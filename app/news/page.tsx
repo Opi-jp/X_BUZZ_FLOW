@@ -71,7 +71,7 @@ export default function NewsPage() {
     }
   }
 
-  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' = 'news') => {
+  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' = 'news') => {
     setCollecting(true)
     try {
       let endpoint = '/api/news/collect'
@@ -79,6 +79,7 @@ export default function NewsPage() {
       if (type === 'jp') endpoint = '/api/news/collect-jp'
       if (type === 'ai-tweets') endpoint = '/api/news/collect-ai-tweets'
       if (type === 'test') endpoint = '/api/news/test-sources'
+      if (type === 'rss') endpoint = '/api/news/collect-rss'
       
       const res = await fetch(endpoint, {
         method: type === 'test' ? 'GET' : 'POST',
@@ -136,8 +137,9 @@ export default function NewsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          date: selectedDate || new Date().toISOString().split('T')[0],
-          limit: 10 
+          date: selectedDate || new Date().toISOString(),
+          limit: 10,
+          timeRange: 24 // 過去24時間
         }),
       })
 
@@ -207,11 +209,11 @@ export default function NewsPage() {
 
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => handleCollect('test')}
+                onClick={() => handleCollect('rss')}
                 disabled={collecting}
-                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                {collecting ? '作成中...' : 'テストデータ'}
+                {collecting ? '収集中...' : 'RSS収集'}
               </button>
               <button
                 onClick={() => handleCollect('ai-tweets')}
@@ -221,11 +223,11 @@ export default function NewsPage() {
                 {collecting ? '収集中...' : 'AIツイート'}
               </button>
               <button
-                onClick={() => handleCollect('news')}
+                onClick={() => handleCollect('test')}
                 disabled={collecting}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
+                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400"
               >
-                {collecting ? '収集中...' : 'NewsAPI'}
+                {collecting ? '作成中...' : 'テスト'}
               </button>
               <div className="w-full sm:w-auto flex-1"></div>
               <button
@@ -239,8 +241,9 @@ export default function NewsPage() {
                 onClick={handleGenerateThread}
                 disabled={generating || articles.filter(a => a.processed && a.importance !== null).length === 0}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+                title="過去24時間のニュースからTOP10を選出"
               >
-                {generating ? '生成中...' : 'スレッド生成'}
+                {generating ? '生成中...' : 'TOP10生成'}
               </button>
             </div>
           </div>

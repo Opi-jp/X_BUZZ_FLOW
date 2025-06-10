@@ -24,13 +24,11 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json()
-    const { date, limit = 10 } = body
+    const { date, limit = 10, timeRange = 24 } = body
 
-    // 指定日の分析済み記事を重要度順に取得
-    const startDate = new Date(date || new Date().toISOString().split('T')[0])
-    startDate.setHours(0, 0, 0, 0)
-    const endDate = new Date(startDate)
-    endDate.setDate(endDate.getDate() + 1)
+    // 指定日時から過去N時間の記事を取得
+    const endDate = date ? new Date(date) : new Date()
+    const startDate = new Date(endDate.getTime() - (timeRange * 60 * 60 * 1000))
 
     const articles = await prisma.newsArticle.findMany({
       where: {
@@ -57,8 +55,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // ソースの多様性を確保（同じソースからの記事が偏らないように）
+    const articlesWithSourceDiversity = articles.reduce((acc: typeof articles, article) => {
+      const sourceCount = acc.filter(a => a.sourceId === article.sourceId).length
+      if (sourceCount < 2) { // 同一ソースから最大2件まで
+        acc.push(article)
+      }
+      return acc
+    }, [])
+
+    // 重要度とソースの多様性を考慮してTOP10を選出
+    const topArticles = articlesWithSourceDiversity.slice(0, limit)
+
     // ツイート生成のプロンプト作成
-    const articlesData = articles.map((article, index) => ({
+    const articlesData = topArticles.map((article, index) => ({
       rank: index + 1,
       title: article.title,
       japaneseSummary: (article.metadata as any)?.analysis?.japaneseSummary || article.summary,
@@ -69,6 +79,9 @@ export async function POST(request: NextRequest) {
 
     const prompt = `以下のAIニュースTOP${articles.length}からTwitterツリー投稿を生成してください。
 
+収集期間: ${startDate.toLocaleString('ja-JP')} 〜 ${endDate.toLocaleString('ja-JP')}
+総記事数: ${articles.length}件から厳選
+
 ニュース一覧:
 ${articlesData.map(a => `${a.rank}. ${a.title}
    日本語要約: ${a.japaneseSummary}
@@ -78,14 +91,14 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
 
 要求事項:
 1. メインツイート（1つ目）:
-   - 「🤖 本日のAIニュースTOP${articles.length}」で始める
+   - 「🤖 AIニュースTOP${topArticles.length}」で始める
    - 最も重要な1-2個のニュースをハイライト
    - 140文字以内（日本語なので）
    - 絵文字を効果的に使用
    - 「続きはスレッドで👇」で終える
 
 2. 個別ニュースツイート（各ニュースごと）:
-   - 「${articles.length > 1 ? '【N位】' : ''}」で始める（Nは順位）
+   - 「${topArticles.length > 1 ? '【N位】' : ''}」で始める（Nは順位）
    - 日本語で要約（元が英語の場合は翻訳済みの要約を使用）
    - 重要ポイントを簡潔に
    - 該当する絵文字を追加
@@ -143,10 +156,10 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
       generation = {
         mainTweet: parsed.mainTweet,
         newsItems: parsed.newsItems.map((item: any) => ({
-          articleId: articles[item.rank - 1].id,
+          articleId: topArticles[item.rank - 1].id,
           rank: item.rank,
           tweetContent: item.tweetContent,
-          originalUrl: articles[item.rank - 1].url,
+          originalUrl: topArticles[item.rank - 1].url,
         })),
       }
     } catch (parseError) {
@@ -157,7 +170,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
     // NewsThreadをデータベースに保存
     const thread = await prisma.newsThread.create({
       data: {
-        title: `AIニュースTOP${articles.length} - ${startDate.toLocaleDateString('ja-JP')}`,
+        title: `AIニュースTOP${topArticles.length} - ${new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`,
         status: 'draft',
         scheduledAt: null,
         metadata: {
