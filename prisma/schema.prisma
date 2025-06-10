@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// バズ投稿
+model BuzzPost {
+  id               String    @id @default(uuid())
+  postId           String    @unique @map("post_id")
+  content          String
+  authorUsername   String    @map("author_username")
+  authorId         String    @map("author_id")
+  likesCount       Int       @map("likes_count")
+  retweetsCount    Int       @map("retweets_count")
+  repliesCount     Int       @map("replies_count")
+  impressionsCount Int       @map("impressions_count")
+  postedAt         DateTime  @map("posted_at")
+  collectedAt      DateTime  @default(now()) @map("collected_at")
+  url              String
+  theme            String
+  language         String
+  mediaUrls        Json      @map("media_urls")
+  hashtags         Json
+  chromaId         String?   @map("chroma_id")
+  
+  scheduledPosts   ScheduledPost[]
+  
+  @@map("buzz_posts")
+}
+
+// 予定投稿
+model ScheduledPost {
+  id             String        @id @default(uuid())
+  content        String
+  scheduledTime  DateTime      @map("scheduled_time")
+  status         PostStatus    @default(DRAFT)
+  postType       PostType      @map("post_type")
+  refPostId      String?       @map("ref_post_id")
+  templateType   String?       @map("template_type")
+  aiGenerated    Boolean       @default(false) @map("ai_generated")
+  aiPrompt       String?       @map("ai_prompt")
+  editedContent  String?       @map("edited_content")
+  postedAt       DateTime?     @map("posted_at")
+  postResult     Json?         @map("post_result")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  
+  refPost        BuzzPost?     @relation(fields: [refPostId], references: [id])
+  analytics      PostAnalytics[]
+  
+  @@map("scheduled_posts")
+}
+
+// 投稿分析
+model PostAnalytics {
+  id               String        @id @default(uuid())
+  scheduledPostId  String        @map("scheduled_post_id")
+  impressions      Int
+  likes            Int
+  retweets         Int
+  replies          Int
+  profileClicks    Int           @map("profile_clicks")
+  linkClicks       Int           @map("link_clicks")
+  measuredAt       DateTime      @default(now()) @map("measured_at")
+  engagementRate   Float         @map("engagement_rate")
+  aiAnalysis       String?       @map("ai_analysis")
+  
+  scheduledPost    ScheduledPost @relation(fields: [scheduledPostId], references: [id])
+  
+  @@map("post_analytics")
+}
+
+// AI生成パターン
+model AiPattern {
+  id              String    @id @default(uuid())
+  name            String
+  description     String
+  promptTemplate  String    @map("prompt_template")
+  exampleOutput   String    @map("example_output")
+  successRate     Float     @default(0) @map("success_rate")
+  usageCount      Int       @default(0) @map("usage_count")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  
+  @@map("ai_patterns")
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  POSTED
+  FAILED
+}
+
+enum PostType {
+  NEW
+  RETWEET
+  QUOTE
+}
