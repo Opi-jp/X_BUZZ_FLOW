@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
+import { formatDateTimeJST } from '@/lib/date-utils'
 
 interface Analytics {
   id: string
@@ -63,12 +64,7 @@ export default function AnalyticsPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP', {
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    return formatDateTimeJST(dateString)
   }
 
   // ソート処理

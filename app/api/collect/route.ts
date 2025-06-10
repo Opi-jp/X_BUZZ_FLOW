@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getKaitoSinceParam } from '@/lib/date-utils'
 
 // Kaito API (Apify) の設定 - 新しいTwitterスクレイパーを使用
 const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs'
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     // 日付フィルター（指定された場合）
     const dateFilter = date ? {
-      since: `${date}_00:00:00_UTC`
+      since: getKaitoSinceParam(date)
     } : {}
 
     // クエリが「from:」で始まる場合はユーザータイムライン取得

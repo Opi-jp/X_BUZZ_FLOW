@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getDaysAgoJST, toUTC } from '@/lib/date-utils'
 
 // POST: 投稿分析データ作成
 export async function POST(request: NextRequest) {
@@ -50,8 +51,8 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const days = parseInt(searchParams.get('days') || '7')
     
-    const dateFrom = new Date()
-    dateFrom.setDate(dateFrom.getDate() - days)
+    // JST基準で過去N日前の日付を取得し、UTCに変換
+    const dateFrom = toUTC(getDaysAgoJST(days))
 
     const analytics = await prisma.postAnalytics.findMany({
       where: {

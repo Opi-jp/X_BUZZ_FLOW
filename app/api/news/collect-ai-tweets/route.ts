@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getNowJST, formatDateJST, getKaitoSinceParam } from '@/lib/date-utils'
 
 // POST: AI関連の一般的なツイートを収集
 export async function POST(request: NextRequest) {
@@ -42,9 +43,7 @@ export async function POST(request: NextRequest) {
     console.log('Searching for AI tweets with query:', searchQuery)
 
     // 今日の日付を取得（JST）
-    const today = new Date()
-    today.setHours(today.getHours() + 9) // JSTに変換
-    const todayStr = today.toISOString().split('T')[0]
+    const todayStr = formatDateJST(getNowJST())
 
     const response = await fetch(kaitoUrl, {
       method: 'POST',
@@ -59,7 +58,7 @@ export async function POST(request: NextRequest) {
         'filter:blue_verified': false,
         'filter:nativeretweets': false,
         queryType: 'Latest',
-        since: `${todayStr}_00:00:00_UTC`
+        since: getKaitoSinceParam(todayStr)
       }),
     })
 

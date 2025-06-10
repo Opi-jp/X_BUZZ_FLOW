@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getDateRangeForDB } from '@/lib/date-utils'
 
 // GET: ニュース記事一覧取得
 export async function GET(request: NextRequest) {
@@ -12,15 +13,13 @@ export async function GET(request: NextRequest) {
 
     const where: any = {}
     
-    // 日付フィルター
+    // 日付フィルター（JST基準）
     if (date) {
-      const startDate = new Date(date)
-      const endDate = new Date(date)
-      endDate.setDate(endDate.getDate() + 1)
+      const { start, end } = getDateRangeForDB(date)
       
       where.publishedAt = {
-        gte: startDate,
-        lt: endDate
+        gte: start,
+        lt: end
       }
     }
 

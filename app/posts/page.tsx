@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { formatDateJST, formatDateTimeJST } from '@/lib/date-utils'
 
 interface BuzzPost {
   id: string
@@ -56,20 +57,7 @@ export default function PostsPage() {
   }
 
   const formatDate = (dateString: string, includeTime = true) => {
-    const date = new Date(dateString)
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      timeZone: 'Asia/Tokyo'
-    }
-    
-    if (includeTime) {
-      options.hour = '2-digit'
-      options.minute = '2-digit'
-    }
-    
-    return date.toLocaleDateString('ja-JP', options)
+    return includeTime ? formatDateTimeJST(dateString) : formatDateJST(dateString)
   }
 
   // 日付でグループ化

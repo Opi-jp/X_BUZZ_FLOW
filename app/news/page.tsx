@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
+import { formatDateTimeJST } from '@/lib/date-utils'
 
 interface NewsSource {
   id: string
@@ -243,14 +244,7 @@ function NewsPageContent() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Asia/Tokyo'
-    })
+    return formatDateTimeJST(dateString)
   }
 
   return (

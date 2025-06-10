@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Sidebar from '@/components/layout/Sidebar'
+import { getNowJST, formatDateJST } from '@/lib/date-utils'
 
 export default function CollectPage() {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function CollectPage() {
   const [maxItems, setMaxItems] = useState('20')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(formatDateJST(getNowJST()))
 
   const handleCollect = async (e: React.FormEvent) => {
     e.preventDefault()
