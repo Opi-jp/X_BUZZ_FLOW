@@ -15,6 +15,7 @@ interface NewsSource {
   _count: {
     articles: number
   }
+  dateCount?: number // 日付別の記事数
 }
 
 interface NewsArticle {
@@ -77,7 +78,10 @@ function NewsPageContent() {
 
   const fetchSources = async () => {
     try {
-      const res = await fetch('/api/news/sources')
+      const params = new URLSearchParams()
+      if (selectedDate) params.append('date', selectedDate)
+      
+      const res = await fetch(`/api/news/sources?${params}`)
       const data = await res.json()
       setSources(data)
     } catch (error) {
@@ -675,7 +679,12 @@ function NewsPageContent() {
                             {source.category}
                           </span>
                           <span className="text-gray-500">
-                            記事数: {source._count.articles}
+                            総記事数: {source._count.articles}
+                            {source.dateCount !== undefined && selectedDate && (
+                              <span className="ml-2 text-blue-600 font-medium">
+                                ({selectedDate}: {source.dateCount}件)
+                              </span>
+                            )}
                           </span>
                         </div>
                       </div>

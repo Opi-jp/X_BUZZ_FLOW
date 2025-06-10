@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         active: true,
         ...(sourceId && { id: sourceId })
       },
-      take: 3 // 一度に処理するソースを制限
+      take: 2 // 一度に処理するソースを2つに制限（タイムアウト回避）
     })
 
     if (rssSources.length === 0) {
@@ -124,8 +124,8 @@ export async function POST(request: NextRequest) {
           '人工知能', 'ディープラーニング', '機械学習', '生成AI'
         ]
 
-        // 最新のlimit件のみ処理
-        for (const item of items.slice(0, limit)) {
+        // 最新の5件のみ処理（各ソースから少量ずつ取得）
+        for (const item of items.slice(0, 5)) {
           try {
             // AI関連の記事かチェック
             const content = `${item.title} ${item.description}`.toLowerCase()
