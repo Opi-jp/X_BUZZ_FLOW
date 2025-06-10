@@ -100,7 +100,8 @@ URL: ${article.url}
   "category": "research" | "product" | "business" | "regulation" | "opinion" | "other",
   "summary": "記事の要約（100文字程度）",
   "japaneseSummary": "日本語での要約（100文字程度、タイトルが日本語の場合は同じ内容）",
-  "keyPoints": ["重要ポイント1", "重要ポイント2", "重要ポイント3"],
+  "keyPoints": ["重要ポイント1（英語の場合は英語で）", "重要ポイント2", "重要ポイント3"],
+  "japaneseKeyPoints": ["日本語の重要ポイント1", "日本語の重要ポイント2", "日本語の重要ポイント3"],
   "impact": "low" | "medium" | "high"
 }
 

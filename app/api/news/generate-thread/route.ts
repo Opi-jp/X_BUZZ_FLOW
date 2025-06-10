@@ -196,13 +196,30 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
     }
 
     const data = await response.json()
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      console.error('Invalid Claude API response:', data)
+      throw new Error('Invalid Claude API response format')
+    }
     const generationText = data.content[0].text
 
     // JSONをパース
     let generation: ThreadGenerationResult
     try {
-      const jsonMatch = generationText.match(/```json\n([\s\S]*?)\n```/) || generationText.match(/{[\s\S]*}/)
-      const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : generationText
+      console.log('Claude response:', generationText)
+      
+      // JSONブロックを抽出
+      const jsonMatch = generationText.match(/```json\n([\s\S]*?)\n```/) || 
+                       generationText.match(/```\n([\s\S]*?)\n```/) ||
+                       generationText.match(/{[\s\S]*}/)
+      
+      if (!jsonMatch) {
+        console.error('No JSON found in response')
+        throw new Error('No JSON found in Claude response')
+      }
+      
+      const jsonStr = jsonMatch[1] || jsonMatch[0]
+      console.log('Extracted JSON:', jsonStr)
+      
       const parsed = JSON.parse(jsonStr)
       
       // 生成結果とarticle情報をマージ（URLが含まれていない場合は追加）
@@ -213,10 +230,13 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           let tweetContent = item.tweetContent
           
           // キーポイントがある場合、箇条書きが含まれているか確認
-          const keyPoints = (article.metadata as any)?.analysis?.keyPoints || []
-          if (keyPoints.length > 0 && !tweetContent.includes('・')) {
-            // キーポイントを箇条書きで追加
-            const bulletPoints = keyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
+          const metadata = article.metadata as any
+          const keyPoints = metadata?.analysis?.keyPoints || []
+          const japaneseKeyPoints = metadata?.analysis?.japaneseKeyPoints || keyPoints
+          
+          if (japaneseKeyPoints.length > 0 && !tweetContent.includes('・')) {
+            // 日本語のキーポイントを箇条書きで追加
+            const bulletPoints = japaneseKeyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
             const titleMatch = tweetContent.match(/【[^】]+】(.+?)(?:\n|$)/)
             if (titleMatch) {
               // タイトルの後にキーポイントを挿入
@@ -264,8 +284,10 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
         }),
       }
     } catch (parseError) {
-      console.error('Failed to parse Claude response:', generationText)
-      throw new Error('Failed to parse thread generation')
+      console.error('Failed to parse Claude response:', parseError)
+      console.error('Response text:', generationText)
+      console.error('Parse error details:', parseError instanceof Error ? parseError.message : 'Unknown error')
+      throw new Error('Failed to parse thread generation: ' + (parseError instanceof Error ? parseError.message : 'Unknown error'))
     }
 
     // NewsThreadをデータベースに保存
