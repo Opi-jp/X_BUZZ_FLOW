@@ -179,12 +179,12 @@ model NewsArticle {
 
 // ニューススレッド
 model NewsThread {
-  id           String   @id @default(uuid())
-  date         DateTime
-  mainTweetId  String?  @map("main_tweet_id")
-  status       String   @default("DRAFT") // DRAFT, SCHEDULED, POSTING, POSTED
-  totalItems   Int      @map("total_items")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id           String    @id @default(uuid())
+  title        String
+  status       String    @default("draft") // draft, scheduled, posted, failed
+  scheduledAt  DateTime? @map("scheduled_at")
+  metadata     Json?     @db.Json
+  createdAt    DateTime  @default(now()) @map("created_at")
   
   items        NewsThreadItem[]
   

@@ -36,6 +36,9 @@ export async function POST(request: NextRequest) {
           publishedAt: 'desc',
         },
         take: 10,
+        include: {
+          source: true,
+        },
       })
 
       const results = []
@@ -52,6 +55,9 @@ export async function POST(request: NextRequest) {
       // 単一記事を分析
       const article = await prisma.newsArticle.findUnique({
         where: { id: articleId },
+        include: {
+          source: true,
+        },
       })
 
       if (!article) {
@@ -84,8 +90,8 @@ async function analyzeArticle(article: any): Promise<any> {
     const prompt = `以下のAI関連ニュース記事を分析してください。
 
 タイトル: ${article.title}
-内容: ${article.content || article.description || ''}
-ソース: ${article.sourceName}
+内容: ${article.content || article.summary || ''}
+ソース: ${article.source?.name || 'Unknown'}
 URL: ${article.url}
 
 以下の形式でJSONで回答してください：
@@ -147,8 +153,8 @@ URL: ${article.url}
       analysis = {
         importance: 0.5,
         category: 'other',
-        summary: article.description || article.title,
-        japaneseSummary: article.description || article.title,
+        summary: article.summary || article.title,
+        japaneseSummary: article.summary || article.title,
         keyPoints: [],
         impact: 'medium'
       }
