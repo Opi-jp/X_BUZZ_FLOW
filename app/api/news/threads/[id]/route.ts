@@ -102,6 +102,13 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
+    
+    // まず関連するアイテムを削除
+    await prisma.newsThreadItem.deleteMany({
+      where: { threadId: id },
+    })
+    
+    // その後スレッドを削除
     await prisma.newsThread.delete({
       where: { id },
     })
