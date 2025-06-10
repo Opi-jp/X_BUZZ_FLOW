@@ -230,13 +230,11 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           let tweetContent = item.tweetContent
           
           // キーポイントがある場合、箇条書きが含まれているか確認
-          const metadata = article.metadata as any
-          const keyPoints = metadata?.analysis?.keyPoints || []
-          const japaneseKeyPoints = metadata?.analysis?.japaneseKeyPoints || keyPoints
+          const keyPoints = (article.metadata as any)?.analysis?.keyPoints || []
           
-          if (japaneseKeyPoints.length > 0 && !tweetContent.includes('・')) {
-            // 日本語のキーポイントを箇条書きで追加
-            const bulletPoints = japaneseKeyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
+          if (keyPoints.length > 0 && !tweetContent.includes('・')) {
+            // キーポイントを箇条書きで追加（既に日本語のはず）
+            const bulletPoints = keyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
             const titleMatch = tweetContent.match(/【[^】]+】(.+?)(?:\n|$)/)
             if (titleMatch) {
               // タイトルの後にキーポイントを挿入
