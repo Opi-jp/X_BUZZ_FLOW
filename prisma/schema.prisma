@@ -195,15 +195,16 @@ model NewsThread {
 model NewsThreadItem {
   id            String    @id @default(uuid())
   threadId      String    @map("thread_id")
-  articleId     String    @map("article_id")
-  rank          Int
-  tweetContent  String    @map("tweet_content")
+  articleId     String?   @map("article_id")
+  position      Int
+  content       String    @db.Text
   tweetId       String?   @map("tweet_id")
   parentTweetId String?   @map("parent_tweet_id")
+  metadata      Json?     @db.Json
   postedAt      DateTime? @map("posted_at")
   
   thread        NewsThread @relation(fields: [threadId], references: [id])
-  article       NewsArticle @relation(fields: [articleId], references: [id])
+  article       NewsArticle? @relation(fields: [articleId], references: [id])
   
   @@map("news_thread_items")
 }
