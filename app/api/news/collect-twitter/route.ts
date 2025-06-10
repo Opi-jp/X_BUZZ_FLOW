@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
         // TwitterユーザーIDを抽出
         const username = source.url.split('/').pop() || ''
         
-        // Kaito APIを使用してツイートを収集
-        const kaitoUrl = `https://api.apify.com/v2/acts/quacker~twitter-scraper/runs?token=${process.env.KAITO_API_KEY}`
+        // Kaito APIを使用してツイートを収集 - 新しいアクターを使用
+        const kaitoUrl = `https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs?token=${process.env.KAITO_API_KEY}`
         
         const response = await fetch(kaitoUrl, {
           method: 'POST',
@@ -52,10 +52,12 @@ export async function POST(request: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            twitterContent: `from:${username} (AI OR ChatGPT OR GPT OR LLM OR "artificial intelligence" OR "machine learning" OR "deep learning" OR Anthropic OR Claude OR OpenAI) -filter:retweets -filter:replies`,
+            twitterContent: `from:${username} (AI OR ChatGPT OR GPT OR LLM OR "artificial intelligence" OR "machine learning" OR "deep learning" OR Anthropic OR Claude OR OpenAI) -is:retweet`,
             maxItems: 20,
             lang: 'en',
-            'include:nativeretweets': false,
+            'filter:replies': false,
+            'filter:nativeretweets': false,
+            queryType: 'Latest'
           }),
         })
 

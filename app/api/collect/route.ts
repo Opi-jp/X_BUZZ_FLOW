@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Kaito API (Apify) の設定
-const KAITO_API_URL = 'https://api.apify.com/v2/acts/quacker~twitter-scraper/runs'
+// Kaito API (Apify) の設定 - 新しいTwitterスクレイパーを使用
+const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs'
 
 // POST: Kaito APIを使ってバズ投稿を収集
 export async function POST(request: NextRequest) {
@@ -13,21 +13,24 @@ export async function POST(request: NextRequest) {
     // クエリが「from:」で始まる場合はユーザータイムライン取得
     const isUserTimeline = query.startsWith('from:')
     const requestBody = isUserTimeline ? {
-      author: query.replace('from:', ''),
-      searchMode: 'user',
-      minimumFavorites: minLikes,
-      minimumRetweets: minRetweets,
+      twitterContent: query,
       maxItems,
-      includeSearchTerms: false,
+      lang: 'ja',
+      'filter:replies': false,
+      'filter:nativeretweets': false,
+      queryType: 'Latest'
     } : {
-      searchTerms: [query],
-      searchMode: 'live',
-      minimumFavorites: minLikes,
-      minimumRetweets: minRetweets,
+      twitterContent: `${query} min_faves:${minLikes} min_retweets:${minRetweets} -is:retweet lang:ja`,
       maxItems,
-      includeSearchTerms: false,
+      lang: 'ja',
+      'filter:replies': false,
+      'filter:blue_verified': false,
+      'filter:nativeretweets': false,
+      queryType: 'Latest'
     }
 
+    console.log('Kaito API Request:', requestBody)
+    
     // Kaito API呼び出し
     const response = await fetch(`${KAITO_API_URL}?token=${process.env.KAITO_API_KEY}`, {
       method: 'POST',
@@ -38,6 +41,8 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Kaito API Error Response:', errorText)
       throw new Error(`Kaito API error: ${response.statusText}`)
     }
 
@@ -57,6 +62,7 @@ export async function POST(request: NextRequest) {
       )
       
       const runData = await resultResponse.json()
+      console.log(`Run status: ${runData.data.status}`)
       
       if (runData.data.status === 'SUCCEEDED') {
         const datasetId = runData.data.defaultDatasetId
@@ -64,9 +70,18 @@ export async function POST(request: NextRequest) {
           `https://api.apify.com/v2/datasets/${datasetId}/items?token=${process.env.KAITO_API_KEY}`
         )
         results = await itemsResponse.json()
+        console.log(`Found ${results.length} items`)
         break
       } else if (runData.data.status === 'FAILED') {
-        throw new Error('Kaito API run failed')
+        console.error('Kaito API run failed. Run details:', runData.data)
+        const statusMessage = runData.data.statusMessage || 'Unknown error'
+        
+        // Twitterのログイン制限エラーをチェック
+        if (statusMessage.includes('Twitter put all content behind login')) {
+          throw new Error('Twitter APIの制限: 2023年6月30日以降、Twitterはログインを必要とするようになりました。現在、この収集方法は利用できません。')
+        }
+        
+        throw new Error(`Kaito API run failed: ${statusMessage}`)
       }
       
       retries++
@@ -76,7 +91,7 @@ export async function POST(request: NextRequest) {
       throw new Error('Kaito API timeout')
     }
 
-    // 取得したデータをデータベースに保存
+    // 取得したデータをデータベースに保存（新しいフォーマットに対応）
     const savedPosts = []
     for (const tweet of results) {
       try {
@@ -88,18 +103,18 @@ export async function POST(request: NextRequest) {
           const post = await prisma.buzzPost.create({
             data: {
               postId: tweet.id,
-              content: tweet.text || tweet.full_text || '',
-              authorUsername: tweet.author?.username || '',
+              content: tweet.text || '',
+              authorUsername: tweet.author?.userName || tweet.author?.username || '',
               authorId: tweet.author?.id || '',
-              likesCount: tweet.favorite_count || 0,
-              retweetsCount: tweet.retweet_count || 0,
-              repliesCount: tweet.reply_count || 0,
-              impressionsCount: tweet.impressions_count || 0,
-              postedAt: new Date(tweet.created_at),
-              url: tweet.url || `https://twitter.com/${tweet.author?.username}/status/${tweet.id}`,
+              likesCount: tweet.likeCount || tweet.favorite_count || 0,
+              retweetsCount: tweet.retweetCount || tweet.retweet_count || 0,
+              repliesCount: tweet.replyCount || tweet.reply_count || 0,
+              impressionsCount: tweet.viewCount || tweet.impressions_count || 0,
+              postedAt: new Date(tweet.createdAt || tweet.created_at),
+              url: tweet.url || tweet.twitterUrl || `https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`,
               theme: query,
               language: tweet.lang || 'ja',
-              mediaUrls: tweet.media?.map((m: any) => m.media_url_https) || [],
+              mediaUrls: tweet.extendedEntities?.media?.map((m: any) => m.media_url_https) || [],
               hashtags: tweet.entities?.hashtags?.map((h: any) => h.text) || [],
             },
           })

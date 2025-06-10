@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 
 interface NewsSource {
@@ -30,20 +31,36 @@ interface NewsArticle {
   }
 }
 
-export default function NewsPage() {
+function NewsPageContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [sources, setSources] = useState<NewsSource[]>([])
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(false)
   const [collectingType, setCollectingType] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [generating, setGenerating] = useState(false)
-  const [selectedDate, setSelectedDate] = useState('')
-  const [activeTab, setActiveTab] = useState<'sources' | 'articles'>('articles')
+  const [selectedDate, setSelectedDate] = useState(searchParams.get('date') || '')
+  const [activeTab, setActiveTab] = useState<'sources' | 'articles'>(
+    (searchParams.get('tab') as 'sources' | 'articles') || 'articles'
+  )
 
   useEffect(() => {
     fetchSources()
     fetchArticles()
   }, [selectedDate])
+
+  // URLパラメータを更新
+  const updateURL = (newDate?: string, newTab?: string) => {
+    const params = new URLSearchParams()
+    if (newDate !== undefined ? newDate : selectedDate) {
+      params.set('date', newDate !== undefined ? newDate : selectedDate)
+    }
+    if (newTab || activeTab !== 'articles') {
+      params.set('tab', newTab || activeTab)
+    }
+    router.push(`/news?${params.toString()}`)
+  }
 
   const fetchSources = async () => {
     try {
@@ -192,15 +209,28 @@ export default function NewsPage() {
         body: JSON.stringify({ 
           date: selectedDate || new Date().toISOString(),
           limit: 10,
-          timeRange: 24 // 過去24時間
+          timeRange: 48 // 過去48時間に拡大
         }),
       })
 
       const data = await res.json()
       
       if (res.ok) {
-        alert(`スレッドを生成しました：${data.title}`)
-        // スレッド管理画面へ遷移するか、モーダルで表示
+        // スレッド内容を整形して表示
+        let threadContent = `スレッドを生成しました！\n\n【${data.title}】\n\n`
+        threadContent += `メインツイート:\n${data.mainTweet}\n\n`
+        
+        if (data.newsItems && data.newsItems.length > 0) {
+          threadContent += `ニュース一覧:\n`
+          data.newsItems.forEach((item: any, index: number) => {
+            threadContent += `\n${index + 1}. ${item.tweet}\n`
+          })
+        }
+        
+        alert(threadContent)
+        
+        // 必要に応じてスレッド管理画面へ遷移
+        // router.push(`/threads/${data.threadId}`)
       } else {
         alert(data.error || 'スレッド生成中にエラーが発生しました')
       }
@@ -239,7 +269,10 @@ export default function NewsPage() {
           <div className="mb-6 flex items-center justify-between">
             <div className="flex bg-white rounded-lg shadow-sm">
               <button
-                onClick={() => setActiveTab('articles')}
+                onClick={() => {
+                  setActiveTab('articles')
+                  updateURL(selectedDate, 'articles')
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
                   activeTab === 'articles' 
                     ? 'bg-blue-600 text-white' 
@@ -249,7 +282,10 @@ export default function NewsPage() {
                 記事一覧
               </button>
               <button
-                onClick={() => setActiveTab('sources')}
+                onClick={() => {
+                  setActiveTab('sources')
+                  updateURL(selectedDate, 'sources')
+                }}
                 className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
                   activeTab === 'sources' 
                     ? 'bg-blue-600 text-white' 
@@ -299,10 +335,11 @@ export default function NewsPage() {
               <div className="w-full sm:w-auto flex-1"></div>
               <button
                 onClick={handleAnalyze}
-                disabled={analyzing}
+                disabled={analyzing || articles.filter(a => !a.processed).length === 0}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+                title={`未処理の記事: ${articles.filter(a => !a.processed).length}件`}
               >
-                {analyzing ? '分析中...' : 'AI分析'}
+                {analyzing ? '分析中...' : `AI分析 (${articles.filter(a => !a.processed).length}件)`}
               </button>
               <button
                 onClick={handleGenerateThread}
@@ -322,7 +359,10 @@ export default function NewsPage() {
                 <input
                   type="date"
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedDate(e.target.value)
+                    updateURL(e.target.value)
+                  }}
                   className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -337,7 +377,7 @@ export default function NewsPage() {
               ) : (
                 <div className="space-y-4">
                   {articles.map((article) => (
-                    <div key={article.id} className="bg-white rounded-lg shadow p-6">
+                    <div key={article.id} className={`rounded-lg shadow p-6 ${article.processed ? 'bg-white' : 'bg-yellow-50 border-2 border-yellow-200'}`}>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -347,9 +387,13 @@ export default function NewsPage() {
                           <div className="flex items-center gap-4 text-sm text-gray-500">
                             <span>{article.source.name}</span>
                             <span>{formatDate(article.publishedAt)}</span>
-                            {article.processed && (
+                            {article.processed ? (
                               <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
                                 処理済み
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold">
+                                未処理
                               </span>
                             )}
                             {article.importance !== null && (
@@ -433,5 +477,13 @@ export default function NewsPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function NewsPage() {
+  return (
+    <React.Suspense fallback={<div className="flex h-screen bg-gray-100"><Sidebar /><main className="flex-1 flex items-center justify-center"><div>読み込み中...</div></main></div>}>
+      <NewsPageContent />
+    </React.Suspense>
   )
 }

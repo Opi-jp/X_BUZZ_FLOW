@@ -33,17 +33,14 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Kaito APIを使用してAI関連のツイートを収集
-    const kaitoUrl = `https://api.apify.com/v2/acts/quacker~twitter-scraper/runs?token=${process.env.KAITO_API_KEY}`
+    // Kaito APIを使用してAI関連のツイートを収集 - 新しいアクターを使用
+    const kaitoUrl = `https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs?token=${process.env.KAITO_API_KEY}`
     
-    // AI関連の検索クエリ
-    const searchQuery = `(ChatGPT OR GPT-4 OR GPT4 OR "Claude AI" OR Claude3 OR Anthropic OR OpenAI OR "Gemini AI" OR "Google AI" OR "Microsoft AI" OR LLM OR "large language model" OR "artificial intelligence" OR "machine learning" OR "deep learning" OR "AI research" OR "AI breakthrough" OR "AI announcement") min_faves:100 min_retweets:20 -filter:retweets -filter:replies lang:en`
+    // AI関連の検索クエリ（新しいフォーマット）
+    const searchQuery = '(AI OR ChatGPT OR GPT-4 OR "Claude AI" OR Anthropic OR OpenAI OR "Google AI" OR "Gemini AI" OR "Microsoft AI" OR "AI research" OR "artificial intelligence" OR LLM OR "large language model") min_faves:100 min_retweets:20 -is:retweet lang:ja'
 
     console.log('Searching for AI tweets with query:', searchQuery)
 
-    console.log('Kaito API URL:', kaitoUrl)
-    console.log('Search query:', searchQuery)
-    
     const response = await fetch(kaitoUrl, {
       method: 'POST',
       headers: {
@@ -52,7 +49,11 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         twitterContent: searchQuery,
         maxItems: 30,
-        'include:nativeretweets': false,
+        lang: 'ja',
+        'filter:replies': false,
+        'filter:blue_verified': false,
+        'filter:nativeretweets': false,
+        queryType: 'Latest'
       }),
     })
 
@@ -89,7 +90,13 @@ export async function POST(request: NextRequest) {
         break
       } else if (runData.data.status === 'FAILED') {
         console.error('Kaito API run failed')
-        throw new Error('Kaito API run failed')
+        const statusMessage = runData.data.statusMessage || 'Unknown error'
+        
+        if (statusMessage.includes('Twitter put all content behind login')) {
+          throw new Error('Twitter APIの制限により、現在この収集方法は利用できません。')
+        }
+        
+        throw new Error(`Kaito API run failed: ${statusMessage}`)
       }
       
       retries++
@@ -110,16 +117,17 @@ export async function POST(request: NextRequest) {
 
     for (const tweet of tweets) {
       try {
-        const username = tweet.author?.username || tweet.user?.screen_name || 'unknown'
-        const tweetId = tweet.id || tweet.id_str
-        const text = tweet.text || tweet.full_text || ''
+        const username = tweet.author?.userName || tweet.author?.username || 'unknown'
+        const tweetId = tweet.id
+        const text = tweet.text || ''
         
         if (!tweetId || !text) {
+          console.log('Skipping tweet with missing ID or text:', tweet)
           skippedCount++
           continue
         }
 
-        const url = `https://twitter.com/${username}/status/${tweetId}`
+        const url = tweet.url || tweet.twitterUrl || `https://twitter.com/${username}/status/${tweetId}`
         
         // URLが既に存在するかチェック
         const existing = await prisma.newsArticle.findUnique({
@@ -134,12 +142,14 @@ export async function POST(request: NextRequest) {
               summary: text,
               content: text,
               url,
-              publishedAt: new Date(tweet.created_at || tweet.createdAt || Date.now()),
+              publishedAt: new Date(tweet.createdAt || Date.now()),
               category: 'Twitter',
               metadata: {
                 author: username,
-                likes: tweet.favorite_count || tweet.likeCount || 0,
-                retweets: tweet.retweet_count || tweet.retweetCount || 0,
+                likes: tweet.likeCount || 0,
+                retweets: tweet.retweetCount || 0,
+                views: tweet.viewCount || 0,
+                authorId: tweet.author?.id
               }
             }
           })
