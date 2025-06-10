@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       orderBy: {
         importance: 'desc',
       },
-      take: limit,
+      take: Math.max(limit * 2, 50), // より多くの記事から選択できるように
       include: {
         source: true,
       },
@@ -56,9 +56,10 @@ export async function POST(request: NextRequest) {
     }
 
     // ソースの多様性を確保（同じソースからの記事が偏らないように）
+    const maxPerSource = Math.max(3, Math.ceil(limit / 5)) // 最低3件、または全体の20%まで
     const articlesWithSourceDiversity = articles.reduce((acc: typeof articles, article) => {
       const sourceCount = acc.filter(a => a.sourceId === article.sourceId).length
-      if (sourceCount < 2) { // 同一ソースから最大2件まで
+      if (sourceCount < maxPerSource) {
         acc.push(article)
       }
       return acc
@@ -77,10 +78,10 @@ export async function POST(request: NextRequest) {
       importance: article.importance,
     }))
 
-    const prompt = `以下のAIニュースTOP${articles.length}からTwitterツリー投稿を生成してください。
+    const prompt = `以下のAIニュースTOP${topArticles.length}からTwitterツリー投稿を生成してください。
 
 収集期間: ${startDate.toLocaleString('ja-JP')} 〜 ${endDate.toLocaleString('ja-JP')}
-総記事数: ${articles.length}件から厳選
+分析済み記事数: ${articles.length}件から厳選
 
 ニュース一覧:
 ${articlesData.map(a => `${a.rank}. ${a.title}
@@ -91,14 +92,15 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
 
 要求事項:
 1. メインツイート（1つ目）:
-   - 「🤖 AIニュースTOP${topArticles.length}」で始める
-   - 最も重要な1-2個のニュースをハイライト
+   - 「🤖 AIニュース${topArticles.length <= 10 ? `TOP${topArticles.length}` : `${topArticles.length}選`}」で始める
+   - 最も重要な${Math.min(3, topArticles.length)}個のニュースをハイライト
    - 140文字以内（日本語なので）
    - 絵文字を効果的に使用
+   - ${topArticles.length > 5 ? '「今日は特に重要なニュースが多数！」のような文言を含める' : ''}
    - 「続きはスレッドで👇」で終える
 
 2. 個別ニュースツイート（各ニュースごと）:
-   - 「${topArticles.length > 1 ? '【N位】' : ''}」で始める（Nは順位）
+   - 「【${topArticles.length <= 10 ? 'N位' : 'Pick ' + 'N'}】」で始める（Nは順位）
    - 日本語で要約（元が英語の場合は翻訳済みの要約を使用）
    - 重要ポイントを簡潔に
    - 該当する絵文字を追加

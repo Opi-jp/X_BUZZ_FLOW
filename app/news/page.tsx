@@ -45,6 +45,7 @@ function NewsPageContent() {
   const [activeTab, setActiveTab] = useState<'sources' | 'articles'>(
     (searchParams.get('tab') as 'sources' | 'articles') || 'articles'
   )
+  const [threadLimit, setThreadLimit] = useState(10)
 
   useEffect(() => {
     fetchSources()
@@ -209,7 +210,7 @@ function NewsPageContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           date: selectedDate || new Date().toISOString(),
-          limit: 10,
+          limit: threadLimit,
           timeRange: 48 // 過去48時間に拡大
         }),
       })
@@ -335,14 +336,29 @@ function NewsPageContent() {
               >
                 {analyzing ? '分析中...' : `AI分析 (${articles.filter(a => !a.processed).length}件)`}
               </button>
-              <button
-                onClick={handleGenerateThread}
-                disabled={generating || articles.filter(a => a.processed && a.importance !== null).length === 0}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
-                title="過去24時間のニュースからTOP10を選出"
-              >
-                {generating ? '生成中...' : 'TOP10生成'}
-              </button>
+              <div className="flex items-center gap-2">
+                <select
+                  value={threadLimit}
+                  onChange={(e) => setThreadLimit(Number(e.target.value))}
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  title="生成する記事数を選択"
+                >
+                  <option value={5}>TOP 5</option>
+                  <option value={10}>TOP 10</option>
+                  <option value={15}>TOP 15</option>
+                  <option value={20}>TOP 20</option>
+                  <option value={25}>TOP 25</option>
+                  <option value={30}>TOP 30</option>
+                </select>
+                <button
+                  onClick={handleGenerateThread}
+                  disabled={generating || articles.filter(a => a.processed && a.importance !== null).length === 0}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+                  title="分析済みニュースからトップ記事を選出"
+                >
+                  {generating ? '生成中...' : 'ニュース生成'}
+                </button>
+              </div>
             </div>
           </div>
 
