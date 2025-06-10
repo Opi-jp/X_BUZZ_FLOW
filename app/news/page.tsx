@@ -23,6 +23,8 @@ interface NewsArticle {
   publishedAt: string
   category: string
   processed: boolean
+  importance: number | null
+  metadata?: any
   source: {
     name: string
   }
@@ -33,6 +35,8 @@ export default function NewsPage() {
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(false)
   const [collecting, setCollecting] = useState(false)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [generating, setGenerating] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
   const [activeTab, setActiveTab] = useState<'sources' | 'articles'>('articles')
 
@@ -91,6 +95,59 @@ export default function NewsPage() {
       alert('収集中にエラーが発生しました')
     } finally {
       setCollecting(false)
+    }
+  }
+
+  const handleAnalyze = async () => {
+    setAnalyzing(true)
+    try {
+      const res = await fetch('/api/news/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ batchAnalyze: true }),
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert(`${data.analyzed}件の記事を分析しました`)
+        fetchArticles()
+      } else {
+        alert('分析中にエラーが発生しました')
+      }
+    } catch (error) {
+      console.error('Error analyzing news:', error)
+      alert('分析中にエラーが発生しました')
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  const handleGenerateThread = async () => {
+    setGenerating(true)
+    try {
+      const res = await fetch('/api/news/generate-thread', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          date: selectedDate || new Date().toISOString().split('T')[0],
+          limit: 10 
+        }),
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert(`スレッドを生成しました：${data.title}`)
+        // スレッド管理画面へ遷移するか、モーダルで表示
+      } else {
+        alert(data.error || 'スレッド生成中にエラーが発生しました')
+      }
+    } catch (error) {
+      console.error('Error generating thread:', error)
+      alert('スレッド生成中にエラーが発生しました')
+    } finally {
+      setGenerating(false)
     }
   }
 
@@ -157,6 +214,20 @@ export default function NewsPage() {
               >
                 {collecting ? '収集中...' : 'Twitter収集'}
               </button>
+              <button
+                onClick={handleAnalyze}
+                disabled={analyzing}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+              >
+                {analyzing ? '分析中...' : 'AI分析実行'}
+              </button>
+              <button
+                onClick={handleGenerateThread}
+                disabled={generating || articles.filter(a => a.processed && a.importance !== null).length === 0}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+              >
+                {generating ? '生成中...' : 'スレッド生成'}
+              </button>
             </div>
           </div>
 
@@ -197,7 +268,26 @@ export default function NewsPage() {
                                 処理済み
                               </span>
                             )}
+                            {article.importance !== null && (
+                              <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">
+                                重要度: {(article.importance * 100).toFixed(0)}%
+                              </span>
+                            )}
                           </div>
+                          {article.metadata?.analysis && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
+                              <p className="text-gray-700">
+                                {article.metadata.analysis.japaneseSummary || article.metadata.analysis.summary}
+                              </p>
+                              {article.metadata.analysis.keyPoints && article.metadata.analysis.keyPoints.length > 0 && (
+                                <ul className="mt-2 list-disc list-inside text-gray-600">
+                                  {article.metadata.analysis.keyPoints.map((point: string, index: number) => (
+                                    <li key={index}>{point}</li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          )}
                         </div>
                         <a
                           href={article.url}

@@ -11,6 +11,7 @@ const navigation = [
   { name: 'スケジュール', href: '/schedule', icon: '📅' },
   { name: '分析', href: '/analytics', icon: '📈' },
   { name: 'AIニュース', href: '/news', icon: '📰' },
+  { name: 'スレッド管理', href: '/news/threads', icon: '🧵' },
   { name: 'AIパターン', href: '/patterns', icon: '🤖' },
   { name: '設定', href: '/settings', icon: '⚙️' },
 ]
