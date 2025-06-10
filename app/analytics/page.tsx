@@ -27,11 +27,16 @@ interface Summary {
   avgEngagementRate: number
 }
 
+type SortKey = 'postedAt' | 'impressions' | 'likes' | 'retweets' | 'engagementRate'
+type SortOrder = 'asc' | 'desc'
+
 export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<Analytics[]>([])
   const [summary, setSummary] = useState<Summary | null>(null)
   const [days, setDays] = useState('7')
   const [loading, setLoading] = useState(true)
+  const [sortKey, setSortKey] = useState<SortKey>('postedAt')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
   useEffect(() => {
     fetchAnalytics()
@@ -64,6 +69,57 @@ export default function AnalyticsPage() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  // ソート処理
+  const sortedAnalytics = [...analytics].sort((a, b) => {
+    let aValue: number
+    let bValue: number
+
+    switch (sortKey) {
+      case 'postedAt':
+        aValue = new Date(a.scheduledPost.postedAt).getTime()
+        bValue = new Date(b.scheduledPost.postedAt).getTime()
+        break
+      case 'impressions':
+        aValue = a.impressions
+        bValue = b.impressions
+        break
+      case 'likes':
+        aValue = a.likes
+        bValue = b.likes
+        break
+      case 'retweets':
+        aValue = a.retweets
+        bValue = b.retweets
+        break
+      case 'engagementRate':
+        aValue = a.engagementRate
+        bValue = b.engagementRate
+        break
+      default:
+        return 0
+    }
+
+    return sortOrder === 'asc' ? aValue - bValue : bValue - aValue
+  })
+
+  // ソートハンドラー
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortKey(key)
+      setSortOrder('desc')
+    }
+  }
+
+  // ソートアイコン
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (sortKey !== columnKey) {
+      return <span className="text-gray-400">↕</span>
+    }
+    return <span className="text-blue-600">{sortOrder === 'asc' ? '↑' : '↓'}</span>
   }
 
   return (
@@ -134,20 +190,50 @@ export default function AnalyticsPage() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           投稿内容
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          投稿日時
+                        <th 
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('postedAt')}
+                        >
+                          <div className="flex items-center gap-1">
+                            投稿日時
+                            <SortIcon columnKey="postedAt" />
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          インプレッション
+                        <th 
+                          className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('impressions')}
+                        >
+                          <div className="flex items-center justify-end gap-1">
+                            インプレッション
+                            <SortIcon columnKey="impressions" />
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          いいね
+                        <th 
+                          className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('likes')}
+                        >
+                          <div className="flex items-center justify-end gap-1">
+                            いいね
+                            <SortIcon columnKey="likes" />
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          RT
+                        <th 
+                          className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('retweets')}
+                        >
+                          <div className="flex items-center justify-end gap-1">
+                            RT
+                            <SortIcon columnKey="retweets" />
+                          </div>
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          エンゲージメント率
+                        <th 
+                          className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                          onClick={() => handleSort('engagementRate')}
+                        >
+                          <div className="flex items-center justify-end gap-1">
+                            エンゲージメント率
+                            <SortIcon columnKey="engagementRate" />
+                          </div>
                         </th>
                       </tr>
                     </thead>
@@ -159,7 +245,7 @@ export default function AnalyticsPage() {
                           </td>
                         </tr>
                       ) : (
-                        analytics.map((item) => (
+                        sortedAnalytics.map((item) => (
                           <tr key={item.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
                               <p className="text-sm text-gray-900 truncate max-w-xs">
