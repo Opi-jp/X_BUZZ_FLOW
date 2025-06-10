@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json()
-    const { date, limit = 10, timeRange = 24 } = body
+    const { date, limit = 10, timeRange = 24, requiredArticleIds = [] } = body
 
     // 指定日時から過去N時間の記事を取得
     const endDate = date ? new Date(date) : new Date()
@@ -55,9 +55,29 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 必須記事を取得（選択された記事）
+    let requiredArticles: typeof articles = []
+    if (requiredArticleIds.length > 0) {
+      requiredArticles = await prisma.newsArticle.findMany({
+        where: {
+          id: { in: requiredArticleIds },
+          processed: true,
+          importance: { not: null }
+        },
+        include: {
+          source: true
+        }
+      })
+    }
+
+    // 必須記事以外の記事をフィルタリング
+    const optionalArticles = articles.filter(
+      article => !requiredArticleIds.includes(article.id)
+    )
+
     // ソースの多様性を確保（同じソースからの記事が偏らないように）
     const maxPerSource = Math.max(3, Math.ceil(limit / 5)) // 最低3件、または全体の20%まで
-    const articlesWithSourceDiversity = articles.reduce((acc: typeof articles, article) => {
+    const articlesWithSourceDiversity = optionalArticles.reduce((acc: typeof articles, article) => {
       const sourceCount = acc.filter(a => a.sourceId === article.sourceId).length
       if (sourceCount < maxPerSource) {
         acc.push(article)
@@ -65,8 +85,13 @@ export async function POST(request: NextRequest) {
       return acc
     }, [])
 
-    // 重要度とソースの多様性を考慮してTOP10を選出
-    const topArticles = articlesWithSourceDiversity.slice(0, limit)
+    // 必須記事を先頭に、その後重要度順で記事を選出
+    const remainingSlots = Math.max(0, limit - requiredArticles.length)
+    const selectedOptionalArticles = articlesWithSourceDiversity.slice(0, remainingSlots)
+    const topArticles = [...requiredArticles, ...selectedOptionalArticles]
+
+    // デバッグ情報
+    console.log(`記事選択結果: 必須記事${requiredArticles.length}件, 選択記事${selectedOptionalArticles.length}件, 合計${topArticles.length}件`)
 
     // ツイート生成のプロンプト作成
     const articlesData = topArticles.map((article, index) => ({
@@ -97,6 +122,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
    - 140文字以内（日本語なので）
    - 絵文字を効果的に使用
    - ${topArticles.length > 5 ? '「今日は特に重要なニュースが多数！」のような文言を含める' : ''}
+   - ${requiredArticles.length > 0 ? '「厳選した重要ニュースを含む」ことを示唆する文言を含める' : ''}
    - 「続きはスレッドで👇」で終える
 
 2. 個別ニュースツイート（各ニュースごと）:
@@ -178,6 +204,8 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
         metadata: {
           date: startDate.toISOString(),
           articleCount: articles.length,
+          requiredArticleIds: requiredArticleIds,
+          totalArticles: topArticles.length,
         },
         items: {
           create: [
@@ -246,6 +274,9 @@ export async function GET(request: NextRequest) {
       take: limit,
       include: {
         items: {
+          include: {
+            article: true,
+          },
           orderBy: {
             position: 'asc',
           },

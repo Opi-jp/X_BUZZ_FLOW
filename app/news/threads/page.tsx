@@ -177,13 +177,21 @@ export default function ThreadsPage() {
                           詳細
                         </button>
                         {thread.status === 'draft' && (
-                          <button
-                            onClick={() => handlePostThread(thread)}
-                            disabled={posting}
-                            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm disabled:bg-gray-400"
-                          >
-                            {posting ? '投稿中...' : '投稿'}
-                          </button>
+                          <>
+                            <button
+                              onClick={() => router.push(`/news/threads/${thread.id}/edit`)}
+                              className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+                            >
+                              編集
+                            </button>
+                            <button
+                              onClick={() => handlePostThread(thread)}
+                              disabled={posting}
+                              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm disabled:bg-gray-400"
+                            >
+                              {posting ? '投稿中...' : '投稿'}
+                            </button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -259,16 +267,27 @@ export default function ThreadsPage() {
                       閉じる
                     </button>
                     {selectedThread.status === 'draft' && (
-                      <button
-                        onClick={() => {
-                          handlePostThread(selectedThread)
-                          setSelectedThread(null)
-                        }}
-                        disabled={posting}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
-                      >
-                        {posting ? '投稿中...' : 'Twitterに投稿'}
-                      </button>
+                      <>
+                        <button
+                          onClick={() => {
+                            router.push(`/news/threads/${selectedThread.id}/edit`)
+                            setSelectedThread(null)
+                          }}
+                          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                        >
+                          編集する
+                        </button>
+                        <button
+                          onClick={() => {
+                            handlePostThread(selectedThread)
+                            setSelectedThread(null)
+                          }}
+                          disabled={posting}
+                          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
+                        >
+                          {posting ? '投稿中...' : 'Twitterに投稿'}
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>

@@ -22,6 +22,17 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+      'max-image-preview': 'none',
+    },
+  },
   openGraph: {
     title: 'BuzzFlow - AI活用型SNS運用支援システム',
     description: 'AIを活用したX(Twitter)バズ投稿管理・分析・自動化システム',

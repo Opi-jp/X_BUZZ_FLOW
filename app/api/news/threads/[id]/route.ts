@@ -1,7 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// PATCH: スレッドのステータス更新
+// GET: スレッド詳細取得
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    
+    const thread = await prisma.newsThread.findUnique({
+      where: { id },
+      include: {
+        items: {
+          include: {
+            article: true,
+          },
+          orderBy: { position: 'asc' },
+        },
+      },
+    })
+
+    if (!thread) {
+      return NextResponse.json(
+        { error: 'Thread not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(thread)
+  } catch (error) {
+    console.error('Error fetching thread:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch thread' },
+      { status: 500 }
+    )
+  }
+}
+
+// PATCH: スレッドのステータス更新またはアイテムの内容更新
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -9,8 +46,37 @@ export async function PATCH(
   try {
     const { id } = await params
     const body = await request.json()
-    const { status, scheduledAt } = body
+    const { status, scheduledAt, items } = body
 
+    // アイテムの内容更新の場合
+    if (items && Array.isArray(items)) {
+      // 各アイテムを更新
+      await Promise.all(
+        items.map(item => 
+          prisma.newsThreadItem.update({
+            where: { id: item.id },
+            data: { content: item.content },
+          })
+        )
+      )
+
+      // 更新後のスレッドを返す
+      const updatedThread = await prisma.newsThread.findUnique({
+        where: { id },
+        include: {
+          items: {
+            include: {
+              article: true,
+            },
+            orderBy: { position: 'asc' },
+          },
+        },
+      })
+
+      return NextResponse.json(updatedThread)
+    }
+
+    // ステータス更新の場合
     const thread = await prisma.newsThread.update({
       where: { id },
       data: {

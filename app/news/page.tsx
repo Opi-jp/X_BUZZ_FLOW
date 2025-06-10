@@ -46,6 +46,7 @@ function NewsPageContent() {
     (searchParams.get('tab') as 'sources' | 'articles') || 'articles'
   )
   const [threadLimit, setThreadLimit] = useState(10)
+  const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetchSources()
@@ -211,7 +212,8 @@ function NewsPageContent() {
         body: JSON.stringify({ 
           date: selectedDate || new Date().toISOString(),
           limit: threadLimit,
-          timeRange: 48 // 過去48時間に拡大
+          timeRange: 48, // 過去48時間に拡大
+          requiredArticleIds: Array.from(selectedArticles) // 選択された記事
         }),
       })
 
@@ -231,8 +233,8 @@ function NewsPageContent() {
         
         alert(threadContent)
         
-        // 必要に応じてスレッド管理画面へ遷移
-        // router.push(`/threads/${data.threadId}`)
+        // スレッド管理画面へ遷移
+        router.push('/news/threads')
       } else {
         alert(data.error || 'スレッド生成中にエラーが発生しました')
       }
@@ -246,6 +248,27 @@ function NewsPageContent() {
 
   const formatDate = (dateString: string) => {
     return formatDateTimeJST(dateString)
+  }
+
+  const handleArticleToggle = (articleId: string) => {
+    const newSelected = new Set(selectedArticles)
+    if (newSelected.has(articleId)) {
+      newSelected.delete(articleId)
+    } else {
+      newSelected.add(articleId)
+    }
+    setSelectedArticles(newSelected)
+  }
+
+  const handleSelectAll = () => {
+    if (selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length) {
+      setSelectedArticles(new Set())
+    } else {
+      const allProcessedIds = articles
+        .filter(a => a.processed && a.importance !== null)
+        .map(a => a.id)
+      setSelectedArticles(new Set(allProcessedIds))
+    }
   }
 
   return (
@@ -293,37 +316,23 @@ function NewsPageContent() {
 
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => handleCollect('simple')}
-                disabled={collectingType !== null}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
-              >
-                {collectingType === 'simple' ? '収集中...' : 'サンプル収集'}
-              </button>
-              <button
-                onClick={() => handleCollect('test')}
-                disabled={collectingType !== null}
-                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400"
-              >
-                {collectingType === 'test' ? '作成中...' : 'テスト'}
-              </button>
-              <button
                 onClick={() => handleCollect('rss')}
                 disabled={collectingType !== null}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                {collectingType === 'rss' ? '収集中...' : 'RSS'}
+                {collectingType === 'rss' ? '収集中...' : 'RSS収集'}
               </button>
               <button
                 onClick={() => handleCollect('ai-tweets')}
                 disabled={collectingType !== null}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
               >
-                {collectingType === 'ai-tweets' ? '収集中...' : 'Twitter'}
+                {collectingType === 'ai-tweets' ? '収集中...' : 'Twitter収集'}
               </button>
               <button
                 onClick={() => handleCollect('all')}
                 disabled={collectingType !== null}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
               >
                 {collectingType === 'all' ? '収集中...' : '一括収集'}
               </button>
@@ -377,6 +386,21 @@ function NewsPageContent() {
                 />
               </div>
 
+              {/* 選択済み記事数と全選択ボタン */}
+              {articles.filter(a => a.processed && a.importance !== null).length > 0 && (
+                <div className="mb-4 flex items-center justify-between bg-blue-50 rounded-lg p-3">
+                  <div className="text-blue-800">
+                    選択済み: {selectedArticles.size}件 / 分析済み: {articles.filter(a => a.processed && a.importance !== null).length}件
+                  </div>
+                  <button
+                    onClick={handleSelectAll}
+                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                  >
+                    {selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length ? '全解除' : '全選択'}
+                  </button>
+                </div>
+              )}
+
               {/* 記事一覧 */}
               {loading ? (
                 <div className="text-center py-8">読み込み中...</div>
@@ -388,7 +412,16 @@ function NewsPageContent() {
                 <div className="space-y-4">
                   {articles.map((article) => (
                     <div key={article.id} className={`rounded-lg shadow p-6 ${article.processed ? 'bg-white' : 'bg-yellow-50 border-2 border-yellow-200'}`}>
-                      <div className="flex items-start justify-between">
+                      <div className="flex items-start">
+                        {/* チェックボックス */}
+                        {article.processed && article.importance !== null && (
+                          <input
+                            type="checkbox"
+                            checked={selectedArticles.has(article.id)}
+                            onChange={() => handleArticleToggle(article.id)}
+                            className="mt-1 mr-4 h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                          />
+                        )}
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
                             {article.title}

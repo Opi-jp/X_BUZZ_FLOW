@@ -183,6 +183,7 @@ model NewsThread {
   title        String
   status       String    @default("draft") // draft, scheduled, posted, failed
   scheduledAt  DateTime? @map("scheduled_at")
+  postedAt     DateTime? @map("posted_at")
   metadata     Json?     @db.Json
   createdAt    DateTime  @default(now()) @map("created_at")
   
