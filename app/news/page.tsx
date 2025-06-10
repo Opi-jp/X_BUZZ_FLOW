@@ -102,6 +102,12 @@ function NewsPageContent() {
   }
 
   const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' | 'simple' = 'news') => {
+    // 一括収集の場合は非同期収集を使用
+    if (type === 'all') {
+      handleCollectAsync()
+      return
+    }
+    
     setCollectingType(type)
     try {
       let endpoint = ''
@@ -124,9 +130,6 @@ function NewsPageContent() {
         case 'rss':
           endpoint = '/api/news/collect-rss'
           break
-        case 'all':
-          endpoint = '/api/news/collect-all'
-          break
         case 'simple':
           endpoint = '/api/news/collect-simple'
           break
@@ -147,21 +150,6 @@ function NewsPageContent() {
       
       if (res.ok) {
         let message = data.message || `${data.saved || 0}件保存しました`
-        
-        // collect-allの詳細結果を表示
-        if (type === 'all' && data.results) {
-          const details = []
-          if (data.results.rss) {
-            details.push(`RSS: ${data.results.rss.saved}件保存${data.results.rss.error ? ' (エラー: ' + data.results.rss.error + ')' : ''}`)
-          }
-          if (data.results.aiTweets) {
-            details.push(`Twitter: ${data.results.aiTweets.saved}件保存${data.results.aiTweets.error ? ' (エラー: ' + data.results.aiTweets.error + ')' : ''}`)
-          }
-          if (details.length > 0) {
-            message += '\n\n詳細:\n' + details.join('\n')
-          }
-        }
-        
         alert(message)
         fetchArticles()
         fetchSources()
@@ -427,16 +415,9 @@ function NewsPageContent() {
                 onClick={() => handleCollect('all')}
                 disabled={collectingType !== null}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
+                title="RSS + Twitterを一括収集（バックグラウンド処理）"
               >
-                {collectingType === 'all' ? '収集中...' : '一括収集'}
-              </button>
-              <button
-                onClick={() => handleCollectAsync()}
-                disabled={collectingType !== null}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
-                title="バックグラウンドで収集（タイムアウトしない）"
-              >
-                {collectingType === 'async' ? '開始中...' : '非同期収集'}
+                {collectingType === 'all' ? '開始中...' : '一括収集'}
               </button>
               <div className="w-full sm:w-auto flex-1"></div>
               <button
@@ -501,20 +482,24 @@ function NewsPageContent() {
                 />
               </div>
 
-              {/* 選択済み記事数と全選択ボタン */}
-              {articles.filter(a => a.processed && a.importance !== null).length > 0 && (
-                <div className="mb-4 flex items-center justify-between bg-blue-50 rounded-lg p-3">
-                  <div className="text-blue-800">
-                    選択済み: {selectedArticles.size}件 / 分析済み: {articles.filter(a => a.processed && a.importance !== null).length}件
+              {/* 記事統計と選択ボタン */}
+              <div className="mb-4 bg-blue-50 rounded-lg p-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-blue-800 space-x-4">
+                    <span>取得済み: {articles.length}件</span>
+                    <span className="text-blue-600">選択済み: {selectedArticles.size}件</span>
+                    <span className="font-semibold">分析済み: {articles.filter(a => a.processed && a.importance !== null).length}件</span>
                   </div>
-                  <button
-                    onClick={handleSelectAll}
-                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                  >
-                    {selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length ? '全解除' : '全選択'}
-                  </button>
+                  {articles.filter(a => a.processed && a.importance !== null).length > 0 && (
+                    <button
+                      onClick={handleSelectAll}
+                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                    >
+                      {selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length ? '全解除' : '全選択'}
+                    </button>
+                  )}
                 </div>
-              )}
+              </div>
 
               {/* 記事一覧 */}
               {loading ? (

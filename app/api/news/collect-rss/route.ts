@@ -75,7 +75,8 @@ export async function POST(request: NextRequest) {
         type: 'RSS',
         active: true,
         ...(sourceId && { id: sourceId })
-      }
+      },
+      take: 3 // 一度に処理するソースを制限
     })
 
     if (rssSources.length === 0) {
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
             'User-Agent': 'Mozilla/5.0 (compatible; BuzzFlow/1.0)',
             'Accept': 'application/rss+xml, application/xml, text/xml, */*',
           },
-          signal: AbortSignal.timeout(30000), // 30秒タイムアウトに延長
+          signal: AbortSignal.timeout(10000), // 10秒タイムアウト
         })
 
         if (!response.ok) {
