@@ -5,17 +5,21 @@ import { prisma } from '@/lib/prisma'
 export async function GET(request: NextRequest) {
   try {
     // テスト用のニュース記事を作成
-    const testSource = await prisma.newsSource.upsert({
-      where: { url: 'https://test.example.com' },
-      update: {},
-      create: {
-        name: 'Test Source',
-        url: 'https://test.example.com',
-        type: 'TEST',
-        category: 'AI',
-        active: true,
-      }
+    let testSource = await prisma.newsSource.findFirst({
+      where: { url: 'https://test.example.com' }
     })
+
+    if (!testSource) {
+      testSource = await prisma.newsSource.create({
+        data: {
+          name: 'Test Source',
+          url: 'https://test.example.com',
+          type: 'TEST',
+          category: 'AI',
+          active: true,
+        }
+      })
+    }
 
     // テスト記事を作成
     const testArticles = [
