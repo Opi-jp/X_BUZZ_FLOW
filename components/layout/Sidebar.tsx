@@ -10,6 +10,7 @@ const navigation = [
   { name: '投稿作成', href: '/create', icon: '✍️' },
   { name: 'スケジュール', href: '/schedule', icon: '📅' },
   { name: '分析', href: '/analytics', icon: '📈' },
+  { name: 'AIニュース', href: '/news', icon: '📰' },
   { name: 'AIパターン', href: '/patterns', icon: '🤖' },
   { name: '設定', href: '/settings', icon: '⚙️' },
 ]

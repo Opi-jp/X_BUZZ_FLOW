@@ -140,3 +140,69 @@ model Session {
   
   @@map("sessions")
 }
+
+// ニュースソース
+model NewsSource {
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  type      String   // RSS, API, SCRAPING
+  category  String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  articles  NewsArticle[]
+  
+  @@map("news_sources")
+}
+
+// ニュース記事
+model NewsArticle {
+  id          String   @id @default(uuid())
+  sourceId    String   @map("source_id")
+  title       String
+  summary     String   @db.Text
+  content     String   @db.Text
+  url         String   @unique
+  publishedAt DateTime @map("published_at")
+  category    String?
+  importance  Float?   // AIによる重要度スコア
+  processed   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  source      NewsSource @relation(fields: [sourceId], references: [id])
+  newsThreadItems NewsThreadItem[]
+  
+  @@map("news_articles")
+}
+
+// ニューススレッド
+model NewsThread {
+  id           String   @id @default(uuid())
+  date         DateTime
+  mainTweetId  String?  @map("main_tweet_id")
+  status       String   @default("DRAFT") // DRAFT, SCHEDULED, POSTING, POSTED
+  totalItems   Int      @map("total_items")
+  createdAt    DateTime @default(now()) @map("created_at")
+  
+  items        NewsThreadItem[]
+  
+  @@map("news_threads")
+}
+
+// ニューススレッドアイテム
+model NewsThreadItem {
+  id            String    @id @default(uuid())
+  threadId      String    @map("thread_id")
+  articleId     String    @map("article_id")
+  rank          Int
+  tweetContent  String    @map("tweet_content")
+  tweetId       String?   @map("tweet_id")
+  parentTweetId String?   @map("parent_tweet_id")
+  postedAt      DateTime? @map("posted_at")
+  
+  thread        NewsThread @relation(fields: [threadId], references: [id])
+  article       NewsArticle @relation(fields: [articleId], references: [id])
+  
+  @@map("news_thread_items")
+}
