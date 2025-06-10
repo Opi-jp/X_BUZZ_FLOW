@@ -63,7 +63,20 @@ function StatCard({ title, value, icon }: { title: string; value: number | strin
 }
 
 export default async function DashboardPage() {
-  const stats = await getStats()
+  let stats
+  try {
+    stats = await getStats()
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error)
+    return (
+      <div className="p-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-800">データの取得中にエラーが発生しました。</p>
+          <p className="text-sm text-red-600 mt-2">{error instanceof Error ? error.message : 'Unknown error'}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>
