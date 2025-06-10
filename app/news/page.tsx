@@ -71,24 +71,30 @@ export default function NewsPage() {
     }
   }
 
-  const handleCollect = async (type: 'news' | 'twitter' = 'news') => {
+  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' = 'news') => {
     setCollecting(true)
     try {
-      const endpoint = type === 'twitter' ? '/api/news/collect-twitter' : '/api/news/collect'
+      let endpoint = '/api/news/collect'
+      if (type === 'twitter') endpoint = '/api/news/collect-twitter'
+      if (type === 'jp') endpoint = '/api/news/collect-jp'
+      if (type === 'ai-tweets') endpoint = '/api/news/collect-ai-tweets'
+      if (type === 'test') endpoint = '/api/news/test-sources'
+      
       const res = await fetch(endpoint, {
-        method: 'POST',
+        method: type === 'test' ? 'GET' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: type === 'test' ? undefined : JSON.stringify({}),
       })
 
       const data = await res.json()
       
       if (res.ok) {
-        alert(data.message)
+        alert(data.message || `${data.saved || 0}件保存しました`)
         fetchArticles()
         fetchSources()
       } else {
-        alert('収集中にエラーが発生しました')
+        console.error('Collection error:', data)
+        alert(data.error || '収集中にエラーが発生しました')
       }
     } catch (error) {
       console.error('Error collecting news:', error)
@@ -199,27 +205,35 @@ export default function NewsPage() {
               </button>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              <button
+                onClick={() => handleCollect('test')}
+                disabled={collecting}
+                className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400"
+              >
+                {collecting ? '作成中...' : 'テストデータ'}
+              </button>
+              <button
+                onClick={() => handleCollect('ai-tweets')}
+                disabled={collecting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+              >
+                {collecting ? '収集中...' : 'AIツイート'}
+              </button>
               <button
                 onClick={() => handleCollect('news')}
                 disabled={collecting}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                {collecting ? '収集中...' : 'ニュース収集'}
+                {collecting ? '収集中...' : 'NewsAPI'}
               </button>
-              <button
-                onClick={() => handleCollect('twitter')}
-                disabled={collecting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                {collecting ? '収集中...' : 'Twitter収集'}
-              </button>
+              <div className="w-full sm:w-auto flex-1"></div>
               <button
                 onClick={handleAnalyze}
                 disabled={analyzing}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
               >
-                {analyzing ? '分析中...' : 'AI分析実行'}
+                {analyzing ? '分析中...' : 'AI分析'}
               </button>
               <button
                 onClick={handleGenerateThread}

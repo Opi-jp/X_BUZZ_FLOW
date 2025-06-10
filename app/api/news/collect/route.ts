@@ -28,11 +28,15 @@ export async function POST(request: NextRequest) {
     }
 
     // NewsAPIからAI関連ニュースを取得
-    const searchQuery = 'AI OR "artificial intelligence" OR ChatGPT OR "machine learning" OR LLM'
+    const searchQuery = 'AI OR "artificial intelligence" OR ChatGPT OR "machine learning" OR LLM OR OpenAI OR Anthropic'
     const fromDate = new Date()
-    fromDate.setDate(fromDate.getDate() - 1) // 過去24時間
+    fromDate.setDate(fromDate.getDate() - 7) // 過去7日間に拡大
 
-    const newsApiUrl = `${NEWSAPI_URL}?q=${encodeURIComponent(searchQuery)}&from=${fromDate.toISOString()}&sortBy=popularity&language=en&pageSize=50`
+    // NewsAPIの無料プランの制限を考慮
+    const newsApiUrl = `${NEWSAPI_URL}?q=${encodeURIComponent(searchQuery)}&from=${fromDate.toISOString()}&sortBy=publishedAt&pageSize=20`
+
+    console.log('NewsAPI URL:', newsApiUrl)
+    console.log('NewsAPI Key exists:', !!NEWSAPI_KEY)
 
     const response = await fetch(newsApiUrl, {
       headers: {
@@ -41,10 +45,13 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
-      throw new Error(`NewsAPI error: ${response.statusText}`)
+      const errorText = await response.text()
+      console.error('NewsAPI response error:', response.status, errorText)
+      throw new Error(`NewsAPI error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
+    console.log('NewsAPI response:', { status: data.status, totalResults: data.totalResults, articles: data.articles?.length })
     const articles = data.articles || []
 
     // 記事を保存

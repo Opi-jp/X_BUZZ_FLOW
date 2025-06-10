@@ -41,10 +41,10 @@ export async function POST(request: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            author: username,
-            searchMode: 'user',
-            maxItems: 10, // 最新10件
-            includeSearchTerms: false,
+            twitterContent: `from:${username} (AI OR ChatGPT OR GPT OR LLM OR "artificial intelligence" OR "machine learning" OR "deep learning" OR Anthropic OR Claude OR OpenAI) -filter:retweets -filter:replies`,
+            maxItems: 20,
+            lang: 'en',
+            'include:nativeretweets': false,
           }),
         })
 
@@ -87,19 +87,11 @@ export async function POST(request: NextRequest) {
 
         if (!tweets) continue
 
-        // AI関連のツイートをフィルタリング（キーワード含む）
-        const aiKeywords = ['AI', 'ChatGPT', 'GPT', 'LLM', 'artificial intelligence', 'machine learning', 'deep learning', 'neural', 'model', 'Anthropic', 'Claude', 'OpenAI']
-        const aiTweets = tweets.filter((tweet: any) => {
-          const text = tweet.text || tweet.full_text || ''
-          return aiKeywords.some(keyword => 
-            text.toLowerCase().includes(keyword.toLowerCase())
-          )
-        })
-
-        totalCollected += aiTweets.length
+        // Kaito APIの検索クエリで既にAI関連ツイートをフィルタリングしているので、そのまま使用
+        totalCollected += tweets.length
 
         // ニュース記事として保存
-        for (const tweet of aiTweets) {
+        for (const tweet of tweets) {
           try {
             const url = `https://twitter.com/${username}/status/${tweet.id}`
             
@@ -112,11 +104,11 @@ export async function POST(request: NextRequest) {
               await prisma.newsArticle.create({
                 data: {
                   sourceId: source.id,
-                  title: `@${username}: ${tweet.text.substring(0, 100)}...`,
-                  summary: tweet.text,
-                  content: tweet.text,
+                  title: `@${username}: ${(tweet.text || tweet.full_text || '').substring(0, 100)}...`,
+                  summary: tweet.text || tweet.full_text || '',
+                  content: tweet.text || tweet.full_text || '',
                   url,
-                  publishedAt: new Date(tweet.created_at),
+                  publishedAt: new Date(tweet.created_at || tweet.createdAt || Date.now()),
                   category: 'Twitter',
                 }
               })
