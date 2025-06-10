@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 
@@ -18,7 +18,7 @@ interface BuzzPost {
   retweetsCount: number
 }
 
-export default function CreatePage() {
+function CreatePageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const refPostId = searchParams.get('refPostId')
@@ -275,5 +275,22 @@ export default function CreatePage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen bg-gray-100">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <div className="flex items-center justify-center h-full">
+            <div>Loading...</div>
+          </div>
+        </main>
+      </div>
+    }>
+      <CreatePageContent />
+    </Suspense>
   )
 }
