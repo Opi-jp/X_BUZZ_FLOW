@@ -168,6 +168,7 @@ model NewsArticle {
   category    String?
   importance  Float?   // AIによる重要度スコア
   processed   Boolean  @default(false)
+  metadata    Json?    @db.Json
   createdAt   DateTime @default(now()) @map("created_at")
   
   source      NewsSource @relation(fields: [sourceId], references: [id])
