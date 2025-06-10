@@ -271,7 +271,24 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
                         {index + 1}
                       </div>
                       <div className="flex-1">
-                        <p className="text-gray-700 whitespace-pre-wrap">{content}</p>
+                        <p className="text-gray-700 whitespace-pre-wrap">
+                          {content.split(/(https?:\/\/[^\s]+)/g).map((part, i) => {
+                            if (part.match(/^https?:\/\//)) {
+                              return (
+                                <a
+                                  key={i}
+                                  href={part}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-500 underline"
+                                >
+                                  {part}
+                                </a>
+                              )
+                            }
+                            return part
+                          })}
+                        </p>
                         <div className="mt-2 flex items-center gap-4 text-gray-400 text-sm">
                           <span>いいね</span>
                           <span>リツイート</span>

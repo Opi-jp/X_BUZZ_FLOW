@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
       rank: index + 1,
       title: article.title,
       japaneseSummary: (article.metadata as any)?.analysis?.japaneseSummary || article.summary,
+      keyPoints: (article.metadata as any)?.analysis?.keyPoints || [],
       sourceName: article.source.name,
       url: article.url,
       importance: article.importance,
@@ -123,6 +124,7 @@ export async function POST(request: NextRequest) {
 ニュース一覧:
 ${articlesData.map(a => `${a.rank}. ${a.title}
    日本語要約: ${a.japaneseSummary}
+   キーポイント: ${a.keyPoints.length > 0 ? a.keyPoints.join(', ') : 'なし'}
    ソース: ${a.sourceName}
    URL: ${a.url}
    重要度: ${a.importance}`).join('\n\n')}
@@ -140,10 +142,12 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
 2. 個別ニュースツイート（各ニュースごと）:
    - 「【${topArticles.length <= 10 ? 'N位' : 'Pick ' + 'N'}】」で始める（Nは順位）
    - 日本語で要約（元が英語の場合は翻訳済みの要約を使用）
-   - 重要ポイントを簡潔に
+   - キーポイントがある場合は、箇条書きで重要ポイントを簡潔にリストする（例: 「・ポイント1 ・ポイント2」）
    - 該当する絵文字を追加
-   - 140文字以内（日本語の場合）
+   - 必ず最後に元記事のURLを含める
+   - URLを含めて140文字以内（日本語の場合、URLは23文字としてカウント）
    - ハッシュタグは使わない
+   - URLの前に「→」または「🔗」を置く
 
 以下のJSON形式で回答してください:
 {
@@ -151,10 +155,12 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
   "newsItems": [
     {
       "rank": 1,
-      "tweetContent": "個別ツイートの内容"
+      "tweetContent": "個別ツイートの内容（URLを含む）"
     }
   ]
-}`
+}
+
+注意: 各ニュースツイートのtweetContentには、必ずそのニュースの元記事URLを含めてください。`
 
     console.log(`Generating thread with ${topArticles.length} articles`)
 
