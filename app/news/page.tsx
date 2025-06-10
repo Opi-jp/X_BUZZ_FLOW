@@ -57,7 +57,7 @@ function NewsPageContent() {
   )
   const [threadLimit, setThreadLimit] = useState(10)
   const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set())
-  const [collectSinceDate, setCollectSinceDate] = useState('')
+  const [collectTargetDate, setCollectTargetDate] = useState('')
   const [analyzingArticles, setAnalyzingArticles] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -145,17 +145,11 @@ function NewsPageContent() {
       
       console.log(`収集タイプ: ${type}, エンドポイント: ${endpoint}`)
       
-      // 日付フィルターを計算
+      // 日付フィルターを設定
       let sinceDate = null
-      if (collectSinceDate === 'today') {
-        sinceDate = new Date()
-        sinceDate.setHours(0, 0, 0, 0)
-      } else if (collectSinceDate === 'yesterday') {
-        sinceDate = new Date()
-        sinceDate.setDate(sinceDate.getDate() - 1)
-      } else if (collectSinceDate === 'week') {
-        sinceDate = new Date()
-        sinceDate.setDate(sinceDate.getDate() - 7)
+      if (collectTargetDate) {
+        // 指定日の00:00:00から収集
+        sinceDate = new Date(collectTargetDate + 'T00:00:00')
       }
       
       const res = await fetch(endpoint, {
@@ -348,17 +342,11 @@ function NewsPageContent() {
   const handleCollectAsync = async () => {
     setCollectingType('async')
     try {
-      // 日付フィルターを計算
+      // 日付フィルターを設定
       let sinceDate = null
-      if (collectSinceDate === 'today') {
-        sinceDate = new Date()
-        sinceDate.setHours(0, 0, 0, 0)
-      } else if (collectSinceDate === 'yesterday') {
-        sinceDate = new Date()
-        sinceDate.setDate(sinceDate.getDate() - 1)
-      } else if (collectSinceDate === 'week') {
-        sinceDate = new Date()
-        sinceDate.setDate(sinceDate.getDate() - 7)
+      if (collectTargetDate) {
+        // 指定日の00:00:00から収集
+        sinceDate = new Date(collectTargetDate + 'T00:00:00')
       }
       
       const res = await fetch('/api/news/collect/start', {
@@ -435,17 +423,23 @@ function NewsPageContent() {
             <div className="flex gap-2 flex-wrap items-center">
               {/* 収集日付フィルター */}
               <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-md">
-                <label className="text-sm text-gray-600">収集対象:</label>
-                <select
+                <label className="text-sm text-gray-600">収集対象日:</label>
+                <input
+                  type="date"
+                  value={collectTargetDate}
+                  onChange={(e) => setCollectTargetDate(e.target.value)}
                   className="text-sm border-0 bg-transparent focus:ring-0"
-                  value={collectSinceDate}
-                  onChange={(e) => setCollectSinceDate(e.target.value)}
-                >
-                  <option value="">全期間</option>
-                  <option value="today">今日のみ</option>
-                  <option value="yesterday">昨日以降</option>
-                  <option value="week">1週間以内</option>
-                </select>
+                  title="指定日以降の記事を収集"
+                />
+                {collectTargetDate && (
+                  <button
+                    onClick={() => setCollectTargetDate('')}
+                    className="text-xs text-gray-500 hover:text-gray-700"
+                    title="日付フィルターをクリア"
+                  >
+                    ✕
+                  </button>
+                )}
               </div>
               
               {/* プライマリアクション：一括収集 */}
