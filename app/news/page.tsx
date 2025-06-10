@@ -30,6 +30,15 @@ interface NewsArticle {
   source: {
     name: string
   }
+  analysis?: {
+    id: string
+    category: string
+    summary: string
+    japaneseSummary: string
+    keyPoints: string[]
+    impact: string
+    analyzedBy: string
+  }
 }
 
 function NewsPageContent() {
@@ -303,6 +312,59 @@ function NewsPageContent() {
     }
   }
 
+  const handleDeleteArticle = async (articleId: string) => {
+    if (!confirm('この記事を削除しますか？')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/news/articles/${articleId}`, {
+        method: 'DELETE',
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert('記事を削除しました')
+        // 記事一覧を再取得
+        fetchArticles()
+      } else {
+        alert(data.error || '削除に失敗しました')
+      }
+    } catch (error) {
+      console.error('Error deleting article:', error)
+      alert('削除中にエラーが発生しました')
+    }
+  }
+
+  const handleCollectAsync = async () => {
+    setCollectingType('async')
+    try {
+      const res = await fetch('/api/news/collect/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'all' }),
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert(`収集を開始しました。\nジョブID: ${data.jobId}\n\n進捗は「設定」画面で確認できます。`)
+        // 5秒後に記事一覧を更新
+        setTimeout(() => {
+          fetchArticles()
+        }, 5000)
+      } else {
+        alert('収集の開始に失敗しました')
+      }
+    } catch (error) {
+      console.error('Error starting async collection:', error)
+      alert('収集の開始中にエラーが発生しました')
+    } finally {
+      setCollectingType(null)
+    }
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
@@ -367,6 +429,14 @@ function NewsPageContent() {
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
               >
                 {collectingType === 'all' ? '収集中...' : '一括収集'}
+              </button>
+              <button
+                onClick={() => handleCollectAsync()}
+                disabled={collectingType !== null}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
+                title="バックグラウンドで収集（タイムアウトしない）"
+              >
+                {collectingType === 'async' ? '開始中...' : '非同期収集'}
               </button>
               <div className="w-full sm:w-auto flex-1"></div>
               <button
@@ -490,7 +560,26 @@ function NewsPageContent() {
                               </span>
                             )}
                           </div>
-                          {article.metadata?.analysis && (
+                          {/* 新しい分析テーブルからデータを表示 */}
+                          {article.analysis && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
+                              <p className="text-gray-700">
+                                {article.analysis.japaneseSummary || article.analysis.summary}
+                              </p>
+                              {article.analysis.keyPoints && article.analysis.keyPoints.length > 0 && (
+                                <ul className="mt-2 list-disc list-inside text-gray-600">
+                                  {article.analysis.keyPoints.map((point: string, index: number) => (
+                                    <li key={index}>{point}</li>
+                                  ))}
+                                </ul>
+                              )}
+                              <div className="mt-2 text-xs text-gray-500">
+                                分析方法: {article.analysis.analyzedBy === 'claude' ? 'Claude AI' : article.analysis.analyzedBy}
+                              </div>
+                            </div>
+                          )}
+                          {/* 古いmetadata.analysisからもデータを表示（移行期間中） */}
+                          {!article.analysis && article.metadata?.analysis && (
                             <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
                               <p className="text-gray-700">
                                 {article.metadata.analysis.japaneseSummary || article.metadata.analysis.summary}
@@ -514,6 +603,13 @@ function NewsPageContent() {
                           >
                             記事を読む
                           </a>
+                          <button
+                            onClick={() => handleDeleteArticle(article.id)}
+                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                            title="記事を削除"
+                          >
+                            削除
+                          </button>
                           <button
                             onClick={() => handleAnalyzeSingle(article.id)}
                             disabled={analyzingArticles.has(article.id)}

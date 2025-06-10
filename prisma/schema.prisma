@@ -139,6 +139,7 @@ model NewsArticle {
   metadata        Json?            @db.Json
   source          NewsSource       @relation(fields: [sourceId], references: [id])
   newsThreadItems NewsThreadItem[]
+  analysis        NewsAnalysis?
 
   @@map("news_articles")
 }
@@ -170,6 +171,45 @@ model NewsThreadItem {
   thread        NewsThread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
 
   @@map("news_thread_items")
+}
+
+// 分析結果専用テーブル
+model NewsAnalysis {
+  id              String      @id @default(uuid())
+  articleId       String      @unique @map("article_id")
+  article         NewsArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  category        String      // 'research', 'product', 'business', 'regulation', 'opinion', 'other'
+  summary         String      @db.Text
+  japaneseSummary String      @map("japanese_summary") @db.Text
+  keyPoints       String[]    @map("key_points") // PostgreSQL配列型
+  impact          String      // 'low', 'medium', 'high'
+  analyzedBy      String      @map("analyzed_by") // 'claude', 'basic', 'manual'
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([impact])
+  @@map("news_analyses")
+}
+
+// ジョブキューテーブル  
+model JobQueue {
+  id        String   @id @default(uuid())
+  type      String   // 'collect_rss', 'collect_twitter', 'analyze_batch', 'generate_thread'
+  status    String   @default("pending") // 'pending', 'processing', 'completed', 'failed'
+  payload   Json?    @db.Json // ジョブの入力パラメータ
+  result    Json?    @db.Json // ジョブの実行結果
+  error     String?  @db.Text
+  progress  Int      @default(0) // 進捗率 0-100
+  total     Int?     // 総アイテム数
+  startedAt DateTime? @map("started_at")
+  endedAt   DateTime? @map("ended_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([type, status])
+  @@index([createdAt])
+  @@map("job_queue")
 }
 
 enum PostStatus {

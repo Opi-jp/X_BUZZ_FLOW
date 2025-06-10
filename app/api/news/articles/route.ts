@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           source: true,
+          analysis: true, // 分析結果も含める
         },
         orderBy: { publishedAt: 'desc' },
         take: limit,

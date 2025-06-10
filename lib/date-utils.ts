@@ -73,15 +73,19 @@ export function formatDateTimeJST(date: Date | string): string {
  */
 export function getDateRangeForDB(dateStr: string): { start: Date, end: Date } {
   const [year, month, day] = dateStr.split('-').map(Number)
-  // JSTの00:00:00
-  const startJST = new Date(year, month - 1, day, 0, 0, 0, 0)
-  // JSTの23:59:59
-  const endJST = new Date(year, month - 1, day, 23, 59, 59, 999)
   
-  // UTCに変換してDBクエリで使用
+  // UTCで日付を作成してから、JSTの時間分を調整
+  // YYYY-MM-DD 00:00:00 JST = YYYY-MM-(DD-1) 15:00:00 UTC
+  const startUTC = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0))
+  startUTC.setUTCHours(startUTC.getUTCHours() - 9) // JST to UTC (-9 hours)
+  
+  // YYYY-MM-DD 23:59:59.999 JST = YYYY-MM-DD 14:59:59.999 UTC
+  const endUTC = new Date(Date.UTC(year, month - 1, day, 23, 59, 59, 999))
+  endUTC.setUTCHours(endUTC.getUTCHours() - 9) // JST to UTC (-9 hours)
+  
   return {
-    start: toUTC(startJST),
-    end: toUTC(endJST)
+    start: startUTC,
+    end: endUTC
   }
 }
 

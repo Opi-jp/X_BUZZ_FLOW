@@ -164,25 +164,39 @@ URL: ${article.url}
       }
     }
 
-    // データベース更新
-    const updatedArticle = await prisma.newsArticle.update({
-      where: { id: article.id },
-      data: {
-        importance: analysis.importance,
-        processed: true,
-        metadata: {
-          ...(article.metadata as any || {}),
-          analysis: {
-            category: analysis.category,
-            summary: analysis.summary,
-            japaneseSummary: analysis.japaneseSummary,
-            keyPoints: analysis.keyPoints,
-            impact: analysis.impact,
-            analyzedAt: new Date().toISOString(),
-          }
-        }
-      },
-    })
+    // データベース更新（トランザクションで一貫性を保証）
+    const [updatedArticle, analysisRecord] = await prisma.$transaction([
+      // 記事を更新
+      prisma.newsArticle.update({
+        where: { id: article.id },
+        data: {
+          importance: analysis.importance,
+          processed: true,
+          category: analysis.category,
+        },
+      }),
+      // 分析結果を作成または更新
+      prisma.newsAnalysis.upsert({
+        where: { articleId: article.id },
+        create: {
+          articleId: article.id,
+          category: analysis.category,
+          summary: analysis.summary,
+          japaneseSummary: analysis.japaneseSummary,
+          keyPoints: analysis.keyPoints,
+          impact: analysis.impact,
+          analyzedBy: 'claude',
+        },
+        update: {
+          category: analysis.category,
+          summary: analysis.summary,
+          japaneseSummary: analysis.japaneseSummary,
+          keyPoints: analysis.keyPoints,
+          impact: analysis.impact,
+          analyzedBy: 'claude',
+        },
+      }),
+    ])
 
     return {
       articleId: article.id,

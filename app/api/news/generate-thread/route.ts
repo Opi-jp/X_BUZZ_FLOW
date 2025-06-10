@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
       take: Math.max(limit * 2, 50), // より多くの記事から選択できるように
       include: {
         source: true,
+        analysis: true, // 分析結果も含める
       },
     })
 
@@ -109,8 +110,8 @@ export async function POST(request: NextRequest) {
     const articlesData = topArticles.map((article, index) => ({
       rank: index + 1,
       title: article.title,
-      japaneseSummary: (article.metadata as any)?.analysis?.japaneseSummary || article.summary,
-      keyPoints: (article.metadata as any)?.analysis?.keyPoints || [],
+      japaneseSummary: article.analysis?.japaneseSummary || (article.metadata as any)?.analysis?.japaneseSummary || article.summary,
+      keyPoints: article.analysis?.keyPoints || (article.metadata as any)?.analysis?.keyPoints || [],
       sourceName: article.source.name,
       url: article.url,
       importance: article.importance,
@@ -230,7 +231,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           let tweetContent = item.tweetContent
           
           // キーポイントがある場合、箇条書きが含まれているか確認
-          const keyPoints = (article.metadata as any)?.analysis?.keyPoints || []
+          const keyPoints = article.analysis?.keyPoints || (article.metadata as any)?.analysis?.keyPoints || []
           
           if (keyPoints.length > 0 && !tweetContent.includes('・')) {
             // キーポイントを箇条書きで追加（既に日本語のはず）
