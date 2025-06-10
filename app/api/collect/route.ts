@@ -10,20 +10,31 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { query, minLikes = 1000, minRetweets = 100, maxItems = 20 } = body
 
+    // クエリが「from:」で始まる場合はユーザータイムライン取得
+    const isUserTimeline = query.startsWith('from:')
+    const requestBody = isUserTimeline ? {
+      author: query.replace('from:', ''),
+      searchMode: 'user',
+      minimumFavorites: minLikes,
+      minimumRetweets: minRetweets,
+      maxItems,
+      includeSearchTerms: false,
+    } : {
+      searchTerms: [query],
+      searchMode: 'live',
+      minimumFavorites: minLikes,
+      minimumRetweets: minRetweets,
+      maxItems,
+      includeSearchTerms: false,
+    }
+
     // Kaito API呼び出し
     const response = await fetch(`${KAITO_API_URL}?token=${process.env.KAITO_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        searchTerms: [query],
-        searchMode: 'live',
-        minimumFavorites: minLikes,
-        minimumRetweets: minRetweets,
-        maxItems,
-        includeSearchTerms: false,
-      }),
+      body: JSON.stringify(requestBody),
     })
 
     if (!response.ok) {

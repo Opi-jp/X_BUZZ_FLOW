@@ -2,11 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Sidebar from '@/components/layout/Sidebar'
 
 export default function CollectPage() {
   const router = useRouter()
+  const { data: session } = useSession()
+  const [collectType, setCollectType] = useState<'search' | 'user'>('search')
   const [query, setQuery] = useState('')
+  const [username, setUsername] = useState('')
   const [minLikes, setMinLikes] = useState('1000')
   const [minRetweets, setMinRetweets] = useState('100')
   const [maxItems, setMaxItems] = useState('20')
@@ -23,7 +27,7 @@ export default function CollectPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          query,
+          query: collectType === 'search' ? query : `from:${username || session?.user?.name}`,
           minLikes: parseInt(minLikes),
           minRetweets: parseInt(minRetweets),
           maxItems: parseInt(maxItems),
@@ -60,19 +64,66 @@ export default function CollectPage() {
 
           <form onSubmit={handleCollect} className="bg-white rounded-lg shadow p-6">
             <div className="space-y-4">
+              {/* 収集タイプ選択 */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  検索クエリ
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  収集タイプ
                 </label>
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="例: AI, ChatGPT, プログラミング"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
+                <div className="flex gap-4">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="search"
+                      checked={collectType === 'search'}
+                      onChange={(e) => setCollectType('search')}
+                      className="mr-2"
+                    />
+                    キーワード検索
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      value="user"
+                      checked={collectType === 'user'}
+                      onChange={(e) => setCollectType('user')}
+                      className="mr-2"
+                    />
+                    ユーザータイムライン
+                  </label>
+                </div>
               </div>
+
+              {collectType === 'search' ? (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    検索クエリ
+                  </label>
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="例: AI, ChatGPT, プログラミング"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    ユーザー名（@なし）
+                  </label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder={session?.user?.name || "username"}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    空欄の場合は自分のアカウントから収集します
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
@@ -147,6 +198,11 @@ export default function CollectPage() {
               <strong>注意:</strong> Kaito API（Apify）の利用には制限があります。
               過度な使用は避けてください。
             </p>
+            {collectType === 'user' && (
+              <p className="text-amber-700 text-sm mt-2">
+                <strong>ヒント:</strong> 自分のアカウントから収集すると、過去の投稿データを分析に活用できます。
+              </p>
+            )}
           </div>
         </div>
       </main>
