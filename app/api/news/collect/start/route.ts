@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { type = 'all' } = body
+    const { type = 'all', sinceDate } = body
 
     // ジョブを作成
     const job = await prisma.jobQueue.create({
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     })
 
     // バックグラウンドで収集を開始（即座にレスポンスを返す）
-    startCollection(job.id, type).catch(error => {
+    startCollection(job.id, type, sinceDate).catch(error => {
       console.error('Collection error:', error)
       prisma.jobQueue.update({
         where: { id: job.id },
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 }
 
 // バックグラウンドで収集を実行
-async function startCollection(jobId: string, type: string) {
+async function startCollection(jobId: string, type: string, sinceDate?: string) {
   // ジョブを開始
   await prisma.jobQueue.update({
     where: { id: jobId },
@@ -61,7 +61,7 @@ async function startCollection(jobId: string, type: string) {
 
   try {
     if (type === 'rss' || type === 'all') {
-      const rssResult = await collectRSS(jobId)
+      const rssResult = await collectRSS(jobId, sinceDate)
       totalSaved += rssResult.saved
       totalSkipped += rssResult.skipped
       results.push({ type: 'rss', ...rssResult })
@@ -92,7 +92,7 @@ async function startCollection(jobId: string, type: string) {
 }
 
 // RSS収集（改良版）
-async function collectRSS(jobId: string) {
+async function collectRSS(jobId: string, sinceDate?: string) {
   const rssSources = await prisma.newsSource.findMany({
     where: {
       type: 'RSS',
@@ -151,6 +151,18 @@ async function collectRSS(jobId: string) {
               .replace(/&[^;]+;/g, ' ')
               .trim()
 
+            // 公開日時を解析
+            const publishedAt = new Date()
+            
+            // 日付フィルタリング
+            if (sinceDate) {
+              const sinceDateObj = new Date(sinceDate)
+              if (publishedAt < sinceDateObj) {
+                skipped++
+                continue // 指定日より古い記事はスキップ
+              }
+            }
+
             await prisma.newsArticle.create({
               data: {
                 sourceId: source.id,
@@ -158,7 +170,7 @@ async function collectRSS(jobId: string) {
                 summary: cleanDescription.substring(0, 1000),
                 content: cleanDescription,
                 url: link,
-                publishedAt: new Date(),
+                publishedAt,
                 category: source.category,
               }
             })

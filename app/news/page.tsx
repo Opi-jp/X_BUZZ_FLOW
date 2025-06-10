@@ -57,6 +57,7 @@ function NewsPageContent() {
   )
   const [threadLimit, setThreadLimit] = useState(10)
   const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set())
+  const [collectSinceDate, setCollectSinceDate] = useState('')
   const [analyzingArticles, setAnalyzingArticles] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -144,10 +145,25 @@ function NewsPageContent() {
       
       console.log(`収集タイプ: ${type}, エンドポイント: ${endpoint}`)
       
+      // 日付フィルターを計算
+      let sinceDate = null
+      if (collectSinceDate === 'today') {
+        sinceDate = new Date()
+        sinceDate.setHours(0, 0, 0, 0)
+      } else if (collectSinceDate === 'yesterday') {
+        sinceDate = new Date()
+        sinceDate.setDate(sinceDate.getDate() - 1)
+      } else if (collectSinceDate === 'week') {
+        sinceDate = new Date()
+        sinceDate.setDate(sinceDate.getDate() - 7)
+      }
+      
       const res = await fetch(endpoint, {
         method: type === 'test' ? 'GET' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: type === 'test' ? undefined : JSON.stringify({}),
+        body: type === 'test' ? undefined : JSON.stringify({ 
+          sinceDate: sinceDate?.toISOString() 
+        }),
       })
 
       const data = await res.json()
@@ -332,10 +348,26 @@ function NewsPageContent() {
   const handleCollectAsync = async () => {
     setCollectingType('async')
     try {
+      // 日付フィルターを計算
+      let sinceDate = null
+      if (collectSinceDate === 'today') {
+        sinceDate = new Date()
+        sinceDate.setHours(0, 0, 0, 0)
+      } else if (collectSinceDate === 'yesterday') {
+        sinceDate = new Date()
+        sinceDate.setDate(sinceDate.getDate() - 1)
+      } else if (collectSinceDate === 'week') {
+        sinceDate = new Date()
+        sinceDate.setDate(sinceDate.getDate() - 7)
+      }
+      
       const res = await fetch('/api/news/collect/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'all' }),
+        body: JSON.stringify({ 
+          type: 'all',
+          sinceDate: sinceDate?.toISOString()
+        }),
       })
 
       const data = await res.json()
@@ -400,7 +432,22 @@ function NewsPageContent() {
               </button>
             </div>
 
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap items-center">
+              {/* 収集日付フィルター */}
+              <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-md">
+                <label className="text-sm text-gray-600">収集対象:</label>
+                <select
+                  className="text-sm border-0 bg-transparent focus:ring-0"
+                  value={collectSinceDate}
+                  onChange={(e) => setCollectSinceDate(e.target.value)}
+                >
+                  <option value="">全期間</option>
+                  <option value="today">今日のみ</option>
+                  <option value="yesterday">昨日以降</option>
+                  <option value="week">1週間以内</option>
+                </select>
+              </div>
+              
               {/* プライマリアクション：一括収集 */}
               <button
                 onClick={() => handleCollect('all')}

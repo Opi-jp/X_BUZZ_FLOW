@@ -67,7 +67,7 @@ function parseRSS(xml: string) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { sourceId, limit = 10 } = body
+    const { sourceId, limit = 10, sinceDate } = body
 
     // RSSソースを取得
     const rssSources = await prisma.newsSource.findMany({
@@ -153,6 +153,18 @@ export async function POST(request: NextRequest) {
                 .replace(/&quot;/g, '"')
                 .trim()
 
+              // 公開日時を解析
+              const publishedAt = item.pubDate ? new Date(item.pubDate) : new Date()
+              
+              // 日付フィルタリング
+              if (sinceDate) {
+                const sinceDateObj = new Date(sinceDate)
+                if (publishedAt < sinceDateObj) {
+                  skippedCount++
+                  continue // 指定日より古い記事はスキップ
+                }
+              }
+
               await prisma.newsArticle.create({
                 data: {
                   sourceId: source.id,
@@ -160,7 +172,7 @@ export async function POST(request: NextRequest) {
                   summary: cleanDescription.substring(0, 1000),
                   content: cleanDescription,
                   url: item.link,
-                  publishedAt: item.pubDate ? new Date(item.pubDate) : new Date(),
+                  publishedAt,
                   category: source.category,
                 }
               })
