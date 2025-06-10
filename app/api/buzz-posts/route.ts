@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching buzz posts:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch buzz posts' },
+      { error: 'Failed to fetch buzz posts', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

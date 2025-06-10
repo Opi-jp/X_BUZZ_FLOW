@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error generating content:', error)
     return NextResponse.json(
-      { error: 'Failed to generate content' },
+      { error: 'Failed to generate content', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

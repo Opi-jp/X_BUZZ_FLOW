@@ -1,0 +1,82 @@
+### BuzzFlow API テスト
+
+# ベースURL
+@baseUrl = http://localhost:3000/api
+
+### 1. バズ投稿一覧取得
+GET {{baseUrl}}/buzz-posts
+
+### 2. バズ投稿作成（テスト用）
+POST {{baseUrl}}/buzz-posts
+Content-Type: application/json
+
+{
+  "postId": "test123456789",
+  "content": "これはテスト投稿です。APIのテストのために作成しました。",
+  "authorUsername": "testuser",
+  "authorId": "user123",
+  "likesCount": 1500,
+  "retweetsCount": 300,
+  "repliesCount": 50,
+  "impressionsCount": 10000,
+  "postedAt": "2025-01-10T10:00:00Z",
+  "url": "https://twitter.com/testuser/status/test123456789",
+  "theme": "テスト",
+  "language": "ja",
+  "mediaUrls": [],
+  "hashtags": ["テスト", "API"]
+}
+
+### 3. AIパターン作成
+POST {{baseUrl}}/ai-patterns
+Content-Type: application/json
+
+{
+  "name": "異常値導入型",
+  "description": "日常的な話題に異常な数値を導入してインパクトを与えるパターン",
+  "promptTemplate": "以下の投稿を参考に、異常な数値や状況を含む投稿を生成してください：\n\n{{content}}\n\n重要：数値は現実離れしていても構いません。",
+  "exampleOutput": "朝起きたら枕元に現金300万円が置いてあった。\n\n誰がどうやって入ってきたのか全くわからない。\n\n警察に届けるべきか、それとも..."
+}
+
+### 4. AIパターン一覧取得
+GET {{baseUrl}}/ai-patterns
+
+### 5. AI文案生成
+POST {{baseUrl}}/generate
+Content-Type: application/json
+
+{
+  "customPrompt": "バズりそうな日常系の投稿を1つ生成してください。140文字以内で。"
+}
+
+### 6. 予定投稿作成
+POST {{baseUrl}}/scheduled-posts
+Content-Type: application/json
+
+{
+  "content": "明日の朝に投稿予定のテストツイートです。",
+  "scheduledTime": "2025-01-11T09:00:00Z",
+  "postType": "NEW",
+  "templateType": "日常系",
+  "aiGenerated": false
+}
+
+### 7. 予定投稿一覧取得
+GET {{baseUrl}}/scheduled-posts
+
+### 8. 分析データ作成（テスト用）
+POST {{baseUrl}}/analytics
+Content-Type: application/json
+
+{
+  "scheduledPostId": "ここに実際のIDを入れる",
+  "impressions": 5000,
+  "likes": 250,
+  "retweets": 50,
+  "replies": 10,
+  "profileClicks": 5,
+  "linkClicks": 3
+}
+
+### 9. 分析サマリー取得（過去7日間）
+GET {{baseUrl}}/analytics?days=7
