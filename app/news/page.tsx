@@ -178,19 +178,19 @@ function NewsPageContent() {
     }
   }
 
-  const handleAnalyze = async () => {
+  const handleAnalyze = async (forceReanalyze = false) => {
     setAnalyzing(true)
     try {
       const res = await fetch('/api/news/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ batchAnalyze: true }),
+        body: JSON.stringify({ batchAnalyze: true, forceReanalyze }),
       })
 
       const data = await res.json()
       
       if (res.ok) {
-        alert(`${data.analyzed}件の記事を分析しました`)
+        alert(`${data.analyzed}件の記事を${forceReanalyze ? '再' : ''}分析しました`)
         fetchArticles()
       } else {
         alert('分析中にエラーが発生しました')
@@ -340,12 +340,25 @@ function NewsPageContent() {
               </button>
               <div className="w-full sm:w-auto flex-1"></div>
               <button
-                onClick={handleAnalyze}
-                disabled={analyzing || articles.filter(a => !a.processed).length === 0}
+                onClick={() => {
+                  const unprocessedCount = articles.filter(a => !a.processed).length
+                  if (unprocessedCount === 0 && articles.length > 0) {
+                    if (confirm('すべての記事が分析済みです。再分析しますか？')) {
+                      handleAnalyze(true)
+                    }
+                  } else {
+                    handleAnalyze(false)
+                  }
+                }}
+                disabled={analyzing || articles.length === 0}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
-                title={`未処理の記事: ${articles.filter(a => !a.processed).length}件`}
+                title={`全記事: ${articles.length}件 (未処理: ${articles.filter(a => !a.processed).length}件)`}
               >
-                {analyzing ? '分析中...' : `AI分析 (${articles.filter(a => !a.processed).length}件)`}
+                {analyzing ? '分析中...' : 
+                 articles.filter(a => !a.processed).length > 0 ? 
+                   `AI分析 (${articles.filter(a => !a.processed).length}件)` : 
+                   `再分析 (${articles.length}件)`
+                }
               </button>
               <div className="flex items-center gap-2">
                 <select

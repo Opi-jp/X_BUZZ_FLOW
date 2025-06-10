@@ -23,15 +23,17 @@ export async function POST(request: NextRequest) {
     }
     
     const body = await request.json()
-    const { articleId, batchAnalyze } = body
+    const { articleId, batchAnalyze, forceReanalyze = false } = body
 
     if (batchAnalyze) {
-      // 未処理の記事を最大10件取得
+      // 未処理または強制再分析の記事を最大10件取得
+      const where = forceReanalyze ? {} : {
+        processed: false,
+        importance: null,
+      }
+      
       const articles = await prisma.newsArticle.findMany({
-        where: {
-          processed: false,
-          importance: null,
-        },
+        where,
         orderBy: {
           publishedAt: 'desc',
         },
