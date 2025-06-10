@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const { query, minLikes = 1000, minRetweets = 100, maxItems = 20 } = body
 
     // Kaito API呼び出し
-    const response = await fetch(KAITO_API_URL, {
+    const response = await fetch(`${KAITO_API_URL}?token=${process.env.KAITO_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,9 +24,6 @@ export async function POST(request: NextRequest) {
         maxItems,
         includeSearchTerms: false,
       }),
-      params: {
-        token: process.env.KAITO_API_KEY,
-      },
     })
 
     if (!response.ok) {
