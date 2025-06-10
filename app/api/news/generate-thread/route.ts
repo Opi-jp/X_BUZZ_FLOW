@@ -78,7 +78,8 @@ export async function POST(request: NextRequest) {
           importance: { not: null }
         },
         include: {
-          source: true
+          source: true,
+          analysis: true, // analysisも含める
         }
       })
     }
