@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma'
 // GET: 特定の予定投稿取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const post = await prisma.scheduledPost.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         refPost: true,
         analytics: {
@@ -34,8 +35,9 @@ export async function GET(
 // PATCH: 予定投稿更新
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const body = await request.json()
     const {
@@ -56,7 +58,7 @@ export async function PATCH(
     if (templateType !== undefined) updateData.templateType = templateType
 
     const post = await prisma.scheduledPost.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       include: {
         refPost: true,
@@ -76,11 +78,12 @@ export async function PATCH(
 // DELETE: 予定投稿削除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     await prisma.scheduledPost.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return new NextResponse(null, { status: 204 })

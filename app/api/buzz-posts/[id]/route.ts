@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma'
 // GET: 特定のバズ投稿取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const post = await prisma.buzzPost.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         scheduledPosts: {
           orderBy: { createdAt: 'desc' },
@@ -33,11 +34,12 @@ export async function GET(
 // DELETE: バズ投稿削除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     await prisma.buzzPost.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return new NextResponse(null, { status: 204 })
