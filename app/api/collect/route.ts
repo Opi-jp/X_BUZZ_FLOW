@@ -8,7 +8,12 @@ const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { query, minLikes = 1000, minRetweets = 100, maxItems = 20 } = body
+    const { query, minLikes = 1000, minRetweets = 100, maxItems = 20, date } = body
+
+    // 日付フィルター（指定された場合）
+    const dateFilter = date ? {
+      since: `${date}_00:00:00_UTC`
+    } : {}
 
     // クエリが「from:」で始まる場合はユーザータイムライン取得
     const isUserTimeline = query.startsWith('from:')
@@ -18,7 +23,8 @@ export async function POST(request: NextRequest) {
       lang: 'ja',
       'filter:replies': false,
       'filter:nativeretweets': false,
-      queryType: 'Latest'
+      queryType: 'Latest',
+      ...dateFilter
     } : {
       twitterContent: `${query} min_faves:${minLikes} min_retweets:${minRetweets} -is:retweet lang:ja`,
       maxItems,
@@ -26,7 +32,8 @@ export async function POST(request: NextRequest) {
       'filter:replies': false,
       'filter:blue_verified': false,
       'filter:nativeretweets': false,
-      queryType: 'Latest'
+      queryType: 'Latest',
+      ...dateFilter
     }
 
     console.log('Kaito API Request:', requestBody)

@@ -41,6 +41,11 @@ export async function POST(request: NextRequest) {
 
     console.log('Searching for AI tweets with query:', searchQuery)
 
+    // 今日の日付を取得（JST）
+    const today = new Date()
+    today.setHours(today.getHours() + 9) // JSTに変換
+    const todayStr = today.toISOString().split('T')[0]
+
     const response = await fetch(kaitoUrl, {
       method: 'POST',
       headers: {
@@ -53,7 +58,8 @@ export async function POST(request: NextRequest) {
         'filter:replies': false,
         'filter:blue_verified': false,
         'filter:nativeretweets': false,
-        queryType: 'Latest'
+        queryType: 'Latest',
+        since: `${todayStr}_00:00:00_UTC`
       }),
     })
 
