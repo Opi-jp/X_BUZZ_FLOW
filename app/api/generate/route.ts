@@ -7,6 +7,12 @@ const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
 // POST: Claude APIを使って投稿文案生成
 export async function POST(request: NextRequest) {
   try {
+    // APIキーの確認
+    if (!process.env.CLAUDE_API_KEY) {
+      console.error('CLAUDE_API_KEY is not set')
+      throw new Error('Claude API key is not configured')
+    }
+    
     const body = await request.json()
     const { refPostId, patternId, customPrompt } = body
 
@@ -54,7 +60,9 @@ export async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
-      throw new Error(`Claude API error: ${response.statusText}`)
+      const errorData = await response.text()
+      console.error('Claude API error:', response.status, errorData)
+      throw new Error(`Claude API error: ${response.status} - ${errorData}`)
     }
 
     const data = await response.json()
