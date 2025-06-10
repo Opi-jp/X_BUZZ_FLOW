@@ -6,10 +6,12 @@ import { usePathname } from 'next/navigation'
 const navigation = [
   { name: 'ダッシュボード', href: '/dashboard', icon: '📊' },
   { name: 'バズ投稿', href: '/posts', icon: '🔥' },
+  { name: '投稿収集', href: '/collect', icon: '🔍' },
   { name: '投稿作成', href: '/create', icon: '✍️' },
   { name: 'スケジュール', href: '/schedule', icon: '📅' },
   { name: '分析', href: '/analytics', icon: '📈' },
   { name: 'AIパターン', href: '/patterns', icon: '🤖' },
+  { name: '設定', href: '/settings', icon: '⚙️' },
 ]
 
 import dynamic from 'next/dynamic'
