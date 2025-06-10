@@ -1,6 +1,6 @@
 # BuzzFlow 作業記録
 
-## 2025/01/10 作業内容
+## 2025/01/10 作業内容 (続き)
 
 ### 完了タスク
 
@@ -137,3 +137,93 @@
 - Supabaseは Transaction pooler を使用（Vercel環境に最適）
 - DIRECT_URLも設定してマイグレーション実行可能に
 - Prismaのoutputを`app/generated/prisma`に設定
+
+## 2025/01/10 追加作業
+
+### OAuth認証の修正
+- Twitter OAuth認証のループ問題を解決
+- SessionProviderを追加
+- 認証ミドルウェアを実装
+- ログイン成功を確認
+
+### 過去ツイートインポート機能
+- Kaito APIを使用した過去ツイート収集
+- 投稿収集ページに「ユーザータイムライン」モード追加
+- 自分のアカウントの過去投稿を分析データとして保存
+
+### 分析ページの機能強化
+- 各メトリクス（インプレッション、いいね、RT、エンゲージメント率）でソート機能追加
+- 昇順/降順の切り替え
+- ソート状態の視覚的表示
+
+### バズ投稿の日別管理
+- 日別表示モードを追加
+- 収集日（JST）でグループ化
+- 日付セレクターで特定日のみ表示
+- 各日付の投稿数表示
+
+### AIニュース自動ツリー投稿システム（Phase 1完了）
+
+#### データベース設計
+- NewsSource: ニュースソース管理
+- NewsArticle: 収集した記事
+- NewsThread: ツリー投稿管理
+- NewsThreadItem: 各ツイート
+
+#### 登録済みニュースソース
+**企業ブログ・公式**
+- Anthropic Blog (RSS)
+- OpenAI Blog (RSS)
+- Google AI Blog (RSS)
+- DeepMind Blog (RSS)
+- Microsoft AI Blog (RSS)
+- Hugging Face Blog (RSS)
+
+**研究機関**
+- MIT News - AI (RSS)
+- Stanford AI Lab (RSS)
+
+**テックメディア**
+- TechCrunch AI (RSS)
+- VentureBeat AI (RSS)
+- The Verge AI (RSS)
+- AI新聞 (RSS)
+
+**Twitterアカウント**
+- @AnthropicAI
+- @OpenAI
+- @GoogleAI
+- @ycombinator
+- @sama (Sam Altman)
+- @DarioAmodei
+- @ylecun (Yann LeCun)
+- @AndrewYNg
+
+#### 実装済み機能
+- NewsAPI連携（AIニュース収集）
+- Twitter収集（Kaito API使用）
+- ニュース管理UI（/news）
+- ソース管理機能
+- 日付フィルター
+
+#### 環境変数追加
+- NEWSAPI_KEY: NewsAPIのAPIキー
+
+### 今後の実装予定
+
+#### Phase 2 (次の作業)
+- Claude APIで記事分析・重要度スコアリング
+- 英語記事の日本語翻訳
+- ツイート文の自動生成
+- RT形式での投稿準備
+
+#### Phase 3
+- ツリー形式での自動投稿
+- スケジューラー実装
+- エラーハンドリング
+
+### 技術的な解決事項
+- Supabase pgbouncerとの互換性問題を解決
+- Next.js 15の動的ルートパラメータ型エラーを修正
+- useSearchParamsのSuspense boundary要件に対応
+- Vercelビルドエラーの解決
