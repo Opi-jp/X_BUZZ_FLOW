@@ -71,7 +71,7 @@ export default function NewsPage() {
     }
   }
 
-  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' = 'news') => {
+  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' = 'news') => {
     setCollecting(true)
     try {
       let endpoint = '/api/news/collect'
@@ -80,6 +80,7 @@ export default function NewsPage() {
       if (type === 'ai-tweets') endpoint = '/api/news/collect-ai-tweets'
       if (type === 'test') endpoint = '/api/news/test-sources'
       if (type === 'rss') endpoint = '/api/news/collect-rss'
+      if (type === 'all') endpoint = '/api/news/collect-all'
       
       const res = await fetch(endpoint, {
         method: type === 'test' ? 'GET' : 'POST',
@@ -95,7 +96,10 @@ export default function NewsPage() {
         fetchSources()
       } else {
         console.error('Collection error:', data)
-        alert(data.error || '収集中にエラーが発生しました')
+        const errorMessage = data.details 
+          ? `${data.error}\n\n詳細: ${data.details}`
+          : data.error || '収集中にエラーが発生しました'
+        alert(errorMessage)
       }
     } catch (error) {
       console.error('Error collecting news:', error)
@@ -209,18 +213,25 @@ export default function NewsPage() {
 
             <div className="flex gap-2 flex-wrap">
               <button
+                onClick={() => handleCollect('all')}
+                disabled={collecting}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+              >
+                {collecting ? '収集中...' : '一括収集'}
+              </button>
+              <button
                 onClick={() => handleCollect('rss')}
                 disabled={collecting}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                {collecting ? '収集中...' : 'RSS収集'}
+                {collecting ? '収集中...' : 'RSS'}
               </button>
               <button
                 onClick={() => handleCollect('ai-tweets')}
                 disabled={collecting}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
               >
-                {collecting ? '収集中...' : 'AIツイート'}
+                {collecting ? '収集中...' : 'Twitter'}
               </button>
               <button
                 onClick={() => handleCollect('test')}

@@ -4,6 +4,17 @@ import { prisma } from '@/lib/prisma'
 // POST: Twitterアカウントからニュースを収集
 export async function POST(request: NextRequest) {
   try {
+    // Kaito APIキーの確認
+    if (!process.env.KAITO_API_KEY) {
+      console.error('KAITO_API_KEY is not set')
+      return NextResponse.json(
+        { 
+          error: 'Kaito API key is not configured',
+          details: 'KAITO_API_KEY環境変数が設定されていません'
+        },
+        { status: 500 }
+      )
+    }
     const body = await request.json()
     const { sourceId } = body
 
@@ -49,7 +60,18 @@ export async function POST(request: NextRequest) {
         })
 
         if (!response.ok) {
-          console.error(`Kaito API error for ${username}:`, response.statusText)
+          const errorText = await response.text()
+          console.error(`Kaito API error for ${username}:`, response.status, errorText)
+          
+          if (response.status === 401 || response.status === 403) {
+            return NextResponse.json(
+              { 
+                error: 'Kaito API authentication failed',
+                details: 'APIキーが無効です'
+              },
+              { status: 401 }
+            )
+          }
           continue
         }
 
@@ -132,7 +154,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error collecting Twitter news:', error)
     return NextResponse.json(
-      { error: 'Failed to collect Twitter news' },
+      { 
+        error: 'Failed to collect Twitter news',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

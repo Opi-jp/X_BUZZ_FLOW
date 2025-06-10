@@ -8,6 +8,17 @@ const NEWSAPI_URL = 'https://newsapi.org/v2/everything'
 // POST: ニュース収集
 export async function POST(request: NextRequest) {
   try {
+    // APIキーの確認
+    if (!NEWSAPI_KEY) {
+      console.error('NEWSAPI_KEY is not set')
+      return NextResponse.json(
+        { 
+          error: 'NewsAPI key is not configured',
+          details: 'NEWSAPI_KEY環境変数が設定されていません'
+        },
+        { status: 500 }
+      )
+    }
     const body = await request.json()
     const { sourceId } = body
 
@@ -47,6 +58,34 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorText = await response.text()
       console.error('NewsAPI response error:', response.status, errorText)
+      
+      // NewsAPIの一般的なエラーをチェック
+      if (response.status === 401) {
+        return NextResponse.json(
+          { 
+            error: 'NewsAPI authentication failed',
+            details: 'APIキーが無効です'
+          },
+          { status: 401 }
+        )
+      } else if (response.status === 429) {
+        return NextResponse.json(
+          { 
+            error: 'NewsAPI rate limit exceeded',
+            details: 'レート制限に達しました。後で再試行してください'
+          },
+          { status: 429 }
+        )
+      } else if (response.status === 426) {
+        return NextResponse.json(
+          { 
+            error: 'NewsAPI plan limitation',
+            details: '無料プランではこの機能は利用できません'
+          },
+          { status: 426 }
+        )
+      }
+      
       throw new Error(`NewsAPI error: ${response.status} - ${errorText}`)
     }
 
@@ -97,7 +136,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error collecting news:', error)
     return NextResponse.json(
-      { error: 'Failed to collect news' },
+      { 
+        error: 'Failed to collect news',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
