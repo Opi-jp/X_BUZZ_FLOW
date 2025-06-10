@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import Sidebar from '@/components/layout/Sidebar'
 
 interface ScheduledPost {
@@ -19,9 +20,11 @@ interface ScheduledPost {
 }
 
 export default function SchedulePage() {
+  const { data: session } = useSession()
   const [posts, setPosts] = useState<ScheduledPost[]>([])
   const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState<string>('')
+  const [posting, setPosting] = useState<string | null>(null)
 
   useEffect(() => {
     fetchScheduledPosts()
@@ -72,6 +75,36 @@ export default function SchedulePage() {
       }
     } catch (error) {
       console.error('Error deleting post:', error)
+    }
+  }
+
+  const postNow = async (id: string) => {
+    if (!session) {
+      alert('投稿するにはログインが必要です')
+      return
+    }
+
+    setPosting(id)
+    try {
+      const res = await fetch('/api/post-tweet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduledPostId: id }),
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        alert(`投稿しました！\n${data.url}`)
+        fetchScheduledPosts()
+      } else {
+        alert(`エラー: ${data.error}`)
+      }
+    } catch (error) {
+      console.error('Error posting tweet:', error)
+      alert('投稿中にエラーが発生しました')
+    } finally {
+      setPosting(null)
     }
   }
 
@@ -212,12 +245,21 @@ export default function SchedulePage() {
                         </>
                       )}
                       {post.status === 'SCHEDULED' && (
-                        <button
-                          onClick={() => updatePostStatus(post.id, 'DRAFT')}
-                          className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
-                        >
-                          下書きに戻す
-                        </button>
+                        <>
+                          <button
+                            onClick={() => postNow(post.id)}
+                            disabled={posting === post.id}
+                            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm disabled:bg-gray-400"
+                          >
+                            {posting === post.id ? '投稿中...' : '今すぐ投稿'}
+                          </button>
+                          <button
+                            onClick={() => updatePostStatus(post.id, 'DRAFT')}
+                            className="px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 text-sm"
+                          >
+                            下書きに戻す
+                          </button>
+                        </>
                       )}
                       <button
                         onClick={() => deletePost(post.id)}

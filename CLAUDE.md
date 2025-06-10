@@ -107,10 +107,28 @@
    - パターンの作成・管理
    - 使用回数・成功率表示
 
+### X (Twitter) OAuth実装
+
+- NextAuth.jsを使用したOAuth 2.0認証
+- ユーザー情報とアクセストークンをDBに保存
+- twitter-api-v2を使用した投稿機能
+- スケジュール画面から直接投稿可能
+
+### 必要な設定
+
+1. Twitter Developer Portalでアプリ作成
+2. OAuth 2.0を有効化
+3. Callback URL設定:
+   - 開発: http://localhost:3000/api/auth/callback/twitter
+   - 本番: https://your-domain/api/auth/callback/twitter
+4. 環境変数設定:
+   - TWITTER_CLIENT_ID
+   - TWITTER_CLIENT_SECRET
+
 ### 次のステップ
 
-1. ChromaDB接続設定とベクトル検索実装
-2. 実際のX投稿機能の実装
+1. Twitter Developer設定の完了
+2. ChromaDB接続設定とベクトル検索実装
 3. 定期実行ジョブの設定
 4. 本番環境でのテスト
 

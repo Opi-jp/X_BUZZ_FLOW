@@ -12,6 +12,12 @@ const navigation = [
   { name: 'AIパターン', href: '/patterns', icon: '🤖' },
 ]
 
+import dynamic from 'next/dynamic'
+
+const AuthButton = dynamic(() => import('@/components/auth/AuthButton'), {
+  ssr: false,
+})
+
 export default function Sidebar() {
   const pathname = usePathname()
 
@@ -41,6 +47,9 @@ export default function Sidebar() {
           )
         })}
       </nav>
+      <div className="px-6 py-4 border-t border-gray-800">
+        <AuthButton />
+      </div>
     </div>
   )
 }
