@@ -34,7 +34,7 @@ export default function NewsPage() {
   const [sources, setSources] = useState<NewsSource[]>([])
   const [articles, setArticles] = useState<NewsArticle[]>([])
   const [loading, setLoading] = useState(false)
-  const [collecting, setCollecting] = useState(false)
+  const [collectingType, setCollectingType] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [selectedDate, setSelectedDate] = useState('')
@@ -71,8 +71,8 @@ export default function NewsPage() {
     }
   }
 
-  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' = 'news') => {
-    setCollecting(true)
+  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' | 'simple' = 'news') => {
+    setCollectingType(type)
     try {
       let endpoint = ''
       switch (type) {
@@ -96,6 +96,9 @@ export default function NewsPage() {
           break
         case 'all':
           endpoint = '/api/news/collect-all'
+          break
+        case 'simple':
+          endpoint = '/api/news/collect-simple'
           break
         default:
           alert('不明な収集タイプです')
@@ -151,7 +154,7 @@ export default function NewsPage() {
       console.error('Error collecting news:', error)
       alert('収集中にエラーが発生しました')
     } finally {
-      setCollecting(false)
+      setCollectingType(null)
     }
   }
 
@@ -259,32 +262,39 @@ export default function NewsPage() {
 
             <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => handleCollect('all')}
-                disabled={collecting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                {collecting ? '収集中...' : '一括収集'}
-              </button>
-              <button
-                onClick={() => handleCollect('rss')}
-                disabled={collecting}
+                onClick={() => handleCollect('simple')}
+                disabled={collectingType !== null}
                 className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
               >
-                {collecting ? '収集中...' : 'RSS'}
-              </button>
-              <button
-                onClick={() => handleCollect('ai-tweets')}
-                disabled={collecting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                {collecting ? '収集中...' : 'Twitter'}
+                {collectingType === 'simple' ? '収集中...' : 'サンプル収集'}
               </button>
               <button
                 onClick={() => handleCollect('test')}
-                disabled={collecting}
+                disabled={collectingType !== null}
                 className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400"
               >
-                {collecting ? '作成中...' : 'テスト'}
+                {collectingType === 'test' ? '作成中...' : 'テスト'}
+              </button>
+              <button
+                onClick={() => handleCollect('rss')}
+                disabled={collectingType !== null}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400"
+              >
+                {collectingType === 'rss' ? '収集中...' : 'RSS'}
+              </button>
+              <button
+                onClick={() => handleCollect('ai-tweets')}
+                disabled={collectingType !== null}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+              >
+                {collectingType === 'ai-tweets' ? '収集中...' : 'Twitter'}
+              </button>
+              <button
+                onClick={() => handleCollect('all')}
+                disabled={collectingType !== null}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+              >
+                {collectingType === 'all' ? '収集中...' : '一括収集'}
               </button>
               <div className="w-full sm:w-auto flex-1"></div>
               <button

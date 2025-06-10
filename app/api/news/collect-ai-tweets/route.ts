@@ -41,6 +41,9 @@ export async function POST(request: NextRequest) {
 
     console.log('Searching for AI tweets with query:', searchQuery)
 
+    console.log('Kaito API URL:', kaitoUrl)
+    console.log('Search query:', searchQuery)
+    
     const response = await fetch(kaitoUrl, {
       method: 'POST',
       headers: {
