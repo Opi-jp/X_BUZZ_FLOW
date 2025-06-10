@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Sidebar from '@/components/layout/Sidebar'
 
 interface BuzzPost {
   id: string
@@ -99,10 +98,7 @@ export default function PostsPage() {
     : posts
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
+    <div className="p-8">
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-900">バズ投稿一覧</h1>
             <p className="mt-1 text-sm text-gray-600">
@@ -233,8 +229,6 @@ export default function PostsPage() {
               )}
             </>
           )}
-        </div>
-      </main>
     </div>
   )
 }
