@@ -2,14 +2,25 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getTwitterClient } from '@/lib/twitter'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 
 // POST: スレッドをTwitterに投稿
 export async function POST(request: NextRequest) {
   try {
     // セッション確認
-    const session = await getServerSession(authOptions)
-    if (!session?.accessToken) {
+    const session = await getServerSession()
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Twitter認証が必要です' },
+        { status: 401 }
+      )
+    }
+
+    // ユーザー情報を取得
+    const user = await prisma.user.findFirst({
+      where: { email: session.user.email },
+    })
+
+    if (!user?.accessToken) {
       return NextResponse.json(
         { error: 'Twitter認証が必要です' },
         { status: 401 }
@@ -51,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Twitter APIクライアント初期化
-    const client = getTwitterClient(session.accessToken)
+    const client = getTwitterClient(user.accessToken)
 
     // ツイートIDを保存する配列
     const tweetIds: string[] = []
@@ -92,9 +103,9 @@ export async function POST(request: NextRequest) {
           status: 'posted',
           postedAt: new Date(),
           metadata: {
-            ...thread.metadata,
+            ...(thread.metadata as object || {}),
             tweetIds,
-            postedBy: session.user?.email,
+            postedBy: user.email,
           },
         },
       })
@@ -102,7 +113,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         tweetIds,
-        threadUrl: `https://twitter.com/${session.user?.name}/status/${tweetIds[0]}`,
+        threadUrl: `https://twitter.com/${user.username}/status/${tweetIds[0]}`,
       })
     } catch (twitterError: any) {
       console.error('Twitter API error:', twitterError)
@@ -114,7 +125,7 @@ export async function POST(request: NextRequest) {
           data: {
             status: 'failed',
             metadata: {
-              ...thread.metadata,
+              ...(thread.metadata as object || {}),
               partialTweetIds: tweetIds,
               error: twitterError.message || 'Unknown error',
             },

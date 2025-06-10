@@ -26,7 +26,7 @@ interface NewsThread {
   metadata?: any
 }
 
-export default function EditThreadPage({ params }: { params: { id: string } }) {
+export default function EditThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const [thread, setThread] = useState<NewsThread | null>(null)
   const [editedItems, setEditedItems] = useState<{ [key: string]: string }>({})
@@ -35,13 +35,17 @@ export default function EditThreadPage({ params }: { params: { id: string } }) {
   const [posting, setPosting] = useState(false)
 
   useEffect(() => {
-    fetchThread()
-  }, [params.id])
+    const fetchData = async () => {
+      const resolvedParams = await params
+      await fetchThread(resolvedParams.id)
+    }
+    fetchData()
+  }, [params])
 
-  const fetchThread = async () => {
+  const fetchThread = async (threadId: string) => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/news/threads/${params.id}`)
+      const res = await fetch(`/api/news/threads/${threadId}`)
       if (res.ok) {
         const data = await res.json()
         setThread(data)
@@ -88,7 +92,8 @@ export default function EditThreadPage({ params }: { params: { id: string } }) {
         content: editedItems[item.id] || item.content
       }))
 
-      const res = await fetch(`/api/news/threads/${params.id}`, {
+      const resolvedParams = await params
+      const res = await fetch(`/api/news/threads/${resolvedParams.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: updates }),
@@ -96,7 +101,7 @@ export default function EditThreadPage({ params }: { params: { id: string } }) {
 
       if (res.ok) {
         alert('保存しました')
-        fetchThread()
+        fetchThread(resolvedParams.id)
       } else {
         alert('保存に失敗しました')
       }
@@ -129,7 +134,7 @@ export default function EditThreadPage({ params }: { params: { id: string } }) {
       const res = await fetch('/api/news/post-thread', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ threadId: params.id }),
+        body: JSON.stringify({ threadId: (await params).id }),
       })
 
       const data = await res.json()
