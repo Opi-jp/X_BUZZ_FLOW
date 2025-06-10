@@ -167,7 +167,7 @@ model NewsThreadItem {
   metadata      Json?        @db.Json
   position      Int
   article       NewsArticle? @relation(fields: [articleId], references: [id])
-  thread        NewsThread   @relation(fields: [threadId], references: [id])
+  thread        NewsThread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
 
   @@map("news_thread_items")
 }

@@ -110,7 +110,11 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting thread:', error)
     return NextResponse.json(
-      { error: 'Failed to delete thread' },
+      { 
+        error: 'Failed to delete thread',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        code: (error as any).code
+      },
       { status: 500 }
     )
   }

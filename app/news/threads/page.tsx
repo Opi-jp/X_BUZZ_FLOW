@@ -127,7 +127,9 @@ export default function ThreadsPage() {
         fetchThreads()
       } else {
         const data = await res.json()
-        alert(data.error || 'スレッド削除中にエラーが発生しました')
+        console.error('Delete error:', data)
+        const errorMessage = data.details ? `${data.error}\n\n詳細: ${data.details}` : (data.error || 'スレッド削除中にエラーが発生しました')
+        alert(errorMessage)
       }
     } catch (error) {
       console.error('Error deleting thread:', error)
