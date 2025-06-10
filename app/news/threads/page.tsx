@@ -114,15 +114,42 @@ export default function ThreadsPage() {
     }
   }
 
+  const handleDeleteThread = async (threadId: string) => {
+    if (!confirm('このスレッドを削除しますか？この操作は取り消せません。')) return
+
+    try {
+      const res = await fetch(`/api/news/threads/${threadId}`, {
+        method: 'DELETE',
+      })
+
+      if (res.ok) {
+        alert('スレッドを削除しました')
+        fetchThreads()
+      } else {
+        const data = await res.json()
+        alert(data.error || 'スレッド削除中にエラーが発生しました')
+      }
+    } catch (error) {
+      console.error('Error deleting thread:', error)
+      alert('スレッド削除中にエラーが発生しました')
+    }
+  }
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ja-JP', {
+    const date = new Date(dateString)
+    // 日付と時刻を分けて表示
+    const dateStr = date.toLocaleDateString('ja-JP', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
+      timeZone: 'Asia/Tokyo'
+    })
+    const timeStr = date.toLocaleTimeString('ja-JP', {
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'Asia/Tokyo'
     })
+    return `${dateStr} ${timeStr}`
   }
 
   const getStatusColor = (status: string) => {
@@ -222,6 +249,12 @@ export default function ThreadsPage() {
                               className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm disabled:bg-gray-400"
                             >
                               {posting ? '投稿中...' : '投稿'}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteThread(thread.id)}
+                              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                            >
+                              削除
                             </button>
                           </>
                         )}

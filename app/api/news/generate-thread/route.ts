@@ -141,13 +141,14 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
 
 2. 個別ニュースツイート（各ニュースごと）:
    - 「【${topArticles.length <= 10 ? 'N位' : 'Pick ' + 'N'}】」で始める（Nは順位）
-   - 日本語で要約（元が英語の場合は翻訳済みの要約を使用）
-   - キーポイントがある場合は、箇条書きで重要ポイントを簡潔にリストする（例: 「・ポイント1 ・ポイント2」）
+   - タイトルを簡潔に説明
+   - **必須**: キーポイントがある場合は、必ず箇条書きで含める。形式: 改行して「・ポイント1
+・ポイント2」のように表示
+   - キーポイントがない場合は、要約を詳しく説明
    - 該当する絵文字を追加
-   - 必ず最後に元記事のURLを含める
+   - **必須**: 最後に元記事のURLを含める。形式: 「🔗 URL」
    - URLを含めて140文字以内（日本語の場合、URLは23文字としてカウント）
    - ハッシュタグは使わない
-   - URLの前に「→」または「🔗」を置く
 
 以下のJSON形式で回答してください:
 {
@@ -155,12 +156,16 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
   "newsItems": [
     {
       "rank": 1,
-      "tweetContent": "個別ツイートの内容（URLを含む）"
+      "tweetContent": "【ランク】タイトル説明\n・キーポイント1\n・キーポイント2\n🔗 https://example.com"
     }
   ]
 }
 
-注意: 各ニュースツイートのtweetContentには、必ずそのニュースの元記事URLを含めてください。`
+**ツイート作成のルール**:
+1. キーポイントがある場合は必ず箇条書きで含める
+2. 箇条書きは「・」で始め、改行で区切る
+3. URLは必ず「🔗 」の後に置く
+4. 各ツイートはURLを含めて140文字以内`
 
     console.log(`Generating thread with ${topArticles.length} articles`)
 
@@ -200,15 +205,63 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
       const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : generationText
       const parsed = JSON.parse(jsonStr)
       
-      // 生成結果とarticle情報をマージ
+      // 生成結果とarticle情報をマージ（URLが含まれていない場合は追加）
       generation = {
         mainTweet: parsed.mainTweet,
-        newsItems: parsed.newsItems.map((item: any) => ({
-          articleId: topArticles[item.rank - 1].id,
-          rank: item.rank,
-          tweetContent: item.tweetContent,
-          originalUrl: topArticles[item.rank - 1].url,
-        })),
+        newsItems: parsed.newsItems.map((item: any) => {
+          const article = topArticles[item.rank - 1]
+          let tweetContent = item.tweetContent
+          
+          // キーポイントがある場合、箇条書きが含まれているか確認
+          const keyPoints = (article.metadata as any)?.analysis?.keyPoints || []
+          if (keyPoints.length > 0 && !tweetContent.includes('・')) {
+            // キーポイントを箇条書きで追加
+            const bulletPoints = keyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
+            const titleMatch = tweetContent.match(/【[^】]+】(.+?)(?:\n|$)/)
+            if (titleMatch) {
+              // タイトルの後にキーポイントを挿入
+              const titlePart = titleMatch[0]
+              const restPart = tweetContent.substring(titlePart.length)
+              tweetContent = titlePart + '\n' + bulletPoints + restPart
+            }
+          }
+          
+          // URLが含まれていない場合は追加
+          if (!tweetContent.includes(article.url) && !tweetContent.includes('http')) {
+            // 既存のURLパターンを削除（念のため）
+            tweetContent = tweetContent.replace(/\s*(→|🔗)\s*https?:\/\/[^\s]+$/g, '')
+            // URLを追加（文字数制限を考慮）
+            const urlPart = `\n🔗 ${article.url}`
+            const maxLength = 140 - 23 // TwitterのURL短縮を考慮
+            if (tweetContent.length + urlPart.length - article.url.length + 23 > 140) {
+              // 文字数オーバーの場合は本文を短縮
+              const overLength = tweetContent.length + urlPart.length - article.url.length + 23 - 140
+              // 箇条書きがある場合はそれを優先して残す
+              if (tweetContent.includes('・')) {
+                const lines = tweetContent.split('\n')
+                // 最後の行から削除
+                while (lines.length > 1 && overLength > 0) {
+                  const lastLine = lines[lines.length - 1]
+                  if (!lastLine.includes('・')) {
+                    lines.pop()
+                    break
+                  }
+                }
+                tweetContent = lines.join('\n')
+              } else {
+                tweetContent = tweetContent.substring(0, tweetContent.length - overLength - 3) + '...'
+              }
+            }
+            tweetContent += urlPart
+          }
+          
+          return {
+            articleId: article.id,
+            rank: item.rank,
+            tweetContent: tweetContent,
+            originalUrl: article.url,
+          }
+        }),
       }
     } catch (parseError) {
       console.error('Failed to parse Claude response:', generationText)
