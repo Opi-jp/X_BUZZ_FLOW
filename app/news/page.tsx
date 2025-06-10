@@ -74,13 +74,35 @@ export default function NewsPage() {
   const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' = 'news') => {
     setCollecting(true)
     try {
-      let endpoint = '/api/news/collect'
-      if (type === 'twitter') endpoint = '/api/news/collect-twitter'
-      if (type === 'jp') endpoint = '/api/news/collect-jp'
-      if (type === 'ai-tweets') endpoint = '/api/news/collect-ai-tweets'
-      if (type === 'test') endpoint = '/api/news/test-sources'
-      if (type === 'rss') endpoint = '/api/news/collect-rss'
-      if (type === 'all') endpoint = '/api/news/collect-all'
+      let endpoint = ''
+      switch (type) {
+        case 'news':
+          endpoint = '/api/news/collect'
+          break
+        case 'twitter':
+          endpoint = '/api/news/collect-twitter'
+          break
+        case 'jp':
+          endpoint = '/api/news/collect-jp'
+          break
+        case 'ai-tweets':
+          endpoint = '/api/news/collect-ai-tweets'
+          break
+        case 'test':
+          endpoint = '/api/news/test-sources'
+          break
+        case 'rss':
+          endpoint = '/api/news/collect-rss'
+          break
+        case 'all':
+          endpoint = '/api/news/collect-all'
+          break
+        default:
+          alert('不明な収集タイプです')
+          return
+      }
+      
+      console.log(`収集タイプ: ${type}, エンドポイント: ${endpoint}`)
       
       const res = await fetch(endpoint, {
         method: type === 'test' ? 'GET' : 'POST',
@@ -91,14 +113,38 @@ export default function NewsPage() {
       const data = await res.json()
       
       if (res.ok) {
-        alert(data.message || `${data.saved || 0}件保存しました`)
+        let message = data.message || `${data.saved || 0}件保存しました`
+        
+        // collect-allの詳細結果を表示
+        if (type === 'all' && data.results) {
+          const details = []
+          if (data.results.rss) {
+            details.push(`RSS: ${data.results.rss.saved}件保存${data.results.rss.error ? ' (エラー: ' + data.results.rss.error + ')' : ''}`)
+          }
+          if (data.results.aiTweets) {
+            details.push(`Twitter: ${data.results.aiTweets.saved}件保存${data.results.aiTweets.error ? ' (エラー: ' + data.results.aiTweets.error + ')' : ''}`)
+          }
+          if (details.length > 0) {
+            message += '\n\n詳細:\n' + details.join('\n')
+          }
+        }
+        
+        alert(message)
         fetchArticles()
         fetchSources()
       } else {
         console.error('Collection error:', data)
-        const errorMessage = data.details 
-          ? `${data.error}\n\n詳細: ${data.details}`
-          : data.error || '収集中にエラーが発生しました'
+        let errorMessage = data.error || '収集中にエラーが発生しました'
+        
+        if (data.details) {
+          errorMessage += '\n\n詳細: ' + data.details
+        }
+        
+        // APIキーエラーの場合は設定を促す
+        if (res.status === 500 && data.details?.includes('環境変数が設定されていません')) {
+          errorMessage += '\n\n環境変数を設定してください。'
+        }
+        
         alert(errorMessage)
       }
     } catch (error) {

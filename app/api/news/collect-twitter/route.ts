@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         // 実行結果を取得（ポーリング）
         let tweets = null
         let retries = 0
-        const maxRetries = 20
+        const maxRetries = 15 // 15秒に短縮
 
         while (retries < maxRetries) {
           await new Promise(resolve => setTimeout(resolve, 1000))

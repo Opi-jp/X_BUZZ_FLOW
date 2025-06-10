@@ -11,11 +11,15 @@ export async function POST(request: NextRequest) {
 
     // 1. RSS収集
     try {
-      const rssResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/news/collect-rss`, {
+      // 内部APIを直接呼び出す代わりに、コードを直接実行
+      console.log('Executing RSS collection...')
+      const { POST: collectRSS } = await import('../collect-rss/route')
+      const rssRequest = new NextRequest('http://localhost:3000/api/news/collect-rss', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       })
+      const rssResponse = await collectRSS(rssRequest)
       
       if (rssResponse.ok) {
         const rssData = await rssResponse.json()
@@ -33,11 +37,15 @@ export async function POST(request: NextRequest) {
 
     // 2. AIツイート収集
     try {
-      const tweetResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/news/collect-ai-tweets`, {
+      // 内部APIを直接呼び出す代わりに、コードを直接実行
+      console.log('Executing Twitter collection...')
+      const { POST: collectAITweets } = await import('../collect-ai-tweets/route')
+      const tweetRequest = new NextRequest('http://localhost:3000/api/news/collect-ai-tweets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       })
+      const tweetResponse = await collectAITweets(tweetRequest)
       
       if (tweetResponse.ok) {
         const tweetData = await tweetResponse.json()

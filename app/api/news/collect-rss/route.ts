@@ -1,24 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// 簡易的なRSSパーサー
+// 改良されたRSSパーサー
 function parseRSS(xml: string) {
   const items: any[] = []
-  const itemMatches = xml.match(/<item>[\s\S]*?<\/item>/g) || []
+  
+  // RSS 2.0 形式のアイテムを取得
+  let itemMatches = xml.match(/<item>[\s\S]*?<\/item>/g) || []
+  
+  // Atom 形式もサポート
+  if (itemMatches.length === 0) {
+    itemMatches = xml.match(/<entry>[\s\S]*?<\/entry>/g) || []
+  }
   
   for (const item of itemMatches) {
-    const title = item.match(/<title>(.*?)<\/title>/)?.[1]?.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1') || ''
-    const link = item.match(/<link>(.*?)<\/link>/)?.[1]?.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1') || ''
-    const description = item.match(/<description>(.*?)<\/description>/)?.[1]?.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1') || ''
-    const pubDate = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || ''
-    const guid = item.match(/<guid.*?>(.*?)<\/guid>/)?.[1] || link
+    // CDATA処理を改善
+    const extractContent = (tag: string) => {
+      const pattern = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i')
+      const match = item.match(pattern)
+      if (!match) return ''
+      
+      let content = match[1]
+      // CDATAを処理
+      content = content.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+      // HTMLエンティティをデコード
+      content = content
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&nbsp;/g, ' ')
+      
+      return content.trim()
+    }
+    
+    // RSS 2.0 形式
+    let title = extractContent('title')
+    let link = extractContent('link')
+    let description = extractContent('description') || extractContent('summary')
+    let pubDate = extractContent('pubDate') || extractContent('published') || extractContent('updated')
+    
+    // Atom形式の場合
+    if (!link && item.includes('<link')) {
+      const linkMatch = item.match(/<link[^>]*href=["']([^"']+)["'][^>]*\/>/) ||
+                       item.match(/<link[^>]*href=["']([^"']+)["'][^>]*>/)
+      if (linkMatch) link = linkMatch[1]
+    }
+    
+    const guid = extractContent('guid') || extractContent('id') || link
 
     if (title && (link || guid)) {
       items.push({
-        title: title.trim(),
-        link: (link || guid).trim(),
-        description: description.trim(),
-        pubDate: pubDate.trim(),
+        title,
+        link: link || guid,
+        description,
+        pubDate,
       })
     }
   }
@@ -62,8 +99,9 @@ export async function POST(request: NextRequest) {
         const response = await fetch(source.url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; BuzzFlow/1.0)',
+            'Accept': 'application/rss+xml, application/xml, text/xml, */*',
           },
-          signal: AbortSignal.timeout(10000), // 10秒タイムアウト
+          signal: AbortSignal.timeout(30000), // 30秒タイムアウトに延長
         })
 
         if (!response.ok) {

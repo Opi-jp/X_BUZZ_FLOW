@@ -4,6 +4,18 @@ import { prisma } from '@/lib/prisma'
 // POST: AI関連の一般的なツイートを収集
 export async function POST(request: NextRequest) {
   try {
+    // Kaito APIキーの確認
+    if (!process.env.KAITO_API_KEY) {
+      console.error('KAITO_API_KEY is not set')
+      return NextResponse.json(
+        { 
+          error: 'Kaito API key is not configured',
+          details: 'KAITO_API_KEY環境変数が設定されていません'
+        },
+        { status: 500 }
+      )
+    }
+
     // AI Tweetsソースを作成（なければ）
     let aiTweetsSource = await prisma.newsSource.findFirst({
       where: { type: 'TWITTER', name: 'AI Community Tweets' }
@@ -53,7 +65,7 @@ export async function POST(request: NextRequest) {
     // 実行結果を取得（ポーリング）
     let tweets = null
     let retries = 0
-    const maxRetries = 30
+    const maxRetries = 15 // 30秒に短縮
 
     while (retries < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, 2000))
