@@ -47,6 +47,7 @@ function NewsPageContent() {
   )
   const [threadLimit, setThreadLimit] = useState(10)
   const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set())
+  const [analyzingArticles, setAnalyzingArticles] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetchSources()
@@ -203,6 +204,35 @@ function NewsPageContent() {
     }
   }
 
+  const handleAnalyzeSingle = async (articleId: string) => {
+    setAnalyzingArticles(prev => new Set([...prev, articleId]))
+    try {
+      const res = await fetch('/api/news/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId }),
+      })
+
+      const data = await res.json()
+      
+      if (res.ok) {
+        // 記事リストを更新
+        fetchArticles()
+      } else {
+        alert(`記事の分析中にエラーが発生しました: ${data.error || '不明なエラー'}`)
+      }
+    } catch (error) {
+      console.error('Error analyzing article:', error)
+      alert('記事の分析中にエラーが発生しました')
+    } finally {
+      setAnalyzingArticles(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(articleId)
+        return newSet
+      })
+    }
+  }
+
   const handleGenerateThread = async () => {
     setGenerating(true)
     try {
@@ -343,7 +373,7 @@ function NewsPageContent() {
                 onClick={() => {
                   const unprocessedCount = articles.filter(a => !a.processed).length
                   if (unprocessedCount === 0 && articles.length > 0) {
-                    if (confirm('すべての記事が分析済みです。再分析しますか？')) {
+                    if (confirm('すべての記事が分析済みです。全記事を再分析しますか？')) {
                       handleAnalyze(true)
                     }
                   } else {
@@ -354,10 +384,10 @@ function NewsPageContent() {
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
                 title={`全記事: ${articles.length}件 (未処理: ${articles.filter(a => !a.processed).length}件)`}
               >
-                {analyzing ? '分析中...' : 
+                {analyzing ? '一括分析中...' : 
                  articles.filter(a => !a.processed).length > 0 ? 
-                   `AI分析 (${articles.filter(a => !a.processed).length}件)` : 
-                   `再分析 (${articles.length}件)`
+                   `未処理を一括分析 (${articles.filter(a => !a.processed).length}件)` : 
+                   `全記事を再分析 (${articles.length}件)`
                 }
               </button>
               <div className="flex items-center gap-2">
@@ -475,14 +505,34 @@ function NewsPageContent() {
                             </div>
                           )}
                         </div>
-                        <a
-                          href={article.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="ml-4 px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm"
-                        >
-                          記事を読む
-                        </a>
+                        <div className="ml-4 flex flex-col gap-2">
+                          <a
+                            href={article.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm text-center"
+                          >
+                            記事を読む
+                          </a>
+                          <button
+                            onClick={() => handleAnalyzeSingle(article.id)}
+                            disabled={analyzingArticles.has(article.id)}
+                            className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                              analyzingArticles.has(article.id)
+                                ? 'bg-gray-400 text-white cursor-not-allowed'
+                                : article.processed
+                                ? 'bg-orange-600 text-white hover:bg-orange-700'
+                                : 'bg-purple-600 text-white hover:bg-purple-700'
+                            }`}
+                            title={article.processed ? '再分析する' : 'この記事を分析する'}
+                          >
+                            {analyzingArticles.has(article.id) 
+                              ? '分析中...' 
+                              : article.processed 
+                              ? '再分析' 
+                              : '分析'}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
