@@ -236,7 +236,9 @@ function NewsPageContent() {
         // スレッド管理画面へ遷移
         router.push('/news/threads')
       } else {
-        alert(data.error || 'スレッド生成中にエラーが発生しました')
+        console.error('Thread generation failed:', data)
+        const errorMessage = data.details ? `${data.error}\n\n詳細: ${data.details}` : (data.error || 'スレッド生成中にエラーが発生しました')
+        alert(errorMessage)
       }
     } catch (error) {
       console.error('Error generating thread:', error)

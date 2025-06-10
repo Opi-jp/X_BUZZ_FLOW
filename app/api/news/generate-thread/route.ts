@@ -30,6 +30,15 @@ export async function POST(request: NextRequest) {
     const endDate = date ? new Date(date) : new Date()
     const startDate = new Date(endDate.getTime() - (timeRange * 60 * 60 * 1000))
 
+    console.log('Generating thread with params:', {
+      date,
+      limit,
+      timeRange,
+      requiredArticleIds,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString()
+    })
+
     const articles = await prisma.newsArticle.findMany({
       where: {
         processed: true,
@@ -48,7 +57,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    console.log(`Found ${articles.length} analyzed articles`)
+
     if (articles.length === 0) {
+      console.error('No analyzed articles found for the specified date range')
       return NextResponse.json(
         { error: 'No analyzed articles found for the specified date' },
         { status: 404 }
@@ -143,6 +155,8 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
     }
   ]
 }`
+
+    console.log(`Generating thread with ${topArticles.length} articles`)
 
     // Claude API呼び出し
     const response = await fetch(CLAUDE_API_URL, {
@@ -247,6 +261,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
     })
   } catch (error) {
     console.error('Error generating thread:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json(
       { error: 'Failed to generate thread', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
