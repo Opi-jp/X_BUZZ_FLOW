@@ -30,9 +30,10 @@ interface NewsThread {
 
 export default function ThreadsPage() {
   const [threads, setThreads] = useState<NewsThread[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [selectedThread, setSelectedThread] = useState<NewsThread | null>(null)
   const [posting, setPosting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -43,10 +44,28 @@ export default function ThreadsPage() {
     setLoading(true)
     try {
       const res = await fetch('/api/news/generate-thread')
+      if (!res.ok) {
+        console.error('Failed to fetch threads:', res.status, res.statusText)
+        const errorData = await res.text()
+        console.error('Error response:', errorData)
+        setError(`スレッドの取得に失敗しました (${res.status})`)
+        setThreads([])
+        return
+      }
       const data = await res.json()
-      setThreads(data)
+      console.log('Fetched threads:', data)
+      if (Array.isArray(data)) {
+        setThreads(data)
+        setError(null)
+      } else {
+        console.error('Invalid response format:', data)
+        setThreads([])
+        setError('不正なレスポンス形式')
+      }
     } catch (error) {
       console.error('Error fetching threads:', error)
+      setError('スレッドの取得中にエラーが発生しました')
+      setThreads([])
     } finally {
       setLoading(false)
     }
@@ -141,7 +160,20 @@ export default function ThreadsPage() {
           {/* スレッド一覧 */}
           {loading ? (
             <div className="text-center py-8">読み込み中...</div>
-          ) : threads.length === 0 ? (
+          ) : error ? (
+            <div className="bg-red-50 rounded-lg shadow p-8 text-center">
+              <p className="text-red-600 mb-4">エラー: {error}</p>
+              <button
+                onClick={() => {
+                  setError(null)
+                  fetchThreads()
+                }}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                再読み込み
+              </button>
+            </div>
+          ) : !Array.isArray(threads) || threads.length === 0 ? (
             <div className="bg-white rounded-lg shadow p-8 text-center">
               <p className="text-gray-500 mb-4">スレッドがありません</p>
               <button
@@ -153,7 +185,7 @@ export default function ThreadsPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {threads.map((thread) => (
+              {Array.isArray(threads) && threads.map((thread) => (
                 <div key={thread.id} className="bg-white rounded-lg shadow">
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">

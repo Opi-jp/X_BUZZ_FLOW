@@ -227,7 +227,7 @@ function NewsPageContent() {
         if (data.newsItems && data.newsItems.length > 0) {
           threadContent += `ニュース一覧:\n`
           data.newsItems.forEach((item: any, index: number) => {
-            threadContent += `\n${index + 1}. ${item.tweet}\n`
+            threadContent += `\n${index + 1}. ${item.tweetContent || ''}【※ニュース内容】\n`
           })
         }
         

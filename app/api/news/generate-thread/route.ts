@@ -289,12 +289,11 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    return NextResponse.json(threads)
+    // 確実に配列を返す
+    return NextResponse.json(threads || [])
   } catch (error) {
     console.error('Error fetching threads:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch threads' },
-      { status: 500 }
-    )
+    // エラー時も空の配列を返す
+    return NextResponse.json([], { status: 200 })
   }
 }
