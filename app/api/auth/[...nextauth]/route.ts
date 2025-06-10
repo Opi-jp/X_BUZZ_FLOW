@@ -17,36 +17,23 @@ const handler = NextAuth({
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       version: '2.0',
-      authorization: {
-        url: 'https://twitter.com/i/oauth2/authorize',
-        params: {
-          scope: 'tweet.read tweet.write users.read offline.access',
-        },
-      },
-      token: {
-        url: 'https://api.twitter.com/2/oauth2/token',
-      },
-      userinfo: {
-        url: 'https://api.twitter.com/2/users/me',
-        params: {
-          'user.fields': 'profile_image_url',
-        },
-      },
-      client: {
-        token_endpoint_auth_method: 'client_secret_post',
-      },
-      profile(profile) {
-        console.log('Twitter profile data:', profile)
-        return {
-          id: profile.data.id,
-          name: profile.data.name,
-          username: profile.data.username,
-          email: profile.data.email ?? null,
-          image: profile.data.profile_image_url,
-        }
-      },
     }),
   ],
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  cookies: {
+    sessionToken: {
+      name: `__Secure-next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true,
+      },
+    },
+  },
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log('SignIn callback:', { user, account, profile })
@@ -96,12 +83,22 @@ const handler = NextAuth({
       }
       return session
     },
-    async jwt({ token, account, profile }) {
-      console.log('JWT callback:', { token, account, profile })
-      if (account) {
-        token.sub = account.providerAccountId
+    async jwt({ token, account, user }) {
+      console.log('JWT callback:', { token, account, user })
+      if (account && user) {
+        token.accessToken = account.access_token
+        token.refreshToken = account.refresh_token
+        token.userId = user.id
       }
       return token
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('Redirect callback:', { url, baseUrl })
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     },
   },
   pages: {
