@@ -8,7 +8,7 @@ interface AnalysisResult {
   importance: number
   category: string
   summary: string
-  japaneseSummary?: string
+  japaneseSummary: string // 必須に変更
   keyPoints: string[]
   impact: 'low' | 'medium' | 'high'
 }
@@ -182,16 +182,16 @@ URL: ${article.url}
           articleId: article.id,
           category: analysis.category,
           summary: analysis.summary,
-          japaneseSummary: analysis.japaneseSummary,
-          keyPoints: analysis.keyPoints,
+          japaneseSummary: analysis.japaneseSummary || analysis.summary, // フォールバック
+          keyPoints: analysis.keyPoints || [],
           impact: analysis.impact,
           analyzedBy: 'claude',
         },
         update: {
           category: analysis.category,
           summary: analysis.summary,
-          japaneseSummary: analysis.japaneseSummary,
-          keyPoints: analysis.keyPoints,
+          japaneseSummary: analysis.japaneseSummary || analysis.summary, // フォールバック
+          keyPoints: analysis.keyPoints || [],
           impact: analysis.impact,
           analyzedBy: 'claude',
         },
