@@ -36,6 +36,7 @@ export default function DashboardV2Page() {
   const [collectionSummary, setCollectionSummary] = useState<BatchCollectionSummary | null>(null)
   const [newsHighlights, setNewsHighlights] = useState<any[]>([])
   const [trendingTopics, setTrendingTopics] = useState<string[]>([])
+  const [briefingData, setBriefingData] = useState<any>(null)
 
   useEffect(() => {
     loadDashboard()
@@ -111,18 +112,45 @@ export default function DashboardV2Page() {
   const runBatchCollection = async () => {
     setCollecting(true)
     try {
-      const res = await fetch('/api/batch-collect', {
+      // 統合ブリーフィングを実行
+      const briefingRes = await fetch('/api/briefing/morning', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          includePerplexity: true,
+          includeNews: true,
+          includeBuzz: true
+        })
       })
       
-      if (res.ok) {
-        const data = await res.json()
-        setCollectionSummary(data.summary)
-        setRpCandidates(data.analysis.rpCandidates || [])
-        alert(`収集完了: ${data.summary.totalCollected}件の新規投稿を収集しました`)
+      if (briefingRes.ok) {
+        const briefingData = await briefingRes.json()
+        console.log('Briefing data:', briefingData)
+        
+        // ブリーフィングデータを保存
+        setBriefingData(briefingData.briefing)
+        
+        // Perplexityの結果を表示
+        if (briefingData.briefing?.perplexityInsights) {
+          const trends = briefingData.briefing.perplexityInsights.structuredInsights?.trends || []
+          const personalAngles = briefingData.briefing.perplexityInsights.personalAngles || []
+          
+          alert(`📊 朝のAI秘書ブリーフィング完了！\n\n🔥 今日のトレンド:\n${trends.slice(0, 3).join('\n')}\n\n💡 あなたの独自視点:\n${personalAngles.slice(0, 2).map(a => a.angle).join('\n')}\n\n詳細は画面下部に表示されています。`)
+        }
+        
+        // バッチ収集も実行
+        const res = await fetch('/api/batch-collect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+        
+        if (res.ok) {
+          const data = await res.json()
+          setCollectionSummary(data.summary)
+          setRpCandidates(data.analysis.rpCandidates || [])
+        }
       } else {
-        alert('収集中にエラーが発生しました')
+        alert('ブリーフィング中にエラーが発生しました')
       }
     } catch (error) {
       console.error('Batch collection error:', error)
@@ -174,7 +202,7 @@ export default function DashboardV2Page() {
           disabled={collecting}
           className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 font-medium"
         >
-          {collecting ? 'AI分析中...' : '🚀 ワンクリック朝の準備'}
+          {collecting ? 'AI分析中...' : '🚀 ワンクリック朝の準備（Perplexity統合）'}
         </button>
         
         <button
@@ -347,6 +375,82 @@ export default function DashboardV2Page() {
         </div>
       </div>
 
+      {/* Perplexityブリーフィング結果 */}
+      {briefingData && (
+        <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg shadow p-6">
+          <h2 className="text-2xl font-bold mb-6 text-purple-800">🤖 AI秘書ブリーフィング結果</h2>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Perplexityトレンド */}
+            {briefingData.perplexityInsights && (
+              <div className="bg-white rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3 text-blue-800">🔥 Perplexity最新トレンド</h3>
+                <div className="space-y-2">
+                  {briefingData.perplexityInsights.structuredInsights?.trends?.slice(0, 5).map((trend: string, i: number) => (
+                    <div key={i} className="p-2 bg-blue-50 rounded text-sm">
+                      {i + 1}. {trend}
+                    </div>
+                  ))}
+                </div>
+                
+                {briefingData.perplexityInsights.personalAngles && (
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-purple-800 mb-2">💡 あなたの独自視点</h4>
+                    <div className="space-y-2">
+                      {briefingData.perplexityInsights.personalAngles.map((angle: any, i: number) => (
+                        <div key={i} className="p-3 bg-purple-50 rounded">
+                          <div className="font-medium text-sm">{angle.angle}</div>
+                          <div className="text-xs text-gray-600 mt-1">{angle.hook}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* アクション提案 */}
+            {briefingData.actionableItems && briefingData.actionableItems.length > 0 && (
+              <div className="bg-white rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-3 text-red-800">🎯 今すぐやるべきこと</h3>
+                <div className="space-y-3">
+                  {briefingData.actionableItems.slice(0, 5).map((action: any, i: number) => (
+                    <div key={i} className={`p-3 rounded border-l-4 ${
+                      action.priority === 'high' ? 'bg-red-50 border-red-500' : 
+                      action.priority === 'medium' ? 'bg-yellow-50 border-yellow-500' : 
+                      'bg-gray-50 border-gray-500'
+                    }`}>
+                      <div className="font-medium text-sm">{action.action}</div>
+                      <div className="text-xs text-gray-600 mt-1">{action.details}</div>
+                      <div className="text-xs text-gray-500 mt-1">⏰ {action.timeframe}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* パーソナライズされた要点 */}
+          {briefingData.personalizedTakeaways && briefingData.personalizedTakeaways.length > 0 && (
+            <div className="mt-6 bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-lg mb-3 text-green-800">🎨 あなただけの戦略</h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                {briefingData.personalizedTakeaways.map((takeaway: any, i: number) => (
+                  <div key={i} className="p-3 bg-green-50 rounded">
+                    <h4 className="font-medium text-green-800 mb-2">{takeaway.title}</h4>
+                    <ul className="text-xs space-y-1">
+                      {takeaway.points.map((point: string, j: number) => (
+                        <li key={j} className="text-gray-700">• {point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
       {/* クイックアクション */}
       <div className="mt-8 p-6 bg-gray-100 rounded-lg">
         <h3 className="font-semibold mb-4">⚡ クイックアクション</h3>
