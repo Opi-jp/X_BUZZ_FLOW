@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
     let existingCount = 0
     
     console.log('Processing tweets:', results.length)
+    console.log('DB URL:', process.env.DATABASE_URL?.substring(0, 50) + '...')
     
     for (const tweet of results) {
       try {
@@ -157,15 +158,16 @@ export async function POST(request: NextRequest) {
           console.log(`Tweet ${postId} already exists in DB`)
         } else {
           console.log(`Tweet ${postId} is new, saving...`)
-          const post = await prisma.buzzPost.create({
-            data: {
-              postId: postId,
+          try {
+            const post = await prisma.buzzPost.create({
+              data: {
+                postId: postId,
               content: tweet.text || '',
               authorUsername: tweet.author?.userName || tweet.author?.username || '',
               authorId: tweet.author?.id || '',
-              authorFollowers: tweet.author?.followersCount || null,
-              authorFollowing: tweet.author?.followingCount || null,
-              authorVerified: tweet.author?.verified || false,
+              authorFollowers: tweet.author?.followersCount || 0,
+              authorFollowing: tweet.author?.followingCount || 0,
+              authorVerified: tweet.author?.verified || null,
               likesCount: likes,
               retweetsCount: retweets,
               repliesCount: replies,
@@ -178,10 +180,18 @@ export async function POST(request: NextRequest) {
               hashtags: tweet.entities?.hashtags?.map((h: any) => h.text) || [],
             },
           })
-          savedPosts.push(post)
+            savedPosts.push(post)
+            console.log(`Successfully saved tweet ${postId}`)
+          } catch (error) {
+            console.error('Error saving tweet:', {
+              postId: postId,
+              error: error instanceof Error ? error.message : error,
+              stack: error instanceof Error ? error.stack : undefined
+            })
+          }
         }
       } catch (error) {
-        console.error('Error saving tweet:', error)
+        console.error('Error processing tweet:', error)
       }
     }
 

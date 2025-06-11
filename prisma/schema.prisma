@@ -15,9 +15,6 @@ model BuzzPost {
   content          String
   authorUsername   String          @map("author_username")
   authorId         String          @map("author_id")
-  authorFollowers  Int?            @map("author_followers") // 追加
-  authorFollowing  Int?            @map("author_following") // 追加
-  authorVerified   Boolean?        @map("author_verified") // 追加
   likesCount       Int             @map("likes_count")
   retweetsCount    Int             @map("retweets_count")
   repliesCount     Int             @map("replies_count")
@@ -30,6 +27,9 @@ model BuzzPost {
   mediaUrls        Json            @map("media_urls")
   hashtags         Json
   chromaId         String?         @map("chroma_id")
+  authorFollowers  Int?            @map("author_followers")
+  authorFollowing  Int?            @map("author_following")
+  authorVerified   Boolean?        @map("author_verified")
   scheduledPosts   ScheduledPost[]
 
   @@map("buzz_posts")
@@ -87,18 +87,18 @@ model AiPattern {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  twitterId    String    @unique @map("twitter_id")
-  username     String
-  name         String?
-  email        String?
-  image        String?
-  accessToken  String    @map("access_token")
-  refreshToken String?   @map("refresh_token")
-  tokenSecret  String?   @map("token_secret")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-  sessions     Session[]
+  id             String          @id @default(uuid())
+  twitterId      String          @unique @map("twitter_id")
+  username       String
+  name           String?
+  email          String?
+  image          String?
+  accessToken    String          @map("access_token")
+  refreshToken   String?         @map("refresh_token")
+  tokenSecret    String?         @map("token_secret")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  sessions       Session[]
   watchlistUsers WatchlistUser[]
 
   @@map("users")
@@ -141,9 +141,9 @@ model NewsArticle {
   processed       Boolean          @default(false)
   createdAt       DateTime         @default(now()) @map("created_at")
   metadata        Json?            @db.Json
+  analysis        NewsAnalysis?
   source          NewsSource       @relation(fields: [sourceId], references: [id])
   newsThreadItems NewsThreadItem[]
-  analysis        NewsAnalysis?
 
   @@map("news_articles")
 }
@@ -177,43 +177,111 @@ model NewsThreadItem {
   @@map("news_thread_items")
 }
 
-// 分析結果専用テーブル
 model NewsAnalysis {
   id              String      @id @default(uuid())
   articleId       String      @unique @map("article_id")
-  article         NewsArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  category        String      // 'research', 'product', 'business', 'regulation', 'opinion', 'other'
-  summary         String      @db.Text
-  japaneseSummary String      @map("japanese_summary") @db.Text
-  keyPoints       String[]    @map("key_points") // PostgreSQL配列型
-  impact          String      // 'low', 'medium', 'high'
-  analyzedBy      String      @map("analyzed_by") // 'claude', 'basic', 'manual'
+  category        String
+  summary         String
+  japaneseSummary String      @map("japanese_summary")
+  keyPoints       String[]    @map("key_points")
+  impact          String
+  analyzedBy      String      @map("analyzed_by")
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
+  article         NewsArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
   @@index([category])
   @@index([impact])
   @@map("news_analyses")
 }
 
-// ジョブキューテーブル  
 model JobQueue {
-  id        String   @id @default(uuid())
-  type      String   // 'collect_rss', 'collect_twitter', 'analyze_batch', 'generate_thread'
-  status    String   @default("pending") // 'pending', 'processing', 'completed', 'failed'
-  payload   Json?    @db.Json // ジョブの入力パラメータ
-  result    Json?    @db.Json // ジョブの実行結果
-  error     String?  @db.Text
-  progress  Int      @default(0) // 進捗率 0-100
-  total     Int?     // 総アイテム数
+  id        String    @id @default(uuid())
+  type      String
+  status    String    @default("pending")
+  payload   Json?     @db.Json
+  result    Json?     @db.Json
+  error     String?
+  progress  Int       @default(0)
+  total     Int?
   startedAt DateTime? @map("started_at")
   endedAt   DateTime? @map("ended_at")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   @@index([type, status])
   @@index([createdAt])
   @@map("job_queue")
+}
+
+model CollectionPreset {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  query       String
+  keywords    String[]
+  minLikes    Int      @default(100)
+  minRetweets Int      @default(50)
+  language    String   @default("ja")
+  category    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("collection_presets")
+}
+
+model WatchlistUser {
+  id             String           @id @default(uuid())
+  twitterId      String           @unique @map("twitter_id")
+  username       String
+  displayName    String           @map("display_name")
+  profileImage   String?          @map("profile_image")
+  bio            String?
+  followersCount Int              @default(0) @map("followers_count")
+  category       String[]
+  notes          String?
+  priority       Int              @default(0)
+  isFollowing    Boolean          @default(false) @map("is_following")
+  addedAt        DateTime         @default(now()) @map("added_at")
+  lastChecked    DateTime?        @map("last_checked")
+  userId         String           @map("user_id")
+  tweets         WatchlistTweet[]
+  user           User             @relation(fields: [userId], references: [id])
+
+  @@unique([userId, username])
+  @@map("watchlist_users")
+}
+
+model WatchlistTweet {
+  id               String        @id @default(uuid())
+  tweetId          String        @unique @map("tweet_id")
+  watchlistUserId  String        @map("watchlist_user_id")
+  content          String
+  likesCount       Int           @map("likes_count")
+  retweetsCount    Int           @map("retweets_count")
+  repliesCount     Int           @map("replies_count")
+  impressionsCount Int           @map("impressions_count")
+  hasReplied       Boolean       @default(false) @map("has_replied")
+  hasQuoted        Boolean       @default(false) @map("has_quoted")
+  postedAt         DateTime      @map("posted_at")
+  collectedAt      DateTime      @default(now()) @map("collected_at")
+  url              String
+  mediaUrls        Json?         @map("media_urls")
+  watchlistUser    WatchlistUser @relation(fields: [watchlistUserId], references: [id], map: "watchlist_tweets_user_id_fkey")
+
+  @@map("watchlist_tweets")
+}
+
+model InteractionHistory {
+  id            String   @id @default(uuid())
+  type          String
+  sourceTweetId String   @map("source_tweet_id")
+  targetTweetId String?  @map("target_tweet_id")
+  content       String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("interaction_history")
 }
 
 enum PostStatus {
@@ -227,78 +295,4 @@ enum PostType {
   NEW
   RETWEET
   QUOTE
-}
-
-// 収集クエリのプリセット
-model CollectionPreset {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  query       String   // Kaito API用のクエリ
-  keywords    String[] // キーワード配列
-  minLikes    Int      @default(100)
-  minRetweets Int      @default(50)
-  language    String   @default("ja")
-  category    String   // AI, Tech, News, etc
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  @@map("collection_presets")
-}
-
-// ウォッチリスト（フォローすべき人）
-model WatchlistUser {
-  id            String   @id @default(uuid())
-  userId        String   @map("user_id") // 追加: ウォッチリストを作成したユーザー
-  twitterId     String   @map("twitter_id")
-  username      String
-  displayName   String   @map("display_name")
-  profileImage  String?  @map("profile_image")
-  bio           String?
-  followersCount Int     @default(0) @map("followers_count")
-  category      String[] // AI研究者, インフルエンサー, etc
-  notes         String?  // メモ
-  priority      Int      @default(0) // 優先度
-  isFollowing   Boolean  @default(false) @map("is_following")
-  addedAt       DateTime @default(now()) @map("added_at")
-  lastChecked   DateTime? @map("last_checked")
-  user          User     @relation(fields: [userId], references: [id])
-  tweets        WatchlistTweet[]
-
-  @@unique([userId, username]) // 同じユーザーが同じアカウントを重複登録できないように
-  @@map("watchlist_users")
-}
-
-// ウォッチリストユーザーのツイート
-model WatchlistTweet {
-  id              String   @id @default(uuid())
-  tweetId         String   @unique @map("tweet_id")
-  watchlistUserId String   @map("watchlist_user_id")
-  content         String
-  likesCount      Int      @map("likes_count")
-  retweetsCount   Int      @map("retweets_count")
-  repliesCount    Int      @map("replies_count")
-  impressionsCount Int     @map("impressions_count")
-  hasReplied      Boolean  @default(false) @map("has_replied")
-  hasQuoted       Boolean  @default(false) @map("has_quoted")
-  postedAt        DateTime @map("posted_at")
-  collectedAt     DateTime @default(now()) @map("collected_at")
-  url             String
-  mediaUrls       Json?    @map("media_urls")
-  watchlistUser   WatchlistUser @relation(fields: [watchlistUserId], references: [id])
-
-  @@map("watchlist_tweets")
-}
-
-// インタラクション履歴
-model InteractionHistory {
-  id            String   @id @default(uuid())
-  type          String   // reply, quote, like, retweet
-  sourceTweetId String   @map("source_tweet_id")
-  targetTweetId String?  @map("target_tweet_id") // リプライ先
-  content       String?  // リプライや引用RTの内容
-  createdAt     DateTime @default(now()) @map("created_at")
-
-  @@map("interaction_history")
 }
