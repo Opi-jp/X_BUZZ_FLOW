@@ -10,6 +10,27 @@ interface CollectionResult {
 
 export async function POST(request: Request) {
   try {
+    // 1. まずニュース収集を実行
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
+    let newsResult = null
+    try {
+      const newsResponse = await fetch(`${baseUrl}/api/news/collect-rss-v2`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sinceDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        })
+      })
+      
+      if (newsResponse.ok) {
+        newsResult = await newsResponse.json()
+        console.log('News collection completed:', newsResult)
+      }
+    } catch (error) {
+      console.error('News collection error:', error)
+    }
+
+    // 2. バズ投稿収集
     // 全てのアクティブなプリセットを取得
     const presets = await prisma.collectionPreset.findMany({
       where: { isActive: true }
@@ -153,9 +174,11 @@ export async function POST(request: Request) {
         totalDuplicates,
         successfulPresets,
         totalPresets: presets.length,
-        collectionTime: new Date().toISOString()
+        collectionTime: new Date().toISOString(),
+        newsCollected: newsResult?.totalCollected || 0
       },
       details: collectionResults,
+      newsCollection: newsResult,
       analysis: {
         highScorePosts: recentHighScorePosts.length,
         rpCandidates: rpCandidates.map(post => ({
