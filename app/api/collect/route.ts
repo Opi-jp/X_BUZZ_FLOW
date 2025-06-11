@@ -9,7 +9,7 @@ const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { query, minLikes = 1000, minRetweets = 100, maxItems = 20, date } = body
+    const { query, minLikes = 1000, minRetweets = 100, maxItems = 20, date, excludeReplies = true } = body
 
     // 日付フィルター（指定された場合）
     const dateFilter = date ? {
@@ -101,8 +101,16 @@ export async function POST(request: NextRequest) {
 
     // 取得したデータをデータベースに保存（新しいフォーマットに対応）
     const savedPosts = []
+    let skippedCount = 0
+    
     for (const tweet of results) {
       try {
+        // リプライを除外（excludeRepliesがtrueの場合）
+        if (excludeReplies && tweet.text && tweet.text.trim().startsWith('@')) {
+          skippedCount++
+          continue
+        }
+        
         const existingPost = await prisma.buzzPost.findUnique({
           where: { postId: tweet.id },
         })
@@ -136,6 +144,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       collected: results.length,
       saved: savedPosts.length,
+      skipped: skippedCount,
       posts: savedPosts,
     })
   } catch (error) {

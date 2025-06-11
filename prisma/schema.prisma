@@ -224,3 +224,74 @@ enum PostType {
   RETWEET
   QUOTE
 }
+
+// 収集クエリのプリセット
+model CollectionPreset {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  query       String   // Kaito API用のクエリ
+  keywords    String[] // キーワード配列
+  minLikes    Int      @default(100)
+  minRetweets Int      @default(50)
+  language    String   @default("ja")
+  category    String   // AI, Tech, News, etc
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("collection_presets")
+}
+
+// ウォッチリスト（フォローすべき人）
+model WatchlistUser {
+  id            String   @id @default(uuid())
+  twitterId     String   @unique @map("twitter_id")
+  username      String
+  displayName   String   @map("display_name")
+  profileImage  String?  @map("profile_image")
+  bio           String?
+  followersCount Int     @map("followers_count")
+  category      String[] // AI研究者, インフルエンサー, etc
+  notes         String?  // メモ
+  priority      Int      @default(0) // 優先度
+  isFollowing   Boolean  @default(false) @map("is_following")
+  addedAt       DateTime @default(now()) @map("added_at")
+  lastChecked   DateTime? @map("last_checked")
+  tweets        WatchlistTweet[]
+
+  @@map("watchlist_users")
+}
+
+// ウォッチリストユーザーのツイート
+model WatchlistTweet {
+  id              String   @id @default(uuid())
+  tweetId         String   @unique @map("tweet_id")
+  userId          String   @map("user_id")
+  content         String
+  likesCount      Int      @map("likes_count")
+  retweetsCount   Int      @map("retweets_count")
+  repliesCount    Int      @map("replies_count")
+  impressionsCount Int     @map("impressions_count")
+  hasReplied      Boolean  @default(false) @map("has_replied")
+  hasQuoted       Boolean  @default(false) @map("has_quoted")
+  postedAt        DateTime @map("posted_at")
+  collectedAt     DateTime @default(now()) @map("collected_at")
+  url             String
+  mediaUrls       Json?    @map("media_urls")
+  user            WatchlistUser @relation(fields: [userId], references: [id])
+
+  @@map("watchlist_tweets")
+}
+
+// インタラクション履歴
+model InteractionHistory {
+  id            String   @id @default(uuid())
+  type          String   // reply, quote, like, retweet
+  sourceTweetId String   @map("source_tweet_id")
+  targetTweetId String?  @map("target_tweet_id") // リプライ先
+  content       String?  // リプライや引用RTの内容
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("interaction_history")
+}

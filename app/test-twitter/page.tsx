@@ -58,6 +58,24 @@ export default function TestTwitterPage() {
     }
   }
 
+  const signOutAndClear = async () => {
+    if (!confirm('ログアウトしてトークンをクリアしますか？')) return
+    
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/auth/signout-and-clear', { method: 'POST' })
+      const data = await res.json()
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'エラーが発生しました')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const testTweet = async () => {
     setLoading(true)
     setError(null)
