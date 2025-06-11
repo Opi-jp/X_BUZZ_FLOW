@@ -86,9 +86,11 @@ function NewsPageContent() {
       
       const res = await fetch(`/api/news/sources?${params}`)
       const data = await res.json()
-      setSources(data)
+      // データが配列であることを確認
+      setSources(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error('Error fetching sources:', error)
+      setSources([])
     }
   }
 
@@ -102,20 +104,17 @@ function NewsPageContent() {
       
       const res = await fetch(`/api/news/articles?${params}`)
       const data = await res.json()
-      setArticles(data.articles)
+      // データが正しい形式であることを確認
+      setArticles(Array.isArray(data.articles) ? data.articles : [])
     } catch (error) {
       console.error('Error fetching articles:', error)
+      setArticles([])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCollect = async (type: 'news' | 'twitter' | 'jp' | 'ai-tweets' | 'test' | 'rss' | 'all' | 'simple' = 'news') => {
-    // 一括収集の場合は非同期収集を使用
-    if (type === 'all') {
-      handleCollectAsync()
-      return
-    }
+  const handleCollect = async (type: string) => {
     
     setCollectingType(type)
     try {
@@ -323,43 +322,6 @@ function NewsPageContent() {
     }
   }
 
-  const handleCollectAsync = async () => {
-    setCollectingType('async')
-    try {
-      // 日付フィルターを設定
-      let sinceDate = null
-      if (collectTargetDate) {
-        // 指定日の00:00:00から収集
-        sinceDate = new Date(collectTargetDate + 'T00:00:00')
-      }
-      
-      const res = await fetch('/api/news/collect/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          type: 'all',
-          sinceDate: sinceDate?.toISOString()
-        }),
-      })
-
-      const data = await res.json()
-      
-      if (res.ok) {
-        alert(`収集を開始しました。\nジョブID: ${data.jobId}\n\n進捗は「設定」画面で確認できます。`)
-        // 5秒後に記事一覧を更新
-        setTimeout(() => {
-          fetchArticles()
-        }, 5000)
-      } else {
-        alert('収集の開始に失敗しました')
-      }
-    } catch (error) {
-      console.error('Error starting async collection:', error)
-      alert('収集の開始中にエラーが発生しました')
-    } finally {
-      setCollectingType(null)
-    }
-  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -684,12 +646,12 @@ function NewsPageContent() {
           ) : (
             /* ソース管理 */
             <div className="space-y-4">
-              {sources.length === 0 ? (
+              {!sources || sources.length === 0 ? (
                 <div className="bg-white rounded-lg shadow p-8 text-center">
                   <p className="text-gray-500">ソースがありません</p>
                 </div>
               ) : (
-                sources.filter(source => source.type !== 'TWITTER').map((source) => (
+                (Array.isArray(sources) ? sources : []).filter(source => source && source.type !== 'TWITTER').map((source) => (
                   <div key={source.id} className="bg-white rounded-lg shadow p-6">
                     <div className="flex items-center justify-between">
                       <div>
