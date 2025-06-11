@@ -12,6 +12,10 @@ function AuthErrorContent() {
     Configuration: '設定エラー: Twitter APIの設定を確認してください',
     AccessDenied: 'アクセスが拒否されました',
     Verification: '認証エラー: もう一度お試しください',
+    OAuthCallback: 'コールバックエラー: Twitter DeveloperでコールバックURLを確認してください',
+    OAuthCreateAccount: 'アカウント作成エラー: データベース接続を確認してください',
+    OAuthSignin: 'サインインエラー: Twitter APIキーを確認してください',
+    SessionRequired: 'セッションエラー: ログインが必要です',
     Default: '予期しないエラーが発生しました',
   }
 
