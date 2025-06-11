@@ -32,11 +32,8 @@ export async function POST(request: NextRequest) {
       },
       orderBy: { importance: 'desc' },
       take: 10,
-      select: {
-        title: true,
-        summary: true,
-        sourceId: true,
-        metadata: true
+      include: {
+        source: true
       }
     })
 
@@ -61,7 +58,7 @@ ${recentBuzzPosts.map((post, i) =>
 
 【重要ニュース TOP ${recentNews.length}】
 ${recentNews.map((news, i) => 
-  `${i + 1}. ${news.title}（ソースID: ${news.sourceId}）
+  `${i + 1}. ${news.title}（ソース: ${news.source.name}）
    要約: ${news.summary || 'なし'}
    ポイント: ${(news.metadata as any)?.keyPoints?.join(', ') || 'なし'}`
 ).join('\n\n')}
@@ -136,7 +133,7 @@ ${recentNews.map((news, i) =>
   } catch (error) {
     console.error('Integrated analysis error:', error)
     return NextResponse.json(
-      { error: '統合分析でエラーが発生しました', details: error.message },
+      { error: '統合分析でエラーが発生しました', details: error instanceof Error ? error.message : '不明なエラー' },
       { status: 500 }
     )
   }

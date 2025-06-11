@@ -58,16 +58,19 @@ export async function POST(request: NextRequest) {
           { importance: 'desc' },
           { publishedAt: 'desc' }
         ],
-        take: 10
+        take: 10,
+        include: {
+          source: true // NewsSourceのデータも含める
+        }
       })
 
       briefing.newsHighlights = newsArticles.map(article => ({
         id: article.id,
         title: article.title,
-        source: article.sourceId, // sourceIdを使用
+        source: article.source.name, // sourceの名前を使用
         importance: article.importance,
         summary: article.summary,
-        keyPoints: article.metadata?.keyPoints || [],
+        keyPoints: (article.metadata as any)?.keyPoints || [],
         url: article.url,
         publishedAt: article.publishedAt
       }))
@@ -86,7 +89,7 @@ export async function POST(request: NextRequest) {
 
       // テーマ別にグループ化
       const themes = ['AI', 'クリエイティブ', '働き方', 'テクノロジー', '50代', 'キャリア']
-      const trendsByTheme = {}
+      const trendsByTheme: Record<string, any> = {}
 
       for (const theme of themes) {
         const themePosts = buzzPosts.filter(post => 
@@ -245,7 +248,7 @@ async function generateActionableItems(briefingData: any) {
   }
 
   return actions.sort((a, b) => {
-    const priorityOrder = { high: 3, medium: 2, low: 1 }
+    const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 }
     return priorityOrder[b.priority] - priorityOrder[a.priority]
   })
 }
@@ -266,7 +269,7 @@ async function generatePersonalizedTakeaways(briefingData: any) {
   })
 
   // 今日の戦略
-  const topThemes = briefingData.buzzTrends.slice(0, 3).map(t => t.theme)
+  const topThemes = briefingData.buzzTrends.slice(0, 3).map((t: any) => t.theme)
   takeaways.push({
     category: 'today_strategy',
     title: '今日の投稿戦略',

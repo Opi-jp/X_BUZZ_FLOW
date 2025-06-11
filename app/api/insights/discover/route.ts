@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // 1. 逆張りパターンの発見
     for (const pattern of INSIGHT_PATTERNS) {
-      const matchingContent = []
+      const matchingContent: any[] = []
       
       // ニュースから該当するトピックを探す
       newsArticles.forEach(article => {
@@ -202,7 +202,7 @@ export async function POST(request: NextRequest) {
 // 逆張り投稿案の生成
 async function generateCounterPost(pattern: any, content: any): Promise<string> {
   // 簡易版（後でClaude APIに置き換え）
-  const templates = {
+  const templates: Record<string, string> = {
     'creative-ai-paradox': `みんなが「${content.type === 'news' ? content.title : content.content.substring(0, 50)}」で効率化と言ってるけど、23年の映像制作の経験から言うと、非効率こそがクリエイティブの源泉。手作業の「無駄」が新しい発見を生む。`,
     'future-past-bridge': `「${content.type === 'news' ? content.title : content.content.substring(0, 50)}」を見て1990年代のCG黎明期を思い出した。あの時も「人間の仕事がなくなる」と言われたが、実際は新しい職種が生まれた。歴史は繰り返すのかもしれない。`,
     'age-advantage-theory': `Z世代が「${content.type === 'news' ? content.title : content.content.substring(0, 50)}」を語っているが、50代の視点から見ると...実は長期視点こそが今重要なのでは？`

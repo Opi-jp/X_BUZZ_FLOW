@@ -135,7 +135,7 @@ export default function DashboardV2Page() {
           const trends = briefingData.briefing.perplexityInsights.structuredInsights?.trends || []
           const personalAngles = briefingData.briefing.perplexityInsights.personalAngles || []
           
-          alert(`📊 朝のAI秘書ブリーフィング完了！\n\n🔥 今日のトレンド:\n${trends.slice(0, 3).join('\n')}\n\n💡 あなたの独自視点:\n${personalAngles.slice(0, 2).map(a => a.angle).join('\n')}\n\n詳細は画面下部に表示されています。`)
+          alert(`📊 朝のAI秘書ブリーフィング完了！\n\n🔥 今日のトレンド:\n${trends.slice(0, 3).join('\n')}\n\n💡 あなたの独自視点:\n${personalAngles.slice(0, 2).map((a: any) => a.angle).join('\n')}\n\n詳細は画面下部に表示されています。`)
         }
         
         // バッチ収集も実行
@@ -314,7 +314,7 @@ export default function DashboardV2Page() {
                 <div key={article.id} className="border-l-4 border-blue-500 pl-4">
                   <h3 className="font-semibold text-sm">{article.title}</h3>
                   <p className="text-xs text-gray-600 mt-1">
-                    ソースID: {article.sourceId} - 重要度: {((article.importance || 0) * 100).toFixed(0)}%
+                    ソース: {article.source?.name || '不明'} - 重要度: {((article.importance || 0) * 100).toFixed(0)}%
                   </p>
                   {article.summary && (
                     <p className="text-xs text-gray-700 mt-2">{article.summary}</p>

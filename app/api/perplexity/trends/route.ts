@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Perplexity trends error:', error)
     return NextResponse.json(
-      { error: 'トレンド分析でエラーが発生しました', details: error.message },
+      { error: 'トレンド分析でエラーが発生しました', details: error instanceof Error ? error.message : '不明なエラー' },
       { status: 500 }
     )
   }
@@ -127,7 +127,7 @@ async function generatePersonalInsights(insights: any, focus: string) {
   const personalAngles = []
   
   // クリエイティブ×AI逆説の視点
-  if (insights.trends.some(t => t.includes('AI') || t.includes('効率'))) {
+  if (insights.trends.some((t: string) => t.includes('AI') || t.includes('効率'))) {
     personalAngles.push({
       type: 'creative-paradox',
       angle: '効率化の流れに逆らって「非効率の美学」を語る',
@@ -137,7 +137,7 @@ async function generatePersonalInsights(insights: any, focus: string) {
   }
   
   // 未来×過去架橋の視点
-  if (insights.trends.some(t => t.includes('革新') || t.includes('最新'))) {
+  if (insights.trends.some((t: string) => t.includes('革新') || t.includes('最新'))) {
     personalAngles.push({
       type: 'future-past-bridge',
       angle: '最新技術と1990年代のデジャヴを語る',
@@ -147,7 +147,7 @@ async function generatePersonalInsights(insights: any, focus: string) {
   }
   
   // 50代優位性の視点
-  if (insights.trends.some(t => t.includes('若者') || t.includes('Z世代'))) {
+  if (insights.trends.some((t: string) => t.includes('若者') || t.includes('Z世代'))) {
     personalAngles.push({
       type: 'age-advantage',
       angle: '若者優位に対して経験者の価値を主張',
