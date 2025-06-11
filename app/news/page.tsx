@@ -51,7 +51,13 @@ function NewsPageContent() {
   const [collectingType, setCollectingType] = useState<string | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [generating, setGenerating] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(searchParams.get('date') || '')
+  // 初期日付を本日に設定（URLパラメータがない場合）
+  const getTodayDate = () => {
+    const today = new Date()
+    return today.toISOString().split('T')[0]
+  }
+  
+  const [selectedDate, setSelectedDate] = useState(searchParams.get('date') || getTodayDate())
   const [activeTab, setActiveTab] = useState<'sources' | 'articles'>(
     (searchParams.get('tab') as 'sources' | 'articles') || 'articles'
   )
@@ -61,6 +67,13 @@ function NewsPageContent() {
   const [analyzingArticles, setAnalyzingArticles] = useState<Set<string>>(new Set())
   const [sortBy, setSortBy] = useState<'publishedAt' | 'importance'>('publishedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
+
+  // 初回表示時にURLに日付を設定
+  useEffect(() => {
+    if (!searchParams.get('date')) {
+      updateURL(selectedDate)
+    }
+  }, [])
 
   useEffect(() => {
     fetchSources()
@@ -101,6 +114,7 @@ function NewsPageContent() {
       if (selectedDate) params.append('date', selectedDate)
       params.append('sortBy', sortBy)
       params.append('sortOrder', sortOrder)
+      params.append('limit', '100') // 最大100件に制限
       
       const res = await fetch(`/api/news/articles?${params}`)
       const data = await res.json()
@@ -465,7 +479,7 @@ function NewsPageContent() {
           {activeTab === 'articles' ? (
             <>
               {/* 日付フィルター */}
-              <div className="mb-4">
+              <div className="mb-4 flex items-center gap-2">
                 <input
                   type="date"
                   value={selectedDate}
@@ -475,6 +489,46 @@ function NewsPageContent() {
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => {
+                      const today = getTodayDate()
+                      setSelectedDate(today)
+                      updateURL(today)
+                    }}
+                    className={`px-3 py-2 text-sm rounded-md ${
+                      selectedDate === getTodayDate() 
+                        ? 'bg-blue-600 text-white' 
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    今日
+                  </button>
+                  <button
+                    onClick={() => {
+                      const yesterday = new Date()
+                      yesterday.setDate(yesterday.getDate() - 1)
+                      const yesterdayStr = yesterday.toISOString().split('T')[0]
+                      setSelectedDate(yesterdayStr)
+                      updateURL(yesterdayStr)
+                    }}
+                    className="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm rounded-md"
+                  >
+                    昨日
+                  </button>
+                  <button
+                    onClick={() => {
+                      const weekAgo = new Date()
+                      weekAgo.setDate(weekAgo.getDate() - 7)
+                      const weekAgoStr = weekAgo.toISOString().split('T')[0]
+                      setSelectedDate(weekAgoStr)
+                      updateURL(weekAgoStr)
+                    }}
+                    className="px-3 py-2 bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm rounded-md"
+                  >
+                    1週間前
+                  </button>
+                </div>
               </div>
 
               {/* 記事統計と選択ボタン */}
