@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
     // 1. Perplexityでリアルタイムトレンド分析
     if (includePerplexity) {
       try {
-        const perplexityResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/perplexity/trends`, {
+        const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
+        const perplexityResponse = await fetch(`${baseUrl}/api/perplexity/trends`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
