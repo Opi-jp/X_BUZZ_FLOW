@@ -17,12 +17,14 @@ export const authOptions: NextAuthOptions = {
   },
   cookies: {
     sessionToken: {
-      name: `__Secure-next-auth.session-token`,
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token'
+        : 'next-auth.session-token',
       options: {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
       },
     },
   },
@@ -61,10 +63,12 @@ export const authOptions: NextAuthOptions = {
       return false
     },
     async session({ session, token }) {
+      console.log('Session callback - token.sub:', token.sub)
       if (token.sub) {
         const user = await prisma.user.findFirst({
           where: { twitterId: token.sub },
         })
+        console.log('Session callback - user found:', user ? 'Yes' : 'No')
         if (user) {
           session.user = {
             ...session.user,

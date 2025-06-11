@@ -9,9 +9,11 @@ export async function POST(request: NextRequest) {
   try {
     // セッション確認
     const session = await getServerSession(authOptions)
-    console.log('Session:', session)
+    console.log('Session:', JSON.stringify(session, null, 2))
+    console.log('Request headers:', request.headers.get('cookie'))
     
     if (!session?.user) {
+      console.error('No session found')
       return NextResponse.json(
         { error: 'Twitter認証が必要です' },
         { status: 401 }
