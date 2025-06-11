@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getKaitoSinceParam } from '@/lib/date-utils'
 
-// Kaito API (Apify) の設定 - 新しいTwitterスクレイパーを使用
-const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs'
+// Kaito API (Apify) の設定 - kaitoeasyapiを使用
+const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~kaito-twitter-scraper/runs'
 
 // POST: Kaito APIを使ってバズ投稿を収集
 export async function POST(request: NextRequest) {
@@ -47,22 +47,31 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    const requestBody = isUserTimeline ? {
-      twitterContent: query,
-      maxItems,
-      lang: 'ja',
-      'filter:replies': false,
-      'filter:nativeretweets': false,
-      queryType: 'Latest',
-      ...dateFilter
-    } : {
-      twitterContent: optimizedQuery,
-      maxItems,
-      lang: 'ja',
-      'filter:replies': false,
-      'filter:blue_verified': false,
-      'filter:nativeretweets': false,
-      queryType: 'Latest',
+    // Kaito APIの正しいフォーマット
+    const requestBody = {
+      "filter:blue_verified": false,
+      "filter:consumer_video": false,
+      "filter:has_engagement": false,
+      "filter:hashtags": false,
+      "filter:images": false,
+      "filter:links": false,
+      "filter:media": false,
+      "filter:mentions": false,
+      "filter:native_video": false,
+      "filter:nativeretweets": false,
+      "filter:news": false,
+      "filter:pro_video": false,
+      "filter:quote": false,
+      "filter:replies": excludeReplies,
+      "filter:safe": false,
+      "filter:spaces": false,
+      "filter:twimg": false,
+      "filter:videos": false,
+      "filter:vine": false,
+      "include:nativeretweets": false,
+      "lang": "ja",
+      "maxItems": maxItems,
+      "twitterContent": optimizedQuery,
       ...dateFilter
     }
 
@@ -95,7 +104,7 @@ export async function POST(request: NextRequest) {
       await new Promise(resolve => setTimeout(resolve, 1000)) // 1秒待機
       
       const resultResponse = await fetch(
-        `https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs/${runId}?token=${process.env.KAITO_API_KEY}`
+        `https://api.apify.com/v2/actor-runs/${runId}?token=${process.env.KAITO_API_KEY}`
       )
       
       const runData = await resultResponse.json()
