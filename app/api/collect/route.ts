@@ -9,7 +9,7 @@ const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { query, minLikes = 1000, minRetweets = 100, maxItems = 20, date, excludeReplies = true } = body
+    const { query, minLikes = 1000, minRetweets = 100, minEngagementRate = 0, maxItems = 20, date, excludeReplies = true } = body
 
     // 日付フィルター（指定された場合）
     const dateFilter = date ? {
@@ -111,6 +111,20 @@ export async function POST(request: NextRequest) {
           continue
         }
         
+        // エンゲージメント率の計算
+        const impressions = tweet.viewCount || tweet.impressions_count || 0
+        const likes = tweet.likeCount || tweet.favorite_count || 0
+        const retweets = tweet.retweetCount || tweet.retweet_count || 0
+        const replies = tweet.replyCount || tweet.reply_count || 0
+        
+        if (impressions > 0 && minEngagementRate > 0) {
+          const engagementRate = ((likes + retweets + replies) / impressions) * 100
+          if (engagementRate < minEngagementRate) {
+            skippedCount++
+            continue
+          }
+        }
+        
         const existingPost = await prisma.buzzPost.findUnique({
           where: { postId: tweet.id },
         })
@@ -122,10 +136,10 @@ export async function POST(request: NextRequest) {
               content: tweet.text || '',
               authorUsername: tweet.author?.userName || tweet.author?.username || '',
               authorId: tweet.author?.id || '',
-              likesCount: tweet.likeCount || tweet.favorite_count || 0,
-              retweetsCount: tweet.retweetCount || tweet.retweet_count || 0,
-              repliesCount: tweet.replyCount || tweet.reply_count || 0,
-              impressionsCount: tweet.viewCount || tweet.impressions_count || 0,
+              likesCount: likes,
+              retweetsCount: retweets,
+              repliesCount: replies,
+              impressionsCount: impressions,
               postedAt: new Date(tweet.createdAt || tweet.created_at),
               url: tweet.url || tweet.twitterUrl || `https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`,
               theme: query,
