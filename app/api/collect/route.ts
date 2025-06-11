@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       await new Promise(resolve => setTimeout(resolve, 1000)) // 1秒待機
       
       const resultResponse = await fetch(
-        `https://api.apify.com/v2/acts/quacker~twitter-scraper/runs/${runId}?token=${process.env.KAITO_API_KEY}`
+        `https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs/${runId}?token=${process.env.KAITO_API_KEY}`
       )
       
       const runData = await resultResponse.json()
@@ -102,6 +102,9 @@ export async function POST(request: NextRequest) {
     // 取得したデータをデータベースに保存（新しいフォーマットに対応）
     const savedPosts = []
     let skippedCount = 0
+    let existingCount = 0
+    
+    console.log('Processing tweets:', results.length)
     
     for (const tweet of results) {
       try {
@@ -140,7 +143,10 @@ export async function POST(request: NextRequest) {
           where: { postId: tweet.id },
         })
 
-        if (!existingPost) {
+        if (existingPost) {
+          existingCount++
+          console.log(`Tweet ${tweet.id} already exists`)
+        } else {
           const post = await prisma.buzzPost.create({
             data: {
               postId: tweet.id,
@@ -173,6 +179,7 @@ export async function POST(request: NextRequest) {
       collected: results.length,
       saved: savedPosts.length,
       skipped: skippedCount,
+      existing: existingCount,
       posts: savedPosts,
     })
   } catch (error) {

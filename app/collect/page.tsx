@@ -184,10 +184,12 @@ export default function CollectPage() {
         setShowPreview(true)
       }
       
-      if (data.saved > 0 && !showPreview) {
-        setTimeout(() => {
-          router.push('/posts')
-        }, 2000)
+      if (data.saved > 0) {
+        if (!showPreview) {
+          setTimeout(() => {
+            router.push('/posts')
+          }, 2000)
+        }
       }
     } catch (error) {
       console.error('Error collecting posts:', error)
@@ -466,6 +468,11 @@ export default function CollectPage() {
                   {result.skipped > 0 && (
                     <p className="text-green-500 text-sm">
                       （{result.skipped}件はリプライのため除外）
+                    </p>
+                  )}
+                  {result.existing > 0 && (
+                    <p className="text-orange-500 text-sm">
+                      （{result.existing}件は既存の投稿）
                     </p>
                   )}
                   {showPreview ? (
