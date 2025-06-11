@@ -213,10 +213,45 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
         throw new Error('No JSON found in Claude response')
       }
       
-      const jsonStr = jsonMatch[1] || jsonMatch[0]
-      console.log('Extracted JSON:', jsonStr)
+      let jsonStr = jsonMatch[1] || jsonMatch[0]
+      console.log('Extracted JSON length:', jsonStr.length)
       
-      const parsed = JSON.parse(jsonStr)
+      // JSON文字列を安全にパースするための処理
+      let parsed
+      try {
+        // まず単純にパースを試みる
+        parsed = JSON.parse(jsonStr)
+        console.log('Successfully parsed JSON on first attempt')
+      } catch (firstError) {
+        console.log('First parse attempt failed:', firstError.message)
+        
+        // JSON文字列内の改行文字を修正
+        // 文字列リテラル内の実際の改行を\nにエスケープ
+        const fixedJson = jsonStr.replace(/"((?:[^"\\]|\\.)*)"/g, (match, content) => {
+          // 既にエスケープされている文字はそのまま、実際の改行文字をエスケープ
+          const fixed = content
+            .split('\\n').join('\u0001') // 一時的に既存の\nを保護
+            .split('\\r').join('\u0002') // 一時的に既存の\rを保護
+            .split('\\t').join('\u0003') // 一時的に既存の\tを保護
+            .replace(/\n/g, '\\n')       // 実際の改行をエスケープ
+            .replace(/\r/g, '\\r')       // 実際のCRをエスケープ
+            .replace(/\t/g, '\\t')       // 実際のタブをエスケープ
+            .split('\u0001').join('\\n') // 保護した\nを戻す
+            .split('\u0002').join('\\r') // 保護した\rを戻す
+            .split('\u0003').join('\\t') // 保護した\tを戻す
+          return `"${fixed}"`
+        })
+        
+        console.log('Attempting to parse fixed JSON...')
+        try {
+          parsed = JSON.parse(fixedJson)
+          console.log('Successfully parsed fixed JSON')
+        } catch (secondError) {
+          console.error('Failed to parse even after fixing:', secondError.message)
+          console.error('Problematic JSON snippet:', jsonStr.substring(0, 500))
+          throw new Error(`JSON parse error: ${secondError.message}`)
+        }
+      }
       
       // 生成結果とarticle情報をマージ（URLが含まれていない場合は追加）
       generation = {
@@ -240,33 +275,12 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
             }
           }
           
-          // URLが含まれていない場合は追加
-          if (!tweetContent.includes(article.url) && !tweetContent.includes('http')) {
-            // 既存のURLパターンを削除（念のため）
-            tweetContent = tweetContent.replace(/\s*(→|🔗)\s*https?:\/\/[^\s]+$/g, '')
-            // URLを追加（文字数制限を考慮）
-            const urlPart = `\n🔗 ${article.url}`
-            const maxLength = 140 - 23 // TwitterのURL短縮を考慮
-            if (tweetContent.length + urlPart.length - article.url.length + 23 > 140) {
-              // 文字数オーバーの場合は本文を短縮
-              const overLength = tweetContent.length + urlPart.length - article.url.length + 23 - 140
-              // 箇条書きがある場合はそれを優先して残す
-              if (tweetContent.includes('・')) {
-                const lines = tweetContent.split('\n')
-                // 最後の行から削除
-                while (lines.length > 1 && overLength > 0) {
-                  const lastLine = lines[lines.length - 1]
-                  if (!lastLine.includes('・')) {
-                    lines.pop()
-                    break
-                  }
-                }
-                tweetContent = lines.join('\n')
-              } else {
-                tweetContent = tweetContent.substring(0, tweetContent.length - overLength - 3) + '...'
-              }
-            }
-            tweetContent += urlPart
+          // Claude APIの生成結果にURLが含まれていることを確認
+          // 含まれていない場合はエラーとする（URLは必須）
+          if (!tweetContent.includes('http')) {
+            console.error(`Tweet missing URL for article: ${article.title}`)
+            console.error(`Generated tweet: ${tweetContent}`)
+            throw new Error(`Generated tweet is missing required URL for article: ${article.title}`)
           }
           
           return {
