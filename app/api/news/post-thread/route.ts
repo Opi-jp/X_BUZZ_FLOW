@@ -20,9 +20,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // ユーザー情報を取得（IDまたはemailで検索）
+    // ユーザー情報を取得（userIdが指定されていれば優先、なければセッションから）
     const user = await prisma.user.findFirst({
-      where: session.user.id 
+      where: userId 
+        ? { id: userId }
+        : session.user.id 
         ? { id: session.user.id }
         : session.user.email 
         ? { email: session.user.email }
@@ -39,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { threadId } = body
+    const { threadId, userId } = body
 
     if (!threadId) {
       return NextResponse.json(

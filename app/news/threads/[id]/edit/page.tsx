@@ -157,7 +157,10 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
       const res = await fetch('/api/news/post-thread', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ threadId: (await params).id }),
+        body: JSON.stringify({ 
+          threadId: (await params).id,
+          userId: '1b75ab50-342d-44c2-a0d7-3dc4a8ec01df' // 直接ユーザーIDを指定
+        }),
       })
 
       const data = await res.json()
