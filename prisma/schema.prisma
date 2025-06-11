@@ -15,6 +15,9 @@ model BuzzPost {
   content          String
   authorUsername   String          @map("author_username")
   authorId         String          @map("author_id")
+  authorFollowers  Int?            @map("author_followers") // 追加
+  authorFollowing  Int?            @map("author_following") // 追加
+  authorVerified   Boolean?        @map("author_verified") // 追加
   likesCount       Int             @map("likes_count")
   retweetsCount    Int             @map("retweets_count")
   repliesCount     Int             @map("replies_count")

@@ -507,7 +507,17 @@ export default function CollectPage() {
                     <div key={post.id} className="border-b pb-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">@{post.authorUsername}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-gray-900">@{post.authorUsername}</p>
+                            {post.authorVerified && (
+                              <span className="text-blue-500" title="認証済み">✓</span>
+                            )}
+                            {post.authorFollowers && (
+                              <span className="text-xs text-gray-500">
+                                (フォロワー: {post.authorFollowers.toLocaleString()} / フォロー: {post.authorFollowing?.toLocaleString() || 0})
+                              </span>
+                            )}
+                          </div>
                           <p className="mt-1 text-gray-700 whitespace-pre-wrap">{post.content}</p>
                           <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
                             <span>❤️ {post.likesCount.toLocaleString()}</span>

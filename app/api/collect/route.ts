@@ -105,6 +105,17 @@ export async function POST(request: NextRequest) {
     
     for (const tweet of results) {
       try {
+        // デバッグ: author情報を確認（最初の1件のみ）
+        if (savedPosts.length === 0 && tweet.author) {
+          console.log('Author info sample:', {
+            userName: tweet.author.userName,
+            followersCount: tweet.author.followersCount,
+            followingCount: tweet.author.followingCount,
+            verified: tweet.author.verified,
+            description: tweet.author.description?.substring(0, 50)
+          })
+        }
+        
         // リプライを除外（excludeRepliesがtrueの場合）
         if (excludeReplies && tweet.text && tweet.text.trim().startsWith('@')) {
           skippedCount++
@@ -136,6 +147,9 @@ export async function POST(request: NextRequest) {
               content: tweet.text || '',
               authorUsername: tweet.author?.userName || tweet.author?.username || '',
               authorId: tweet.author?.id || '',
+              authorFollowers: tweet.author?.followersCount || null,
+              authorFollowing: tweet.author?.followingCount || null,
+              authorVerified: tweet.author?.verified || false,
               likesCount: likes,
               retweetsCount: retweets,
               repliesCount: replies,
