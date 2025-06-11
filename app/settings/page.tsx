@@ -8,6 +8,8 @@ export default function SettingsPage() {
   const { data: session } = useSession()
   const [importing, setImporting] = useState(false)
   const [importResult, setImportResult] = useState<string | null>(null)
+  const [bulkImporting, setBulkImporting] = useState(false)
+  const [bulkImportResult, setBulkImportResult] = useState<string | null>(null)
 
   const importTweets = async () => {
     if (!session) {
@@ -91,39 +93,90 @@ export default function SettingsPage() {
 
           {/* ツイートインポート */}
           {session && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                過去のツイートをインポート
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                あなたの過去のツイート（最新100件）を分析データとしてインポートします。
-              </p>
-              
-              <button
-                onClick={importTweets}
-                disabled={importing || !session}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                {importing ? 'インポート中...' : 'ツイートをインポート'}
-              </button>
-
-              {importResult && (
-                <div className={`mt-4 p-3 rounded-md ${
-                  importResult.includes('エラー') 
-                    ? 'bg-red-50 text-red-800' 
-                    : 'bg-green-50 text-green-800'
-                }`}>
-                  {importResult}
-                </div>
-              )}
-
-              <div className="mt-4 p-4 bg-yellow-50 rounded-md">
-                <p className="text-sm text-yellow-800">
-                  <strong>注意:</strong> Twitter APIの制限により、インプレッション数は取得できない場合があります。
-                  また、プロモーションツイートや返信は除外されます。
+            <>
+              <div className="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  過去のツイートをインポート
+                </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  あなたの過去のツイート（最新100件）を分析データとしてインポートします。
                 </p>
+                
+                <button
+                  onClick={importTweets}
+                  disabled={importing || !session}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+                >
+                  {importing ? 'インポート中...' : 'ツイートをインポート'}
+                </button>
+
+                {importResult && (
+                  <div className={`mt-4 p-3 rounded-md ${
+                    importResult.includes('エラー') 
+                      ? 'bg-red-50 text-red-800' 
+                      : 'bg-green-50 text-green-800'
+                  }`}>
+                    {importResult}
+                  </div>
+                )}
               </div>
-            </div>
+
+              {/* 初期データ一括インポート */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  初期分析データの一括インポート
+                </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  分析機能を使うために、過去500件のツイートを一括インポートします。
+                  初回のみ実行してください。
+                </p>
+                
+                <button
+                  onClick={async () => {
+                    setBulkImporting(true)
+                    setBulkImportResult(null)
+                    try {
+                      const res = await fetch('/api/import-my-tweets-initial', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ limit: 500 })
+                      })
+                      const data = await res.json()
+                      if (res.ok) {
+                        setBulkImportResult(data.message || 'インポートが完了しました')
+                      } else {
+                        setBulkImportResult(`エラー: ${data.error}`)
+                      }
+                    } catch (error) {
+                      setBulkImportResult('インポート中にエラーが発生しました')
+                    } finally {
+                      setBulkImporting(false)
+                    }
+                  }}
+                  disabled={bulkImporting || !session}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+                >
+                  {bulkImporting ? '一括インポート中...' : '初期データを一括インポート (500件)'}
+                </button>
+
+                {bulkImportResult && (
+                  <div className={`mt-4 p-3 rounded-md ${
+                    bulkImportResult.includes('エラー') 
+                      ? 'bg-red-50 text-red-800' 
+                      : 'bg-green-50 text-green-800'
+                  }`}>
+                    {bulkImportResult}
+                  </div>
+                )}
+
+                <div className="mt-4 p-4 bg-yellow-50 rounded-md">
+                  <p className="text-sm text-yellow-800">
+                    <strong>注意:</strong> インポートには数分かかる場合があります。
+                    RTやリプライは除外されます。
+                  </p>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </main>
