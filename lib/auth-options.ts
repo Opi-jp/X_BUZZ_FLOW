@@ -68,12 +68,21 @@ export const authOptions: NextAuthOptions = {
       return false
     },
     async session({ session, token }) {
-      console.log('Session callback - token.sub:', token.sub)
-      if (token.sub) {
+      console.log('Session callback - token:', { sub: token.sub, twitterId: token.twitterId })
+      
+      // tokenにtwitterIdが保存されている場合はそれを使用
+      const twitterId = (token.twitterId as string) || token.sub
+      
+      if (twitterId) {
         const user = await prisma.user.findFirst({
-          where: { twitterId: token.sub },
+          where: { 
+            OR: [
+              { twitterId: twitterId },
+              { id: token.userId as string }
+            ].filter(Boolean)
+          },
         })
-        console.log('Session callback - user found:', user ? 'Yes' : 'No')
+        console.log('Session callback - user found:', user ? `Yes (${user.username})` : 'No')
         if (user) {
           session.user = {
             ...session.user,
@@ -90,6 +99,7 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token
         token.refreshToken = account.refresh_token
         token.userId = user.id
+        token.twitterId = account.providerAccountId
       }
       return token
     },
