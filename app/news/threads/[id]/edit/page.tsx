@@ -13,6 +13,11 @@ interface NewsThreadItem {
   article?: {
     title: string
     url: string
+    summary?: string
+    analysis?: {
+      japaneseSummary: string
+      keyPoints: string[]
+    }
   }
 }
 
@@ -212,9 +217,9 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
               
               return (
                 <div key={item.id} className="bg-white rounded-lg shadow p-6">
-                  <div className="mb-2">
-                    <div className="flex items-start justify-between">
-                      <span className="text-sm font-medium text-gray-500">
+                  <div className="mb-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-sm font-medium text-gray-700">
                         {index === 0 ? 'メインツイート' : `${index}. ${item.article?.title || 'ニュース'}`}
                       </span>
                       {item.article && (
@@ -228,6 +233,26 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
                         </a>
                       )}
                     </div>
+                    
+                    {/* 元の分析結果を表示（メインツイート以外） */}
+                    {index > 0 && item.article?.analysis && (
+                      <div className="mb-3 p-3 bg-gray-50 rounded-lg text-sm">
+                        <div className="mb-2">
+                          <span className="font-medium text-gray-700">要約:</span>
+                          <p className="text-gray-600 mt-1">{item.article.analysis.japaneseSummary}</p>
+                        </div>
+                        {item.article.analysis.keyPoints.length > 0 && (
+                          <div>
+                            <span className="font-medium text-gray-700">キーポイント:</span>
+                            <ul className="mt-1 list-disc list-inside text-gray-600">
+                              {item.article.analysis.keyPoints.map((point, idx) => (
+                                <li key={idx}>{point}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   
                   <textarea

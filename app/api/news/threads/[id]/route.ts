@@ -14,7 +14,11 @@ export async function GET(
       include: {
         items: {
           include: {
-            article: true,
+            article: {
+              include: {
+                analysis: true,
+              }
+            },
           },
           orderBy: { position: 'asc' },
         },
@@ -66,7 +70,11 @@ export async function PATCH(
         include: {
           items: {
             include: {
-              article: true,
+              article: {
+                include: {
+                  analysis: true,
+                }
+              },
             },
             orderBy: { position: 'asc' },
           },

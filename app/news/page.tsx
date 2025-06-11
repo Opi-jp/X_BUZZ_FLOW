@@ -59,11 +59,13 @@ function NewsPageContent() {
   const [selectedArticles, setSelectedArticles] = useState<Set<string>>(new Set())
   const [collectTargetDate, setCollectTargetDate] = useState('')
   const [analyzingArticles, setAnalyzingArticles] = useState<Set<string>>(new Set())
+  const [sortBy, setSortBy] = useState<'publishedAt' | 'importance'>('publishedAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   useEffect(() => {
     fetchSources()
     fetchArticles()
-  }, [selectedDate])
+  }, [selectedDate, sortBy, sortOrder])
 
   // URLパラメータを更新
   const updateURL = (newDate?: string, newTab?: string) => {
@@ -95,6 +97,8 @@ function NewsPageContent() {
     try {
       const params = new URLSearchParams()
       if (selectedDate) params.append('date', selectedDate)
+      params.append('sortBy', sortBy)
+      params.append('sortOrder', sortOrder)
       
       const res = await fetch(`/api/news/articles?${params}`)
       const data = await res.json()
@@ -564,14 +568,42 @@ function NewsPageContent() {
                     <span className="text-blue-600">選択済み: {selectedArticles.size}件</span>
                     <span className="font-semibold">分析済み: {articles.filter(a => a.processed && a.importance !== null).length}件</span>
                   </div>
-                  {articles.filter(a => a.processed && a.importance !== null).length > 0 && (
-                    <button
-                      onClick={handleSelectAll}
-                      className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-                    >
-                      {selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length ? '全解除' : '全選択'}
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {/* ソートボタン */}
+                    <div className="flex items-center gap-1 bg-white rounded-md px-2 py-1">
+                      <label className="text-xs text-gray-600">並び順:</label>
+                      <button
+                        onClick={() => {
+                          setSortBy('publishedAt')
+                          setSortOrder('desc')
+                        }}
+                        className={`px-2 py-1 text-xs rounded ${
+                          sortBy === 'publishedAt' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                      >
+                        日付順
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSortBy('importance')
+                          setSortOrder('desc')
+                        }}
+                        className={`px-2 py-1 text-xs rounded ${
+                          sortBy === 'importance' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                      >
+                        重要度順
+                      </button>
+                    </div>
+                    {articles.filter(a => a.processed && a.importance !== null).length > 0 && (
+                      <button
+                        onClick={handleSelectAll}
+                        className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                      >
+                        {selectedArticles.size === articles.filter(a => a.processed && a.importance !== null).length ? '全解除' : '全選択'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 

@@ -10,6 +10,8 @@ export async function GET(request: NextRequest) {
     const processed = searchParams.get('processed')
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
+    const sortBy = searchParams.get('sortBy') || 'publishedAt' // importance or publishedAt
+    const sortOrder = searchParams.get('sortOrder') || 'desc' // asc or desc
 
     const where: any = {}
     
@@ -28,6 +30,19 @@ export async function GET(request: NextRequest) {
       where.processed = processed === 'true'
     }
 
+    // ソート条件を構築
+    let orderBy: any = { publishedAt: 'desc' } // デフォルト
+    
+    if (sortBy === 'importance') {
+      // 重要度でソート（nullは最後に）
+      orderBy = [
+        { importance: sortOrder as 'asc' | 'desc' },
+        { publishedAt: 'desc' } // 同じ重要度の場合は日付順
+      ]
+    } else {
+      orderBy = { [sortBy]: sortOrder }
+    }
+
     const [articles, total] = await Promise.all([
       prisma.newsArticle.findMany({
         where,
@@ -35,7 +50,7 @@ export async function GET(request: NextRequest) {
           source: true,
           analysis: true, // 分析結果も含める
         },
-        orderBy: { publishedAt: 'desc' },
+        orderBy,
         take: limit,
         skip: offset,
       }),
