@@ -223,7 +223,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
         parsed = JSON.parse(jsonStr)
         console.log('Successfully parsed JSON on first attempt')
       } catch (firstError) {
-        console.log('First parse attempt failed:', firstError.message)
+        console.log('First parse attempt failed:', firstError instanceof Error ? firstError.message : 'Unknown error')
         
         // JSON文字列内の改行文字を修正
         // 文字列リテラル内の実際の改行を\nにエスケープ
@@ -247,9 +247,10 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           parsed = JSON.parse(fixedJson)
           console.log('Successfully parsed fixed JSON')
         } catch (secondError) {
-          console.error('Failed to parse even after fixing:', secondError.message)
+          const errorMessage = secondError instanceof Error ? secondError.message : 'Unknown error'
+          console.error('Failed to parse even after fixing:', errorMessage)
           console.error('Problematic JSON snippet:', jsonStr.substring(0, 500))
-          throw new Error(`JSON parse error: ${secondError.message}`)
+          throw new Error(`JSON parse error: ${errorMessage}`)
         }
       }
       
