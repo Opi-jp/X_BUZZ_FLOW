@@ -14,6 +14,7 @@ interface NavItem {
 const navigation: NavItem[] = [
   // メインワークフロー
   { name: 'ホーム', href: '/', icon: '🏠', primary: true },
+  { name: '投稿計画', href: '/plan', icon: '🗓️' },
   { name: 'コンテンツ管理', href: '/content', icon: '📝' },
   { name: 'リアルタイム', href: '/realtime', icon: '⚡' },
   { name: '振り返り', href: '/review', icon: '📊' },

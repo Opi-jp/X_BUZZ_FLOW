@@ -270,6 +270,7 @@ export default function Home() {
       recommendations: briefing?.perplexityInsights?.recommendations || {},
       crossSourceInsights: briefing?.crossSourceInsights || [],
       actionableItems: briefing?.actionableItems || []
+    }
     
     // コンテキストをbase64エンコード
     const encodedContext = btoa(encodeURIComponent(JSON.stringify(context)))
