@@ -70,17 +70,23 @@ async function saveTweets(tweets, username) {
       // 保存
       await prisma.buzzPost.create({
         data: {
+          postId: tweet.id || `import_${Date.now()}_${Math.random()}`,
           content: tweet.fullText || tweet.text || '',
           authorUsername: username,
-          authorName: tweet.author?.name || username,
+          authorId: tweet.author?.id || username,
           likesCount: tweet.likeCount || 0,
           retweetsCount: tweet.retweetCount || 0,
+          repliesCount: tweet.replyCount || 0,
           impressionsCount: tweet.viewCount || 0,
           url: tweet.url || '',
           postedAt: tweet.createdAt ? new Date(tweet.createdAt) : new Date(),
           theme: '自分の投稿',
+          language: 'ja',
+          mediaUrls: tweet.media || [],
           hashtags: tweet.hashtags || [],
-          isAnalyzed: true, // 自分の投稿は分析済みとしてマーク
+          authorFollowers: tweet.author?.followers || null,
+          authorFollowing: tweet.author?.following || null,
+          authorVerified: tweet.author?.isVerified || false
         }
       })
       

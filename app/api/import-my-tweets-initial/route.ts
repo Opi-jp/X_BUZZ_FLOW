@@ -84,24 +84,23 @@ export async function POST(request: NextRequest) {
         // 保存
         await prisma.buzzPost.create({
           data: {
+            postId: tweet.id || `import_${Date.now()}_${Math.random()}`,
             content: tweet.fullText || tweet.text || '',
             authorUsername: session.user.username,
-            authorName: tweet.author?.name || session.user.username,
+            authorId: tweet.author?.id || session.user.id || 'self',
             likesCount: tweet.likeCount || 0,
             retweetsCount: tweet.retweetCount || 0,
+            repliesCount: tweet.replyCount || 0,
             impressionsCount: impressions,
             url: tweet.url || '',
             postedAt: tweet.createdAt ? new Date(tweet.createdAt) : new Date(),
             theme: '自分の投稿分析',
+            language: 'ja',
+            mediaUrls: tweet.media || [],
             hashtags: tweet.hashtags || [],
-            isAnalyzed: true,
-            metadata: {
-              engagementRate,
-              quoteTweetCount: tweet.quoteTweetCount || 0,
-              replyCount: tweet.replyCount || 0,
-              importedAt: new Date().toISOString(),
-              source: 'initial_import'
-            }
+            authorFollowers: tweet.author?.followers || null,
+            authorFollowing: tweet.author?.following || null,
+            authorVerified: tweet.author?.isVerified || false
           }
         })
         
