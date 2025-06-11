@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const navigation = [
   { name: 'ダッシュボード', href: '/dashboard', icon: '📊' },
+  { name: 'AI秘書', href: '/dashboard-v2', icon: '⚡' },
   { name: 'バズ投稿', href: '/posts', icon: '🔥' },
   { name: '投稿収集', href: '/collect', icon: '🔍' },
   { name: '投稿作成', href: '/create', icon: '✍️' },
