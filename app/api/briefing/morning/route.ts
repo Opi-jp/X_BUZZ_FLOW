@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       timeRange = '24h'
     } = body
 
-    const briefing = {
+    const briefing: any = {
       perplexityInsights: null,
       newsHighlights: [],
       buzzTrends: [],
