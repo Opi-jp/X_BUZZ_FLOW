@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         username: username.replace('@', ''),
         twitterId: twitterId || '',
         displayName: displayName || username,
-        profileImageUrl: profileImageUrl || '',
+        profileImage: profileImageUrl || '',
       }
     })
 

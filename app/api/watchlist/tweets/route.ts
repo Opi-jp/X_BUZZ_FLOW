@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     // 最終収集日時を更新
     await prisma.watchlistUser.update({
       where: { id: watchlistUserId },
-      data: { lastCheckedAt: new Date() }
+      data: { lastChecked: new Date() }
     })
 
     return NextResponse.json({

@@ -96,6 +96,7 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at")
   updatedAt    DateTime  @updatedAt @map("updated_at")
   sessions     Session[]
+  watchlistUsers WatchlistUser[]
 
   @@map("users")
 }
@@ -246,20 +247,23 @@ model CollectionPreset {
 // ウォッチリスト（フォローすべき人）
 model WatchlistUser {
   id            String   @id @default(uuid())
-  twitterId     String   @unique @map("twitter_id")
+  userId        String   @map("user_id") // 追加: ウォッチリストを作成したユーザー
+  twitterId     String   @map("twitter_id")
   username      String
   displayName   String   @map("display_name")
   profileImage  String?  @map("profile_image")
   bio           String?
-  followersCount Int     @map("followers_count")
+  followersCount Int     @default(0) @map("followers_count")
   category      String[] // AI研究者, インフルエンサー, etc
   notes         String?  // メモ
   priority      Int      @default(0) // 優先度
   isFollowing   Boolean  @default(false) @map("is_following")
   addedAt       DateTime @default(now()) @map("added_at")
   lastChecked   DateTime? @map("last_checked")
+  user          User     @relation(fields: [userId], references: [id])
   tweets        WatchlistTweet[]
 
+  @@unique([userId, username]) // 同じユーザーが同じアカウントを重複登録できないように
   @@map("watchlist_users")
 }
 

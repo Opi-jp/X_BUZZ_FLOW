@@ -21,8 +21,8 @@ interface WatchlistUser {
   id: string
   username: string
   displayName: string
-  profileImageUrl: string
-  lastCheckedAt: Date | null
+  profileImage: string | null
+  lastChecked: Date | null
   _count: {
     tweets: number
   }
