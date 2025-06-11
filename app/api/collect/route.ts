@@ -108,14 +108,14 @@ export async function POST(request: NextRequest) {
     
     for (const tweet of results) {
       try {
-        // デバッグ: author情報を確認（最初の1件のみ）
-        if (savedPosts.length === 0 && tweet.author) {
-          console.log('Author info sample:', {
-            userName: tweet.author.userName,
-            followersCount: tweet.author.followersCount,
-            followingCount: tweet.author.followingCount,
-            verified: tweet.author.verified,
-            description: tweet.author.description?.substring(0, 50)
+        // デバッグ: 最初の3件の詳細を出力
+        if (savedPosts.length < 3) {
+          console.log('Tweet data:', {
+            id: tweet.id,
+            text: tweet.text?.substring(0, 50),
+            author: tweet.author?.userName,
+            hasId: !!tweet.id,
+            idType: typeof tweet.id
           })
         }
         
@@ -139,17 +139,27 @@ export async function POST(request: NextRequest) {
           }
         }
         
+        // IDが存在しない場合はスキップ
+        if (!tweet.id) {
+          console.log('Tweet has no ID, skipping:', tweet)
+          skippedCount++
+          continue
+        }
+        
+        const postId = String(tweet.id) // 念のため文字列に変換
+        
         const existingPost = await prisma.buzzPost.findUnique({
-          where: { postId: tweet.id },
+          where: { postId: postId },
         })
 
         if (existingPost) {
           existingCount++
-          console.log(`Tweet ${tweet.id} already exists`)
+          console.log(`Tweet ${postId} already exists in DB`)
         } else {
+          console.log(`Tweet ${postId} is new, saving...`)
           const post = await prisma.buzzPost.create({
             data: {
-              postId: tweet.id,
+              postId: postId,
               content: tweet.text || '',
               authorUsername: tweet.author?.userName || tweet.author?.username || '',
               authorId: tweet.author?.id || '',
