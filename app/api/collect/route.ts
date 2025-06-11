@@ -41,6 +41,10 @@ export async function POST(request: NextRequest) {
       if (!query.includes('lang:')) {
         optimizedQuery += ' lang:ja'
       }
+      // プロフィール検索を除外（投稿内容のみを対象に）
+      if (!query.includes('-filter:profile_region')) {
+        optimizedQuery += ' -filter:profile_region'
+      }
     }
     
     const requestBody = isUserTimeline ? {
@@ -149,6 +153,43 @@ export async function POST(request: NextRequest) {
         if (excludeReplies && tweet.text && tweet.text.trim().startsWith('@')) {
           skippedCount++
           continue
+        }
+        
+        // コンテンツの関連性チェック（クエリに特定のキーワードが含まれる場合）
+        const contentText = tweet.text || ''
+        const isWorkRelated = query.includes('働き方') || query.includes('キャリア') || query.includes('副業')
+        const isAIRelated = query.includes('AI') || query.includes('ChatGPT') || query.includes('生成AI')
+        
+        if (isWorkRelated) {
+          // 働き方関連のクエリの場合、アニメ・ゲーム・エンタメ系を除外
+          const excludePatterns = ['ガンダム', 'アニメ', 'ゲーム', '声優', 'Vtuber', '配信', 'イラスト', '漫画']
+          if (excludePatterns.some(pattern => contentText.includes(pattern))) {
+            skippedCount++
+            console.log(`Skipped non-work-related content: ${contentText.substring(0, 50)}...`)
+            continue
+          }
+          
+          // 働き方関連の必須キーワードチェック
+          const workKeywords = ['働', '仕事', '副業', 'キャリア', 'フリーランス', 'リモート', '起業', '独立', '収入', '効率', '生産性']
+          if (!workKeywords.some(keyword => contentText.includes(keyword))) {
+            skippedCount++
+            console.log(`Skipped: no work-related keywords found`)
+            continue
+          }
+        }
+        
+        if (isAIRelated) {
+          // AI関連のクエリの場合、実質的な内容を含むかチェック
+          const aiKeywords = ['AI', 'ChatGPT', 'Claude', '生成AI', 'LLM', 'プロンプト', '活用', '効率化', '自動化']
+          const hasAIContent = aiKeywords.some(keyword => contentText.includes(keyword))
+          
+          // URLのみや引用RTのみの投稿を除外
+          const isJustLink = contentText.trim().length < 20 && contentText.includes('http')
+          if (!hasAIContent || isJustLink) {
+            skippedCount++
+            console.log(`Skipped: insufficient AI-related content`)
+            continue
+          }
         }
         
         // エンゲージメント率の計算

@@ -9,6 +9,10 @@ interface BuzzPost {
   postId: string
   content: string
   authorUsername: string
+  authorId?: string
+  authorFollowers?: number
+  authorFollowing?: number
+  authorVerified?: boolean | null
   likesCount: number
   retweetsCount: number
   impressionsCount: number
@@ -115,18 +119,29 @@ export default function PostsPage() {
   const sortedPosts = sortPosts(filteredPosts)
 
   // ウォッチリストに追加
-  const addToWatchlist = async (username: string) => {
+  const addToWatchlist = async (post: BuzzPost) => {
     try {
       const res = await fetch('/api/watchlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ 
+          username: post.authorUsername,
+          twitterId: post.authorId || '',
+          displayName: post.authorUsername,
+          profileImageUrl: ''
+        }),
       })
       if (res.ok) {
-        alert(`@${username} をウォッチリストに追加しました`)
+        alert(`@${post.authorUsername} をウォッチリストに追加しました`)
+      } else {
+        const data = await res.json()
+        if (data.error) {
+          alert(data.error)
+        }
       }
     } catch (error) {
       console.error('Error adding to watchlist:', error)
+      alert('ウォッチリストへの追加に失敗しました')
     }
   }
 
@@ -251,7 +266,7 @@ function PostCard({
   formatDate: (date: string, includeTime?: boolean) => string
   formatNumber: (num: number) => string
   calculateEngagementRate: (post: BuzzPost) => number
-  addToWatchlist: (username: string) => void
+  addToWatchlist: (post: BuzzPost) => void
 }) {
   const engagementRate = calculateEngagementRate(post)
   const isHighEngagement = engagementRate > 5 // 5%以上を高エンゲージメントとする
@@ -259,6 +274,7 @@ function PostCard({
   const [showQuickGenerate, setShowQuickGenerate] = useState(false)
   const [quickGenerating, setQuickGenerating] = useState(false)
   const [generatedContent, setGeneratedContent] = useState('')
+  const [showUserInfo, setShowUserInfo] = useState(false)
 
   const handleQuickGenerate = async (action: 'quote' | 'inspire') => {
     setQuickGenerating(true)
@@ -288,21 +304,89 @@ function PostCard({
     <div className={`bg-white rounded-lg shadow p-6 ${isHighEngagement ? 'border-2 border-green-500' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="font-semibold text-gray-900">
-              @{post.authorUsername}
-            </span>
-            <span className="text-sm text-gray-500">
-              {formatDate(post.postedAt)}
-            </span>
-            {isHighEngagement && (
-              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold">
-                高エンゲージメント
-              </span>
+          <div className="mb-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowUserInfo(!showUserInfo)}
+                  className="font-semibold text-gray-900 hover:text-blue-600 flex items-center gap-1"
+                >
+                  @{post.authorUsername}
+                  <svg className={`w-4 h-4 transition-transform ${showUserInfo ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <span className="text-sm text-gray-500">
+                  {formatDate(post.postedAt)}
+                </span>
+                {isHighEngagement && (
+                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold">
+                    高エンゲージメント
+                  </span>
+                )}
+                <span className="px-2 py-1 bg-gray-100 rounded text-xs">
+                  {post.theme}
+                </span>
+              </div>
+              {post.authorVerified && (
+                <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              )}
+            </div>
+            
+            {/* ユーザー情報ドロップダウン */}
+            {showUserInfo && (
+              <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                  <div>
+                    <p className="text-gray-500">フォロワー</p>
+                    <p className="font-semibold">{formatNumber(post.authorFollowers || 0)}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">フォロー中</p>
+                    <p className="font-semibold">{formatNumber(post.authorFollowing || 0)}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">FF比</p>
+                    <p className="font-semibold">
+                      {post.authorFollowing && post.authorFollowing > 0 
+                        ? (post.authorFollowers / post.authorFollowing).toFixed(2)
+                        : '∞'
+                      }
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">平均エンゲージ率</p>
+                    <p className="font-semibold">{engagementRate.toFixed(2)}%</p>
+                  </div>
+                </div>
+                
+                <div className="mt-3 pt-3 border-t border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm">
+                      <p className="text-gray-600">
+                        {post.authorFollowers >= 10000 ? '🏆 インフルエンサー' : 
+                         post.authorFollowers >= 1000 ? '⭐ マイクロインフルエンサー' : 
+                         '📱 一般ユーザー'}
+                      </p>
+                      {post.authorFollowers / (post.authorFollowing || 1) > 10 && (
+                        <p className="text-green-600 mt-1">✨ 高影響力（FF比 10以上）</p>
+                      )}
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        addToWatchlist(post)
+                      }}
+                      className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm font-medium"
+                    >
+                      Watchリストに追加
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
-            <span className="px-2 py-1 bg-gray-100 rounded text-xs">
-              {post.theme}
-            </span>
           </div>
           <p className="text-gray-800 whitespace-pre-wrap mb-4">{post.content}</p>
           
@@ -348,7 +432,7 @@ function PostCard({
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => addToWatchlist(post.authorUsername)}
+              onClick={() => addToWatchlist(post)}
               className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs"
             >
               Watch
