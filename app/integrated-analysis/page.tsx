@@ -102,7 +102,7 @@ export default function IntegratedAnalysisPage() {
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h3 className="font-bold mb-2">📰 最重要ニュース</h3>
                   <p className="text-sm font-medium">{result.rawData.topNews.title}</p>
-                  <p className="text-xs text-gray-600 mt-2">{result.rawData.topNews.source}</p>
+                  <p className="text-xs text-gray-600 mt-2">ソースID: {result.rawData.topNews.sourceId}</p>
                 </div>
               )}
             </div>

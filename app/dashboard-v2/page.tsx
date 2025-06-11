@@ -314,7 +314,7 @@ export default function DashboardV2Page() {
                 <div key={article.id} className="border-l-4 border-blue-500 pl-4">
                   <h3 className="font-semibold text-sm">{article.title}</h3>
                   <p className="text-xs text-gray-600 mt-1">
-                    {article.source} - 重要度: {(article.importance * 100).toFixed(0)}%
+                    ソースID: {article.sourceId} - 重要度: {((article.importance || 0) * 100).toFixed(0)}%
                   </p>
                   {article.summary && (
                     <p className="text-xs text-gray-700 mt-2">{article.summary}</p>

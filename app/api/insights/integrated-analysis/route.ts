@@ -35,8 +35,8 @@ export async function POST(request: NextRequest) {
       select: {
         title: true,
         summary: true,
-        source: true,
-        keyPoints: true
+        sourceId: true,
+        metadata: true
       }
     })
 
@@ -61,9 +61,9 @@ ${recentBuzzPosts.map((post, i) =>
 
 【重要ニュース TOP ${recentNews.length}】
 ${recentNews.map((news, i) => 
-  `${i + 1}. ${news.title}（${news.source}）
+  `${i + 1}. ${news.title}（ソースID: ${news.sourceId}）
    要約: ${news.summary || 'なし'}
-   ポイント: ${news.keyPoints?.join(', ') || 'なし'}`
+   ポイント: ${(news.metadata as any)?.keyPoints?.join(', ') || 'なし'}`
 ).join('\n\n')}
 
 これらの実データを基に：

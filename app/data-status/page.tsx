@@ -119,7 +119,7 @@ export default function DataStatusPage() {
                 <div key={article.id} className="border-l-4 border-green-500 pl-4 py-2">
                   <p className="font-medium text-sm">{article.title}</p>
                   <p className="text-xs text-gray-600 mt-1">
-                    {article.source} | 重要度: {(article.importance * 100).toFixed(0)}%
+                    ソースID: {article.sourceId} | 重要度: {((article.importance || 0) * 100).toFixed(0)}%
                   </p>
                 </div>
               ))}

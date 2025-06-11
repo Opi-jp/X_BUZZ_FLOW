@@ -64,10 +64,10 @@ export async function POST(request: NextRequest) {
       briefing.newsHighlights = newsArticles.map(article => ({
         id: article.id,
         title: article.title,
-        source: article.source,
+        source: article.sourceId, // sourceIdを使用
         importance: article.importance,
         summary: article.summary,
-        keyPoints: article.keyPoints,
+        keyPoints: article.metadata?.keyPoints || [],
         url: article.url,
         publishedAt: article.publishedAt
       }))
