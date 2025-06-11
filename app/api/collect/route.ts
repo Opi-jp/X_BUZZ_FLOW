@@ -18,6 +18,31 @@ export async function POST(request: NextRequest) {
 
     // クエリが「from:」で始まる場合はユーザータイムライン取得
     const isUserTimeline = query.startsWith('from:')
+    // クエリに既にmin_faves:が含まれているかチェック
+    const hasMinFaves = query.includes('min_faves:')
+    const hasMinRetweets = query.includes('min_retweets:')
+    
+    // バズ戦略に基づいたクエリ最適化
+    let optimizedQuery = query
+    if (!isUserTimeline) {
+      // min_favesが含まれていない場合のみ追加
+      if (!hasMinFaves) {
+        optimizedQuery += ` min_faves:${minLikes}`
+      }
+      // min_retweetsが含まれていない場合のみ追加
+      if (!hasMinRetweets) {
+        optimizedQuery += ` min_retweets:${minRetweets}`
+      }
+      // リツイート除外
+      if (!query.includes('-is:retweet')) {
+        optimizedQuery += ' -is:retweet'
+      }
+      // 日本語指定
+      if (!query.includes('lang:')) {
+        optimizedQuery += ' lang:ja'
+      }
+    }
+    
     const requestBody = isUserTimeline ? {
       twitterContent: query,
       maxItems,
@@ -27,7 +52,7 @@ export async function POST(request: NextRequest) {
       queryType: 'Latest',
       ...dateFilter
     } : {
-      twitterContent: `${query} min_faves:${minLikes} min_retweets:${minRetweets} -is:retweet lang:ja`,
+      twitterContent: optimizedQuery,
       maxItems,
       lang: 'ja',
       'filter:replies': false,
@@ -132,10 +157,16 @@ export async function POST(request: NextRequest) {
         const retweets = tweet.retweetCount || tweet.retweet_count || 0
         const replies = tweet.replyCount || tweet.reply_count || 0
         
-        if (impressions > 0 && minEngagementRate > 0) {
+        // バズ戦略：エンゲージメント率での追加フィルタリング
+        if (impressions > 0) {
           const engagementRate = ((likes + retweets + replies) / impressions) * 100
-          if (engagementRate < minEngagementRate) {
+          
+          // デフォルトの最小エンゲージメント率を設定（0.5%）
+          const effectiveMinEngagementRate = minEngagementRate > 0 ? minEngagementRate : 0.5
+          
+          if (engagementRate < effectiveMinEngagementRate) {
             skippedCount++
+            console.log(`Low engagement rate: ${engagementRate.toFixed(2)}% (min: ${effectiveMinEngagementRate}%)`)
             continue
           }
         }
@@ -159,27 +190,49 @@ export async function POST(request: NextRequest) {
         } else {
           console.log(`Tweet ${postId} is new, saving...`)
           try {
+            // エンゲージメント率を計算して保存
+            const calculatedEngagementRate = impressions > 0 
+              ? ((likes + retweets + replies) / impressions) * 100 
+              : 0
+            
+            // バズ戦略タグの判定
+            const buzzTags = []
+            if (likes >= 10000) buzzTags.push('mega_buzz')
+            else if (likes >= 5000) buzzTags.push('high_buzz')
+            else if (likes >= 1000) buzzTags.push('buzz')
+            
+            // 異常値系の判定
+            if (tweet.text && (tweet.text.includes('万円') || tweet.text.includes('億'))) {
+              buzzTags.push('anomaly_value')
+            }
+            
+            // トレンドワードの判定
+            const trendWords = ['ChatGPT', 'AI', '生成AI', 'Claude', 'GPT-4', 'Gemini']
+            if (tweet.text && trendWords.some(word => tweet.text.includes(word))) {
+              buzzTags.push('trend_word')
+            }
+            
             const post = await prisma.buzzPost.create({
               data: {
                 postId: postId,
-              content: tweet.text || '',
-              authorUsername: tweet.author?.userName || tweet.author?.username || '',
-              authorId: tweet.author?.id || '',
-              authorFollowers: tweet.author?.followersCount || 0,
-              authorFollowing: tweet.author?.followingCount || 0,
-              authorVerified: tweet.author?.verified || null,
-              likesCount: likes,
-              retweetsCount: retweets,
-              repliesCount: replies,
-              impressionsCount: impressions,
-              postedAt: new Date(tweet.createdAt || tweet.created_at),
-              url: tweet.url || tweet.twitterUrl || `https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`,
-              theme: query,
-              language: tweet.lang || 'ja',
-              mediaUrls: tweet.extendedEntities?.media?.map((m: any) => m.media_url_https) || [],
-              hashtags: tweet.entities?.hashtags?.map((h: any) => h.text) || [],
-            },
-          })
+                content: tweet.text || '',
+                authorUsername: tweet.author?.userName || tweet.author?.username || '',
+                authorId: tweet.author?.id || '',
+                authorFollowers: tweet.author?.followersCount || 0,
+                authorFollowing: tweet.author?.followingCount || 0,
+                authorVerified: tweet.author?.verified || null,
+                likesCount: likes,
+                retweetsCount: retweets,
+                repliesCount: replies,
+                impressionsCount: impressions,
+                postedAt: new Date(tweet.createdAt || tweet.created_at),
+                url: tweet.url || tweet.twitterUrl || `https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`,
+                theme: query,
+                language: tweet.lang || 'ja',
+                mediaUrls: tweet.extendedEntities?.media?.map((m: any) => m.media_url_https) || [],
+                hashtags: [...(tweet.entities?.hashtags?.map((h: any) => h.text) || []), ...buzzTags],
+              },
+            })
             savedPosts.push(post)
             console.log(`Successfully saved tweet ${postId}`)
           } catch (error) {
@@ -195,12 +248,43 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 収集結果の分析
+    const analysis = {
+      totalTweets: results.length,
+      saved: savedPosts.length,
+      skipped: skippedCount,
+      existing: existingCount,
+      
+      // エンゲージメント分析
+      avgLikes: savedPosts.length > 0 
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.likesCount, 0) / savedPosts.length)
+        : 0,
+      avgRetweets: savedPosts.length > 0
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.retweetsCount, 0) / savedPosts.length)
+        : 0,
+      avgImpressions: savedPosts.length > 0
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.impressionsCount, 0) / savedPosts.length)
+        : 0,
+      
+      // バズレベル分析
+      megaBuzz: savedPosts.filter(p => p.hashtags.includes('mega_buzz')).length,
+      highBuzz: savedPosts.filter(p => p.hashtags.includes('high_buzz')).length,
+      normalBuzz: savedPosts.filter(p => p.hashtags.includes('buzz')).length,
+      
+      // タイプ分析
+      anomalyValue: savedPosts.filter(p => p.hashtags.includes('anomaly_value')).length,
+      trendWord: savedPosts.filter(p => p.hashtags.includes('trend_word')).length,
+    }
+    
+    console.log('Collection Analysis:', analysis)
+    
     return NextResponse.json({
       collected: results.length,
       saved: savedPosts.length,
       skipped: skippedCount,
       existing: existingCount,
       posts: savedPosts,
+      analysis,
     })
   } catch (error) {
     console.error('Error collecting posts:', error)
