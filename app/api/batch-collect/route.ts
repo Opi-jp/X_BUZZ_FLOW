@@ -25,7 +25,8 @@ export async function POST(request: Request) {
     const collectionPromises = presets.map(async (preset) => {
       try {
         // Kaito API（Apify）を使用して収集 - 新しいエンドポイントを使用
-        const collectResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/collect`, {
+        const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
+        const collectResponse = await fetch(`${baseUrl}/api/collect`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
