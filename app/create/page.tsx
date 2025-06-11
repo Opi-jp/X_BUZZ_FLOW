@@ -324,7 +324,7 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
                           <div key={i} className="mb-2 last:mb-0">
                             <p className="text-xs font-semibold text-purple-700">{angle.angle}</p>
                             {angle.postTemplate && (
-                              <p className="text-xs text-gray-600 mt-1 italic">"{angle.postTemplate}"</p>
+                              <p className="text-xs text-gray-600 mt-1 italic">&ldquo;{angle.postTemplate}&rdquo;</p>
                             )}
                           </div>
                         ))}

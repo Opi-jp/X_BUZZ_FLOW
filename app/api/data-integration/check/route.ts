@@ -144,7 +144,7 @@ function extractKeywordsFromText(text: string): string[] {
 
 // 相関関係の発見
 function findCorrelations(buzzPosts: any[], newsArticles: any[], perplexityReports: any[]) {
-  const correlations = []
+  const correlations: any[] = []
   
   // ニュースとバズの相関
   newsArticles.forEach(article => {
