@@ -83,7 +83,7 @@ export async function POST(request: Request) {
               repliesCount: tweet.replyCount || 0,
               impressionsCount: tweet.viewCount || 0,
               postedAt: new Date(tweet.createdAt),
-              theme: preset.theme || preset.name,
+              theme: preset.category || preset.name,
               url: tweet.url || `https://twitter.com/${tweet.author?.username}/status/${tweet.id}`,
               language: preset.language || 'ja',
               mediaUrls: tweet.media?.map((m: any) => m.url) || [],
