@@ -19,15 +19,15 @@ export async function GET(request: NextRequest) {
     
     // 2. インプレッション集計
     const analytics = await prisma.postAnalytics.findMany({
-      where: { recordedAt: { gte: since } }
+      where: { measuredAt: { gte: since } }
     })
     
-    const totalImpressions = analytics.reduce((sum, a) => sum + (a.impressionsCount || 0), 0)
+    const totalImpressions = analytics.reduce((sum, a) => sum + (a.impressions || 0), 0)
     const monthlyImpressions = days === 30 ? totalImpressions : (totalImpressions / days * 30)
     
     // 3. エンゲージメント率計算
     const totalEngagements = analytics.reduce((sum, a) => 
-      sum + a.likesCount + a.retweetsCount + a.repliesCount, 0
+      sum + a.likes + a.retweets + a.replies, 0
     )
     const engagementRate = totalImpressions > 0 ? totalEngagements / totalImpressions : 0
     
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     scheduledPosts.forEach(post => {
       const type = post.postType as keyof typeof typePerformance
       const engagement = post.analytics?.reduce((sum, a) => 
-        sum + a.likesCount + a.retweetsCount, 0
+        sum + a.likes + a.retweets, 0
       ) || 0
       
       typePerformance[type].posts++
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       
       const avgEngagement = hourPosts.length > 0 ?
         hourPosts.reduce((sum, p) => 
-          sum + (p.analytics?.[0]?.likesCount || 0) + (p.analytics?.[0]?.retweetsCount || 0), 0
+          sum + (p.analytics?.[0]?.likes || 0) + (p.analytics?.[0]?.retweets || 0), 0
         ) / hourPosts.length : 0
       
       return { hour, avgEngagement }
