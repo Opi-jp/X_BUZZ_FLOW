@@ -12,8 +12,11 @@ export async function POST(request: NextRequest) {
     console.log('Session:', JSON.stringify(session, null, 2))
     console.log('Request headers:', request.headers.get('cookie'))
     
-    if (!session?.user) {
-      console.error('No session found')
+    const body = await request.json()
+    const { threadId, userId } = body
+    
+    if (!session?.user && !userId) {
+      console.error('No session found and no userId provided')
       return NextResponse.json(
         { error: 'Twitter認証が必要です' },
         { status: 401 }
@@ -24,9 +27,9 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.findFirst({
       where: userId 
         ? { id: userId }
-        : session.user.id 
+        : session.user?.id 
         ? { id: session.user.id }
-        : session.user.email 
+        : session.user?.email 
         ? { email: session.user.email }
         : undefined,
     })
@@ -39,9 +42,6 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       )
     }
-
-    const body = await request.json()
-    const { threadId, userId } = body
 
     if (!threadId) {
       return NextResponse.json(
