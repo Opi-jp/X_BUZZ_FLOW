@@ -227,7 +227,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
         
         // JSON文字列内の改行文字を修正
         // 文字列リテラル内の実際の改行を\nにエスケープ
-        const fixedJson = jsonStr.replace(/"((?:[^"\\]|\\.)*)"/g, (match, content) => {
+        const fixedJson = jsonStr.replace(/"((?:[^"\\]|\\.)*)"/g, (match: string, content: string) => {
           // 既にエスケープされている文字はそのまま、実際の改行文字をエスケープ
           const fixed = content
             .split('\\n').join('\u0001') // 一時的に既存の\nを保護
