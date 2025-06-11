@@ -321,6 +321,28 @@ export default function Home() {
       {briefing?.perplexityInsights && (
         <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
           <h2 className="text-xl font-bold mb-3">📊 Perplexity統合分析</h2>
+          
+          {/* バズ予測スコア */}
+          {briefing.perplexityInsights.buzzPrediction !== undefined && (
+            <div className="mb-4 p-4 bg-white rounded-lg">
+              <h3 className="font-semibold mb-2">🎯 バズ成功予測</h3>
+              <div className="flex items-center gap-4">
+                <div className="flex-1 bg-gray-200 rounded-full h-4 relative overflow-hidden">
+                  <div 
+                    className="absolute left-0 top-0 h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-500"
+                    style={{ width: `${(briefing.perplexityInsights.buzzPrediction * 100).toFixed(0)}%` }}
+                  />
+                </div>
+                <span className="font-bold text-lg">
+                  {(briefing.perplexityInsights.buzzPrediction * 100).toFixed(0)}%
+                </span>
+              </div>
+              <p className="text-xs text-gray-600 mt-2">
+                リアルタイムトレンド + AI関連度 + 話題性から算出
+              </p>
+            </div>
+          )}
+          
           <div className="grid md:grid-cols-2 gap-4">
             <div className="bg-white p-4 rounded">
               <h3 className="font-semibold mb-2">🔥 今日のトレンド</h3>
@@ -343,6 +365,20 @@ export default function Home() {
               </div>
             )}
           </div>
+          
+          {/* 推奨アクション */}
+          {briefing.perplexityInsights.recommendations?.immediateAction && (
+            <div className="mt-4 p-4 bg-yellow-50 rounded">
+              <h3 className="font-semibold text-yellow-800 mb-2">⚡ 今すぐやるべきこと</h3>
+              {briefing.perplexityInsights.recommendations.immediateAction.slice(0, 2).map((action: any, i: number) => (
+                <div key={i} className="text-sm mb-1">
+                  <span className="font-medium">{action.timeframe}</span>
+                  <span>: </span>
+                  <span>{action.action}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
