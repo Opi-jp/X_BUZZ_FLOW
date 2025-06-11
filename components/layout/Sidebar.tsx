@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 const navigation = [
   { name: '🤖 AI秘書', href: '/dashboard-v2', icon: '🚀' },
+  { name: '統合分析', href: '/integrated-analysis', icon: '🧠' },
   { name: 'Perplexity', href: '/perplexity-test', icon: '🔥' },
   { name: 'データ統合状況', href: '/data-status', icon: '📊' },
   { name: 'ダッシュボード', href: '/dashboard', icon: '📈' },
