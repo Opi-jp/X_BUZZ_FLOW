@@ -125,8 +125,9 @@ function CreatePageContent() {
     }
   }
 
-  const characterCount = editedContent.length
-  const isOverLimit = characterCount > 280
+  // URLを除外して文字数をカウント（日本語なので140文字制限）
+  const characterCount = editedContent.replace(/https?:\/\/[^\s]+/g, '').length
+  const isOverLimit = characterCount > 140
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -213,7 +214,7 @@ function CreatePageContent() {
                   }`}
                 />
                 <div className={`mt-2 text-sm ${isOverLimit ? 'text-red-600' : 'text-gray-500'}`}>
-                  {characterCount} / 280 文字
+                  {characterCount} / 140 文字 (URLを除く)
                 </div>
               </div>
 
