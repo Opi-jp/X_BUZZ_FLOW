@@ -133,15 +133,15 @@ function CreatePageContent() {
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-4xl mx-auto p-8">
-          <div className="mb-8">
+        <div className="max-w-6xl mx-auto p-6">
+          <div className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900">投稿作成</h1>
             <p className="mt-1 text-sm text-gray-600">
-              AIを使って投稿を生成・編集できます
+              AIを使って事実に基づいた投稿を生成・編集できます
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             {/* 左側：生成設定 */}
             <div className="space-y-4">
               {/* 参照投稿 */}
@@ -199,78 +199,122 @@ function CreatePageContent() {
               )}
             </div>
 
-            {/* 右側：編集・設定 */}
-            <div className="space-y-4">
-              {/* 投稿内容編集 */}
-              <div className="bg-white rounded-lg shadow p-4">
-                <h3 className="font-semibold text-gray-900 mb-3">投稿内容</h3>
+            {/* 中央と右側：編集・設定 */}
+            <div className="xl:col-span-2 space-y-4">
+              {/* 投稿内容編集 - 大きく表示 */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">投稿内容</h3>
+                  <div className={`text-sm font-medium ${isOverLimit ? 'text-red-600' : 'text-gray-500'}`}>
+                    {characterCount} / 140
+                  </div>
+                </div>
                 <textarea
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
-                  placeholder="投稿内容を入力..."
-                  rows={6}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isOverLimit ? 'border-red-500' : 'border-gray-300'
+                  placeholder="投稿内容を入力してください。&#10;&#10;AIが生成した内容をベースに、あなたの経験や知見を加えて編集しましょう。"
+                  rows={10}
+                  className={`w-full px-4 py-3 text-base border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none ${
+                    isOverLimit ? 'border-red-500 bg-red-50' : 'border-gray-300'
                   }`}
+                  style={{ fontSize: '16px', lineHeight: '1.6' }}
                 />
-                <div className={`mt-2 text-sm ${isOverLimit ? 'text-red-600' : 'text-gray-500'}`}>
-                  {characterCount} / 140 文字 (URLを除く)
-                </div>
-              </div>
-
-              {/* 投稿設定 */}
-              <div className="bg-white rounded-lg shadow p-4 space-y-3">
-                <h3 className="font-semibold text-gray-900">投稿設定</h3>
+                {isOverLimit && (
+                  <p className="mt-2 text-sm text-red-600">
+                    文字数制限を超えています。内容を短くしてください。
+                  </p>
+                )}
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    投稿タイプ
-                  </label>
-                  <select
-                    value={postType}
-                    onChange={(e) => setPostType(e.target.value as any)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {/* クイックアクション */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setEditedContent(editedContent + '\n\n#AI活用')}
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
                   >
-                    <option value="NEW">新規投稿</option>
-                    <option value="RETWEET">リツイート</option>
-                    <option value="QUOTE">引用リツイート</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    テンプレートタイプ
-                  </label>
-                  <input
-                    type="text"
-                    value={templateType}
-                    onChange={(e) => setTemplateType(e.target.value)}
-                    placeholder="例: 日常系、ビジネス系"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    投稿予定時刻
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={scheduledTime}
-                    onChange={(e) => setScheduledTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                    #AI活用
+                  </button>
+                  <button
+                    onClick={() => setEditedContent(editedContent + '\n\n#働き方改革')}
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                  >
+                    #働き方改革
+                  </button>
+                  <button
+                    onClick={() => setEditedContent(editedContent + '\n\n#クリエイティブ')}
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+                  >
+                    #クリエイティブ
+                  </button>
+                  <button
+                    onClick={() => setEditedContent('')}
+                    className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                  >
+                    クリア
+                  </button>
                 </div>
               </div>
 
-              {/* 保存ボタン */}
-              <button
-                onClick={handleSave}
-                disabled={saving || !editedContent.trim() || isOverLimit}
-                className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-              >
-                {saving ? '保存中...' : '予定投稿として保存'}
-              </button>
+              {/* 投稿設定とアクション */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* 投稿設定 */}
+                <div className="bg-white rounded-lg shadow p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">投稿設定</h3>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        投稿タイプ
+                      </label>
+                      <select
+                        value={postType}
+                        onChange={(e) => setPostType(e.target.value as any)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="NEW">新規投稿</option>
+                        <option value="RETWEET">リツイート</option>
+                        <option value="QUOTE">引用リツイート</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        投稿予定時刻
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={scheduledTime}
+                        onChange={(e) => setScheduledTime(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        未設定の場合は1時間後に設定されます
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* アクションボタン */}
+                <div className="bg-white rounded-lg shadow p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3">アクション</h3>
+                  
+                  <div className="space-y-3">
+                    <button
+                      onClick={handleSave}
+                      disabled={saving || !editedContent.trim() || isOverLimit}
+                      className="w-full py-3 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 font-medium"
+                    >
+                      {saving ? '保存中...' : '予定投稿として保存'}
+                    </button>
+                    
+                    <button
+                      onClick={() => router.push('/schedule')}
+                      className="w-full py-3 px-4 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                    >
+                      スケジュール画面へ
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
