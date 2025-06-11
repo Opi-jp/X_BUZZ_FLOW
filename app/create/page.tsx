@@ -22,10 +22,14 @@ function CreatePageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const refPostId = searchParams.get('refPostId')
+  const action = searchParams.get('action') || 'new'
+  const initialContent = searchParams.get('content') || ''
 
-  const [content, setContent] = useState('')
-  const [editedContent, setEditedContent] = useState('')
-  const [postType, setPostType] = useState<'NEW' | 'RETWEET' | 'QUOTE'>('NEW')
+  const [content, setContent] = useState(initialContent)
+  const [editedContent, setEditedContent] = useState(initialContent)
+  const [postType, setPostType] = useState<'NEW' | 'RETWEET' | 'QUOTE'>(
+    action === 'quote' ? 'QUOTE' : action === 'inspire' ? 'NEW' : 'NEW'
+  )
   const [templateType, setTemplateType] = useState('')
   const [scheduledTime, setScheduledTime] = useState('')
   const [patterns, setPatterns] = useState<AIPattern[]>([])
@@ -33,13 +37,21 @@ function CreatePageContent() {
   const [refPost, setRefPost] = useState<BuzzPost | null>(null)
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [targetAudience, setTargetAudience] = useState('general')
+  const [tone, setTone] = useState('professional')
+  const [additionalContext, setAdditionalContext] = useState('')
 
   useEffect(() => {
     fetchPatterns()
     if (refPostId) {
       fetchRefPost()
     }
-  }, [refPostId])
+    // URLパラメータからcontentが渡された場合、自動的に生成済みとして扱う
+    if (initialContent) {
+      setContent(initialContent)
+      setEditedContent(initialContent)
+    }
+  }, [refPostId, initialContent])
 
   const fetchPatterns = async () => {
     try {
@@ -64,12 +76,83 @@ function CreatePageContent() {
   const handleGenerate = async () => {
     setGenerating(true)
     try {
-      const body: any = {}
+      const body: any = {
+        targetAudience,
+        tone,
+        additionalContext
+      }
       
-      if (refPostId) body.refPostId = refPostId
-      if (selectedPatternId) body.patternId = selectedPatternId
-      if (!refPostId && !selectedPatternId) {
-        body.customPrompt = 'バズりそうな投稿を1つ生成してください。140文字以内で。'
+      if (refPostId && refPost) {
+        body.refPostId = refPostId
+        
+        // アクションに応じたプロンプトを設定
+        if (action === 'quote') {
+          body.customPrompt = `
+以下の投稿を引用RTして、価値のあるコメントを追加してください。
+
+【対象投稿】
+${refPost.content}
+
+【要件】
+- クリエイティブディレクター（23年の経験）の視点を活かす
+- LLM活用や働き方の未来に関する独自の見解を含める
+- 読者に新しい気づきや価値を提供する
+- 賛否両論を呼ぶような刺激的な内容も可
+- 140文字以内で簡潔に
+
+【ターゲット】
+${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家層'}
+
+【トーン】
+${tone === 'professional' ? 'プロフェッショナルで信頼感のある' : tone === 'casual' ? 'カジュアルで親しみやすい' : '挑発的で議論を呼ぶ'}
+
+${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : ''}
+`
+        } else if (action === 'inspire') {
+          body.customPrompt = `
+以下の投稿を参考に、似たテーマで新しい投稿を作成してください。
+
+【参考投稿】
+${refPost.content}
+（いいね: ${refPost.likesCount}, RT: ${refPost.retweetsCount}）
+
+【要件】
+- 参考投稿の成功要因を分析して活用
+- クリエイティブディレクターの経験を活かした独自視点
+- 具体的な数値や事例を含める（異常値系も可）
+- トレンドワード（AI、ChatGPT等）を効果的に使用
+- 140文字以内でインパクトのある内容
+
+【ターゲット】
+${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家層'}
+
+【トーン】
+${tone === 'professional' ? 'プロフェッショナルで信頼感のある' : tone === 'casual' ? 'カジュアルで親しみやすい' : '挑発的で議論を呼ぶ'}
+
+${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : ''}
+`
+        }
+      } else if (selectedPatternId) {
+        body.patternId = selectedPatternId
+      } else {
+        body.customPrompt = `
+バズりそうな投稿を1つ生成してください。
+
+【要件】
+- クリエイティブディレクター（映像制作会社NAKED創業、23年の経験）の視点
+- LLM活用、AI時代の働き方、クリエイティブとテクノロジーの融合など
+- 具体的な数値や事例を含める
+- 読者の感情を動かす内容（驚き、共感、議論など）
+- 140文字以内
+
+【ターゲット】
+${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家層'}
+
+【トーン】
+${tone === 'professional' ? 'プロフェッショナルで信頼感のある' : tone === 'casual' ? 'カジュアルで親しみやすい' : '挑発的で議論を呼ぶ'}
+
+${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : ''}
+`
       }
 
       const res = await fetch('/api/generate', {
@@ -179,6 +262,56 @@ function CreatePageContent() {
                     {patterns.find(p => p.id === selectedPatternId)?.description}
                   </p>
                 )}
+              </div>
+
+              {/* 生成オプション */}
+              <div className="bg-white rounded-lg shadow p-4">
+                <h3 className="font-semibold text-gray-900 mb-3">生成オプション</h3>
+                
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      ターゲット層
+                    </label>
+                    <select
+                      value={targetAudience}
+                      onChange={(e) => setTargetAudience(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="general">一般層</option>
+                      <option value="tech">テック・AI関心層</option>
+                      <option value="business">ビジネス・起業家層</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      トーン
+                    </label>
+                    <select
+                      value={tone}
+                      onChange={(e) => setTone(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="professional">プロフェッショナル</option>
+                      <option value="casual">カジュアル</option>
+                      <option value="provocative">挑発的</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      追加コンテキスト
+                    </label>
+                    <textarea
+                      value={additionalContext}
+                      onChange={(e) => setAdditionalContext(e.target.value)}
+                      placeholder="特定のトレンドや文脈など..."
+                      rows={2}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* 生成ボタン */}

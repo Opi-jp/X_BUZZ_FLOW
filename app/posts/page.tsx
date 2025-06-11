@@ -256,6 +256,34 @@ function PostCard({
   const engagementRate = calculateEngagementRate(post)
   const isHighEngagement = engagementRate > 5 // 5%以上を高エンゲージメントとする
 
+  const [showQuickGenerate, setShowQuickGenerate] = useState(false)
+  const [quickGenerating, setQuickGenerating] = useState(false)
+  const [generatedContent, setGeneratedContent] = useState('')
+
+  const handleQuickGenerate = async (action: 'quote' | 'inspire') => {
+    setQuickGenerating(true)
+    try {
+      const prompt = action === 'quote' 
+        ? `以下の投稿を引用RTして、価値のあるコメントを追加してください。クリエイティブディレクターの視点で、LLM活用の観点を含めてください。140文字以内で。\n\n${post.content}`
+        : `以下の投稿を参考に、似たテーマで新しい投稿を作成してください。クリエイティブディレクターの視点で、独自の見解を含めてください。140文字以内で。\n\n${post.content}`
+
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customPrompt: prompt }),
+      })
+
+      const data = await res.json()
+      setGeneratedContent(data.generatedContent)
+      setShowQuickGenerate(true)
+    } catch (error) {
+      console.error('Error generating content:', error)
+      alert('生成中にエラーが発生しました')
+    } finally {
+      setQuickGenerating(false)
+    }
+  }
+
   return (
     <div className={`bg-white rounded-lg shadow p-6 ${isHighEngagement ? 'border-2 border-green-500' : ''}`}>
       <div className="flex items-start justify-between">
@@ -296,34 +324,112 @@ function PostCard({
         </div>
         
         <div className="ml-4 flex flex-col gap-2">
-          <button
-            onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`これは興味深い！\n\n`)}&url=${encodeURIComponent(post.url)}`, '_blank')}
-            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-          >
-            引用RT
-          </button>
-          <button
-            onClick={() => addToWatchlist(post.authorUsername)}
-            className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm"
-          >
-            Watch
-          </button>
-          <Link
-            href={`/create?refPostId=${post.id}`}
-            className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm text-center"
-          >
-            参考作成
-          </Link>
-          <a
-            href={post.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm text-center"
-          >
-            元投稿
-          </a>
+          <div className="flex gap-2">
+            <Link
+              href={`/create?refPostId=${post.id}&action=quote`}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm font-medium flex items-center gap-1"
+              title="このツイートを引用してAI生成"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
+              </svg>
+              引用生成
+            </Link>
+            <Link
+              href={`/create?refPostId=${post.id}&action=inspire`}
+              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm font-medium flex items-center gap-1"
+              title="このツイートを参考にAI生成"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              参考生成
+            </Link>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => addToWatchlist(post.authorUsername)}
+              className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs"
+            >
+              Watch
+            </button>
+            <a
+              href={post.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-xs"
+            >
+              元投稿
+            </a>
+          </div>
         </div>
       </div>
+      
+      {/* クイック生成結果表示 */}
+      {showQuickGenerate && (
+        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="font-semibold text-sm">AI生成結果</h4>
+            <button
+              onClick={() => setShowQuickGenerate(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <textarea
+            value={generatedContent}
+            onChange={(e) => setGeneratedContent(e.target.value)}
+            className="w-full p-3 border rounded-md mb-3 text-sm"
+            rows={4}
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(generatedContent)
+                alert('クリップボードにコピーしました')
+              }}
+              className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+            >
+              コピー
+            </button>
+            <button
+              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(generatedContent)}`, '_blank')}
+              className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+            >
+              投稿する
+            </button>
+            <Link
+              href={`/create?refPostId=${post.id}&content=${encodeURIComponent(generatedContent)}`}
+              className="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm"
+            >
+              詳細編集
+            </Link>
+          </div>
+        </div>
+      )}
+      
+      {/* クイック生成ボタン（インライン） */}
+      {!showQuickGenerate && (
+        <div className="mt-3 flex gap-2">
+          <button
+            onClick={() => handleQuickGenerate('quote')}
+            disabled={quickGenerating}
+            className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-xs disabled:opacity-50"
+          >
+            {quickGenerating ? '生成中...' : 'クイック引用生成'}
+          </button>
+          <button
+            onClick={() => handleQuickGenerate('inspire')}
+            disabled={quickGenerating}
+            className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 text-xs disabled:opacity-50"
+          >
+            {quickGenerating ? '生成中...' : 'クイック参考生成'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
