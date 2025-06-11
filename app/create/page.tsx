@@ -162,6 +162,12 @@ ${postContext.personalAngles ? postContext.personalAngles.map((a: any) => `- ${a
 
 【バズ予測スコア】
 ${postContext.buzzPrediction ? `${(postContext.buzzPrediction * 100).toFixed(0)}%` : ''}
+
+【推奨アクション】
+${postContext.recommendations?.immediateAction ? postContext.recommendations.immediateAction.slice(0, 2).map((a: any) => `- ${a.action} (${a.timeframe})`).join('\n') : ''}
+
+【クロスソース洞察】
+${postContext.crossSourceInsights ? postContext.crossSourceInsights.slice(0, 2).map((i: any) => `- ${i.insight}`).join('\n') : ''}
 ` : ''
         
         body.customPrompt = `
@@ -176,11 +182,13 @@ ${postContext.buzzPrediction ? `${(postContext.buzzPrediction * 100).toFixed(0)}
 
 ${contextInfo}
 
+${postContext?.recommendations?.immediateAction ? `【推奨アクション】\n${postContext.recommendations.immediateAction.slice(0, 2).map((a: any) => `- ${a.action}`).join('\n')}\n` : ''}
+
 【投稿時間帯】
 ${postContext?.title || ''}
 
 【ターゲット】
-${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家層'}
+${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家层'}
 
 【トーン】
 ${tone === 'professional' ? 'プロフェッショナルで信頼感のある' : tone === 'casual' ? 'カジュアルで親しみやすい' : '挑発的で議論を呼ぶ'}
@@ -268,6 +276,15 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
                     📊 投稿コンテキスト: {postContext.title}
                   </h3>
                   
+                  {/* デバッグ情報 */}
+                  {process.env.NODE_ENV === 'development' && (
+                    <div className="mb-2 p-2 bg-gray-100 rounded text-xs">
+                      <p className="font-mono">buzz: {postContext.buzzPrediction}</p>
+                      <p className="font-mono">angles: {postContext.personalAngles?.length || 0}</p>
+                      <p className="font-mono">trends: {postContext.trends?.length || 0}</p>
+                    </div>
+                  )}
+                  
                   {postContext.buzzPrediction > 0 && (
                     <div className="mb-3">
                       <p className="text-sm font-medium text-gray-700">バズ予測スコア</p>
@@ -327,6 +344,19 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
                               <p className="text-xs text-gray-600 mt-1 italic">&ldquo;{angle.postTemplate}&rdquo;</p>
                             )}
                           </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {postContext.recommendations?.immediateAction && postContext.recommendations.immediateAction.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-medium text-gray-700">推奨アクション</p>
+                      <div className="mt-1 bg-yellow-50 rounded p-2">
+                        {postContext.recommendations.immediateAction.slice(0, 2).map((action: any, i: number) => (
+                          <p key={i} className="text-xs text-gray-700">
+                            • {action.action} <span className="text-gray-500">({action.timeframe})</span>
+                          </p>
                         ))}
                       </div>
                     </div>

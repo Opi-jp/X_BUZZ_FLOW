@@ -59,30 +59,61 @@ export async function POST(request: NextRequest) {
     // 2. Perplexityでリアルタイムトレンド分析（ニュースを含めて）
     if (includePerplexity) {
       try {
-        // 最新ニュースのタイトルを含めたクエリを生成
-        const newsKeywords = briefing.newsHighlights.length > 0
-          ? briefing.newsHighlights.slice(0, 3).map((n: any) => n.title).join(' ')
-          : ''
-        
-        const perplexityQuery = `AI クリエイティブ 働き方 テクノロジー 最新トレンド 2025年1月 ${newsKeywords}`
-        
-        const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
-        const perplexityResponse = await fetch(`${baseUrl}/api/perplexity/trends`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: perplexityQuery,
-            focus: 'creative_ai_comprehensive',
-            newsContext: briefing.newsHighlights.slice(0, 5) // ニュースコンテキストを追加
-          })
+        // まず既存のレポートをDBから取得（1時間以内のもの）
+        const recentReport = await prisma.perplexityReport.findFirst({
+          where: {
+            createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) }
+          },
+          orderBy: { createdAt: 'desc' }
         })
 
-        if (perplexityResponse.ok) {
-          const perplexityData = await perplexityResponse.json()
+        if (recentReport) {
+          // 既存のレポートを使用
           briefing.perplexityInsights = {
-            ...perplexityData,
+            reportId: recentReport.id,
+            rawAnalysis: recentReport.rawAnalysis,
+            structuredInsights: {
+              trends: recentReport.trends as string[],
+              insights: recentReport.insights as string[]
+            },
+            personalAngles: recentReport.personalAngles,
+            buzzPrediction: recentReport.buzzPrediction,
+            recommendations: recentReport.recommendations,
+            metadata: recentReport.metadata,
             newsIntegrated: true,
-            newsUsedCount: Math.min(briefing.newsHighlights.length, 5)
+            newsUsedCount: Math.min(briefing.newsHighlights.length, 5),
+            fromCache: true
+          }
+        } else {
+          // 新規でPerplexity分析を実行
+          // 最新ニュースの詳細情報を含めたリッチなクエリを生成
+          const newsContext = briefing.newsHighlights.length > 0
+            ? `\n\n【最新ニュース】\n${briefing.newsHighlights.slice(0, 3).map((n: any) => 
+                `- ${n.title}\n  要点: ${n.keyPoints?.slice(0, 2).join(', ') || ''}\n  重要度: ${(n.importance * 100).toFixed(0)}%`
+              ).join('\n')}`
+            : ''
+          
+          const perplexityQuery = `AI クリエイティブ 働き方 テクノロジー 最新トレンド 2025年1月${newsContext}`
+          
+          const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
+          const perplexityResponse = await fetch(`${baseUrl}/api/perplexity/trends`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query: perplexityQuery,
+              focus: 'creative_ai_comprehensive',
+              newsContext: briefing.newsHighlights.slice(0, 5) // ニュースコンテキストを追加
+            })
+          })
+
+          if (perplexityResponse.ok) {
+            const perplexityData = await perplexityResponse.json()
+            briefing.perplexityInsights = {
+              ...perplexityData,
+              newsIntegrated: true,
+              newsUsedCount: Math.min(briefing.newsHighlights.length, 5),
+              fromCache: false
+            }
           }
         }
       } catch (error) {

@@ -33,7 +33,9 @@ export async function POST(request: NextRequest) {
             - 今日の注目トレンド（3つ）
             - 各トレンドの独自解釈
             - 投稿すべき「逆張り視点」
-            - RP（引用RT）すべきアカウントやツイートの種類`
+            - RP（引用RT）すべきアカウントやツイートの種類
+            
+            重要：必ず最新の情報を反映し、今日・今週の出来事を中心に分析してください。`
           },
           {
             role: 'user',
@@ -58,32 +60,69 @@ export async function POST(request: NextRequest) {
     // あなた独自の視点でさらに分析
     const personalInsights = await generatePersonalInsights(insights, focus)
 
-    // バズ予測スコアを計算
-    const buzzPrediction = calculateBuzzPotential(insights)
+    // バズ予測スコアを計算（ニュースコンテキストも考慮）
+    const newsContext = body.newsContext || []
+    const buzzPrediction = calculateBuzzPotential(insights, newsContext)
 
-    // レポートをDBに保存
+    // レポートをDBに保存（重複チェック付き）
     const { prisma } = await import('@/lib/prisma')
     
-    const savedReport = await prisma.perplexityReport.create({
-      data: {
-        query,
+    // 1時間以内の同じfocusのレポートがあるか確認
+    const existingReport = await prisma.perplexityReport.findFirst({
+      where: {
         focus,
-        rawAnalysis: analysis,
-        trends: insights.trends || [],
-        insights: insights.insights || [],
-        personalAngles: personalInsights,
-        buzzPrediction,
-        recommendations: {
-          immediateAction: generateImmediateActions(insights),
-          rpTargets: generateRPTargets(insights),
-          postIdeas: generatePostIdeas(personalInsights)
-        },
-        metadata: {
-          timestamp: new Date().toISOString(),
-          freshness: 'real-time'
-        }
+        createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) }
       }
     })
+
+    let savedReport
+    if (existingReport) {
+      // 既存レポートを更新
+      savedReport = await prisma.perplexityReport.update({
+        where: { id: existingReport.id },
+        data: {
+          query,
+          rawAnalysis: analysis,
+          trends: insights.trends || [],
+          insights: insights.insights || [],
+          personalAngles: personalInsights,
+          buzzPrediction,
+          recommendations: {
+            immediateAction: generateImmediateActions(insights),
+            rpTargets: generateRPTargets(insights),
+            postIdeas: generatePostIdeas(personalInsights)
+          },
+          metadata: {
+            timestamp: new Date().toISOString(),
+            freshness: 'real-time',
+            newsContext: newsContext.slice(0, 5)
+          }
+        }
+      })
+    } else {
+      // 新規作成
+      savedReport = await prisma.perplexityReport.create({
+        data: {
+          query,
+          focus,
+          rawAnalysis: analysis,
+          trends: insights.trends || [],
+          insights: insights.insights || [],
+          personalAngles: personalInsights,
+          buzzPrediction,
+          recommendations: {
+            immediateAction: generateImmediateActions(insights),
+            rpTargets: generateRPTargets(insights),
+            postIdeas: generatePostIdeas(personalInsights)
+          },
+          metadata: {
+            timestamp: new Date().toISOString(),
+            freshness: 'real-time',
+            newsContext: newsContext.slice(0, 5)
+          }
+        }
+      })
+    }
 
     return NextResponse.json({
       success: true,
@@ -116,29 +155,65 @@ export async function POST(request: NextRequest) {
 
 // Perplexityの分析を構造化
 function parsePerplexityAnalysis(analysis: string) {
-  const lines = analysis.split('\n').filter(line => line.trim())
+  const trends: string[] = []
+  const insights: string[] = []
+  const lines = analysis.split('\n')
   
-  const trends = []
-  const insights = []
-  let currentSection = ''
+  // トレンドの抽出（"#### 1. **XXX**" 形式）
+  lines.forEach(line => {
+    const trendMatch = line.match(/^####\s*\d+\.\s*\*\*(.+?)\*\*/)
+    if (trendMatch) {
+      trends.push(trendMatch[1])
+    }
+  })
   
-  for (const line of lines) {
-    if (line.includes('トレンド') || line.includes('注目')) {
-      currentSection = 'trends'
-    } else if (line.includes('解釈') || line.includes('視点')) {
-      currentSection = 'insights'
-    } else if (line.includes('投稿') || line.includes('ツイート')) {
-      currentSection = 'posts'
+  // 独自解釈と逆張り視点の抽出
+  let isInsightSection = false
+  lines.forEach((line, index) => {
+    // セクションの開始を検出
+    if (line.includes('**独自解釈**:') || line.includes('**逆張り視点**:')) {
+      isInsightSection = true
+      return
     }
     
-    if (line.match(/^\d+\./) || line.includes('・')) {
-      if (currentSection === 'trends') {
-        trends.push(line.replace(/^\d+\.|\・/, '').trim())
-      } else if (currentSection === 'insights') {
-        insights.push(line.replace(/^\d+\.|\・/, '').trim())
+    // セクションの終了を検出
+    if (isInsightSection && line.trim() === '') {
+      isInsightSection = false
+      return
+    }
+    
+    // インサイトの抽出
+    if (isInsightSection && line.trim().startsWith('-')) {
+      const insight = line.replace(/^-\s*/, '').trim()
+      if (insight.length > 10) { // 短すぎるものを除外
+        insights.push(insight)
       }
     }
-  }
+  })
+  
+  // "投稿すべき「逆張り視点」"セクションからも抽出
+  let inPostSection = false
+  lines.forEach(line => {
+    if (line.includes('投稿すべき')) {
+      inPostSection = true
+      return
+    }
+    
+    if (inPostSection && line.trim().startsWith('-')) {
+      const postIdea = line.replace(/^-\s*/, '').replace(/\*\*/g, '').trim()
+      if (postIdea.length > 10 && !postIdea.endsWith(':')) {
+        insights.push(postIdea)
+      }
+    }
+  })
+  
+  // デバッグ情報
+  console.log('Perplexityパース結果:', {
+    trends: trends.length,
+    insights: insights.length,
+    firstTrend: trends[0],
+    firstInsight: insights[0]?.substring(0, 50)
+  })
   
   return {
     trends: trends.slice(0, 5),
@@ -184,19 +259,26 @@ async function generatePersonalInsights(insights: any, focus: string) {
   return personalAngles
 }
 
-// バズ予測スコアの計算
-function calculateBuzzPotential(insights: any): number {
+// バズ予測スコアの計算（ニュースコンテキストも考慮）
+function calculateBuzzPotential(insights: any, newsContext: any[] = []): number {
   let score = 0.3 // ベーススコア
   
   // Perplexityからのリアルタイム情報 = +0.3
   score += 0.3
   
-  // 複数のトレンドキーワード = +0.2
-  if (insights.trends.length >= 3) score += 0.2
+  // 複数のトレンドキーワード = +0.1〜0.2
+  if (insights.trends.length >= 3) score += 0.1
+  if (insights.trends.length >= 5) score += 0.1
   
-  // AI関連（注目度が高い）= +0.2
+  // AI関連（注目度が高い）= +0.1
   if (insights.rawText.includes('AI') || insights.rawText.includes('LLM')) {
-    score += 0.2
+    score += 0.1
+  }
+  
+  // 重要ニュースとの関連性 = +0.1
+  if (newsContext.length > 0) {
+    const avgImportance = newsContext.reduce((sum, news) => sum + (news.importance || 0), 0) / newsContext.length
+    if (avgImportance > 0.7) score += 0.1
   }
   
   return Math.min(score, 1)

@@ -265,8 +265,11 @@ export default function Home() {
         summary: n.summary,
         keyPoints: n.keyPoints
       })),
-      personalAngles: briefing?.perplexityInsights?.personalAngles || []
-    }
+      personalAngles: briefing?.perplexityInsights?.personalAngles || [],
+      rawAnalysis: briefing?.perplexityInsights?.rawAnalysis || '',
+      recommendations: briefing?.perplexityInsights?.recommendations || {},
+      crossSourceInsights: briefing?.crossSourceInsights || [],
+      actionableItems: briefing?.actionableItems || []
     
     // コンテキストをbase64エンコード
     const encodedContext = btoa(encodeURIComponent(JSON.stringify(context)))
@@ -392,6 +395,11 @@ ${data.recommendations.slice(0, 2).map((r: any) => `- ${r.action}`).join('\n')}
                 （ニュース{briefing.perplexityInsights.newsUsedCount}件を活用）
               </span>
             )}
+            {briefing.perplexityInsights.fromCache && (
+              <span className="ml-2 text-xs font-normal text-gray-500">
+                [1時間以内の分析結果を使用]
+              </span>
+            )}
           </h2>
           
           {/* バズ予測スコア */}
@@ -412,6 +420,11 @@ ${data.recommendations.slice(0, 2).map((r: any) => `- ${r.action}`).join('\n')}
               <p className="text-xs text-gray-600 mt-2">
                 リアルタイムトレンド + AI関連度 + 話題性 + 最新ニュースから算出
               </p>
+              {briefing.perplexityInsights.metadata?.timestamp && (
+                <p className="text-xs text-gray-500 mt-1">
+                  分析時刻: {formatDateTimeJST(briefing.perplexityInsights.metadata.timestamp)}
+                </p>
+              )}
             </div>
           )}
           
