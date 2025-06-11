@@ -155,40 +155,67 @@ export async function POST(request: NextRequest) {
           continue
         }
         
-        // コンテンツの関連性チェック（クエリに特定のキーワードが含まれる場合）
+        // コンテンツの関連性チェック - より厳密なフィルタリング
         const contentText = tweet.text || ''
-        const isWorkRelated = query.includes('働き方') || query.includes('キャリア') || query.includes('副業')
-        const isAIRelated = query.includes('AI') || query.includes('ChatGPT') || query.includes('生成AI')
         
-        if (isWorkRelated) {
-          // 働き方関連のクエリの場合、アニメ・ゲーム・エンタメ系を除外
-          const excludePatterns = ['ガンダム', 'アニメ', 'ゲーム', '声優', 'Vtuber', '配信', 'イラスト', '漫画']
-          if (excludePatterns.some(pattern => contentText.includes(pattern))) {
-            skippedCount++
-            console.log(`Skipped non-work-related content: ${contentText.substring(0, 50)}...`)
-            continue
-          }
-          
-          // 働き方関連の必須キーワードチェック
-          const workKeywords = ['働', '仕事', '副業', 'キャリア', 'フリーランス', 'リモート', '起業', '独立', '収入', '効率', '生産性']
-          if (!workKeywords.some(keyword => contentText.includes(keyword))) {
-            skippedCount++
-            console.log(`Skipped: no work-related keywords found`)
-            continue
-          }
+        // 一般的な除外パターン（政治、エンタメ、スパム）
+        const generalExcludePatterns = [
+          '選挙', '政治', '政党', '議員', '内閣', '国会', 
+          '中国', '韓国', '税金', '年金', '政府',
+          'ガンダム', 'アニメ', 'ゲーム', '声優', 'Vtuber', '配信', 
+          'イラスト', '漫画', 'マンガ', 'ドラマ', '映画',
+          '懸賞', 'プレゼント', 'キャンペーン', 'フォロー&RT',
+          '拡散希望', 'お願いします', '困っています'
+        ]
+        
+        if (generalExcludePatterns.some(pattern => contentText.includes(pattern))) {
+          skippedCount++
+          console.log(`Skipped non-relevant content: ${contentText.substring(0, 50)}...`)
+          continue
         }
         
-        if (isAIRelated) {
-          // AI関連のクエリの場合、実質的な内容を含むかチェック
-          const aiKeywords = ['AI', 'ChatGPT', 'Claude', '生成AI', 'LLM', 'プロンプト', '活用', '効率化', '自動化']
-          const hasAIContent = aiKeywords.some(keyword => contentText.includes(keyword))
+        // クエリタイプの判定（ANDクエリかどうか）
+        const hasANDQuery = query.includes(' AND ') || query.includes(' and ')
+        
+        if (hasANDQuery) {
+          // ANDクエリの場合は、Twitterの検索結果を信頼
+          // ただし、追加の品質チェックは行う
           
-          // URLのみや引用RTのみの投稿を除外
-          const isJustLink = contentText.trim().length < 20 && contentText.includes('http')
-          if (!hasAIContent || isJustLink) {
+          // 短すぎる投稿を除外
+          if (contentText.length < 30) {
             skippedCount++
-            console.log(`Skipped: insufficient AI-related content`)
+            console.log(`Skipped: too short content`)
             continue
+          }
+          
+          // URLだけの投稿を除外
+          const urlRemoved = contentText.replace(/https?:\/\/[^\s]+/g, '').trim()
+          if (urlRemoved.length < 20) {
+            skippedCount++
+            console.log(`Skipped: URL-only content`)
+            continue
+          }
+        } else {
+          // レガシークエリの場合は従来のチェックを実施
+          const isWorkRelated = query.includes('働き方') || query.includes('キャリア') || query.includes('副業')
+          const isAIRelated = query.includes('AI') || query.includes('ChatGPT') || query.includes('生成AI')
+          
+          if (isWorkRelated) {
+            const workKeywords = ['働', '仕事', '副業', 'キャリア', 'フリーランス', 'リモート', '起業', '独立', '収入', '効率', '生産性']
+            if (!workKeywords.some(keyword => contentText.includes(keyword))) {
+              skippedCount++
+              console.log(`Skipped: no work-related keywords found`)
+              continue
+            }
+          }
+          
+          if (isAIRelated) {
+            const aiKeywords = ['AI', 'ChatGPT', 'Claude', '生成AI', 'LLM', 'プロンプト', '活用', '効率化', '自動化']
+            if (!aiKeywords.some(keyword => contentText.includes(keyword))) {
+              skippedCount++
+              console.log(`Skipped: no AI-related keywords found`)
+              continue
+            }
           }
         }
         
