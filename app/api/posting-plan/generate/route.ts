@@ -249,7 +249,7 @@ function getScheduledTime(time: string): string {
 }
 
 function estimateEngagement(type: string, post?: any): number {
-  const baseRates = {
+  const baseRates: { [key: string]: number } = {
     quote_rt: 0.03,
     comment_rt: 0.025,
     original: 0.02,
