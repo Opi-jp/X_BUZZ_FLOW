@@ -92,11 +92,15 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
   }
 
   const getCharCount = (text: string) => {
-    return text.length
+    // URLを除外して文字数をカウント（URLは文字数制限にカウントされない）
+    const textWithoutUrls = text.replace(/https?:\/\/[^\s]+/g, '')
+    return textWithoutUrls.length
   }
 
   const isOverLimit = (text: string) => {
-    return text.length > 140
+    // URLを除外して140文字制限をチェック
+    const textWithoutUrls = text.replace(/https?:\/\/[^\s]+/g, '')
+    return textWithoutUrls.length > 140
   }
 
   const handleSave = async (asDraft = false) => {
@@ -322,7 +326,7 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
                     <span className={`text-sm ${
                       overLimit ? 'text-red-600 font-semibold' : 'text-gray-500'
                     }`}>
-                      {charCount} / 140文字
+                      {charCount} / 140文字 (URLを除く)
                     </span>
                     {overLimit && (
                       <span className="text-sm text-red-600">
