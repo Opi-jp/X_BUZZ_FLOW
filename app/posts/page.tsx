@@ -350,7 +350,7 @@ function PostCard({
                   <div>
                     <p className="text-gray-500">FF比</p>
                     <p className="font-semibold">
-                      {post.authorFollowing && post.authorFollowing > 0 
+                      {post.authorFollowers && post.authorFollowing && post.authorFollowing > 0 
                         ? (post.authorFollowers / post.authorFollowing).toFixed(2)
                         : '∞'
                       }
