@@ -40,9 +40,30 @@ npm run dev
 ## 環境変数
 
 ```
+# Database
 DATABASE_URL=
+DIRECT_URL= # Prismaマイグレーション用
+
+# AI APIs
 CLAUDE_API_KEY=
 KAITO_API_KEY=
-CHROMA_HOST=
-CHROMA_PORT=
+
+# Authentication
+NEXTAUTH_URL=
+NEXTAUTH_SECRET=
+TWITTER_CLIENT_ID=
+TWITTER_CLIENT_SECRET=
+
+# News APIs
+NEWSAPI_KEY=
+
+# Cron Jobs
+CRON_SECRET= # Vercel Cron Job認証用
 ```
+
+## 定時実行設定
+
+毎日朝6時（JST）にRSS収集を自動実行：
+
+1. Vercel環境変数に`CRON_SECRET`を設定（ランダムな文字列）
+2. デプロイ後、Vercelダッシュボードで確認

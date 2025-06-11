@@ -536,6 +536,11 @@ function NewsPageContent() {
                 <div className="flex items-center justify-between">
                   <div className="text-blue-800 space-x-4">
                     <span>取得済み: {articles.length}件</span>
+                    {articles.filter(a => !a.processed).length > 0 && (
+                      <span className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">
+                        未処理: {articles.filter(a => !a.processed).length}件
+                      </span>
+                    )}
                     <span className="text-blue-600">選択済み: {selectedArticles.size}件</span>
                     <span className="font-semibold">分析済み: {articles.filter(a => a.processed && a.importance !== null).length}件</span>
                   </div>
