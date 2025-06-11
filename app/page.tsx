@@ -71,16 +71,22 @@ export default function Home() {
       const data = await res.json()
       
       // 自動スコアリングしてRP候補を抽出
+      // Calculate time threshold on client side to avoid hydration issues
+      const sixHoursAgo = typeof window !== 'undefined' ? Date.now() - 6 * 60 * 60 * 1000 : 0
+      
       const candidates = data.posts
         .filter((post: any) => {
           const engagementRate = post.impressionsCount > 0 
             ? ((post.likesCount + post.retweetsCount) / post.impressionsCount) * 100 
             : 0
           
+          // Skip time check during SSR
+          const timeCheck = typeof window === 'undefined' || new Date(post.postedAt).getTime() > sixHoursAgo
+          
           return (
             engagementRate > 5 &&
             post.authorFollowers > 50000 &&
-            new Date(post.postedAt).getTime() > Date.now() - 6 * 60 * 60 * 1000
+            timeCheck
           )
         })
         .slice(0, 5)
@@ -228,23 +234,41 @@ export default function Home() {
     )
   }
 
-  const now = new Date()
-  const greeting = now.getHours() < 12 ? 'おはようございます' : 'こんにちは'
-  const dateStr = now.toLocaleDateString('ja-JP', { 
-    month: 'numeric', 
-    day: 'numeric', 
-    weekday: 'short' 
+  // Use state to avoid hydration mismatch
+  const [currentTime, setCurrentTime] = useState<{greeting: string; dateStr: string; timeStr: string}>({
+    greeting: 'こんにちは',
+    dateStr: '',
+    timeStr: ''
   })
-  const timeStr = now.toLocaleTimeString('ja-JP', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  })
+  
+  useEffect(() => {
+    const now = new Date()
+    const greeting = now.getHours() < 12 ? 'おはようございます' : 'こんにちは'
+    const dateStr = now.toLocaleDateString('ja-JP', { 
+      month: 'numeric', 
+      day: 'numeric', 
+      weekday: 'short' 
+    })
+    const timeStr = now.toLocaleTimeString('ja-JP', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+    setCurrentTime({ greeting, dateStr, timeStr })
+  }, [])
 
   return (
     <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">☀️ {greeting}、大屋さん</h1>
-        <p className="mt-2 text-gray-600">{dateStr} {timeStr}</p>
+        <h1 className="text-3xl font-bold text-gray-900">
+          <span>☀️ </span>
+          <span>{currentTime.greeting}</span>
+          <span>、大屋さん</span>
+        </h1>
+        <p className="mt-2 text-gray-600">
+          <span>{currentTime.dateStr}</span>
+          {currentTime.dateStr && currentTime.timeStr && <span> </span>}
+          <span>{currentTime.timeStr}</span>
+        </p>
       </div>
 
       {/* アクションボタン */}
@@ -301,14 +325,20 @@ export default function Home() {
             <div className="bg-white p-4 rounded">
               <h3 className="font-semibold mb-2">🔥 今日のトレンド</h3>
               {briefing.perplexityInsights.structuredInsights?.trends?.slice(0, 3).map((trend: string, i: number) => (
-                <div key={i} className="text-sm mb-1">• {trend}</div>
+                <div key={i} className="text-sm mb-1">
+                  <span>• </span>
+                  <span>{trend}</span>
+                </div>
               ))}
             </div>
             {briefing.perplexityInsights.personalAngles && (
               <div className="bg-white p-4 rounded">
                 <h3 className="font-semibold mb-2">💡 あなたの独自視点</h3>
                 {briefing.perplexityInsights.personalAngles.slice(0, 2).map((angle: any, i: number) => (
-                  <div key={i} className="text-sm mb-1">• {angle.angle}</div>
+                  <div key={i} className="text-sm mb-1">
+                    <span>• </span>
+                    <span>{angle.angle}</span>
+                  </div>
                 ))}
               </div>
             )}
@@ -330,15 +360,21 @@ export default function Home() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <p className="font-semibold">
-                        {index + 1}. @{candidate.author}
+                        <span>{index + 1}. @</span>
+                        <span>{candidate.author}</span>
                         <span className="ml-2 text-sm text-gray-600">
-                          ({(candidate.followers / 10000).toFixed(1)}万フォロワー)
+                          <span>(</span>
+                          <span>{(candidate.followers / 10000).toFixed(1)}</span>
+                          <span>万フォロワー)</span>
                         </span>
                       </p>
                       <p className="text-sm text-gray-700 mt-1">{candidate.content}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        エンゲージメント率: {candidate.engagementRate} | 
-                        {candidate.likesCount.toLocaleString()}いいね
+                        <span>エンゲージメント率: </span>
+                        <span>{candidate.engagementRate}</span>
+                        <span> | </span>
+                        <span>{candidate.likesCount.toLocaleString()}</span>
+                        <span>いいね</span>
                       </p>
                     </div>
                     <div className="ml-4 flex flex-col gap-2">
@@ -376,7 +412,11 @@ export default function Home() {
                 <div key={article.id} className="border-l-4 border-blue-500 pl-4">
                   <h3 className="font-semibold text-sm">{article.title}</h3>
                   <p className="text-xs text-gray-600 mt-1">
-                    ソース: {article.source?.name || '不明'} - 重要度: {((article.importance || 0) * 100).toFixed(0)}%
+                    <span>ソース: </span>
+                    <span>{article.source?.name || '不明'}</span>
+                    <span> - 重要度: </span>
+                    <span>{((article.importance || 0) * 100).toFixed(0)}</span>
+                    <span>%</span>
                   </p>
                   {article.summary && (
                     <p className="text-xs text-gray-700 mt-2">{article.summary}</p>
