@@ -137,6 +137,12 @@ export async function POST(request: NextRequest) {
     console.log('DB URL:', process.env.DATABASE_URL?.substring(0, 50) + '...')
     
     for (const tweet of results) {
+      // Kaito APIのデフォルトメッセージをスキップ
+      if (tweet.text && tweet.text.includes('From KaitoEasyAPI, a reminder:')) {
+        console.log('Skipped: Kaito API default message')
+        skippedCount++
+        continue
+      }
       try {
         // デバッグ: 最初の3件の詳細を出力
         if (savedPosts.length < 3) {

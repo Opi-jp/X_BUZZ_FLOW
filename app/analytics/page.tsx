@@ -4,36 +4,43 @@ import { useState, useEffect } from 'react'
 import Sidebar from '@/components/layout/Sidebar'
 import { formatDateTimeJST } from '@/lib/date-utils'
 
-interface Analytics {
+interface MyTweetAnalytics {
   id: string
+  content: string
+  createdAt: string
   impressions: number
   likes: number
   retweets: number
   replies: number
-  profileClicks: number
-  linkClicks: number
+  quotes: number
   engagementRate: number
-  measuredAt: string
-  scheduledPost: {
-    content: string
-    postedAt: string
-  }
 }
 
 interface Summary {
-  totalPosts: number
+  totalTweets: number
   totalImpressions: number
   totalLikes: number
   totalRetweets: number
   avgEngagementRate: number
 }
 
+interface Profile {
+  username: string
+  name: string
+  followers: number
+  following: number
+  tweets: number
+  verified: boolean
+}
+
 type SortKey = 'postedAt' | 'impressions' | 'likes' | 'retweets' | 'engagementRate'
 type SortOrder = 'asc' | 'desc'
 
 export default function AnalyticsPage() {
-  const [analytics, setAnalytics] = useState<Analytics[]>([])
+  const [analytics, setAnalytics] = useState<MyTweetAnalytics[]>([])
   const [summary, setSummary] = useState<Summary | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [days, setDays] = useState('7')
   const [loading, setLoading] = useState(true)
   const [sortKey, setSortKey] = useState<SortKey>('postedAt')
@@ -46,12 +53,27 @@ export default function AnalyticsPage() {
   const fetchAnalytics = async () => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/analytics?days=${days}`)
+      const res = await fetch(`/api/analytics/my-posts?days=${days}`)
       const data = await res.json()
-      setAnalytics(data.analytics)
-      setSummary(data.summary)
+      
+      if (data.error) {
+        console.error('API Error:', data.error)
+        setError(data.error)
+        setAnalytics([])
+        setSummary(null)
+        setProfile(null)
+      } else {
+        setError(null)
+        setProfile(data.profile)
+        setAnalytics(data.analytics?.tweets || [])
+        setSummary(data.analytics?.summary || null)
+      }
     } catch (error) {
       console.error('Error fetching analytics:', error)
+      setError('データの取得に失敗しました')
+      setAnalytics([])
+      setSummary(null)
+      setProfile(null)
     } finally {
       setLoading(false)
     }
@@ -74,8 +96,8 @@ export default function AnalyticsPage() {
 
     switch (sortKey) {
       case 'postedAt':
-        aValue = new Date(a.scheduledPost.postedAt).getTime()
-        bValue = new Date(b.scheduledPost.postedAt).getTime()
+        aValue = new Date(a.createdAt).getTime()
+        bValue = new Date(b.createdAt).getTime()
         break
       case 'impressions':
         aValue = a.impressions
@@ -148,12 +170,25 @@ export default function AnalyticsPage() {
             <div className="text-center py-8">読み込み中...</div>
           ) : (
             <>
+              {/* エラーメッセージ */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-red-800">
+                    {error === '認証が必要です' 
+                      ? 'Twitter認証が必要です。設定ページからTwitterアカウントを連携してください。'
+                      : error}
+                  </p>
+                  <a href="/settings" className="text-sm text-red-600 hover:text-red-800 underline mt-2 inline-block">
+                    設定ページへ
+                  </a>
+                </div>
+              )}
               {/* サマリーカード */}
               {summary && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                   <div className="bg-white rounded-lg shadow p-4">
                     <p className="text-sm text-gray-600">総投稿数</p>
-                    <p className="text-2xl font-bold">{summary.totalPosts}</p>
+                    <p className="text-2xl font-bold">{summary.totalTweets}</p>
                   </div>
                   <div className="bg-white rounded-lg shadow p-4">
                     <p className="text-sm text-gray-600">総インプレッション</p>
@@ -237,7 +272,7 @@ export default function AnalyticsPage() {
                       {analytics.length === 0 ? (
                         <tr>
                           <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-                            分析データがありません
+                            {profile ? '分析データがありません' : 'Twitterアカウントを連携してください'}
                           </td>
                         </tr>
                       ) : (
@@ -245,11 +280,11 @@ export default function AnalyticsPage() {
                           <tr key={item.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
                               <p className="text-sm text-gray-900 truncate max-w-xs">
-                                {item.scheduledPost.content}
+                                {item.content}
                               </p>
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-500">
-                              {formatDate(item.scheduledPost.postedAt)}
+                              {formatDate(item.createdAt)}
                             </td>
                             <td className="px-6 py-4 text-sm text-gray-900 text-right">
                               {formatNumber(item.impressions)}

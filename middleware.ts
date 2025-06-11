@@ -1,15 +1,48 @@
-export { default } from "next-auth/middleware"
+import { withAuth } from "next-auth/middleware"
+import { NextResponse } from 'next/server'
+
+export default withAuth(
+  function middleware() {
+    // 認証が成功した場合はそのまま続行
+    return NextResponse.next()
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        // トークンが存在すれば認証済みとみなす
+        console.log('Middleware auth check:', { hasToken: !!token, tokenSub: token?.sub })
+        return !!token
+      },
+    },
+    pages: {
+      signIn: '/auth/signin',
+      error: '/auth/error',
+    }
+  }
+)
 
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (all API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - auth (auth pages)
+     * 以下のパスを保護:
+     * - /dashboard
+     * - /analytics
+     * - /posts
+     * - /collect
+     * - /create
+     * - /schedule
+     * - /patterns
+     * - /settings
+     * - /news
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|auth).*)',
+    '/dashboard/:path*',
+    '/analytics/:path*',
+    '/posts/:path*',
+    '/collect/:path*',
+    '/create/:path*',
+    '/schedule/:path*',
+    '/patterns/:path*',
+    '/settings/:path*',
+    '/news/:path*',
   ],
 }

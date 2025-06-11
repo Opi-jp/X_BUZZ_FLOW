@@ -99,6 +99,12 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
+      
+      // JWTトークンからアクセストークンをセッションに追加
+      if (token.accessToken) {
+        session.accessToken = token.accessToken as string
+      }
+      
       return session
     },
     async jwt({ token, account, user }) {
