@@ -74,16 +74,20 @@ export async function POST(request: Request) {
               postId: tweet.id,
               content: tweet.fullText || tweet.text || '',
               authorUsername: tweet.author?.username || 'unknown',
-              authorId: tweet.author?.id,
+              authorId: tweet.author?.id || '',
               authorFollowers: tweet.author?.followers,
               authorFollowing: tweet.author?.following,
               authorVerified: tweet.author?.isVerified,
               likesCount: tweet.likeCount || 0,
               retweetsCount: tweet.retweetCount || 0,
+              repliesCount: tweet.replyCount || 0,
               impressionsCount: tweet.viewCount || 0,
               postedAt: new Date(tweet.createdAt),
               theme: preset.theme || preset.name,
               url: tweet.url || `https://twitter.com/${tweet.author?.username}/status/${tweet.id}`,
+              language: preset.language || 'ja',
+              mediaUrls: tweet.media?.map((m: any) => m.url) || [],
+              hashtags: tweet.hashtags || []
             },
           })
           collected++
