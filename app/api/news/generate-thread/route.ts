@@ -302,7 +302,14 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
     // NewsThreadをデータベースに保存
     const thread = await prisma.newsThread.create({
       data: {
-        title: `AIニュースTOP${topArticles.length} - ${new Date().toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' })}`,
+        title: `AIニュースTOP${topArticles.length} - ${new Date().toLocaleString('ja-JP', { 
+          timeZone: 'Asia/Tokyo',
+          month: 'numeric', 
+          day: 'numeric', 
+          hour: 'numeric', 
+          minute: 'numeric',
+          hour12: false 
+        })}`,
         status: 'draft',
         scheduledAt: null,
         metadata: {
