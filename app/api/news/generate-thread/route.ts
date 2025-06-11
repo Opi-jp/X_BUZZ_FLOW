@@ -68,44 +68,38 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 必須記事を取得（選択された記事）
-    let requiredArticles: typeof articles = []
-    if (requiredArticleIds.length > 0) {
-      requiredArticles = await prisma.newsArticle.findMany({
-        where: {
-          id: { in: requiredArticleIds },
-          processed: true,
-          importance: { not: null }
-        },
-        include: {
-          source: true,
-          analysis: true, // analysisも含める
-        }
-      })
+    // 選択された記事のみから生成
+    if (!requiredArticleIds || requiredArticleIds.length === 0) {
+      return NextResponse.json(
+        { error: '記事が選択されていません' },
+        { status: 400 }
+      )
     }
 
-    // 必須記事以外の記事をフィルタリング
-    const optionalArticles = articles.filter(
-      article => !requiredArticleIds.includes(article.id)
-    )
-
-    // ソースの多様性を確保（同じソースからの記事が偏らないように）
-    const maxPerSource = Math.max(3, Math.ceil(limit / 5)) // 最低3件、または全体の20%まで
-    const articlesWithSourceDiversity = optionalArticles.reduce((acc: typeof articles, article) => {
-      const sourceCount = acc.filter(a => a.sourceId === article.sourceId).length
-      if (sourceCount < maxPerSource) {
-        acc.push(article)
+    const topArticles = await prisma.newsArticle.findMany({
+      where: {
+        id: { in: requiredArticleIds },
+        processed: true,
+        importance: { not: null }
+      },
+      include: {
+        source: true,
+        analysis: true,
+      },
+      orderBy: {
+        importance: 'desc', // 重要度順にソート
       }
-      return acc
-    }, [])
+    })
 
-    // 必須記事を先頭に、その後重要度順で記事を選出
-    const remainingSlots = Math.max(0, limit - requiredArticles.length)
-    const selectedOptionalArticles = articlesWithSourceDiversity.slice(0, remainingSlots)
-    const topArticles = [...requiredArticles, ...selectedOptionalArticles]
+    if (topArticles.length === 0) {
+      return NextResponse.json(
+        { error: '有効な分析済み記事が見つかりません' },
+        { status: 404 }
+      )
+    }
 
     // デバッグ情報
-    console.log(`記事選択結果: 必須記事${requiredArticles.length}件, 選択記事${selectedOptionalArticles.length}件, 合計${topArticles.length}件`)
+    console.log(`選択された記事: ${topArticles.length}件`)
 
     // ツイート生成のプロンプト作成
     const articlesData = topArticles.map((article, index) => ({

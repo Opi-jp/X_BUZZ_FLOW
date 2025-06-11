@@ -31,6 +31,15 @@ interface NewsThread {
   metadata?: any
 }
 
+const COMMENT_SNIPPETS = [
+  { label: 'これは注目', text: '【これは注目】' },
+  { label: '個人的には', text: '個人的には、' },
+  { label: '重要なポイント', text: '重要なポイントは、' },
+  { label: '今後の展開', text: '今後の展開に注目です。' },
+  { label: '日本でも', text: '日本でも' },
+  { label: '業界への影響', text: '業界への影響が大きそうです。' },
+]
+
 export default function EditThreadPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const [thread, setThread] = useState<NewsThread | null>(null)
@@ -38,6 +47,8 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [posting, setPosting] = useState(false)
+  const [showSnippets, setShowSnippets] = useState<string | null>(null)
+  const [isDraft, setIsDraft] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,7 +99,7 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
     return text.length > 140
   }
 
-  const handleSave = async () => {
+  const handleSave = async (asDraft = false) => {
     setSaving(true)
     try {
       // 編集内容を保存
@@ -101,11 +112,14 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
       const res = await fetch(`/api/news/threads/${resolvedParams.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: updates }),
+        body: JSON.stringify({ 
+          items: updates,
+          status: asDraft ? 'draft' : thread?.status 
+        }),
       })
 
       if (res.ok) {
-        alert('保存しました')
+        alert(asDraft ? '下書きとして保存しました' : '保存しました')
         fetchThread(resolvedParams.id)
       } else {
         alert('保存に失敗しました')
@@ -193,7 +207,14 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
               キャンセル
             </button>
             <button
-              onClick={handleSave}
+              onClick={() => handleSave(true)}
+              disabled={saving}
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:bg-gray-400"
+            >
+              {saving ? '保存中...' : '下書き保存'}
+            </button>
+            <button
+              onClick={() => handleSave(false)}
               disabled={saving}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400"
             >
@@ -254,6 +275,37 @@ export default function EditThreadPage({ params }: { params: Promise<{ id: strin
                       </div>
                     )}
                   </div>
+                  
+                  {/* コメントスニペット */}
+                  {index > 0 && (
+                    <div className="mb-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowSnippets(showSnippets === item.id ? null : item.id)}
+                        className="text-sm text-blue-600 hover:text-blue-800"
+                      >
+                        コメントを挿入 ▼
+                      </button>
+                      {showSnippets === item.id && (
+                        <div className="mt-2 p-2 bg-gray-100 rounded flex flex-wrap gap-2">
+                          {COMMENT_SNIPPETS.map((snippet, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => {
+                                const currentContent = editedItems[item.id] || item.content
+                                handleContentChange(item.id, currentContent + ' ' + snippet.text)
+                                setShowSnippets(null)
+                              }}
+                              className="px-3 py-1 bg-white rounded text-sm hover:bg-blue-50"
+                            >
+                              {snippet.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   <textarea
                     value={content}

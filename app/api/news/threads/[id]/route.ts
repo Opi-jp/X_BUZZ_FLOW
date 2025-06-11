@@ -64,6 +64,14 @@ export async function PATCH(
         )
       )
 
+      // ステータスも更新する場合
+      if (status) {
+        await prisma.newsThread.update({
+          where: { id },
+          data: { status },
+        })
+      }
+
       // 更新後のスレッドを返す
       const updatedThread = await prisma.newsThread.findUnique({
         where: { id },
