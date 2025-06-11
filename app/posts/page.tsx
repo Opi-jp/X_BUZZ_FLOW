@@ -366,11 +366,11 @@ function PostCard({
                   <div className="flex items-center justify-between">
                     <div className="text-sm">
                       <p className="text-gray-600">
-                        {post.authorFollowers >= 10000 ? '🏆 インフルエンサー' : 
-                         post.authorFollowers >= 1000 ? '⭐ マイクロインフルエンサー' : 
+                        {post.authorFollowers && post.authorFollowers >= 10000 ? '🏆 インフルエンサー' : 
+                         post.authorFollowers && post.authorFollowers >= 1000 ? '⭐ マイクロインフルエンサー' : 
                          '📱 一般ユーザー'}
                       </p>
-                      {post.authorFollowers / (post.authorFollowing || 1) > 10 && (
+                      {post.authorFollowers && post.authorFollowing && post.authorFollowers / post.authorFollowing > 10 && (
                         <p className="text-green-600 mt-1">✨ 高影響力（FF比 10以上）</p>
                       )}
                     </div>
