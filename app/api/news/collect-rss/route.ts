@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
               if (sinceDate) {
                 const sinceDateObj = new Date(sinceDate)
                 if (publishedAt < sinceDateObj) {
-                  skippedCount++
+                  totalSkipped++
                   continue // 指定日より古い記事はスキップ
                 }
               }
