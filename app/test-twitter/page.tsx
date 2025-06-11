@@ -23,6 +23,41 @@ export default function TestTwitterPage() {
     }
   }
 
+  const checkScope = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/auth/check-scope')
+      const data = await res.json()
+      setResult(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'エラーが発生しました')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const revokeToken = async () => {
+    if (!confirm('トークンを無効化しますか？再ログインが必要になります。')) return
+    
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/auth/revoke', { method: 'POST' })
+      const data = await res.json()
+      setResult(data)
+      if (data.success) {
+        setTimeout(() => {
+          window.location.href = '/auth/signin'
+        }, 2000)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'エラーが発生しました')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const testTweet = async () => {
     setLoading(true)
     setError(null)
@@ -87,13 +122,21 @@ export default function TestTwitterPage() {
         )}
       </div>
 
-      <div className="space-x-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-6">
         <button
           onClick={testAuth}
           disabled={loading}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
         >
           認証状態を確認
+        </button>
+        
+        <button
+          onClick={checkScope}
+          disabled={loading}
+          className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:opacity-50"
+        >
+          権限スコープを確認
         </button>
         
         <button
@@ -110,6 +153,14 @@ export default function TestTwitterPage() {
           className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50"
         >
           直接ツイート投稿（ID指定）
+        </button>
+        
+        <button
+          onClick={revokeToken}
+          disabled={loading}
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 col-span-2"
+        >
+          トークンを無効化して再ログイン
         </button>
       </div>
 
