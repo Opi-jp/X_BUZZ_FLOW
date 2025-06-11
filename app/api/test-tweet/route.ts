@@ -86,6 +86,25 @@ export async function POST(request: NextRequest) {
         rateLimit: twitterError.rateLimit
       })
       
+      // 401エラーの場合の詳細メッセージ
+      if (twitterError.code === 401) {
+        return NextResponse.json({
+          error: 'Twitter認証エラー',
+          message: 'アクセストークンが無効です。再ログインが必要です。',
+          details: {
+            code: 401,
+            data: twitterError.data,
+            suggestion: '「トークンを無効化して再ログイン」ボタンを押してください',
+            tokenInfo: {
+              tokenLength: user.accessToken.length,
+              userId: user.id,
+              username: user.username,
+              lastUpdated: user.updatedAt
+            }
+          }
+        }, { status: 401 })
+      }
+      
       return NextResponse.json({
         error: 'Twitter API エラー',
         details: {

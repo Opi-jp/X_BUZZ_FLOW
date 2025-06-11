@@ -39,6 +39,14 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'twitter') {
         try {
           // ユーザー情報を保存
+          console.log('Saving user with token:', {
+            hasAccessToken: !!account.access_token,
+            tokenLength: account.access_token?.length,
+            tokenType: account.token_type,
+            scope: account.scope,
+            expiresAt: account.expires_at,
+          })
+          
           await prisma.user.upsert({
             where: { twitterId: account.providerAccountId },
             update: {
