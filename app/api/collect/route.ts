@@ -341,13 +341,28 @@ export async function POST(request: NextRequest) {
         : 0,
       
       // バズレベル分析
-      megaBuzz: savedPosts.filter(p => p.hashtags?.includes('mega_buzz')).length,
-      highBuzz: savedPosts.filter(p => p.hashtags?.includes('high_buzz')).length,
-      normalBuzz: savedPosts.filter(p => p.hashtags?.includes('buzz')).length,
+      megaBuzz: savedPosts.filter(p => {
+        const tags = p.hashtags as string[] | null
+        return tags?.includes('mega_buzz')
+      }).length,
+      highBuzz: savedPosts.filter(p => {
+        const tags = p.hashtags as string[] | null
+        return tags?.includes('high_buzz')
+      }).length,
+      normalBuzz: savedPosts.filter(p => {
+        const tags = p.hashtags as string[] | null
+        return tags?.includes('buzz')
+      }).length,
       
       // タイプ分析
-      anomalyValue: savedPosts.filter(p => p.hashtags?.includes('anomaly_value')).length,
-      trendWord: savedPosts.filter(p => p.hashtags?.includes('trend_word')).length,
+      anomalyValue: savedPosts.filter(p => {
+        const tags = p.hashtags as string[] | null
+        return tags?.includes('anomaly_value')
+      }).length,
+      trendWord: savedPosts.filter(p => {
+        const tags = p.hashtags as string[] | null
+        return tags?.includes('trend_word')
+      }).length,
     }
     
     console.log('Collection Analysis:', analysis)
