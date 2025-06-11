@@ -296,3 +296,27 @@
 - Next.js 15の動的ルートパラメータ型エラーを修正
 - useSearchParamsのSuspense boundary要件に対応
 - Vercelビルドエラーの解決
+
+## 2025/06/11 作業内容
+
+### 完了タスク
+1. **Twitter収集機能の完全削除**
+   - AIニュース機能からTwitterデータソースを削除
+   - 削除したエンドポイント：
+     - `collect-ai-tweets` - AI Community Tweets収集
+     - `collect-twitter` - 一般的なTwitter収集
+     - `collect-jp` - 未完成の日本語収集
+     - `collect-simple` - テスト用
+     - `collect-rss-sequential` - 未使用の順次RSS収集
+     - 古い`collect-rss` - v2があるため不要
+   - `collect-all`からTwitter収集を削除（RSSのみに変更）
+   - AI Community Tweetsソースは非アクティブ化済み
+
+2. **APIの整理**
+   - 不要な収集エンドポイントを削除
+   - RSS収集機能（`collect-rss-v2`）のみを残す
+   - cronジョブは既にRSSのみを収集する設定
+
+3. **ビルドエラーの修正**
+   - `requiredArticles`の未定義変数エラーを修正
+   - `requiredArticleIds`に変更して解決
