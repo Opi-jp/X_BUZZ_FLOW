@@ -3,7 +3,18 @@ import { prisma } from './prisma'
 
 export function getTwitterClient(accessToken: string) {
   // OAuth 2.0を使用
-  const client = new TwitterApi(accessToken)
+  // アクセストークンが"Bearer "で始まる場合は除去
+  const token = accessToken.startsWith('Bearer ') 
+    ? accessToken.substring(7) 
+    : accessToken
+    
+  console.log('Creating Twitter client with token:', {
+    originalLength: accessToken.length,
+    processedLength: token.length,
+    tokenPreview: token.substring(0, 20) + '...'
+  })
+  
+  const client = new TwitterApi(token)
   return client
 }
 
