@@ -27,9 +27,9 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.findFirst({
       where: userId 
         ? { id: userId }
-        : session.user?.id 
+        : session?.user?.id 
         ? { id: session.user.id }
-        : session.user?.email 
+        : session?.user?.email 
         ? { email: session.user.email }
         : undefined,
     })
