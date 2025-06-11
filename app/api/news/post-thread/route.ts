@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Twitter APIクライアント初期化
+    console.log('Initializing Twitter client with token:', user.accessToken.substring(0, 20) + '...')
     const client = getTwitterClient(user.accessToken)
 
     // ツイートIDを保存する配列
@@ -128,6 +129,13 @@ export async function POST(request: NextRequest) {
       })
     } catch (twitterError: any) {
       console.error('Twitter API error:', twitterError)
+      console.error('Error details:', {
+        message: twitterError.message,
+        code: twitterError.code,
+        data: twitterError.data,
+        errors: twitterError.errors,
+        stack: twitterError.stack
+      })
       
       // 部分的に投稿された場合はmetadataに保存
       if (tweetIds.length > 0) {
@@ -139,15 +147,24 @@ export async function POST(request: NextRequest) {
               ...(thread.metadata as object || {}),
               partialTweetIds: tweetIds,
               error: twitterError.message || 'Unknown error',
+              errorDetails: {
+                code: twitterError.code,
+                data: twitterError.data,
+                errors: twitterError.errors
+              }
             },
           },
         })
       }
 
+      const errorMessage = twitterError.data?.detail || twitterError.message || 'Unknown error'
+      
       return NextResponse.json(
         { 
           error: 'Twitter投稿エラー', 
-          details: twitterError.message || 'Unknown error',
+          details: errorMessage,
+          twitterCode: twitterError.code,
+          twitterData: twitterError.data,
           partialTweetIds: tweetIds,
         },
         { status: 500 }
