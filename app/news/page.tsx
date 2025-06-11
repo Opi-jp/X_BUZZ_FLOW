@@ -119,33 +119,13 @@ function NewsPageContent() {
     
     setCollectingType(type)
     try {
-      let endpoint = ''
-      switch (type) {
-        case 'news':
-          endpoint = '/api/news/collect'
-          break
-        case 'twitter':
-          endpoint = '/api/news/collect-twitter'
-          break
-        case 'jp':
-          endpoint = '/api/news/collect-jp'
-          break
-        case 'ai-tweets':
-          endpoint = '/api/news/collect-ai-tweets'
-          break
-        case 'test':
-          endpoint = '/api/news/test-sources'
-          break
-        case 'rss':
-          endpoint = '/api/news/collect-rss'
-          break
-        case 'simple':
-          endpoint = '/api/news/collect-simple'
-          break
-        default:
-          alert('不明な収集タイプです')
-          return
+      // RSS収集のみをサポート
+      if (type !== 'rss') {
+        alert('RSS収集のみ利用可能です')
+        return
       }
+      
+      const endpoint = '/api/news/collect-rss-v2'
       
       console.log(`収集タイプ: ${type}, エンドポイント: ${endpoint}`)
       
@@ -157,9 +137,9 @@ function NewsPageContent() {
       }
       
       const res = await fetch(endpoint, {
-        method: type === 'test' ? 'GET' : 'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: type === 'test' ? undefined : JSON.stringify({ 
+        body: JSON.stringify({ 
           sinceDate: sinceDate?.toISOString() 
         }),
       })
@@ -446,14 +426,14 @@ function NewsPageContent() {
                 )}
               </div>
               
-              {/* プライマリアクション：一括収集 */}
+              {/* RSS収集 */}
               <button
-                onClick={() => handleCollect('all')}
+                onClick={() => handleCollect('rss')}
                 disabled={collectingType !== null}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:bg-gray-400 font-medium shadow-sm"
-                title="RSS + Twitterを一括収集（バックグラウンド処理）"
+                title="RSSフィードから記事を収集"
               >
-                {collectingType === 'all' ? (
+                {collectingType === 'rss' ? (
                   <span className="flex items-center gap-2">
                     <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -466,36 +446,11 @@ function NewsPageContent() {
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    一括収集
+                    RSS収集
                   </span>
                 )}
               </button>
               
-              {/* セカンダリアクション：個別収集 */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-md p-1">
-                <button
-                  onClick={() => handleCollect('rss')}
-                  disabled={collectingType !== null}
-                  className={`px-3 py-1 rounded text-sm transition-colors ${
-                    collectingType === 'rss' 
-                      ? 'bg-white text-green-700 shadow-sm' 
-                      : 'text-gray-600 hover:bg-white hover:text-green-700'
-                  } disabled:opacity-50`}
-                >
-                  RSS
-                </button>
-                <button
-                  onClick={() => handleCollect('ai-tweets')}
-                  disabled={collectingType !== null}
-                  className={`px-3 py-1 rounded text-sm transition-colors ${
-                    collectingType === 'ai-tweets' 
-                      ? 'bg-white text-blue-700 shadow-sm' 
-                      : 'text-gray-600 hover:bg-white hover:text-blue-700'
-                  } disabled:opacity-50`}
-                >
-                  Twitter
-                </button>
-              </div>
               
               <div className="w-full sm:w-auto flex-1"></div>
               <button
@@ -734,7 +689,7 @@ function NewsPageContent() {
                   <p className="text-gray-500">ソースがありません</p>
                 </div>
               ) : (
-                sources.map((source) => (
+                sources.filter(source => source.type !== 'TWITTER').map((source) => (
                   <div key={source.id} className="bg-white rounded-lg shadow p-6">
                     <div className="flex items-center justify-between">
                       <div>
