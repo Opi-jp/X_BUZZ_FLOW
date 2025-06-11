@@ -13,7 +13,7 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   // メインワークフロー
-  { name: '朝の準備', href: '/morning', icon: '☀️', primary: true },
+  { name: 'ホーム', href: '/', icon: '🏠', primary: true },
   { name: 'コンテンツ管理', href: '/content', icon: '📝' },
   { name: 'リアルタイム', href: '/realtime', icon: '⚡' },
   { name: '振り返り', href: '/review', icon: '📊' },
