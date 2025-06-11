@@ -55,20 +55,26 @@ export async function GET(request: NextRequest) {
     
     // ツイートデータを整形
     const tweetsData = tweets.data.data?.map(tweet => {
-      const metrics = tweet.public_metrics || {}
-      const engagementRate = metrics.impression_count > 0 
-        ? ((metrics.like_count + metrics.retweet_count + metrics.reply_count + metrics.quote_count) / metrics.impression_count) * 100
+      const metrics = tweet.public_metrics as any || {}
+      const impressionCount = metrics.impression_count || 0
+      const likeCount = metrics.like_count || 0
+      const retweetCount = metrics.retweet_count || 0
+      const replyCount = metrics.reply_count || 0
+      const quoteCount = metrics.quote_count || 0
+      
+      const engagementRate = impressionCount > 0 
+        ? ((likeCount + retweetCount + replyCount + quoteCount) / impressionCount) * 100
         : 0
         
       return {
         id: tweet.id,
         content: tweet.text,
         createdAt: tweet.created_at,
-        impressions: metrics.impression_count || 0,
-        likes: metrics.like_count || 0,
-        retweets: metrics.retweet_count || 0,
-        replies: metrics.reply_count || 0,
-        quotes: metrics.quote_count || 0,
+        impressions: impressionCount,
+        likes: likeCount,
+        retweets: retweetCount,
+        replies: replyCount,
+        quotes: quoteCount,
         engagementRate: engagementRate
       }
     }) || []
@@ -84,7 +90,7 @@ export async function GET(request: NextRequest) {
       
     // 時間帯別パフォーマンス分析
     const hourlyPerformance = tweetsData.reduce((acc, tweet) => {
-      const hour = new Date(tweet.createdAt).getHours()
+      const hour = new Date(tweet.createdAt as string).getHours()
       if (!acc[hour]) {
         acc[hour] = { count: 0, totalEngagement: 0 }
       }
