@@ -38,7 +38,7 @@ export async function POST(request: Request) {
                 mode: 'search',
                 maxTweets: 20,
                 language: preset.language || 'ja',
-                minFaves: preset.minFaves || 100,
+                minFaves: preset.minLikes || 100,
                 minRetweets: preset.minRetweets || 10,
                 since: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 過去24時間
               }
