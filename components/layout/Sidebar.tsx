@@ -4,16 +4,17 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const navigation = [
+  { name: '🤖 AI秘書', href: '/dashboard-v2', icon: '🚀' },
+  { name: 'Perplexity', href: '/perplexity-test', icon: '🔥' },
   { name: 'ダッシュボード', href: '/dashboard', icon: '📊' },
-  { name: 'AI秘書', href: '/dashboard-v2', icon: '⚡' },
-  { name: 'バズ投稿', href: '/posts', icon: '🔥' },
+  { name: 'バズ投稿', href: '/posts', icon: '💫' },
   { name: '投稿収集', href: '/collect', icon: '🔍' },
   { name: '投稿作成', href: '/create', icon: '✍️' },
   { name: 'スケジュール', href: '/schedule', icon: '📅' },
   { name: '分析', href: '/analytics', icon: '📈' },
   { name: 'AIニュース', href: '/news', icon: '📰' },
   { name: 'スレッド管理', href: '/news/threads', icon: '🧵' },
-  { name: 'AIパターン', href: '/patterns', icon: '🤖' },
+  { name: 'AIパターン', href: '/patterns', icon: '🎨' },
   { name: '設定', href: '/settings', icon: '⚙️' },
 ]
 
