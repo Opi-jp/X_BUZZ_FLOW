@@ -163,10 +163,16 @@ export async function GET(request: NextRequest) {
 
 // 具体的なアクションプラン生成
 function generateActionPlan(metrics: any, analysis: any): any {
+  interface ActionItem {
+    action: string
+    target: string
+    expectedImpact: string
+  }
+  
   const plan = {
-    immediate: [], // 今すぐやること
-    weekly: [], // 今週中にやること
-    monthly: [] // 今月中にやること
+    immediate: [] as ActionItem[], // 今すぐやること
+    weekly: [] as ActionItem[], // 今週中にやること
+    monthly: [] as ActionItem[] // 今月中にやること
   }
   
   // KPI進捗に基づく即時アクション
