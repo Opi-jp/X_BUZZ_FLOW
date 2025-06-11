@@ -296,3 +296,20 @@ enum PostType {
   RETWEET
   QUOTE
 }
+
+model PerplexityReport {
+  id                 String   @id @default(uuid())
+  query              String
+  focus              String
+  rawAnalysis        String   @db.Text
+  trends             Json
+  insights           Json
+  personalAngles     Json     @map("personal_angles")
+  buzzPrediction     Float    @map("buzz_prediction")
+  recommendations    Json
+  metadata           Json
+  createdAt          DateTime @default(now()) @map("created_at")
+  
+  @@index([createdAt])
+  @@map("perplexity_reports")
+}

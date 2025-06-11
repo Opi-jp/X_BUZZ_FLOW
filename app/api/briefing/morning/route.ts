@@ -21,28 +21,7 @@ export async function POST(request: NextRequest) {
       personalizedTakeaways: []
     }
 
-    // 1. Perplexityでリアルタイムトレンド分析
-    if (includePerplexity) {
-      try {
-        const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
-        const perplexityResponse = await fetch(`${baseUrl}/api/perplexity/trends`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: 'AI クリエイティブ 働き方 テクノロジー 最新トレンド 2025年1月',
-            focus: 'creative_ai_comprehensive'
-          })
-        })
-
-        if (perplexityResponse.ok) {
-          briefing.perplexityInsights = await perplexityResponse.json()
-        }
-      } catch (error) {
-        console.warn('Perplexity API error:', error)
-      }
-    }
-
-    // 2. 重要ニュースの抽出（過去24時間）
+    // 1. 重要ニュースの抽出を先に実行（Perplexityで活用するため）
     if (includeNews) {
       const since = new Date(Date.now() - (timeRange === '24h' ? 24 : 6) * 60 * 60 * 1000)
       
@@ -75,6 +54,40 @@ export async function POST(request: NextRequest) {
         url: article.url,
         publishedAt: article.publishedAt
       }))
+    }
+
+    // 2. Perplexityでリアルタイムトレンド分析（ニュースを含めて）
+    if (includePerplexity) {
+      try {
+        // 最新ニュースのタイトルを含めたクエリを生成
+        const newsKeywords = briefing.newsHighlights.length > 0
+          ? briefing.newsHighlights.slice(0, 3).map((n: any) => n.title).join(' ')
+          : ''
+        
+        const perplexityQuery = `AI クリエイティブ 働き方 テクノロジー 最新トレンド 2025年1月 ${newsKeywords}`
+        
+        const baseUrl = process.env.NEXTAUTH_URL || 'https://x-buzz-flow.vercel.app'
+        const perplexityResponse = await fetch(`${baseUrl}/api/perplexity/trends`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: perplexityQuery,
+            focus: 'creative_ai_comprehensive',
+            newsContext: briefing.newsHighlights.slice(0, 5) // ニュースコンテキストを追加
+          })
+        })
+
+        if (perplexityResponse.ok) {
+          const perplexityData = await perplexityResponse.json()
+          briefing.perplexityInsights = {
+            ...perplexityData,
+            newsIntegrated: true,
+            newsUsedCount: Math.min(briefing.newsHighlights.length, 5)
+          }
+        }
+      } catch (error) {
+        console.warn('Perplexity API error:', error)
+      }
     }
 
     // 3. バズツイートのトレンド分析

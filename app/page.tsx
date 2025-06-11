@@ -41,9 +41,30 @@ export default function Home() {
   const [originalPosts, setOriginalPosts] = useState<OriginalPost[]>([])
   const [selectedRPs, setSelectedRPs] = useState<Set<string>>(new Set())
   const [newsHighlights, setNewsHighlights] = useState<any[]>([])
+  const [currentTime, setCurrentTime] = useState<{greeting: string; dateStr: string; timeStr: string}>({
+    greeting: 'こんにちは',
+    dateStr: '',
+    timeStr: ''
+  })
+  const [dataIntegration, setDataIntegration] = useState<any>(null)
 
   useEffect(() => {
     loadDashboard()
+  }, [])
+
+  useEffect(() => {
+    const now = new Date()
+    const greeting = now.getHours() < 12 ? 'おはようございます' : 'こんにちは'
+    const dateStr = now.toLocaleDateString('ja-JP', { 
+      month: 'numeric', 
+      day: 'numeric', 
+      weekday: 'short' 
+    })
+    const timeStr = now.toLocaleTimeString('ja-JP', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    })
+    setCurrentTime({ greeting, dateStr, timeStr })
   }, [])
 
   const loadDashboard = async () => {
@@ -116,7 +137,13 @@ export default function Home() {
       const res = await fetch('/api/news/articles?analyzed=true&limit=5')
       if (res.ok) {
         const data = await res.json()
-        setNewsHighlights(data.articles.filter((a: any) => a.importance >= 0.7))
+        const highlights = data.articles
+          .filter((a: any) => a.importance >= 0.7)
+          .map((article: any) => ({
+            ...article,
+            keyPoints: article.metadata?.keyPoints || []
+          }))
+        setNewsHighlights(highlights)
       }
     } catch (error) {
       console.error('Error fetching news:', error)
@@ -226,6 +253,59 @@ export default function Home() {
     alert(`準備完了！\n\nRP予定: ${selectedRPs.size}件\nオリジナル投稿: ${originalPosts.length}件\n\n今日も頑張りましょう！`)
   }
 
+  const createPostWithContext = (timeSlot: string, title: string) => {
+    // Perplexityレポートとニュース情報を含めてURLパラメータを生成
+    const context = {
+      timeSlot,
+      title,
+      trends: briefing?.perplexityInsights?.structuredInsights?.trends || [],
+      buzzPrediction: briefing?.perplexityInsights?.buzzPrediction || 0,
+      topNews: newsHighlights.slice(0, 3).map(n => ({
+        title: n.title,
+        summary: n.summary,
+        keyPoints: n.keyPoints
+      })),
+      personalAngles: briefing?.perplexityInsights?.personalAngles || []
+    }
+    
+    // コンテキストをbase64エンコード
+    const encodedContext = btoa(encodeURIComponent(JSON.stringify(context)))
+    
+    // 投稿作成ページへ遷移
+    window.location.href = `/create?context=${encodedContext}`
+  }
+
+  const checkDataIntegration = async () => {
+    try {
+      const res = await fetch('/api/data-integration/check')
+      if (res.ok) {
+        const data = await res.json()
+        setDataIntegration(data)
+        
+        // 結果をアラートで表示（簡易版）
+        const summary = `
+データ統合チェック完了！
+
+📊 収集データ:
+- バズ投稿: ${data.summary.buzzPosts.count}件
+- ニュース: ${data.summary.news.count}件  
+- Perplexityレポート: ${data.summary.perplexity.count}件
+
+🔥 トレンドキーワード:
+${data.integration.trendKeywords.slice(0, 3).map((k: any) => `- ${k.keyword}`).join('\n')}
+
+💡 推奨アクション:
+${data.recommendations.slice(0, 2).map((r: any) => `- ${r.action}`).join('\n')}
+        `
+        
+        alert(summary)
+      }
+    } catch (error) {
+      console.error('Data integration check error:', error)
+      alert('データ統合チェックに失敗しました')
+    }
+  }
+
   if (loading) {
     return (
       <div className="p-8">
@@ -233,28 +313,6 @@ export default function Home() {
       </div>
     )
   }
-
-  // Use state to avoid hydration mismatch
-  const [currentTime, setCurrentTime] = useState<{greeting: string; dateStr: string; timeStr: string}>({
-    greeting: 'こんにちは',
-    dateStr: '',
-    timeStr: ''
-  })
-  
-  useEffect(() => {
-    const now = new Date()
-    const greeting = now.getHours() < 12 ? 'おはようございます' : 'こんにちは'
-    const dateStr = now.toLocaleDateString('ja-JP', { 
-      month: 'numeric', 
-      day: 'numeric', 
-      weekday: 'short' 
-    })
-    const timeStr = now.toLocaleTimeString('ja-JP', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    })
-    setCurrentTime({ greeting, dateStr, timeStr })
-  }, [])
 
   return (
     <div className="p-8">
@@ -272,7 +330,7 @@ export default function Home() {
       </div>
 
       {/* アクションボタン */}
-      <div className="mb-8 flex gap-4">
+      <div className="mb-8 flex gap-4 flex-wrap">
         <button
           onClick={runBatchCollection}
           disabled={collecting}
@@ -294,6 +352,13 @@ export default function Home() {
         >
           🔍 手動収集
         </Link>
+        
+        <button
+          onClick={checkDataIntegration}
+          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-medium"
+        >
+          🔗 データ統合確認
+        </button>
       </div>
 
       {/* 収集結果サマリー */}
@@ -320,7 +385,14 @@ export default function Home() {
       {/* Perplexity統合分析 */}
       {briefing?.perplexityInsights && (
         <div className="mb-8 p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
-          <h2 className="text-xl font-bold mb-3">📊 Perplexity統合分析</h2>
+          <h2 className="text-xl font-bold mb-3">
+            📊 Perplexity統合分析
+            {briefing.perplexityInsights.newsIntegrated && (
+              <span className="ml-2 text-sm font-normal text-purple-600">
+                （ニュース{briefing.perplexityInsights.newsUsedCount}件を活用）
+              </span>
+            )}
+          </h2>
           
           {/* バズ予測スコア */}
           {briefing.perplexityInsights.buzzPrediction !== undefined && (
@@ -338,7 +410,7 @@ export default function Home() {
                 </span>
               </div>
               <p className="text-xs text-gray-600 mt-2">
-                リアルタイムトレンド + AI関連度 + 話題性から算出
+                リアルタイムトレンド + AI関連度 + 話題性 + 最新ニュースから算出
               </p>
             </div>
           )}
@@ -457,12 +529,32 @@ export default function Home() {
                   {article.summary && (
                     <p className="text-xs text-gray-700 mt-2">{article.summary}</p>
                   )}
-                  <Link
-                    href={`/news/threads?articleIds=${article.id}`}
-                    className="inline-block mt-2 text-xs text-blue-600 hover:text-blue-800"
-                  >
-                    スレッド作成 →
-                  </Link>
+                  {article.keyPoints && article.keyPoints.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-xs font-semibold text-gray-600">要点:</p>
+                      <ul className="text-xs text-gray-700 ml-2">
+                        {article.keyPoints.slice(0, 3).map((point: string, i: number) => (
+                          <li key={i}>• {point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div className="mt-2 flex gap-2">
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      元記事を読む →
+                    </a>
+                    <Link
+                      href={`/news/threads?articleIds=${article.id}`}
+                      className="inline-block text-xs text-purple-600 hover:text-purple-800"
+                    >
+                      スレッド作成 →
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>
@@ -482,9 +574,11 @@ export default function Home() {
               - 実践的なTips共有
               - 具体的なツール紹介
             </p>
-            <Link href="/create" className="mt-3 inline-block px-4 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700">
+            <button 
+              onClick={() => createPostWithContext('morning', '朝の投稿（7-9時）')}
+              className="mt-3 inline-block px-4 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700">
               投稿作成
-            </Link>
+            </button>
           </div>
           
           <div className="p-4 bg-yellow-50 rounded-lg">
@@ -494,9 +588,11 @@ export default function Home() {
               - 世代特有の強みを活かす
               - 経験×AIの価値
             </p>
-            <Link href="/create" className="mt-3 inline-block px-4 py-2 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700">
+            <button 
+              onClick={() => createPostWithContext('afternoon', '昼の投稿（12-13時）')}
+              className="mt-3 inline-block px-4 py-2 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700">
               投稿作成
-            </Link>
+            </button>
           </div>
           
           <div className="p-4 bg-purple-50 rounded-lg">
@@ -506,9 +602,11 @@ export default function Home() {
               - 深い洞察系コンテンツ
               - 議論を呼ぶ問題提起
             </p>
-            <Link href="/create" className="mt-3 inline-block px-4 py-2 bg-purple-600 text-white rounded text-sm hover:bg-purple-700">
+            <button 
+              onClick={() => createPostWithContext('night', '夜の投稿（21-23時）')}
+              className="mt-3 inline-block px-4 py-2 bg-purple-600 text-white rounded text-sm hover:bg-purple-700">
               投稿作成
-            </Link>
+            </button>
           </div>
         </div>
       </div>

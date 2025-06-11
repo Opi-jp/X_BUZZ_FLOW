@@ -61,8 +61,33 @@ export async function POST(request: NextRequest) {
     // バズ予測スコアを計算
     const buzzPrediction = calculateBuzzPotential(insights)
 
+    // レポートをDBに保存
+    const { prisma } = await import('@/lib/prisma')
+    
+    const savedReport = await prisma.perplexityReport.create({
+      data: {
+        query,
+        focus,
+        rawAnalysis: analysis,
+        trends: insights.trends || [],
+        insights: insights.insights || [],
+        personalAngles: personalInsights,
+        buzzPrediction,
+        recommendations: {
+          immediateAction: generateImmediateActions(insights),
+          rpTargets: generateRPTargets(insights),
+          postIdeas: generatePostIdeas(personalInsights)
+        },
+        metadata: {
+          timestamp: new Date().toISOString(),
+          freshness: 'real-time'
+        }
+      }
+    })
+
     return NextResponse.json({
       success: true,
+      reportId: savedReport.id,
       rawAnalysis: analysis,
       structuredInsights: insights,
       personalAngles: personalInsights,

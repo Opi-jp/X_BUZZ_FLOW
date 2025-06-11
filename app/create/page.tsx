@@ -24,6 +24,20 @@ function CreatePageContent() {
   const refPostId = searchParams.get('refPostId')
   const action = searchParams.get('action') || 'new'
   const initialContent = searchParams.get('content') || ''
+  const contextParam = searchParams.get('context')
+  
+  // コンテキストをデコード
+  const [postContext, setPostContext] = useState<any>(null)
+  useEffect(() => {
+    if (contextParam) {
+      try {
+        const decoded = JSON.parse(decodeURIComponent(atob(contextParam)))
+        setPostContext(decoded)
+      } catch (error) {
+        console.error('Failed to decode context:', error)
+      }
+    }
+  }, [contextParam])
 
   const [content, setContent] = useState(initialContent)
   const [editedContent, setEditedContent] = useState(initialContent)
@@ -135,6 +149,21 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
       } else if (selectedPatternId) {
         body.patternId = selectedPatternId
       } else {
+        // コンテキスト情報を含めたプロンプト生成
+        const contextInfo = postContext ? `
+【今日のトレンド】
+${postContext.trends ? postContext.trends.slice(0, 3).join('\n') : ''}
+
+【関連ニュース】
+${postContext.topNews ? postContext.topNews.map((n: any) => `- ${n.title}`).join('\n') : ''}
+
+【独自視点の提案】
+${postContext.personalAngles ? postContext.personalAngles.map((a: any) => `- ${a.angle}`).join('\n') : ''}
+
+【バズ予測スコア】
+${postContext.buzzPrediction ? `${(postContext.buzzPrediction * 100).toFixed(0)}%` : ''}
+` : ''
+        
         body.customPrompt = `
 バズりそうな投稿を1つ生成してください。
 
@@ -144,6 +173,11 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
 - 具体的な数値や事例を含める
 - 読者の感情を動かす内容（驚き、共感、議論など）
 - 140文字以内
+
+${contextInfo}
+
+【投稿時間帯】
+${postContext?.title || ''}
 
 【ターゲット】
 ${targetAudience === 'general' ? '一般的なXユーザー' : targetAudience === 'tech' ? 'テック系・AI関心層' : 'ビジネス・起業家層'}
@@ -227,6 +261,79 @@ ${additionalContext ? `【追加コンテキスト】\n${additionalContext}` : '
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             {/* 左側：生成設定 */}
             <div className="space-y-4">
+              {/* コンテキスト情報 */}
+              {postContext && (
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg shadow p-4">
+                  <h3 className="font-semibold text-purple-900 mb-2">
+                    📊 投稿コンテキスト: {postContext.title}
+                  </h3>
+                  
+                  {postContext.buzzPrediction > 0 && (
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-700">バズ予測スコア</p>
+                      <div className="mt-1 bg-white rounded p-2">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 bg-gray-200 rounded-full h-3 relative overflow-hidden">
+                            <div 
+                              className="absolute left-0 top-0 h-full bg-gradient-to-r from-red-500 to-orange-500"
+                              style={{ width: `${(postContext.buzzPrediction * 100).toFixed(0)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-bold">{(postContext.buzzPrediction * 100).toFixed(0)}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {postContext.trends && postContext.trends.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-700">今日のトレンド</p>
+                      <div className="mt-1 bg-white rounded p-2">
+                        {postContext.trends.slice(0, 3).map((trend: string, i: number) => (
+                          <p key={i} className="text-xs text-gray-600">• {trend}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {postContext.topNews && postContext.topNews.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-700">関連ニュース</p>
+                      <div className="mt-1 space-y-2">
+                        {postContext.topNews.map((news: any, i: number) => (
+                          <div key={i} className="bg-white rounded p-2">
+                            <p className="text-xs font-semibold text-gray-800">{news.title}</p>
+                            {news.keyPoints && news.keyPoints.length > 0 && (
+                              <ul className="mt-1 text-xs text-gray-600">
+                                {news.keyPoints.slice(0, 2).map((point: string, j: number) => (
+                                  <li key={j}>• {point}</li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {postContext.personalAngles && postContext.personalAngles.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">独自視点の提案</p>
+                      <div className="mt-1 bg-white rounded p-2">
+                        {postContext.personalAngles.map((angle: any, i: number) => (
+                          <div key={i} className="mb-2 last:mb-0">
+                            <p className="text-xs font-semibold text-purple-700">{angle.angle}</p>
+                            {angle.postTemplate && (
+                              <p className="text-xs text-gray-600 mt-1 italic">"{angle.postTemplate}"</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              
               {/* 参照投稿 */}
               {refPost && (
                 <div className="bg-white rounded-lg shadow p-4">

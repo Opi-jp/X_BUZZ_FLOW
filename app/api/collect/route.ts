@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getKaitoSinceParam } from '@/lib/date-utils'
 
-// Kaito API (Apify) の設定 - kaitoeasyapiを使用
-const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~kaito-twitter-scraper/runs'
+// Kaito API (Apify) の設定 - 動作確認済みのTwitterスクレイパーを使用
+const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs'
 
 // POST: Kaito APIを使ってバズ投稿を収集
 export async function POST(request: NextRequest) {
