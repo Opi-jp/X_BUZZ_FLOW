@@ -2,23 +2,32 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getTwitterClient } from '@/lib/twitter'
 import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 
 // POST: スレッドをTwitterに投稿
 export async function POST(request: NextRequest) {
   try {
     // セッション確認
-    const session = await getServerSession()
-    if (!session?.user?.email) {
+    const session = await getServerSession(authOptions)
+    console.log('Session:', session)
+    
+    if (!session?.user) {
       return NextResponse.json(
         { error: 'Twitter認証が必要です' },
         { status: 401 }
       )
     }
 
-    // ユーザー情報を取得
+    // ユーザー情報を取得（IDまたはemailで検索）
     const user = await prisma.user.findFirst({
-      where: { email: session.user.email },
+      where: session.user.id 
+        ? { id: session.user.id }
+        : session.user.email 
+        ? { email: session.user.email }
+        : undefined,
     })
+    
+    console.log('User found:', user ? 'Yes' : 'No', user?.username)
 
     if (!user?.accessToken) {
       return NextResponse.json(

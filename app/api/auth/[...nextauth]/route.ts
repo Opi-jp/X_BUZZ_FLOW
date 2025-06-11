@@ -10,7 +10,7 @@ console.log('Auth config:', {
   nodeEnv: process.env.NODE_ENV,
 })
 
-const handler = NextAuth({
+export const authOptions = {
   debug: true, // デバッグモードを有効化
   providers: [
     TwitterProvider({
@@ -106,6 +106,8 @@ const handler = NextAuth({
     error: '/auth/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
-})
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
