@@ -4,5 +4,20 @@
       "path": "/api/cron/collect-rss",
       "schedule": "0 21 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/collect/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/news/analyze/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/perplexity/trends/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/batch-collect/route.ts": {
+      "maxDuration": 60
+    }
+  },
+  "regions": ["iad1"]
 }

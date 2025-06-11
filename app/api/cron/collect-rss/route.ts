@@ -6,8 +6,13 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   // Vercel Cronからのリクエストかチェック
   const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const isVercelCron = request.headers.get('x-vercel-cron') === '1'
+  
+  // 開発環境では認証をスキップ
+  if (process.env.NODE_ENV === 'production') {
+    if (!isVercelCron || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
   }
 
   try {

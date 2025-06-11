@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Vercel Function Configuration
+export const maxDuration = 30 // Perplexity API呼び出しで時間がかかる可能性
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()

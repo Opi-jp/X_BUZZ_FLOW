@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getKaitoSinceParam } from '@/lib/date-utils'
 
+// Vercel Function Configuration
+export const maxDuration = 30 // 30秒（Pro planは60秒まで可能）
+
 // Kaito API (Apify) の設定 - 動作確認済みのTwitterスクレイパーを使用
 const KAITO_API_URL = 'https://api.apify.com/v2/acts/kaitoeasyapi~twitter-x-data-tweet-scraper-pay-per-result-cheapest/runs'
 

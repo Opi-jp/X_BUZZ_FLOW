@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Vercel Function Configuration
+export const maxDuration = 30 // 複数記事の分析で時間がかかる可能性
+
 // Anthropic Claude API
 const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages'
 

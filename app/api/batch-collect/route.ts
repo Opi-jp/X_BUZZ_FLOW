@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Vercel Function Configuration
+export const maxDuration = 60 // バッチ処理は時間がかかる
+
 interface CollectionResult {
   presetName: string
   collected: number
