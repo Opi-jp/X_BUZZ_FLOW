@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { PostType } from '@/app/generated/prisma'
 
 // 選択した投稿計画をスケジュールに追加
 export async function POST(request: NextRequest) {
@@ -65,13 +66,13 @@ export async function POST(request: NextRequest) {
 }
 
 // 計画タイプを投稿タイプに変換
-function convertPlanTypeToPostType(planType: string): string {
-  const typeMap: Record<string, string> = {
-    'quote_rt': 'QUOTE',
-    'comment_rt': 'QUOTE', // コメント付きも引用RTとして扱う
-    'original': 'NEW',
-    'news_thread': 'NEW' // ニューススレッドも新規投稿として扱う
+function convertPlanTypeToPostType(planType: string): PostType {
+  const typeMap: Record<string, PostType> = {
+    'quote_rt': PostType.QUOTE,
+    'comment_rt': PostType.QUOTE, // コメント付きも引用RTとして扱う
+    'original': PostType.NEW,
+    'news_thread': PostType.NEW // ニューススレッドも新規投稿として扱う
   }
   
-  return typeMap[planType] || 'NEW'
+  return typeMap[planType] || PostType.NEW
 }
