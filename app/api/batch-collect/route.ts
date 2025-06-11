@@ -24,34 +24,27 @@ export async function POST(request: Request) {
     // 各プリセットで並列収集
     const collectionPromises = presets.map(async (preset) => {
       try {
-        // Kaito API（Apify）を使用して収集
-        const response = await fetch('https://api.apify.com/v2/acts/kaitoeasyapi~kaito-twitter-scraper/run-sync-get-dataset-items', {
+        // Kaito API（Apify）を使用して収集 - 新しいエンドポイントを使用
+        const collectResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/collect`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            token: process.env.KAITO_API_KEY,
-            input: {
-              twitterContent: {
-                query: preset.query,
-                mode: 'search',
-                maxTweets: 20,
-                language: preset.language || 'ja',
-                minFaves: preset.minLikes || 100,
-                minRetweets: preset.minRetweets || 10,
-                since: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 過去24時間
-              }
-            }
+            query: preset.query,
+            minLikes: preset.minLikes || 100,
+            minRetweets: preset.minRetweets || 10,
+            maxItems: 20,
+            excludeReplies: true
           }),
         })
 
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`)
+        if (!collectResponse.ok) {
+          throw new Error(`API error: ${collectResponse.status}`)
         }
 
-        const data = await response.json()
-        const tweets = data.twitterSearchContent || []
+        const data = await collectResponse.json()
+        const tweets = data.posts || []
         
         let collected = 0
         let duplicates = 0
