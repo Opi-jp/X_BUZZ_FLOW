@@ -108,7 +108,15 @@ export default function ViralDashboard() {
 
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">バイラルコンテンツ自動生成システム</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">バイラルコンテンツ自動生成システム</h1>
+        <a
+          href="/viral/enhanced"
+          className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+        >
+          拡張版（4フェーズ分析）
+        </a>
+      </div>
 
       <div className="mb-4">
         <button
