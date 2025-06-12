@@ -76,7 +76,7 @@ export default function ViralDashboard() {
           disabled={loading}
           className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? '分析中...' : 'トレンド分析 (ChatGPT)'}
+          {loading ? '分析中...' : 'ステップ1: トレンド分析のみ (ChatGPT)'}
         </button>
 
         <button
@@ -84,7 +84,7 @@ export default function ViralDashboard() {
           disabled={loading}
           className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {loading ? '実行中...' : '自動ワークフロー実行'}
+          {loading ? '実行中...' : 'ステップ1+2: 分析＋投稿生成 (ChatGPT→Claude)'}
         </button>
       </div>
 

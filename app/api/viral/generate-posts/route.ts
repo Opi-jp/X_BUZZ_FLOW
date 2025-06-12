@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
               data: {
                 opportunityId: opportunity.id,
                 conceptType: `concept${index + 1}`,
-                content: concept.content,
+                content: concept.content || (concept.threadContent && concept.threadContent[0]) || '',
                 threadContent: concept.threadContent || null,
                 visualGuide: concept.visualGuide,
                 hashtags: concept.hashtags,
@@ -158,7 +158,7 @@ function buildGenerationPrompt(opportunity: any) {
     {
       "title": "コンセプトタイトル",
       "postType": "single" または "thread",
-      "content": "140文字以内の完全な投稿文（単発の場合）",
+      "content": "140文字以内の完全な投稿文（スレッドの場合は最初のツイート）",
       "threadContent": [
         "スレッド1つ目の投稿",
         "スレッド2つ目の投稿",
