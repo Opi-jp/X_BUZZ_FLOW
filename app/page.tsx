@@ -552,8 +552,15 @@ ${data.recommendations.slice(0, 2).map((r: any) => `- ${r.action}`).join('\n')}
                     <span>{((article.importance || 0) * 100).toFixed(0)}</span>
                     <span>%</span>
                   </p>
-                  {article.summary && (
-                    <p className="text-xs text-gray-700 mt-2">{article.summary}</p>
+                  {(article.japaneseSummary || article.summary) && (
+                    <p className="text-xs text-gray-700 mt-2">
+                      {article.japaneseSummary || article.summary}
+                    </p>
+                  )}
+                  {!article.processed && (
+                    <p className="text-xs text-orange-600 mt-1">
+                      ※ AI分析待ち
+                    </p>
                   )}
                   {article.keyPoints && article.keyPoints.length > 0 && (
                     <div className="mt-2">

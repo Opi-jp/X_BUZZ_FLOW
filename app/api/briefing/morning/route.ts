@@ -63,7 +63,12 @@ export async function POST(request: NextRequest) {
       briefing.newsHighlights = newsArticles.map(article => ({
         id: article.id,
         title: article.title,
-        source: article.source.name, // sourceの名前を使用
+        source: {
+          id: article.source.id,
+          name: article.source.name,
+          url: article.source.url
+        }, // sourceオブジェクトとして渡す
+        sourceName: article.source.name, // 互換性のため名前も直接設定
         importance: article.importance || 0.5, // 未処理の場合はデフォルト値
         summary: article.summary,
         url: article.url,
