@@ -426,3 +426,64 @@ model ViralConfig {
   
   @@map("viral_config")
 }
+
+// GPTベース分析システム用モデル
+model GptAnalysis {
+  id              String   @id @default(uuid())
+  analysisType    String   @map("analysis_type") // comprehensive, trends, concepts
+  prompt          String   @db.Text
+  response        Json
+  tokens          Int?
+  duration        Int?     // ミリ秒
+  metadata        Json?
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  
+  drafts          ContentDraft[]
+  
+  @@index([analysisType])
+  @@map("gpt_analyses")
+}
+
+model ContentDraft {
+  id                    String   @id @default(uuid())
+  analysisId            String   @map("analysis_id")
+  conceptType           String   @map("concept_type") // controversy, empathy, humor, insight, news
+  category              String   // AI依存, 働き方改革, 世代間ギャップ, 未来予測
+  title                 String
+  content               String   @db.Text
+  explanation           String   @db.Text // なぜバズるかの説明
+  buzzFactors           String[] @map("buzz_factors")
+  targetAudience        String   @map("target_audience")
+  estimatedEngagement   Json     @map("estimated_engagement")
+  hashtags              String[]
+  status                String   @default("draft") // draft, reviewed, scheduled, posted
+  editedContent         String?  @map("edited_content") @db.Text
+  editorNotes           String?  @map("editor_notes") @db.Text
+  metadata              Json?
+  
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+  
+  analysis              GptAnalysis @relation(fields: [analysisId], references: [id])
+  
+  @@index([analysisId, status])
+  @@index([conceptType, category])
+  @@map("content_drafts")
+}
+
+model PromptTemplate {
+  id              String   @id @default(uuid())
+  name            String
+  type            String   // analysis, concept, review
+  template        String   @db.Text
+  variables       Json     // 利用可能な変数のリスト
+  isActive        Boolean  @default(true) @map("is_active")
+  metadata        Json?
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  @@index([type, isActive])
+  @@map("prompt_templates")
+}
