@@ -37,7 +37,7 @@ export async function POST(
     const startTime = Date.now()
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: config.config.model || 'gpt-4-turbo-preview',
       messages: [
         {
           role: 'system',
@@ -141,8 +141,9 @@ async function getLatestNewsData() {
 function buildStep1Prompt(config: any, newsData: any[]) {
   const newsSection = newsData.map((news, i) => 
     `${i + 1}. 【${news.source}】${news.title}
-    カテゴリ: ${news.category} | 重要度: ${news.importance}`
-  ).join('\n')
+    カテゴリ: ${news.category} | 重要度: ${news.importance}
+    要約: ${news.summary || 'なし'}`
+  ).join('\n\n')
 
   return `
 現在時刻: ${new Date().toLocaleString('ja-JP')}
@@ -192,18 +193,19 @@ ${newsSection}
 
 {
   "articleAnalysis": [
+    // 上記のニュースデータすべてについて、以下の形式で詳細分析を行ってください
     {
-      "title": "記事タイトル",
+      "title": "記事タイトル（元のタイトルをそのまま使用）",
       "source": "ソース名",
       "category": "カテゴリ",
       "importance": 0.0-1.0,
-      "summary": "この記事の要約（100文字程度）",
+      "summary": "この記事の内容を100文字程度で要約",
       "keyPoints": [
-        "重要ポイント1",
-        "重要ポイント2",
-        "重要ポイント3"
+        "重要ポイント1（具体的に）",
+        "重要ポイント2（具体的に）",
+        "重要ポイント3（具体的に）"
       ],
-      "viralPotential": "なぜこの記事がバズる可能性があるか"
+      "viralPotential": "なぜこの記事がバズる可能性があるか（具体的な理由）"
     }
   ],
   "currentEvents": {

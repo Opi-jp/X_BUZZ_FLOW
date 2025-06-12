@@ -42,7 +42,7 @@ export async function POST(
     const startTime = Date.now()
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: currentMetadata.config.model || 'gpt-4-turbo-preview',
       messages: [
         {
           role: 'system',

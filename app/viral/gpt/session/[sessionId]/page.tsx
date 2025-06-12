@@ -228,61 +228,51 @@ export default function GptSessionDetail() {
                 </div>
 
                 {/* 記事詳細分析 */}
-                {stepData.step1.articleAnalysis && (
-                  <div className="border border-blue-200 rounded-lg p-4 mb-4">
-                    <button
-                      onClick={() => toggleSection('articleAnalysis')}
-                      className="w-full flex justify-between items-center text-left"
-                    >
-                      <h3 className="font-medium text-blue-900">📰 記事別詳細分析</h3>
-                      <svg className={`w-5 h-5 transform transition-transform ${expandedSections.articleAnalysis ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    
-                    {expandedSections.articleAnalysis && (
-                      <div className="mt-4 space-y-4">
-                        {stepData.step1.articleAnalysis.map((article: any, idx: number) => (
-                          <div key={idx} className="bg-blue-50 rounded-lg p-4">
-                            <h4 className="font-semibold text-blue-900 mb-2">{article.title}</h4>
-                            <div className="text-sm text-gray-700 space-y-2">
-                              <p><span className="font-medium">ソース:</span> {article.source}</p>
-                              <p><span className="font-medium">カテゴリ:</span> {article.category}</p>
-                              <p><span className="font-medium">重要度:</span> {(article.importance * 100).toFixed(0)}%</p>
-                              
-                              {article.summary && (
-                                <div className="mt-2">
-                                  <p className="font-medium text-blue-800">要約:</p>
-                                  <p className="text-gray-700">{article.summary}</p>
-                                </div>
-                              )}
-                              
-                              {article.keyPoints && article.keyPoints.length > 0 && (
-                                <div className="mt-2">
-                                  <p className="font-medium text-blue-800">キーポイント:</p>
-                                  <ul className="ml-4 space-y-1">
-                                    {article.keyPoints.map((point: string, pointIdx: number) => (
-                                      <li key={pointIdx} className="flex items-start">
-                                        <span className="text-blue-600 mr-2">•</span>
-                                        <span>{point}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                              
-                              {article.viralPotential && (
-                                <div className="mt-2 p-2 bg-yellow-100 rounded">
-                                  <p className="text-sm font-medium text-yellow-800">
-                                    バイラルポテンシャル: {article.viralPotential}
-                                  </p>
-                                </div>
-                              )}
+                {stepData.step1.articleAnalysis && stepData.step1.articleAnalysis.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="font-medium text-blue-900 mb-3">📰 記事別詳細分析</h3>
+                    <div className="space-y-4">
+                      {stepData.step1.articleAnalysis.map((article: any, idx: number) => (
+                        <div key={idx} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                          <h4 className="font-semibold text-blue-900 mb-2">{article.title}</h4>
+                          <div className="text-sm text-gray-700 space-y-2">
+                            <div className="flex items-center gap-4">
+                              <span><span className="font-medium">ソース:</span> {article.source}</span>
+                              <span><span className="font-medium">カテゴリ:</span> {article.category}</span>
+                              <span><span className="font-medium">重要度:</span> <span className="text-blue-600 font-semibold">{(article.importance * 100).toFixed(0)}%</span></span>
                             </div>
+                            
+                            {article.summary && (
+                              <div className="mt-2 p-3 bg-white rounded">
+                                <p className="text-gray-700">{article.summary}</p>
+                              </div>
+                            )}
+                            
+                            {article.keyPoints && article.keyPoints.length > 0 && (
+                              <div className="mt-2">
+                                <p className="font-medium text-blue-800 mb-1">キーポイント:</p>
+                                <ul className="space-y-1">
+                                  {article.keyPoints.map((point: string, pointIdx: number) => (
+                                    <li key={pointIdx} className="flex items-start">
+                                      <span className="text-blue-600 mr-2">•</span>
+                                      <span className="text-sm">{point}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            
+                            {article.viralPotential && (
+                              <div className="mt-2 p-2 bg-yellow-100 rounded">
+                                <p className="text-sm font-medium text-yellow-800">
+                                  💡 バズる理由: {article.viralPotential}
+                                </p>
+                              </div>
+                            )}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 

@@ -10,13 +10,17 @@ export default function GptViralDashboard() {
   const [config, setConfig] = useState({
     expertise: 'AI × 働き方、25年のクリエイティブ経験',
     platform: 'Twitter',
-    style: '解説 × エンタメ'
+    style: '解説 × エンタメ',
+    model: 'gpt-4o'
   })
   const [showMenu, setShowMenu] = useState(false)
+  const [availableModels, setAvailableModels] = useState<any[]>([])
+  const [modelsLoading, setModelsLoading] = useState(true)
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchSessions()
+    fetchModels()
   }, [])
 
   useEffect(() => {
@@ -39,6 +43,26 @@ export default function GptViralDashboard() {
       }
     } catch (error) {
       console.error('Failed to fetch sessions:', error)
+    }
+  }
+
+  const fetchModels = async () => {
+    try {
+      const response = await fetch('/api/viral/models')
+      if (response.ok) {
+        const data = await response.json()
+        setAvailableModels(data.models || [])
+        
+        // デフォルトモデルが利用可能なモデルに含まれているか確認
+        const modelIds = data.models.map((m: any) => m.id)
+        if (!modelIds.includes(config.model) && data.models.length > 0) {
+          setConfig(prev => ({ ...prev, model: data.models[0].id }))
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch models:', error)
+    } finally {
+      setModelsLoading(false)
     }
   }
 
@@ -143,7 +167,7 @@ export default function GptViralDashboard() {
         {/* 設定パネル */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">初期設定</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 専門分野
@@ -184,6 +208,35 @@ export default function GptViralDashboard() {
                 <option value="教育">教育</option>
                 <option value="エンターテイメント">エンターテイメント</option>
                 <option value="個人的な話">個人的な話</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                GPTモデル
+              </label>
+              <select
+                value={config.model}
+                onChange={(e) => setConfig({ ...config, model: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                disabled={modelsLoading}
+              >
+                {modelsLoading ? (
+                  <option>モデルを読み込み中...</option>
+                ) : availableModels.length > 0 ? (
+                  availableModels.map((model) => (
+                    <option key={model.id} value={model.id}>
+                      {model.displayName} {model.description && `(${model.description})`}
+                    </option>
+                  ))
+                ) : (
+                  <>
+                    <option value="gpt-4o">GPT-4o (最新・推奨)</option>
+                    <option value="gpt-4o-mini">GPT-4o Mini (高速・コスト効率)</option>
+                    <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
+                    <option value="gpt-4">GPT-4 (従来版)</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (旧モデル)</option>
+                  </>
+                )}
               </select>
             </div>
           </div>
