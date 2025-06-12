@@ -26,27 +26,32 @@ export async function GET() {
       keys: Object.keys(response || {}),
       // outputフィールドの詳細
       outputInfo: {
-        hasOutput: !!response.output,
-        outputType: typeof response.output,
-        outputIsArray: Array.isArray(response.output),
-        outputLength: Array.isArray(response.output) ? response.output.length : null,
-        outputItems: Array.isArray(response.output) ? 
-          response.output.map((item: any) => ({
+        hasOutput: !!(response as any).output,
+        outputType: typeof (response as any).output,
+        outputIsArray: Array.isArray((response as any).output),
+        outputLength: Array.isArray((response as any).output) ? (response as any).output.length : null,
+        outputItems: Array.isArray((response as any).output) ? 
+          (response as any).output.map((item: any) => ({
             type: item.type,
             id: item.id,
             status: item.status,
             hasContent: !!item.content,
             contentType: typeof item.content,
             hasResult: !!item.result
-          })) : null
+          })) : null,
+        // output_textフィールドもチェック
+        hasOutputText: !!(response as any).output_text,
+        outputTextType: typeof (response as any).output_text,
+        outputTextPreview: (response as any).output_text ? 
+          ((response as any).output_text as string).substring(0, 200) : null
       }
     })
     
   } catch (error) {
     return NextResponse.json({
       success: false,
-      error: error.message,
-      errorType: error.constructor.name
+      error: error instanceof Error ? error.message : 'Unknown error',
+      errorType: error instanceof Error ? error.constructor.name : 'Unknown'
     }, { status: 500 })
   }
 }

@@ -107,7 +107,7 @@ Return ONLY this JSON:
     
     return NextResponse.json({
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString(),
       suggestion: 'Check API key and GPT-4o access'
     }, { 

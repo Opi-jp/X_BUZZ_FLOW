@@ -147,8 +147,8 @@ Output this exact JSON structure:
       console.error('Test error:', error)
       return NextResponse.json({
         success: false,
-        error: error.message,
-        stack: error.stack
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
       }, { status: 500 })
     }
     
@@ -157,7 +157,7 @@ Output this exact JSON structure:
     return NextResponse.json({
       success: false,
       error: 'Fatal error occurred',
-      details: error.message
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

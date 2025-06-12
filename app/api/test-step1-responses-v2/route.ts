@@ -129,7 +129,7 @@ CRITICAL INSTRUCTIONS:
           { 
             error: 'レスポンスの解析に失敗しました',
             debug: {
-              parseError: e.message,
+              parseError: e instanceof Error ? e.message : 'Unknown error',
               rawTextPreview: response.output_text?.substring(0, 200)
             }
           },
@@ -215,7 +215,7 @@ CRITICAL INSTRUCTIONS:
     return NextResponse.json(
       { 
         error: 'Step 1 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

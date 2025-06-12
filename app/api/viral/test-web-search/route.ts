@@ -45,7 +45,7 @@ web_searchツールを使用して、「AI 働き方 最新ニュース 2025年6
   } catch (error) {
     console.error('Web search test error:', error)
     return NextResponse.json(
-      { error: 'Web search test failed', details: error.message },
+      { error: 'Web search test failed', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

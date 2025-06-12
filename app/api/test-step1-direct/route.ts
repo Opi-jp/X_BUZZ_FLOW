@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import { parseGptResponse } from '@/lib/gpt-response-parser'
+// import { parseGptResponse } from '@/lib/gpt-response-parser'
 
 export async function GET() {
   try {
@@ -33,22 +33,33 @@ export async function GET() {
     console.log('Duration:', duration, 'ms')
     
     // レスポンスを解析
-    const parsed = parseGptResponse(response)
-    console.log('Parse success:', parsed.success)
+    let result = null
+    const rawText = response.output_text || ''
     
-    // パース失敗時のデバッグ
-    if (!parsed.success && parsed.rawText) {
-      console.log('Raw text length:', parsed.rawText.length)
-      console.log('Raw text preview:', parsed.rawText.substring(0, 200))
-      console.log('Raw text last 50 chars:', parsed.rawText.substring(parsed.rawText.length - 50))
+    try {
+      // Markdownブロックを除去
+      let cleanText = rawText
+      if (cleanText.includes('```')) {
+        const match = cleanText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/)
+        if (match) {
+          cleanText = match[1]
+        }
+      }
+      result = JSON.parse(cleanText.trim())
+      console.log('Parse success: true')
+    } catch (e) {
+      console.log('Parse success: false')
+      console.log('Raw text length:', rawText.length)
+      console.log('Raw text preview:', rawText.substring(0, 200))
+      console.log('Raw text last 50 chars:', rawText.substring(rawText.length - 50))
     }
     
-    if (parsed.success && parsed.data?.articleAnalysis) {
-      const articles = parsed.data.articleAnalysis
+    if (result && result.articleAnalysis) {
+      const articles = result.articleAnalysis
       console.log('Articles found:', articles.length)
       
       // URL検証
-      const validUrls = articles.filter(a => a.url && a.url.startsWith('http'))
+      const validUrls = articles.filter((a: any) => a.url && a.url.startsWith('http'))
       console.log('Articles with valid URLs:', validUrls.length)
       
       return NextResponse.json({
@@ -60,7 +71,7 @@ export async function GET() {
           themes: config
         },
         articles: articles.slice(0, 3), // 最初の3件
-        fullData: parsed.data
+        fullData: result
       })
     }
     
@@ -68,15 +79,15 @@ export async function GET() {
       success: false,
       duration: duration + 'ms',
       error: 'No articles found',
-      rawText: parsed.rawText?.substring(0, 500)
+      rawText: rawText.substring(0, 500)
     })
     
   } catch (error) {
     console.error('Test error:', error)
     return NextResponse.json({
       success: false,
-      error: error.message,
-      details: error
+      error: error instanceof Error ? error.message : 'Unknown error',
+      details: error instanceof Error ? error.toString() : 'Unknown error'
     }, { status: 500 })
   }
 }

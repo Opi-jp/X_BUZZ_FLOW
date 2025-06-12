@@ -98,7 +98,7 @@ Return pure JSON without markdown blocks.`
     
     if (result && result.articleAnalysis) {
       // 日付の検証
-      const validDates = result.articleAnalysis.filter(a => {
+      const validDates = result.articleAnalysis.filter((a: any) => {
         if (!a.publishDate) return false
         const date = new Date(a.publishDate)
         const sevenDaysAgoDate = new Date(sevenDaysAgo)
@@ -106,7 +106,7 @@ Return pure JSON without markdown blocks.`
       })
       
       // テーマの反映確認
-      const hasTheme = result.articleAnalysis.filter(a => 
+      const hasTheme = result.articleAnalysis.filter((a: any) => 
         a.expertPerspective && 
         (a.expertPerspective.includes(config.expertise) || 
          a.expertPerspective.includes('働き方') ||
@@ -132,7 +132,7 @@ Return pure JSON without markdown blocks.`
         dateRange: result.dateRange,
         summary: result.summary,
         checkPoints: {
-          '1. 実在記事のURL取得': result.articleAnalysis.every(a => a.url && a.url.startsWith('http')),
+          '1. 実在記事のURL取得': result.articleAnalysis.every((a: any) => a.url && a.url.startsWith('http')),
           '2. 最新記事（7日以内）': validDates.length > 0,
           '3. テーマ設定の反映': hasTheme.length === result.articleAnalysis.length
         }
@@ -149,7 +149,7 @@ Return pure JSON without markdown blocks.`
   } catch (error) {
     return NextResponse.json({
       success: false,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

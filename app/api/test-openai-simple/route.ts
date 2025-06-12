@@ -22,7 +22,7 @@ export async function GET() {
       
       console.log('Chat completion success:', chatResponse.choices[0].message.content)
     } catch (error) {
-      console.error('Chat completion error:', error.message)
+      console.error('Chat completion error:', error instanceof Error ? error.message : 'Unknown error')
     }
     
     // 2. Responses APIテスト（web_searchなし）
@@ -37,7 +37,7 @@ export async function GET() {
       console.log('Is array:', Array.isArray(responsesResult))
       console.log('Keys:', Object.keys(responsesResult || {}))
     } catch (error) {
-      console.error('Responses API error:', error.message)
+      console.error('Responses API error:', error instanceof Error ? error.message : 'Unknown error')
     }
     
     // 3. Responses API with web_search
@@ -64,9 +64,9 @@ export async function GET() {
     } catch (error) {
       console.error('Web search error:', error)
       console.error('Error details:', {
-        message: error.message,
-        status: error.status,
-        code: error.code
+        message: error instanceof Error ? error.message : 'Unknown error',
+        status: (error as any).status,
+        code: (error as any).code
       })
     }
     
@@ -80,8 +80,8 @@ export async function GET() {
     console.error('Test error:', error)
     return NextResponse.json({
       success: false,
-      error: error.message,
-      stack: error.stack
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
     }, { status: 500 })
   }
 }
