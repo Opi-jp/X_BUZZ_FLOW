@@ -8,6 +8,17 @@ const openai = new OpenAI({
 })
 
 export async function POST(request: NextRequest) {
+  console.log('Viral analyze-trends API called')
+  
+  // 環境変数チェック
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('OPENAI_API_KEY is not set')
+    return NextResponse.json(
+      { error: 'OpenAI APIキーが設定されていません' },
+      { status: 500 }
+    )
+  }
+  
   try {
     const body = await request.json()
     const {
