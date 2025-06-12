@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
           },
           {
             role: 'user',
-            content: query
+            content: enhanceQueryWithNewsContext(query, newsContext)
           }
         ],
         max_tokens: 1000,
@@ -98,7 +98,8 @@ export async function POST(request: NextRequest) {
           metadata: {
             timestamp: new Date().toISOString(),
             freshness: 'real-time',
-            newsContext: newsContext.slice(0, 5)
+            newsContext: newsContext.slice(0, 5),
+            newsAnalysisIntegrated: newsContext.length > 0
           }
         }
       })
@@ -121,7 +122,8 @@ export async function POST(request: NextRequest) {
           metadata: {
             timestamp: new Date().toISOString(),
             freshness: 'real-time',
-            newsContext: newsContext.slice(0, 5)
+            newsContext: newsContext.slice(0, 5),
+            newsAnalysisIntegrated: newsContext.length > 0
           }
         }
       })
@@ -342,4 +344,38 @@ function generatePostIdeas(personalInsights: any[]) {
     hashtags: ['#AI', '#クリエイティブ', '#50代キャリア'],
     expectedImpact: 'medium-high'
   }))
+}
+
+// ニュース分析結果を含めたクエリの強化
+function enhanceQueryWithNewsContext(baseQuery: string, newsContext: any[]): string {
+  if (!newsContext || newsContext.length === 0) {
+    return baseQuery
+  }
+
+  // ニュース分析結果を構造化して含める
+  const newsAnalysis = newsContext.map((news, index) => {
+    const analysis = news.analysis || {}
+    return `
+【ニュース${index + 1}】
+タイトル: ${news.title}
+カテゴリ: ${analysis.category || news.category || '未分類'}
+重要度: ${news.importance ? (news.importance * 100).toFixed(0) + '%' : '未評価'}
+影響度: ${analysis.impact || '不明'}
+
+日本語要約: ${analysis.japaneseSummary || news.summary}
+
+重要ポイント:
+${(analysis.keyPoints || []).map((point: string) => `- ${point}`).join('\n') || '- なし'}
+
+分析時刻: ${news.updatedAt || news.createdAt}
+`
+  }).join('\n---\n')
+
+  return `${baseQuery}
+
+=== 最新ニュース分析結果 ===
+${newsAnalysis}
+===
+
+これらのニュース分析結果を踏まえて、より具体的で実践的なトレンド分析と、50代クリエイティブディレクターならではの独自視点を提供してください。特に、各ニュースがもたらす業界への影響と、それに対する「逆張り」的な見解を含めてください。`
 }

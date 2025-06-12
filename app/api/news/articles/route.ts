@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0')
     const sortBy = searchParams.get('sortBy') || 'publishedAt' // importance or publishedAt
     const sortOrder = searchParams.get('sortOrder') || 'desc' // asc or desc
+    const includeAnalysis = searchParams.get('includeAnalysis') === 'true'
 
     const where: any = {}
     
@@ -48,7 +49,7 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           source: true,
-          analysis: true, // 分析結果も含める
+          analysis: includeAnalysis, // パラメータに基づいて分析結果を含める
         },
         orderBy,
         take: limit,

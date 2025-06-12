@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
         ],
         take: 10,
         include: {
-          source: true // NewsSourceのデータも含める
+          source: true, // NewsSourceのデータも含める
+          analysis: true // NewsAnalysisの詳細データも含める
         }
       })
 
@@ -50,9 +51,20 @@ export async function POST(request: NextRequest) {
         source: article.source.name, // sourceの名前を使用
         importance: article.importance,
         summary: article.summary,
-        keyPoints: (article.metadata as any)?.keyPoints || [],
         url: article.url,
-        publishedAt: article.publishedAt
+        publishedAt: article.publishedAt,
+        category: article.category,
+        // NewsAnalysisのデータを含める
+        analysis: article.analysis ? {
+          category: article.analysis.category,
+          summary: article.analysis.summary,
+          japaneseSummary: article.analysis.japaneseSummary,
+          keyPoints: article.analysis.keyPoints,
+          impact: article.analysis.impact
+        } : null,
+        // 互換性のため keyPoints も直接設定
+        keyPoints: article.analysis?.keyPoints || [],
+        japaneseSummary: article.analysis?.japaneseSummary || article.summary
       }))
     }
 
