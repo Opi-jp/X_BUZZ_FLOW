@@ -153,9 +153,14 @@ function buildStep3Prompt(config: any, step2Data: any) {
 ${step2Data.summary}
 
 選択された上位機会:
-${topOpportunities.map((opp: any) => 
-  `- ${opp.topic} (角度: ${opp.bestAngle})`
-).join('\n')}
+${topOpportunities.map((opp: any) => {
+  const articles = opp.sourceArticles || []
+  return `
+- ${opp.topic} (角度: ${opp.bestAngle})
+  参照記事:
+${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
+`
+}).join('\n')}
 
 ## タスク: Step 3 - コンテンツコンセプト作成
 
@@ -211,7 +216,14 @@ ${topOpportunities.map((opp: any) =>
         "likes": "1000-5000",
         "retweets": "200-1000",
         "replies": "50-200"
-      }
+      },
+      "sourceArticles": [
+        {
+          "title": "参照した記事タイトル",
+          "url": "記事URL",
+          "usage": "この記事をどう活用するか（引用、参考、データ引用など）"
+        }
+      ]
     }
   ],
   "summary": "3つのコンセプトの要約",

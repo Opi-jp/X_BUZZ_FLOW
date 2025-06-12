@@ -117,6 +117,11 @@ function buildStep2Prompt(config: any, step1Data: any) {
     .sort((a: any, b: any) => b.overallScore - a.overallScore)
     .slice(0, 5)
 
+  // 重要度の高い記事を取得
+  const topArticles = (step1Data.articleAnalysis || [])
+    .sort((a: any, b: any) => b.importance - a.importance)
+    .slice(0, 5)
+
   return `
 現在時刻: ${new Date().toLocaleString('ja-JP')}
 専門分野: ${config.expertise}
@@ -125,6 +130,15 @@ function buildStep2Prompt(config: any, step1Data: any) {
 
 ## Step 1の分析結果
 ${step1Data.summary}
+
+## 参照記事（重要度順）
+${topArticles.map((article: any, idx: number) => `
+${idx + 1}. ${article.title}
+   - ソース: ${article.source}
+   - URL: ${article.url || 'URLなし'}
+   - 公開日: ${article.publishDate || '日付不明'}
+   - 要約: ${article.summary}
+`).join('\n')}
 
 特定された上位機会:
 ${topOpportunities.map((opp: any, i: number) => 
@@ -190,8 +204,16 @@ ${topOpportunities.map((opp: any, i: number) =>
       "topic": "...",
       "viralScore": 0.0-1.0,
       "bestAngle": "...",
+      "angleReasoning": "なぜこの角度が最適か",
       "timeWindow": "XX時間以内",
-      "specificRecommendation": "具体的な推奨事項"
+      "specificRecommendation": "具体的な推奨事項",
+      "sourceArticles": [
+        {
+          "title": "参照した記事タイトル",
+          "url": "記事URL",
+          "relevance": "この記事がどう関連するか"
+        }
+      ]
     }
   ],
   "summary": "Step 2の分析サマリー",

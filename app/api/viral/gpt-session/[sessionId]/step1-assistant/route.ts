@@ -44,7 +44,9 @@ export async function POST(
 5. すべての出力は日本語で行い、指定されたJSON形式で返してください
 6. 架空の製品名やモデル名は絶対に使用しないでください
 7. 実際に存在するニュース記事のタイトル、ソース、日付を正確に記載してください
-8. 「2025年6月」の最新ニュースを取得してください（今日の日付: ${new Date().toLocaleDateString('ja-JP')}）
+8. 「2025年12月」の最新ニュースを取得してください（今日の日付: ${new Date().toLocaleDateString('ja-JP')}）
+9. 必ず過去7日間以内のニュースを優先してください
+10. 各検索で「site:」演算子を使って信頼できるソースから検索（例：「site:techcrunch.com AI news」）
 
 バイラルコンテンツの機会を特定し、詳細な分析を行ってください。`,
       tools: [{ type: 'web_search' as any }],
@@ -179,15 +181,21 @@ function buildPrompt(config: any) {
 
 検索すべきトピック：
 1. AI・機械学習の最新動向（OpenAI、Anthropic、Google、Microsoft等）
-   - 検索例：「OpenAI latest news December 2025」「Anthropic Claude updates」
+   - 検索例：「OpenAI news today」「Anthropic Claude latest update」「Google Gemini December 2025」
+   - 重要：GPT-4o（2024年5月リリース）より新しいニュースを探す
 2. AIと働き方・雇用への影響に関する議論
-   - 検索例：「AI impact on jobs 2025」「AI workplace automation news」
+   - 検索例：「AI jobs impact December 2025」「AI workplace latest news」
 3. テクノロジー業界の重要な発表や動き
-   - 検索例：「tech industry AI announcements December 2025」
+   - 検索例：「AI news today」「tech AI announcements December 6 2025」
 4. ビジネス界でのAI活用事例
-   - 検索例：「enterprise AI adoption 2025」「AI business case studies」
+   - 検索例：「AI business news December 2025」「enterprise AI latest」
 5. AI規制・倫理に関する最新の議論
-   - 検索例：「AI regulation news 2025」「AI ethics policy updates」
+   - 検索例：「AI regulation December 2025」「AI policy news today」
+
+**重要な検索指示**：
+- 「today」「latest」「December 2025」などの時間指定を必ず含める
+- 過去1週間以内のニュースを優先
+- 古いニュース（GPT-4oリリース等）は除外
 
 検索した記事を分析し、以下の観点で包括的な分析を行ってください：
 
@@ -199,6 +207,7 @@ function buildPrompt(config: any) {
 **重要: すべての内容を日本語で記述してください。**
 **重要: web_searchで見つけた実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
 **重要: 各記事について、実際の記事タイトル、メディア名、公開日を正確に記載してください。**
+**重要: 2025年11月30日以降の記事のみを含めてください（古い記事は除外）。**
 
 {
   "articleAnalysis": [

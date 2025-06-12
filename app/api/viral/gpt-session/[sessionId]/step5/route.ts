@@ -127,11 +127,14 @@ function buildStep5Prompt(config: any, sessionData: any) {
 スタイル: ${config.style}
 
 ## 生成されたコンテンツ
-${fullContents.map((c: any, i: number) => 
-  `コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
+${fullContents.map((c: any, i: number) => {
+  const articles = c.sourceArticles || []
+  return `コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
   文字数: ${c.characterCount}
-  形式: ${c.format}`
-).join('\n\n')}
+  形式: ${c.format}
+  参照記事: ${articles.length}件
+${articles.map((article: any) => `    • ${article.url || 'URLなし'}`).join('\n')}`
+}).join('\n\n')}
 
 ## タスク: Step 5 - 実行戦略
 

@@ -47,7 +47,7 @@ export async function POST(
       input: buildPrompt(config.config),
       tools: [
         {
-          type: 'web_search_preview' as any
+          type: 'web_search'
         }
       ]
     })
@@ -55,12 +55,25 @@ export async function POST(
     const duration = Date.now() - startTime
     
     // レスポンスを処理
-    const rawResponse = (response as any).output || (response as any).message?.content || JSON.stringify(response)
+    let rawResponse = ''
+    if (Array.isArray(response)) {
+      // メッセージを探す
+      const messageItem = response.find((item: any) => item.type === 'message')
+      if (messageItem && messageItem.content && messageItem.content[0]) {
+        rawResponse = messageItem.content[0].text || ''
+      }
+    } else {
+      rawResponse = (response as any).output || JSON.stringify(response)
+    }
+    
     console.log('GPT Step 1 response length:', rawResponse.length)
     
     let analysisResult
     try {
-      analysisResult = typeof rawResponse === 'string' ? JSON.parse(rawResponse) : rawResponse
+      // JSON部分を抽出（必要に応じて）
+      const jsonMatch = rawResponse.match(/\{[\s\S]*\}/)
+      const jsonStr = jsonMatch ? jsonMatch[0] : rawResponse
+      analysisResult = JSON.parse(jsonStr)
       console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
     } catch (parseError) {
       console.error('Failed to parse GPT response:', parseError)
@@ -126,13 +139,22 @@ export async function POST(
 }
 
 function buildPrompt(config: any) {
+  const today = new Date()
+  const formattedDate = today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+  
   return `
-現在時刻: ${new Date().toLocaleString('ja-JP')}
+現在時刻: ${today.toLocaleString('ja-JP')}
+今日の日付: ${formattedDate}
 専門分野: ${config.expertise}
 プラットフォーム: ${config.platform}
 スタイル: ${config.style}
 
 ## タスク: Step 1 - データ収集・初期分析
+
+【重要な指示】
+- web_searchツールを使用して、2025年6月の最新ニュースを検索してください
+- 「latest」「today」「June 2025」などの時間指定を検索クエリに含めてください
+- 2025年5月31日以降のニュースのみを含めてください（古いニュースは除外）
 
 ウェブ検索を使用して、以下に関する最新のニュースやトレンドを調査してください：
 

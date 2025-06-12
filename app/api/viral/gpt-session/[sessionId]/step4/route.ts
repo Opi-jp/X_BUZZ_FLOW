@@ -153,10 +153,13 @@ function buildStep4Prompt(config: any, step3Data: any) {
 スタイル: ${config.style}
 
 ## Step 3のコンセプト
-${concepts.map((c: any) => 
-  `コンセプト${c.conceptNumber}: ${c.title}
+${concepts.map((c: any) => {
+  const articles = c.sourceArticles || []
+  return `コンセプト${c.conceptNumber}: ${c.title}
   - トピック: ${c.topic}
   - フック: ${c.hook}
+  - 参照記事:
+${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}`
   - 角度: ${c.angle}`
 ).join('\n\n')}
 
@@ -197,6 +200,13 @@ ${config.platform === 'Twitter' ? `
       "alternativeVersions": [
         "微調整版1（オプション）",
         "微調整版2（オプション）"
+      ],
+      "sourceArticles": [
+        {
+          "title": "引用する記事タイトル",
+          "url": "記事URL（引用ツイートで使用）",
+          "quoteTweet": "この記事を引用ツイートする場合の文面"
+        }
       ]
     }
   ],

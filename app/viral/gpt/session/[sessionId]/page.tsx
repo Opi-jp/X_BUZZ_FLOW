@@ -52,14 +52,13 @@ export default function GptSessionDetail() {
   const executeStep = async (step: number) => {
     setLoading(true)
     try {
-      // Step 1の場合は、Assistants API版を使うオプション
-      const useAssistantAPI = step === 1 && session?.metadata?.config?.model === 'gpt-4o' // GPT-4oの場合のみ
-      const endpoint = useAssistantAPI
-        ? `/api/viral/gpt-session/${sessionId}/step1-assistant`
-        : `/api/viral/gpt-session/${sessionId}/step${step}`
+      // Step 1の場合は、使用するAPIを選択
+      let endpoint = `/api/viral/gpt-session/${sessionId}/step${step}`
       
-      if (useAssistantAPI) {
-        console.log('Using Assistants API with web_search tool for Step 1')
+      if (step === 1 && session?.metadata?.config?.model === 'gpt-4o') {
+        // GPT-4oの場合はResponses APIを使用（Web検索対応）
+        endpoint = `/api/viral/gpt-session/${sessionId}/step1-responses`
+        console.log('Using Responses API with web_search tool for Step 1')
       }
       
       const response = await fetch(endpoint, {
@@ -583,6 +582,31 @@ export default function GptSessionDetail() {
                     <div className="space-y-2 text-sm text-gray-600">
                       <p><span className="font-medium">ビジュアル:</span> {content.visualDescription}</p>
                       <p><span className="font-medium">投稿メモ:</span> {content.postingNotes}</p>
+                      
+                      {content.sourceArticles && content.sourceArticles.length > 0 && (
+                        <div className="mt-3 p-3 bg-blue-50 rounded">
+                          <p className="font-medium text-blue-900 mb-2">📰 参照記事（引用ツイート用）:</p>
+                          {content.sourceArticles.map((article: any, articleIdx: number) => (
+                            <div key={articleIdx} className="mb-2 text-xs">
+                              <a href={article.url} target="_blank" rel="noopener noreferrer" 
+                                 className="text-blue-600 hover:underline block mb-1">
+                                {article.title}
+                              </a>
+                              {article.quoteTweet && (
+                                <div className="ml-4 p-2 bg-white rounded border border-blue-200">
+                                  <p className="text-gray-700">{article.quoteTweet}</p>
+                                  <button 
+                                    onClick={() => navigator.clipboard.writeText(article.quoteTweet)}
+                                    className="text-xs text-blue-600 hover:text-blue-800 mt-1"
+                                  >
+                                    コピー
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
