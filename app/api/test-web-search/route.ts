@@ -55,7 +55,7 @@ Respond in Japanese.`,
       : 'No response'
 
     // クリーンアップ
-    await openai.beta.assistants.del(assistant.id)
+    await openai.beta.assistants.delete(assistant.id)
     console.log('Assistant deleted')
 
     const duration = Date.now() - startTime

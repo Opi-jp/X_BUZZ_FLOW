@@ -113,7 +113,7 @@ export async function POST(
     }
 
     // クリーンアップ：Assistantを削除
-    await openai.beta.assistants.del(assistant.id)
+    await openai.beta.assistants.delete(assistant.id)
 
     // Step 1の結果を保存
     const currentResponse = session.response as Record<string, any> || {}
