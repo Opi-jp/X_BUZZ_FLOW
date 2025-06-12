@@ -12,27 +12,56 @@ export default function ViralDashboard() {
     console.log('runWorkflow called')
     setLoading(true)
     setError(null)
-    // 結果をクリアしない（既存の結果を保持）
 
     try {
-      const response = await fetch('/api/viral/workflow/auto-generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          expertise: 'AI × 働き方、25年のクリエイティブ経験',
-          platform: 'Twitter',
-          style: '解説 × エンタメ',
-          minViralScore: 0.7,
-          maxOpportunities: 3,
-          autoSchedule: false
+      let data
+      
+      if (executedSteps.has('trends')) {
+        // ステップ1が完了している場合：投稿生成のみ実行
+        if (!result?.opportunities || result.opportunities.length === 0) {
+          throw new Error('トレンド分析結果が見つかりません')
+        }
+        
+        const generateResponse = await fetch('/api/viral/generate-posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            opportunityIds: result.opportunities.slice(0, 3).map((o: any) => o.id)
+          })
         })
-      })
+        
+        if (!generateResponse.ok) {
+          throw new Error(`投稿生成エラー: ${generateResponse.status}`)
+        }
+        
+        const generateData = await generateResponse.json()
+        data = {
+          ...result,
+          posts: generateData.posts,
+          apiSource: 'generate-posts-only'
+        }
+      } else {
+        // フルワークフロー実行
+        const response = await fetch('/api/viral/workflow/auto-generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            expertise: 'AI × 働き方、25年のクリエイティブ経験',
+            platform: 'Twitter',
+            style: '解説 × エンタメ',
+            minViralScore: 0.7,
+            maxOpportunities: 3,
+            autoSchedule: false
+          })
+        })
 
-      if (!response.ok) {
-        throw new Error(`エラー: ${response.status}`)
+        if (!response.ok) {
+          throw new Error(`エラー: ${response.status}`)
+        }
+
+        data = await response.json()
       }
 
-      const data = await response.json()
       setResult(data)
       setExecutedSteps(prev => new Set([...prev, 'workflow']))
     } catch (err) {
@@ -110,14 +139,23 @@ export default function ViralDashboard() {
 
         <button
           onClick={runWorkflow}
-          disabled={loading || executedSteps.has('trends')}
+          disabled={loading || executedSteps.has('workflow')}
           className={`px-6 py-3 rounded-lg ${
-            executedSteps.has('trends')
+            executedSteps.has('workflow')
               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : executedSteps.has('trends')
+              ? 'bg-orange-500 text-white hover:bg-orange-600'
               : 'bg-green-500 text-white hover:bg-green-600'
           } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-          {loading ? '実行中...' : 'ステップ1+2: 分析＋投稿生成 (ChatGPT→Claude)'}
+          {executedSteps.has('workflow')
+            ? '✓ 完了: 全ステップ'
+            : loading 
+            ? '実行中...' 
+            : executedSteps.has('trends')
+            ? 'ステップ2: 投稿生成のみ (Claude)'
+            : 'ステップ1+2: 分析＋投稿生成 (ChatGPT→Claude)'
+          }
         </button>
       </div>
 
