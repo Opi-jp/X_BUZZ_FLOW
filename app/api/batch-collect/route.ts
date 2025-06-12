@@ -21,7 +21,8 @@ export async function POST(request: Request) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sinceDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+          sinceDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          autoAnalyze: true // 自動分析を有効化
         })
       })
       

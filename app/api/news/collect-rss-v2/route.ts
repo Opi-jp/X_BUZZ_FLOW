@@ -228,6 +228,34 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 新しく保存された記事がある場合、自動分析を実行
+    let analysisResult = null
+    if (results.totalSaved > 0 && body.autoAnalyze !== false) {
+      try {
+        console.log(`Analyzing ${results.totalSaved} new articles...`)
+        
+        // 内部APIを呼び出して分析
+        const baseUrl = process.env.VERCEL_URL 
+          ? `https://${process.env.VERCEL_URL}` 
+          : process.env.NEXTAUTH_URL || 'http://localhost:3000'
+          
+        const analyzeResponse = await fetch(`${baseUrl}/api/news/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ limit: Math.min(results.totalSaved, 10) }) // 最大10件ずつ
+        })
+        
+        if (analyzeResponse.ok) {
+          analysisResult = await analyzeResponse.json()
+          console.log(`Analysis completed: ${analysisResult.analyzed} articles`)
+        } else {
+          console.error('Analysis failed:', await analyzeResponse.text())
+        }
+      } catch (analyzeError) {
+        console.error('Auto-analysis error:', analyzeError)
+      }
+    }
+
     // 詳細なレスポンスを返す
     const response: any = {
       success: true,
@@ -237,8 +265,9 @@ export async function POST(request: NextRequest) {
         saved: results.totalSaved,
         skipped: results.totalSkipped,
         errors: results.totalErrors,
+        analyzed: analysisResult?.analyzed || 0
       },
-      message: `${results.totalSaved}件の新しい記事を保存しました（${results.processedSources}/${rssSources.length}ソース処理）`,
+      message: `${results.totalSaved}件の新しい記事を保存しました（${results.processedSources}/${rssSources.length}ソース処理）${analysisResult ? `、${analysisResult.analyzed}件を分析しました` : ''}`,
     }
 
     // エラーがある場合は詳細を含める

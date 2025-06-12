@@ -30,8 +30,23 @@ export async function POST(request: NextRequest) {
           publishedAt: { gte: since },
           OR: [
             { importance: { gte: 0.7 } },
-            { title: { contains: 'AI', mode: 'insensitive' } },
-            { title: { contains: 'クリエイティブ', mode: 'insensitive' } }
+            // 未処理でもAI関連の重要そうな記事を含める
+            {
+              AND: [
+                { processed: false },
+                {
+                  OR: [
+                    { title: { contains: 'AI', mode: 'insensitive' } },
+                    { title: { contains: 'GPT', mode: 'insensitive' } },
+                    { title: { contains: 'Claude', mode: 'insensitive' } },
+                    { title: { contains: 'OpenAI', mode: 'insensitive' } },
+                    { title: { contains: 'Anthropic', mode: 'insensitive' } },
+                    { title: { contains: 'Google', mode: 'insensitive' } },
+                    { title: { contains: 'Microsoft', mode: 'insensitive' } }
+                  ]
+                }
+              ]
+            }
           ]
         },
         orderBy: [
@@ -49,11 +64,12 @@ export async function POST(request: NextRequest) {
         id: article.id,
         title: article.title,
         source: article.source.name, // sourceの名前を使用
-        importance: article.importance,
+        importance: article.importance || 0.5, // 未処理の場合はデフォルト値
         summary: article.summary,
         url: article.url,
         publishedAt: article.publishedAt,
-        category: article.category,
+        category: article.category || 'other',
+        processed: article.processed,
         // NewsAnalysisのデータを含める
         analysis: article.analysis ? {
           category: article.analysis.category,
