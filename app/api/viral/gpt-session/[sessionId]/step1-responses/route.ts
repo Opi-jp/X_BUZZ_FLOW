@@ -155,6 +155,9 @@ function buildPrompt(config: any) {
 - web_searchツールを使用して、2025年6月の最新ニュースを検索してください
 - 「latest」「today」「June 2025」などの時間指定を検索クエリに含めてください
 - 2025年5月31日以降のニュースのみを含めてください（古いニュースは除外）
+- 必ず各記事の実際のURLを取得し、"url"フィールドに含めてください
+- GPT-4oは2024年5月リリースなので、それより新しいニュースを探してください
+- バズる機会（opportunityCount）は必ず5件以上特定してください
 
 ウェブ検索を使用して、以下に関する最新のニュースやトレンドを調査してください：
 
@@ -200,12 +203,15 @@ function buildPrompt(config: any) {
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
 **重要: 検索した実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
+**重要: 各記事のURLフィールドは必須です。Web検索で見つけた実際のURLを含めてください。**
 
 {
   "articleAnalysis": [
     {
-      "title": "実際の記事タイトル",
-      "source": "実際のメディア名",
+      "title": "実際の記事タイトル（Web検索結果から）",
+      "source": "実際のメディア名（例: Reuters, TechCrunch等）",
+      "url": "https://... （記事の実際のURL - 必須）",
+      "publishDate": "YYYY-MM-DD",
       "category": "AI/ビジネス/規制/研究/製品発表等",
       "importance": 0.0-1.0,
       "summary": "この記事の内容を100文字程度で要約",
@@ -250,10 +256,10 @@ function buildPrompt(config: any) {
         },
         "overallScore": 0.0-1.0
       }
-      // 最低5件、最大10件のバズる機会を特定してください
+      // 必ず5件以上のバズる機会を特定してください
     ]
   },
-  "opportunityCount": 数値,
+  "opportunityCount": 数値（5以上）,
   "summary": "全体的な分析サマリー（200文字程度）",
   "keyPoints": [
     "重要なポイント1",

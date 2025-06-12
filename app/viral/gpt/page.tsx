@@ -210,34 +210,19 @@ export default function GptViralDashboard() {
                 <option value="個人的な話">個人的な話</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                GPTモデル
-              </label>
-              <select
-                value={config.model}
-                onChange={(e) => setConfig({ ...config, model: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                disabled={modelsLoading}
-              >
-                {modelsLoading ? (
-                  <option>モデルを読み込み中...</option>
-                ) : availableModels.length > 0 ? (
-                  availableModels.map((model) => (
-                    <option key={model.id} value={model.id}>
-                      {model.displayName} {model.description && `(${model.description})`}
-                    </option>
-                  ))
-                ) : (
-                  <>
-                    <option value="gpt-4o">GPT-4o (最新・推奨・Web検索対応)</option>
-                    <option value="gpt-4o-mini">GPT-4o Mini (高速・低コスト・Web検索非対応)</option>
-                    <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
-                    <option value="gpt-4">GPT-4 (従来版)</option>
-                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (旧モデル)</option>
-                  </>
-                )}
-              </select>
+            {/* モデル情報（固定） */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span className="text-sm font-medium text-blue-900">
+                  使用モデル: GPT-4o + Responses API（Web検索対応）
+                </span>
+              </div>
+              <p className="text-xs text-blue-700 mt-1">
+                最新のニュースをリアルタイムで検索・分析します
+              </p>
             </div>
           </div>
           
