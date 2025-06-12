@@ -320,15 +320,15 @@ model ViralOpportunity {
   id              String   @id @default(uuid())
   topic           String   // トレンドトピック
   platform        String   // Twitter, TikTok等
-  viralScore      Float    // バズポテンシャル（0-1）
-  timeWindow      Int      // 投稿までの残り時間（時間）
+  viralScore      Float    @map("viral_score") // バズポテンシャル（0-1）
+  timeWindow      Int      @map("time_window") // 投稿までの残り時間（時間）
   angle           String   // コンテンツアングル
   keywords        String[] // 関連キーワード
-  sourceData      Json     // 元データ（ニュース、トレンド等）
+  sourceData      Json     @map("source_data") // 元データ（ニュース、トレンド等）
   status          String   // identified, analyzed, generated, posted
-  analyzedAt      DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  analyzedAt      DateTime @map("analyzed_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   posts           ViralPost[]
   
@@ -340,12 +340,12 @@ model ViralOpportunity {
 model ViralPost {
   id              String   @id @default(uuid())
   opportunityId   String   @map("opportunity_id")
-  conceptType     String   // concept1, concept2, concept3
+  conceptType     String   @map("concept_type") // concept1, concept2, concept3
   content         String   @db.Text // 投稿内容
-  threadContent   Json?    // スレッドの場合の全内容
-  visualGuide     String?  // ビジュアル作成ガイド
+  threadContent   Json?    @map("thread_content") // スレッドの場合の全内容
+  visualGuide     String?  @map("visual_guide") // ビジュアル作成ガイド
   hashtags        String[] // ハッシュタグ
-  postType        String   // single, thread, reply
+  postType        String   @map("post_type") // single, thread, reply
   platform        String   // Twitter等
   
   scheduledAt     DateTime? @map("scheduled_at")
@@ -355,8 +355,8 @@ model ViralPost {
   performance     ViralPostPerformance?
   opportunity     ViralOpportunity @relation(fields: [opportunityId], references: [id])
   
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   @@index([opportunityId])
   @@index([scheduledAt])
@@ -391,8 +391,8 @@ model ViralPostPerformance {
   
   post            ViralPost @relation(fields: [postId], references: [id])
   
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   @@map("viral_post_performance")
 }
@@ -408,7 +408,7 @@ model ViralAnalysisLog {
   success         Boolean
   error           String?
   
-  createdAt       DateTime @default(now())
+  createdAt       DateTime @default(now()) @map("created_at")
   
   @@index([model, phase])
   @@map("viral_analysis_logs")
@@ -420,8 +420,8 @@ model ViralConfig {
   value           Json
   description     String?
   
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
   
   @@map("viral_config")
 }
