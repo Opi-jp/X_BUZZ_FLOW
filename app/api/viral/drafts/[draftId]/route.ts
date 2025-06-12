@@ -3,10 +3,10 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { draftId: string } }
+  { params }: { params: Promise<{ draftId: string }> }
 ) {
   try {
-    const draftId = params.draftId
+    const { draftId } = await params
 
     const draft = await prisma.contentDraft.findUnique({
       where: { id: draftId }
@@ -36,10 +36,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { draftId: string } }
+  { params }: { params: Promise<{ draftId: string }> }
 ) {
   try {
-    const draftId = params.draftId
+    const { draftId } = await params
     const body = await request.json()
 
     const updateData: any = {}
@@ -83,10 +83,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { draftId: string } }
+  { params }: { params: Promise<{ draftId: string }> }
 ) {
   try {
-    const draftId = params.draftId
+    const { draftId } = await params
 
     await prisma.contentDraft.delete({
       where: { id: draftId }
