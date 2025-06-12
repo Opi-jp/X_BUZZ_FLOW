@@ -52,11 +52,15 @@ export default function GptSessionDetail() {
   const executeStep = async (step: number) => {
     setLoading(true)
     try {
-      // Step 1の場合は、Agent版を使うオプション（現在は通常版を使用）
-      const useAgentAPI = step === 1 && false // 将来的にAgents SDKを使用
-      const endpoint = useAgentAPI
-        ? `/api/viral/gpt-session/${sessionId}/step1-agent`
+      // Step 1の場合は、Assistants API版を使うオプション
+      const useAssistantAPI = step === 1 && session?.metadata?.config?.model === 'gpt-4o' // GPT-4oの場合のみ
+      const endpoint = useAssistantAPI
+        ? `/api/viral/gpt-session/${sessionId}/step1-assistant`
         : `/api/viral/gpt-session/${sessionId}/step${step}`
+      
+      if (useAssistantAPI) {
+        console.log('Using Assistants API with web_search tool for Step 1')
+      }
       
       const response = await fetch(endpoint, {
         method: 'POST'
@@ -173,6 +177,19 @@ export default function GptSessionDetail() {
                 {stepData[`step${currentStep - 1}` as keyof StepData]?.nextStep?.message || 
                  `Step ${currentStep}: ${stepInfo[currentStep - 1].title}を実行します`}
               </p>
+              
+              {/* GPT-4oでStep 1の場合、Web検索機能の説明を表示 */}
+              {currentStep === 1 && session?.metadata?.config?.model === 'gpt-4o' && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg inline-flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <span className="text-sm text-blue-800">
+                    GPT-4oのWeb検索機能を使用して最新ニュースを取得します
+                  </span>
+                </div>
+              )}
+              
               <button
                 onClick={() => executeStep(currentStep)}
                 disabled={loading}
