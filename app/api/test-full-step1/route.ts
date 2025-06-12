@@ -107,7 +107,7 @@ web_searchツールを使用して、最新のAIニュースを5件検索して�
   } catch (error) {
     return NextResponse.json({
       success: false,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }
