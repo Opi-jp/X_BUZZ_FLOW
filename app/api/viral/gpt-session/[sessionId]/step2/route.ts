@@ -12,6 +12,13 @@ export async function POST(
 ) {
   try {
     const { sessionId } = await params
+    
+    // キャッシュを無効化
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
 
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
@@ -21,61 +28,141 @@ export async function POST(
     if (!session) {
       return NextResponse.json(
         { error: 'セッションが見つかりません' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
-    const currentResponse = session.response as Record<string, any> || {}
-    const currentMetadata = session.metadata as Record<string, any> || {}
+    const config = session.metadata as any
+    const step1Data = (session.response as any)?.step1
 
-    if (!currentResponse.step1) {
+    if (!step1Data) {
       return NextResponse.json(
-        { error: 'Step 1を先に完了してください' },
-        { status: 400 }
+        { error: 'Step 1のデータが見つかりません。まずStep 1を実行してください。' },
+        { status: 400, headers }
       )
     }
 
-    // Step 2: トレンド評価・角度分析のプロンプト
-    const prompt = buildStep2Prompt(currentMetadata.config, currentResponse.step1)
+    console.log('=== Step 2: Chain of Thought + Function Calling ===')
+    console.log('Session ID:', sessionId)
+    console.log('Available viral opportunities:', step1Data.viralOpportunities?.length || 0)
 
-    console.log('Executing GPT Step 2 analysis...')
     const startTime = Date.now()
 
-    const completion = await openai.chat.completions.create({
-      model: currentMetadata.config.model || 'gpt-4-turbo-preview',
+    // Function Definition for trend analysis
+    const trendAnalysisFunction = {
+      name: 'analyze_viral_trends',
+      description: 'バイラル機会を詳細に分析し、エンゲージメント予測を行う',
+      parameters: {
+        type: 'object',
+        properties: {
+          opportunities: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                topic: { type: 'string', description: 'トピックタイトル' },
+                controversy_level: { type: 'number', description: '論争レベル（0-1）' },
+                emotion_intensity: { type: 'number', description: '感情の強さ（0-1）' },
+                relatability_factor: { type: 'number', description: '共感性要因（0-1）' },
+                shareability: { type: 'number', description: '共有可能性（0-1）' },
+                timing_sensitivity: { type: 'number', description: 'タイミング敏感性（0-1）' },
+                platform_alignment: { type: 'number', description: 'プラットフォーム適合性（0-1）' },
+                viral_velocity: { type: 'string', description: '拡散速度予測（slow/medium/fast/explosive）' },
+                content_angle: { type: 'string', description: '最適なコンテンツアングル' },
+                opportunity_window: { type: 'string', description: '機会ウィンドウ（時間枠）' },
+                target_emotion: { type: 'string', description: '狙う感情（surprise/anger/joy/outrage/curiosity）' },
+                engagement_prediction: { type: 'number', description: 'エンゲージメント予測スコア（0-1）' }
+              },
+              required: ['topic', 'controversy_level', 'emotion_intensity', 'relatability_factor', 'shareability', 'timing_sensitivity', 'platform_alignment', 'viral_velocity', 'content_angle', 'opportunity_window', 'target_emotion', 'engagement_prediction']
+            }
+          },
+          overall_assessment: {
+            type: 'object',
+            properties: {
+              best_opportunity: { type: 'string', description: '最高のバズ機会' },
+              recommended_timeline: { type: 'string', description: '推奨タイムライン' },
+              risk_factors: { type: 'array', items: { type: 'string' }, description: 'リスク要因' },
+              success_factors: { type: 'array', items: { type: 'string' }, description: '成功要因' }
+            },
+            required: ['best_opportunity', 'recommended_timeline', 'risk_factors', 'success_factors']
+          }
+        },
+        required: ['opportunities', 'overall_assessment']
+      }
+    }
+
+    // Chain of Thought プロンプト構築
+    const cotPrompt = buildChainOfThoughtPrompt(config.config, step1Data)
+
+    // GPT-4o Function Calling実行
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: `あなたは、${currentMetadata.config.expertise}の専門家で、バイラルコンテンツ戦略家です。
-Step 1で特定したトレンドを詳細に評価し、最適なコンテンツアングルを特定してください。`
+          content: `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+          
+Chain of Thought（段階的思考）に従って、以下の手順で分析を進めてください：
+
+1. **現状認識** - 提供された機会を整理
+2. **深層分析** - 各機会の6つの軸（論争・感情・共感・共有・タイミング・プラットフォーム適合）での評価
+3. **拡散予測** - プラットフォーム特性を考慮した拡散速度とエンゲージメント予測
+4. **戦略決定** - 最適な機会とアプローチの決定
+
+必ずanalyze_viral_trends関数を呼び出して、構造化された分析結果を返してください。`
         },
         {
           role: 'user',
-          content: prompt
+          content: cotPrompt
         }
       ],
+      functions: [trendAnalysisFunction],
+      function_call: { name: 'analyze_viral_trends' },
       temperature: 0.7,
-      max_tokens: 3000,
-      response_format: { type: 'json_object' }
+      max_tokens: 4000
     })
 
     const duration = Date.now() - startTime
-    const response = JSON.parse(completion.choices[0].message.content || '{}')
+    console.log('API call duration:', duration, 'ms')
 
-    // Step 2の結果を保存
+    // Function Callingの結果を取得
+    const functionCall = response.choices[0]?.message?.function_call
+    let analysisResult = null
+
+    if (functionCall && functionCall.name === 'analyze_viral_trends') {
+      try {
+        analysisResult = JSON.parse(functionCall.arguments)
+        console.log('Function calling successful:', Object.keys(analysisResult))
+      } catch (e) {
+        console.error('Failed to parse function arguments:', e)
+        return NextResponse.json(
+          { error: 'Function Callingの結果解析に失敗しました' },
+          { status: 500, headers }
+        )
+      }
+    } else {
+      return NextResponse.json(
+        { error: 'Function Callingが実行されませんでした' },
+        { status: 500, headers }
+      )
+    }
+
+    // 結果をデータベースに保存
     await prisma.gptAnalysis.update({
       where: { id: sessionId },
       data: {
         response: {
-          ...currentResponse,
-          step2: response
+          ...(session.response as any || {}),
+          step2: analysisResult
         },
-        tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...currentMetadata,
+          ...(session.metadata as any || {}),
           currentStep: 2,
-          step2CompletedAt: new Date().toISOString()
+          step2CompletedAt: new Date().toISOString(),
+          usedFunctionCalling: true,
+          cotImplementation: true
         }
       }
     })
@@ -84,151 +171,85 @@ Step 1で特定したトレンドを詳細に評価し、最適なコンテン�
       success: true,
       sessionId,
       step: 2,
-      response: {
-        viralVelocity: response.viralVelocity,
-        contentAngles: response.contentAngles,
-        topOpportunities: response.topOpportunities,
-        summary: response.summary
-      },
+      method: 'Chain of Thought + Function Calling',
+      response: analysisResult,
       metrics: {
         duration,
-        tokens: completion.usage?.total_tokens
+        tokensUsed: response.usage?.total_tokens || 0,
+        opportunitiesAnalyzed: analysisResult.opportunities?.length || 0,
+        bestOpportunity: analysisResult.overall_assessment?.best_opportunity
       },
       nextStep: {
         step: 3,
         url: `/api/viral/gpt-session/${sessionId}/step3`,
-        description: 'コンテンツコンセプト作成',
-        message: response.nextStepMessage || '特定の角度から、最もバズる可能性の高い機会をご紹介します。コンテンツのコンセプトについては、「続行」と入力してください。'
+        description: 'コンテンツコンセプト生成',
+        message: `${analysisResult.opportunities?.length || 0}個の機会を分析しました。次はコンテンツ生成に進みます。`
       }
-    })
+    }, { headers })
 
   } catch (error) {
-    console.error('GPT Step 2 error:', error)
+    console.error('Step 2 CoT error:', error)
     
     return NextResponse.json(
-      { error: 'Step 2 分析でエラーが発生しました' },
+      { 
+        error: 'Step 2 分析でエラーが発生しました',
+        details: error.message
+      },
       { status: 500 }
     )
   }
 }
 
-function buildStep2Prompt(config: any, step1Data: any) {
-  const topOpportunities = step1Data.viralPatterns.topOpportunities
-    .sort((a: any, b: any) => b.overallScore - a.overallScore)
-    .slice(0, 5)
+function buildChainOfThoughtPrompt(config: any, step1Data: any) {
+  const opportunities = step1Data.viralOpportunities || []
+  const currentDateJST = new Date().toLocaleDateString('ja-JP', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    timeZone: 'Asia/Tokyo'
+  })
 
-  // 重要度の高い記事を取得
-  const topArticles = (step1Data.articleAnalysis || [])
-    .sort((a: any, b: any) => b.importance - a.importance)
-    .slice(0, 5)
+  return `**Chain of Thought: バイラルトレンド詳細分析**
 
-  return `
-あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+設定情報:
+- 専門分野: ${config.expertise}
+- プラットフォーム: ${config.platform}
+- スタイル: ${config.style}
+- 現在時刻: ${currentDateJST}
 
-## フェーズ2: バズる機会評価
-
-現在時刻: ${new Date().toLocaleString('ja-JP')}
-
-### あなたの設定情報（フェーズ1から引き継ぎ）：
-1. あなたの専門分野または業界: ${config.expertise}
-2. 重点を置くプラットフォーム: ${config.platform}
-3. コンテンツのスタイル: ${config.style}
-
-### フェーズ1の分析結果
-${step1Data.summary}
-
-### 収集した重要記事（重要度順）
-${topArticles.map((article: any, idx: number) => `
-${idx + 1}. ${article.title}
-   - ソース: ${article.source}
-   - URL: ${article.url || 'URLなし'}
-   - 公開日: ${article.publishDate || '日付不明'}
-   - 要約: ${article.summary}
-   - ${config.expertise}の視点: ${article.expertPerspective || ''}
+**ステップ1で特定されたバズ機会:**
+${opportunities.map((opp: any, index: number) => `
+${index + 1}. ${opp.topic}
+   - 洞察: ${opp.insight}
+   - ソース: ${opp.url}
+   - 初期スコア: ${opp.viralScore}
 `).join('\n')}
 
-### 特定されたバズる機会（上位5件）
-${topOpportunities.map((opp: any, i: number) => `
-${i + 1}. ${opp.topic}
-   - 総合スコア: ${opp.overallScore}
-   - ${config.expertise}の視点: ${opp.expertAngle || ''}
-   - 理由: ${opp.reasoning || ''}
-`).join('\n')}
+**Chain of Thought 分析手順:**
 
-それぞれのトレンドトピックのバズるポテンシャルを「${config.expertise}」の専門家として評価します。
+🧠 **思考ステップ1: 現状認識**
+各機会の基本的な性質と現在のトレンド状況を把握
 
-### 1. ウイルス速度指標の評価
-各トレンドについて、「${config.expertise}」の視点から以下を評価してください：
-- 検索ボリュームの急増と成長率
-- ソーシャルメンションの加速
-- 複数プラットフォームの存在
-- インフルエンサーの採用
-- メディア報道の勢い
+🔍 **思考ステップ2: 6軸詳細評価**
+各機会を以下の軸で0-1スケールで評価：
+- 論争レベル（強い意見を生み出すか）
+- 感情の強さ（怒り、喜び、驚き、憤慨の度合い）
+- 共感性要因（多くの人に影響を与えるか）
+- 共有可能性（人々が広めたいと思うか）
+- タイミング敏感性（関連性のウィンドウの狭さ）
+- プラットフォーム適合性（${config.platform}文化への適合度）
 
-### 2. コンテンツアングル識別
-「${config.expertise}」の専門家として、実行可能なトレンドごとに独自の角度を特定：
-- 反対派視点: 一般的な意見に対して${config.expertise}の観点から異議を唱える
-- 専門家分析: ${config.expertise}の専門知識を活かした内部視点
-- 個人的な物語: ${config.expertise}の経験に基づく個人的なつながり
-- 教育的解説: ${config.expertise}の知識を活かした分かりやすい解説
-- 未来予測: ${config.expertise}の視点から次に何が起こるかを予測
-- 舞台裏の洞察: ${config.expertise}の経験から見える舞台裏
-- 比較分析: ${config.expertise}の観点から過去のイベントとの比較
+⚡ **思考ステップ3: 拡散メカニズム予測**
+- バイラル速度（slow/medium/fast/explosive）
+- エンゲージメントタイプの予測
+- ターゲット感情の特定
 
-以下のJSON形式で回答してください：
+🎯 **思考ステップ4: 戦略決定**
+- 最適なコンテンツアングル
+- 機会ウィンドウの特定
+- リスクと成功要因の分析
 
-**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
+この分析を基に、analyze_viral_trends関数を呼び出して構造化された結果を提供してください。
 
-{
-  "viralVelocity": {
-    "metrics": [
-      {
-        "topic": "...",
-        "searchVolume": {"current": 数値, "growth": "XX%"},
-        "socialMentions": {"count": 数値, "acceleration": "XX%/hour"},
-        "crossPlatform": {"platforms": [...], "reach": 数値},
-        "influencerAdoption": {"count": 数値, "totalReach": 数値},
-        "mediaVelocity": {"articles": 数値, "momentum": "increasing/stable/decreasing"}
-      }
-    ]
-  },
-  "contentAngles": {
-    "opportunities": [
-      {
-        "topic": "...",
-        "bestAngles": [
-          {
-            "type": "contrarian/expert/personal/educational/predictive/behind-scenes/comparative",
-            "angle": "具体的な切り口の説明",
-            "reasoning": "なぜこの角度が効果的か",
-            "expectedEngagement": "high/medium/low"
-          }
-        ],
-        "avoidAngles": ["避けるべき角度と理由"]
-      }
-    ]
-  },
-  "topOpportunities": [
-    {
-      "rank": 1,
-      "topic": "...",
-      "viralScore": 0.0-1.0,
-      "bestAngle": "...",
-      "angleReasoning": "${config.expertise}の専門家として、なぜこの角度が最適か",
-      "expertUniqueness": "${config.expertise}ならではの独自性",
-      "timeWindow": "XX時間以内",
-      "specificRecommendation": "${config.platform}で${config.style}を活かした具体的な推奨事項",
-      "sourceArticles": [
-        {
-          "title": "参照した記事タイトル",
-          "url": "記事URL",
-          "relevance": "${config.expertise}の視点でこの記事をどう活用するか"
-        }
-      ]
-    }
-  ],
-  "summary": "「${config.expertise}」の専門家としてのStep 2分析サマリー",
-  "nextStepMessage": "特定の角度から、最もバズる可能性の高い機会をご紹介します。コンテンツのコンセプトについては、「続行」と入力してください。"
-}
-`
+特に${config.expertise}の視点から、48時間以内に実行可能な最高のバズ機会を特定し、${config.platform}での成功確率が最も高いアプローチを推奨してください。`
 }

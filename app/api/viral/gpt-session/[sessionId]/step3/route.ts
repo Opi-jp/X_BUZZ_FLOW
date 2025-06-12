@@ -12,6 +12,12 @@ export async function POST(
 ) {
   try {
     const { sessionId } = await params
+    
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
 
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
@@ -21,79 +27,179 @@ export async function POST(
     if (!session) {
       return NextResponse.json(
         { error: 'セッションが見つかりません' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
-    const currentResponse = session.response as Record<string, any> || {}
-    const currentMetadata = session.metadata as Record<string, any> || {}
+    const config = session.metadata as any
+    const step2Data = (session.response as any)?.step2
 
-    if (!currentResponse.step2) {
+    if (!step2Data) {
       return NextResponse.json(
-        { error: 'Step 2を先に完了してください' },
-        { status: 400 }
+        { error: 'Step 2のデータが見つかりません。まずStep 2を実行してください。' },
+        { status: 400, headers }
       )
     }
 
-    // Step 3: コンテンツコンセプト作成のプロンプト
-    const prompt = buildStep3Prompt(currentMetadata.config, currentResponse.step2)
+    console.log('=== Step 3: Content Concept Creation with Function Calling ===')
+    console.log('Session ID:', sessionId)
+    console.log('Opportunities to process:', step2Data.opportunities?.length || 0)
 
-    console.log('Executing GPT Step 3 analysis...')
     const startTime = Date.now()
 
-    const completion = await openai.chat.completions.create({
-      model: currentMetadata.config.model || 'gpt-4-turbo-preview',
+    // Function Definition for content concept creation
+    const contentConceptFunction = {
+      name: 'create_viral_content_concepts',
+      description: 'バイラル機会から具体的な投稿コンセプトを3つ生成する',
+      parameters: {
+        type: 'object',
+        properties: {
+          concepts: {
+            type: 'array',
+            maxItems: 3,
+            items: {
+              type: 'object',
+              properties: {
+                topic: { type: 'string', description: '対象トピック' },
+                title: { type: 'string', description: 'コンセプトタイトル' },
+                hook: { type: 'string', description: '注目を集めるオープニングフック（20-30文字）' },
+                angle: { type: 'string', description: '専門家ならではの独自視点' },
+                platform: { type: 'string', description: 'プラットフォーム' },
+                format: { type: 'string', enum: ['single', 'thread', 'video'], description: '投稿形式' },
+                content_outline: {
+                  type: 'object',
+                  properties: {
+                    opening_hook: { type: 'string', description: 'オープニングフック詳細' },
+                    key_points: { type: 'array', items: { type: 'string' }, description: '専門知識を活かしたポイント' },
+                    unexpected_insight: { type: 'string', description: '専門家だからこその洞察' },
+                    cta: { type: 'string', description: 'エンゲージメントCTA' }
+                  },
+                  required: ['opening_hook', 'key_points', 'unexpected_insight', 'cta']
+                },
+                timing: { type: 'string', description: '最適投稿タイミング' },
+                visual_description: { type: 'string', description: 'ビジュアルガイド' },
+                hashtags: { type: 'array', items: { type: 'string' }, description: 'ハッシュタグ' },
+                target_audience: { type: 'string', description: 'ターゲット層' },
+                buzz_factors: { type: 'array', items: { type: 'string' }, description: 'バズ要因' },
+                estimated_engagement: {
+                  type: 'object',
+                  properties: {
+                    likes: { type: 'string', description: 'いいね予測' },
+                    retweets: { type: 'string', description: 'RT予測' },
+                    replies: { type: 'string', description: 'リプライ予測' }
+                  }
+                },
+                risk_level: { type: 'string', enum: ['low', 'medium', 'high'], description: 'リスクレベル' },
+                confidence_score: { type: 'number', description: '成功確信度（0-1）' }
+              },
+              required: ['topic', 'title', 'hook', 'angle', 'platform', 'format', 'content_outline', 'timing', 'visual_description', 'hashtags', 'target_audience', 'buzz_factors', 'estimated_engagement', 'risk_level', 'confidence_score']
+            }
+          },
+          strategic_summary: {
+            type: 'object',
+            properties: {
+              recommended_concept: { type: 'string', description: '最推奨コンセプト' },
+              execution_priority: { type: 'array', items: { type: 'string' }, description: '実行優先順位' },
+              timing_strategy: { type: 'string', description: 'タイミング戦略' },
+              risk_mitigation: { type: 'array', items: { type: 'string' }, description: 'リスク軽減策' }
+            },
+            required: ['recommended_concept', 'execution_priority', 'timing_strategy', 'risk_mitigation']
+          }
+        },
+        required: ['concepts', 'strategic_summary']
+      }
+    }
+
+    // Chain of Thought プロンプト構築
+    const cotPrompt = buildContentConceptPrompt(config.config, step2Data)
+
+    // GPT-4o Function Calling実行
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: `あなたは、${currentMetadata.config.expertise}の専門家で、バイラルコンテンツクリエイターです。
-Step 2で特定した機会に対して、具体的なコンテンツコンセプトを作成してください。`
+          content: `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+
+Chain of Thought に従って、以下の手順でコンセプトを作成してください：
+
+1. **機会分析** - Step 2の分析結果から最適な機会を選択
+2. **専門性活用** - ${config.config.expertise}の知見を活かした独自角度の設定  
+3. **コンセプト設計** - プラットフォーム特性と専門性を組み合わせた投稿コンセプト
+4. **戦略最適化** - エンゲージメント最大化とリスク最小化のバランス
+
+必ずcreate_viral_content_concepts関数を呼び出して、3つの具体的なコンセプトを提供してください。`
         },
         {
           role: 'user',
-          content: prompt
+          content: cotPrompt
         }
       ],
+      functions: [contentConceptFunction],
+      function_call: { name: 'create_viral_content_concepts' },
       temperature: 0.8,
-      max_tokens: 4000,
-      response_format: { type: 'json_object' }
+      max_tokens: 4000
     })
 
     const duration = Date.now() - startTime
-    const response = JSON.parse(completion.choices[0].message.content || '{}')
+    console.log('API call duration:', duration, 'ms')
 
-    // Step 3の結果を保存
+    // Function Callingの結果を取得
+    const functionCall = response.choices[0]?.message?.function_call
+    let conceptResult = null
+
+    if (functionCall && functionCall.name === 'create_viral_content_concepts') {
+      try {
+        conceptResult = JSON.parse(functionCall.arguments)
+        console.log('Content concepts generated:', conceptResult.concepts?.length || 0)
+      } catch (e) {
+        console.error('Failed to parse concept function arguments:', e)
+        return NextResponse.json(
+          { error: 'コンセプト生成の結果解析に失敗しました' },
+          { status: 500, headers }
+        )
+      }
+    } else {
+      return NextResponse.json(
+        { error: 'コンセプト生成Function Callingが実行されませんでした' },
+        { status: 500, headers }
+      )
+    }
+
+    // 結果をデータベースに保存
     await prisma.gptAnalysis.update({
       where: { id: sessionId },
       data: {
         response: {
-          ...currentResponse,
-          step3: response
+          ...(session.response as any || {}),
+          step3: conceptResult
         },
-        tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...currentMetadata,
+          ...(session.metadata as any || {}),
           currentStep: 3,
-          step3CompletedAt: new Date().toISOString()
+          step3CompletedAt: new Date().toISOString(),
+          usedFunctionCalling: true,
+          conceptsGenerated: conceptResult.concepts?.length || 0
         }
       }
     })
 
     // コンセプトを下書きとして保存
     const drafts = await Promise.all(
-      response.concepts.map(async (concept: any, index: number) => {
+      (conceptResult.concepts || []).map(async (concept: any, index: number) => {
         return await prisma.contentDraft.create({
           data: {
             analysisId: sessionId,
-            conceptType: concept.type || 'general',
-            category: concept.category || 'AI × 働き方',
+            conceptType: concept.format || 'single',
+            category: concept.topic,
             title: concept.title,
-            content: concept.hook, // Step 3ではフックのみ
-            explanation: concept.explanation || '',
-            buzzFactors: concept.buzzFactors || [],
-            targetAudience: concept.targetAudience || '',
-            estimatedEngagement: concept.estimatedEngagement || {},
+            content: concept.hook,
+            explanation: concept.angle,
+            buzzFactors: concept.buzz_factors || [],
+            targetAudience: concept.target_audience || '',
+            estimatedEngagement: concept.estimated_engagement || {},
             hashtags: concept.hashtags || [],
             metadata: {
               conceptNumber: index + 1,
@@ -101,8 +207,10 @@ Step 2で特定した機会に対して、具体的なコンテンツコンセ�
               format: concept.format,
               angle: concept.angle,
               timing: concept.timing,
-              visualDescription: concept.visualDescription,
-              contentOutline: concept.contentOutline
+              visualDescription: concept.visual_description,
+              contentOutline: concept.content_outline,
+              riskLevel: concept.risk_level,
+              confidenceScore: concept.confidence_score
             }
           }
         })
@@ -113,131 +221,96 @@ Step 2で特定した機会に対して、具体的なコンテンツコンセ�
       success: true,
       sessionId,
       step: 3,
-      response: {
-        concepts: response.concepts,
-        summary: response.summary
-      },
+      method: 'Chain of Thought + Function Calling',
+      response: conceptResult,
       draftsCreated: drafts.length,
       metrics: {
         duration,
-        tokens: completion.usage?.total_tokens
+        tokensUsed: response.usage?.total_tokens || 0,
+        conceptsGenerated: conceptResult.concepts?.length || 0,
+        recommendedConcept: conceptResult.strategic_summary?.recommended_concept
       },
       nextStep: {
         step: 4,
         url: `/api/viral/gpt-session/${sessionId}/step4`,
         description: '完全な投稿可能コンテンツ生成',
-        message: response.nextStepMessage || 'バズるコンテンツのコンセプトの概要は次のとおりです。「続行」と入力すると、各コンセプトの完全な、すぐに投稿できるコンテンツが表示されます。'
+        message: `${conceptResult.concepts?.length || 0}個のコンセプトを生成しました。完全な投稿コンテンツの作成に進みます。`
       }
-    })
+    }, { headers })
 
   } catch (error) {
-    console.error('GPT Step 3 error:', error)
+    console.error('Step 3 CoT error:', error)
     
     return NextResponse.json(
-      { error: 'Step 3 コンセプト作成でエラーが発生しました' },
+      { 
+        error: 'Step 3 コンセプト作成でエラーが発生しました',
+        details: error.message
+      },
       { status: 500 }
     )
   }
 }
 
-function buildStep3Prompt(config: any, step2Data: any) {
-  const topOpportunities = step2Data.topOpportunities.slice(0, 3)
+function buildContentConceptPrompt(config: any, step2Data: any) {
+  const opportunities = step2Data.opportunities || []
+  const bestOpportunity = step2Data.overall_assessment?.best_opportunity
+  const currentDateJST = new Date().toLocaleDateString('ja-JP', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    timeZone: 'Asia/Tokyo'
+  })
 
-  return `
-あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+  return `**Chain of Thought: バイラルコンテンツコンセプト生成**
 
-## フェーズ3: バズるコンテンツのコンセプト作成
+設定情報:
+- 専門分野: ${config.expertise}
+- プラットフォーム: ${config.platform}
+- スタイル: ${config.style}
+- 現在時刻: ${currentDateJST}
 
-現在時刻: ${new Date().toLocaleString('ja-JP')}
+**Step 2 分析結果:**
+最高のバズ機会: ${bestOpportunity}
+推奨タイムライン: ${step2Data.overall_assessment?.recommended_timeline}
 
-### あなたの設定情報（フェーズ1-2から引き継ぎ）：
-1. あなたの専門分野または業界: ${config.expertise}
-2. 重点を置くプラットフォーム: ${config.platform}
-3. コンテンツのスタイル: ${config.style}
+**分析された機会一覧:**
+${opportunities.slice(0, 3).map((opp: any, index: number) => `
+${index + 1}. ${opp.topic}
+   - 論争レベル: ${opp.controversy_level}
+   - 感情の強さ: ${opp.emotion_intensity}
+   - 共感性: ${opp.relatability_factor}
+   - 共有可能性: ${opp.shareability}
+   - タイミング敏感性: ${opp.timing_sensitivity}
+   - プラットフォーム適合性: ${opp.platform_alignment}
+   - 拡散速度予測: ${opp.viral_velocity}
+   - コンテンツアングル: ${opp.content_angle}
+   - ターゲット感情: ${opp.target_emotion}
+   - エンゲージメント予測: ${opp.engagement_prediction}
+`).join('\n')}
 
-### フェーズ2の分析結果
-${step2Data.summary}
+**Chain of Thought コンセプト作成手順:**
 
-### 選択された上位機会（最もバズる可能性が高い3つ）
-${topOpportunities.map((opp: any, idx: number) => {
-  const articles = opp.sourceArticles || []
-  return `
-${idx + 1}. ${opp.topic}
-   - バイラルスコア: ${opp.viralScore}
-   - 最適な角度: ${opp.bestAngle}
-   - ${config.expertise}ならではの独自性: ${opp.expertUniqueness || ''}
-   - 推奨タイミング: ${opp.timeWindow}
-   - 参照記事:
-${articles.map((article: any) => `     • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
-`
-}).join('\n')}
+🎯 **思考ステップ1: 機会選択**
+Step 2の分析結果から、最もバズる可能性が高い3つの機会を選択し、${config.expertise}の専門性を活かせる角度を特定
 
-具体的で実行可能なコンテンツコンセプトを「${config.expertise}」の専門家として作成します。
+💡 **思考ステップ2: 専門性統合**
+${config.expertise}の知見を活かして：
+- 一般的な視点とは異なる独自の角度
+- 専門家だからこそ語れる洞察
+- ${config.style}スタイルに合ったアプローチ
 
-### コンテンツコンセプトフレームワーク
-それぞれの機会について、以下を開発します：
+📱 **思考ステップ3: プラットフォーム最適化**
+${config.platform}の特性に合わせて：
+- 最適な投稿形式（単発/スレッド/動画）
+- プラットフォーム文化に適合したトーン
+- エンゲージメントを最大化するCTA
 
-- プラットフォーム: ${config.platform}に最適化
-- 形式: ${config.platform}に適した形式（スレッド/単発/ビデオなど）
-- フック: 「${config.expertise}の視点から注目を集める具体的なオープナー」
-- 角度: ${config.expertise}ならではの独自の視点
-- コンテンツ概要:
-  - トレンドと${config.expertise}をつなぐオープニングフック
-  - ${config.expertise}の専門知識を活かした3-5つのキーポイント
-  - ${config.expertise}だからこそ語れる予期せぬ洞察
-  - ${config.style}に合ったエンゲージメントCTA
-- タイミング: 最大の効果を得るための投稿時間
-- ビジュアル: ${config.platform}に適した具体的な画像/動画の説明
-- ハッシュタグ: ${config.platform}と${config.expertise}に最適化されたタグ
+⚡ **思考ステップ4: 実行可能性評価**
+- リスクレベルの評価
+- 成功確信度の算出
+- タイミング戦略の決定
 
-以下のJSON形式で回答してください：
+この分析を基に、create_viral_content_concepts関数を呼び出して、${config.expertise}の専門家として3つの具体的で実行可能なコンセプトを提供してください。
 
-**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
-
-{
-  "concepts": [
-    {
-      "conceptNumber": 1,
-      "topic": "対象トピック",
-      "platform": "${config.platform}",
-      "format": "single/thread/video",
-      "type": "controversy/empathy/humor/insight/news",
-      "category": "AI依存/働き方改革/世代間ギャップ/未来予測",
-      "title": "コンセプトタイトル",
-      "hook": "${config.expertise}の視点から注目を集める具体的なオープナー（20-30文字）",
-      "angle": "${config.expertise}ならではの独自の視点",
-      "contentOutline": {
-        "openingHook": "トレンドと${config.expertise}をつなぐオープニング",
-        "keyPoints": [
-          "${config.expertise}の専門知識を活かしたポイント1",
-          "${config.expertise}の専門知識を活かしたポイント2",
-          "${config.expertise}の専門知識を活かしたポイント3"
-        ],
-        "unexpectedInsight": "${config.expertise}だからこそ語れる予期せぬ洞察",
-        "cta": "${config.style}に合ったエンゲージメントCTA"
-      },
-      "timing": "X時間以内",
-      "visualDescription": "${config.platform}に適した画像/動画の説明",
-      "hashtags": ["${config.expertise}関連タグ1", "トレンドタグ2"],
-      "explanation": "${config.expertise}の専門家として、なぜこのコンセプトがバズるのかの説明",
-      "targetAudience": "${config.expertise}に興味があるターゲット層の説明",
-      "buzzFactors": ["${config.expertise}ならではのバズ要因1", "要因2", "要因3"],
-      "estimatedEngagement": {
-        "likes": "1000-5000",
-        "retweets": "200-1000",
-        "replies": "50-200"
-      },
-      "sourceArticles": [
-        {
-          "title": "参照した記事タイトル",
-          "url": "記事URL",
-          "usage": "この記事をどう活用するか（引用、参考、データ引用など）"
-        }
-      ]
-    }
-  ],
-  "summary": "3つのコンセプトの要約",
-  "nextStepMessage": "バズるコンテンツのコンセプトの概要は次のとおりです。「続行」と入力すると、各コンセプトの完全な、すぐに投稿できるコンテンツが表示されます。"
-}
-`
+各コンセプトは48時間以内に実行可能で、${config.platform}での最大エンゲージメントを狙えるものにしてください。`
 }

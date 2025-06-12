@@ -5,10 +5,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
+      config = {}
+    } = body
+    
+    const {
       expertise = 'AI × 働き方、25年のクリエイティブ経験',
       platform = 'Twitter',
-      style = '解説 × エンタメ'
-    } = body
+      style = '解説 × エンタメ',
+      model = 'gpt-4o'
+    } = config
 
     // 新しい分析セッションを作成
     const session = await prisma.gptAnalysis.create({
@@ -25,7 +30,8 @@ export async function POST(request: NextRequest) {
           config: {
             expertise,
             platform,
-            style
+            style,
+            model
           },
           currentStep: 0,
           completed: false
@@ -62,7 +68,8 @@ export async function POST(request: NextRequest) {
       config: {
         expertise,
         platform,
-        style
+        style,
+        model
       },
       nextStep: {
         step: 1,

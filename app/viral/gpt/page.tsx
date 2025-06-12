@@ -8,7 +8,7 @@ export default function GptViralDashboard() {
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [config, setConfig] = useState({
-    expertise: 'AI × 働き方、25年のクリエイティブ経験',
+    expertise: 'AI × 働き方',
     platform: 'Twitter',
     style: '解説 × エンタメ',
     model: 'gpt-4o'
@@ -86,6 +86,42 @@ export default function GptViralDashboard() {
     }
   }
 
+  const createChainOfThoughtSession = async () => {
+    setLoading(true)
+    try {
+      // まず通常のセッションを作成
+      const sessionResponse = await fetch('/api/viral/gpt-session/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      })
+
+      if (sessionResponse.ok) {
+        const sessionData = await sessionResponse.json()
+        
+        // Chain of Thought Hybrid実行を開始
+        const cotResponse = await fetch(`/api/viral/gpt-session/${sessionData.sessionId}/chain-hybrid`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+
+        if (cotResponse.ok) {
+          const cotData = await cotResponse.json()
+          // 結果ページに移動
+          window.location.href = `/viral/gpt/session/${sessionData.sessionId}?cot=true`
+        } else {
+          console.error('Chain of Thought execution failed')
+          // 通常のセッションページに移動
+          window.location.href = `/viral/gpt/session/${sessionData.sessionId}`
+        }
+      }
+    } catch (error) {
+      console.error('Failed to create Chain of Thought session:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const formatDate = (date: string) => {
     return formatInTimeZone(new Date(date), 'Asia/Tokyo', 'yyyy年MM月dd日 HH:mm', { locale: ja })
   }
@@ -126,6 +162,9 @@ export default function GptViralDashboard() {
                     </a>
                     <a href="/viral/drafts" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
                       📝 下書き管理
+                    </a>
+                    <a href="/viral/gpt/auto-execute" className="block px-3 py-2 text-sm text-green-700 hover:bg-green-50 rounded font-semibold">
+                      🚀 自動実行（新機能）
                     </a>
                     
                     <div className="border-t my-2"></div>
@@ -210,29 +249,92 @@ export default function GptViralDashboard() {
                 <option value="個人的な話">個人的な話</option>
               </select>
             </div>
-            {/* モデル情報（固定） */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            {/* システム情報 */}
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
-                <span className="text-sm font-medium text-blue-900">
-                  使用モデル: GPT-4o + Responses API（Web検索対応）
+                <span className="text-sm font-medium text-purple-900">
+                  Hybrid Chain of Thought システム
                 </span>
               </div>
-              <p className="text-xs text-blue-700 mt-1">
-                最新のニュースをリアルタイムで検索・分析します
-              </p>
+              <div className="space-y-1 text-xs">
+                <p className="text-purple-700">🔍 Phase 1: GPT-4o Responses APIでWeb検索（実記事URL取得）</p>
+                <p className="text-blue-700">📊 Phase 2-4: Function Calling + JSON Modeで構造化分析</p>
+                <p className="text-green-700">✨ 最低5個の実在記事から投稿準備完了コンテンツまで自動生成</p>
+              </div>
             </div>
           </div>
           
-          <button
-            onClick={createNewSession}
-            disabled={loading}
-            className="mt-6 w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            {loading ? '作成中...' : '新規分析を開始'}
-          </button>
+          <div className="mt-6">
+            {/* 実行モード選択 */}
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2">実行モードを選択</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="border border-gray-200 rounded-lg p-3 bg-white">
+                  <h4 className="font-medium text-gray-900 mb-1">📝 ステップ実行</h4>
+                  <p className="text-xs text-gray-600 mb-2">各ステップを確認しながら進める</p>
+                  <p className="text-xs text-green-600 mb-2">⏱ 各ステップ5-10秒</p>
+                  <button
+                    onClick={createNewSession}
+                    disabled={loading}
+                    className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg shadow hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+                  >
+                    {loading ? '作成中...' : 'ステップ実行'}
+                  </button>
+                </div>
+                
+                <div className="border border-purple-300 rounded-lg p-3 bg-purple-50">
+                  <h4 className="font-medium text-purple-900 mb-1">🧠 Chain of Thought</h4>
+                  <p className="text-xs text-purple-700 mb-2">Web検索＋詳細分析（高品質）</p>
+                  <p className="text-xs text-orange-600 mb-2">⏱ 約50-60秒</p>
+                  <button
+                    onClick={createChainOfThoughtSession}
+                    disabled={loading}
+                    className="w-full px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg shadow hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+                  >
+                    {loading ? '実行中...' : 'CoT実行'}
+                  </button>
+                </div>
+                
+                <div className="border border-green-300 rounded-lg p-3 bg-green-50">
+                  <h4 className="font-medium text-green-900 mb-1">⚡ 高速生成</h4>
+                  <p className="text-xs text-green-700 mb-2">即座に投稿準備完了（最速）</p>
+                  <p className="text-xs text-blue-600 mb-2">⏱ 5秒以内</p>
+                  <button
+                    onClick={async () => {
+                      setLoading(true)
+                      try {
+                        const sessionResponse = await fetch('/api/viral/gpt-session/create', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(config)
+                        })
+                        if (sessionResponse.ok) {
+                          const sessionData = await sessionResponse.json()
+                          const fastResponse = await fetch(`/api/viral/gpt-session/${sessionData.sessionId}/chain-fast`, {
+                            method: 'POST'
+                          })
+                          if (fastResponse.ok) {
+                            window.location.href = `/viral/gpt/session/${sessionData.sessionId}?fast=true`
+                          }
+                        }
+                      } catch (error) {
+                        console.error('Failed to create fast session:', error)
+                      } finally {
+                        setLoading(false)
+                      }
+                    }}
+                    disabled={loading}
+                    className="w-full px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg shadow hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+                  >
+                    {loading ? '生成中...' : '高速生成'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* セッション一覧 */}
@@ -274,9 +376,16 @@ export default function GptViralDashboard() {
                       <span className={`px-3 py-1 text-xs font-medium rounded-full ${
                         session.metadata?.completed 
                           ? 'bg-green-100 text-green-800' 
+                          : session.metadata?.chainHybridCompleted
+                          ? 'bg-purple-100 text-purple-800'
+                          : session.metadata?.usedChainFast
+                          ? 'bg-emerald-100 text-emerald-800'
                           : 'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {session.metadata?.completed ? '完了' : `Step ${session.metadata?.currentStep || 0}/5`}
+                        {session.metadata?.completed ? '完了' : 
+                         session.metadata?.chainHybridCompleted ? 'CoT完了' :
+                         session.metadata?.usedChainFast ? '⚡高速完了' :
+                         `Step ${session.metadata?.currentStep || 0}/5`}
                       </span>
                     </div>
                   </div>

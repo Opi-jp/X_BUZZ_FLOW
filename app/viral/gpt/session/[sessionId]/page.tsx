@@ -23,6 +23,9 @@ export default function GptSessionDetail() {
   const [loading, setLoading] = useState(false)
   const [stepData, setStepData] = useState<StepData>({})
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({})
+  const [chainResult, setChainResult] = useState<any>(null)
+  const [executingChain, setExecutingChain] = useState(false)
+  const [fastResult, setFastResult] = useState<any>(null)
 
   useEffect(() => {
     fetchSession()
@@ -94,6 +97,38 @@ export default function GptSessionDetail() {
 
   const toggleSection = (key: string) => {
     setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }))
+  }
+
+  const executeChainOfThought = async () => {
+    setExecutingChain(true)
+    try {
+      const response = await fetch(`/api/viral/gpt-session/${sessionId}/chain-hybrid`, {
+        method: 'POST'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log('Chain of Thought response:', data)
+        setChainResult(data)
+        
+        // セッションのメタデータも更新
+        setSession((prev: any) => ({
+          ...prev,
+          metadata: {
+            ...prev?.metadata,
+            chainHybridCompleted: true,
+            chainHybridCompletedAt: new Date().toISOString()
+          }
+        }))
+        
+        // 再度セッションを取得して最新データを反映
+        await fetchSession()
+      }
+    } catch (error) {
+      console.error('Failed to execute Chain of Thought:', error)
+    } finally {
+      setExecutingChain(false)
+    }
   }
 
   const formatDate = (date: string) => {
@@ -189,13 +224,26 @@ export default function GptSessionDetail() {
                 </div>
               )}
               
-              <button
-                onClick={() => executeStep(currentStep)}
-                disabled={loading}
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                {loading ? '実行中...' : currentStep === 1 ? '分析を開始' : '続行'}
-              </button>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => executeStep(currentStep)}
+                  disabled={loading}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                >
+                  {loading ? '実行中...' : currentStep === 1 ? '分析を開始' : '続行'}
+                </button>
+                
+                {/* Chain of Thought一括実行ボタン */}
+                {currentStep === 1 && !session.metadata?.chainHybridCompleted && (
+                  <button
+                    onClick={executeChainOfThought}
+                    disabled={executingChain || loading}
+                    className="px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  >
+                    {executingChain ? '実行中... (約60秒)' : '🚀 Chain of Thought一括実行'}
+                  </button>
+                )}
+              </div>
               
               {/* Step 3以降で下書き管理へのリンクを表示 */}
               {currentStep > 3 && (
@@ -211,9 +259,11 @@ export default function GptSessionDetail() {
             </div>
           )}
 
-          {session.metadata?.completed && (
+          {(session.metadata?.completed || session.metadata?.chainHybridCompleted) && (
             <div className="mt-8 text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-green-800 font-medium">✅ すべての分析が完了しました</p>
+              <p className="text-green-800 font-medium">
+                ✅ {session.metadata?.chainHybridCompleted ? 'Chain of Thought分析が完了しました' : 'すべての分析が完了しました'}
+              </p>
               <Link 
                 href={`/viral/drafts?sessionId=${sessionId}`}
                 className="inline-block mt-2 text-blue-600 hover:text-blue-800"
@@ -668,6 +718,182 @@ export default function GptSessionDetail() {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Chain of Thought 結果 */}
+          {(chainResult || session?.response?.chainHybrid) && (
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl shadow-lg p-6 border border-purple-200">
+              <h2 className="text-xl font-semibold mb-4 flex items-center text-purple-900">
+                <span className="mr-2">🧠</span>
+                Chain of Thought 一括実行結果
+              </h2>
+              
+              {(chainResult?.readyToPost?.status || session?.response?.chainHybrid?.summary?.readyToPost) && (
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <h3 className="font-semibold text-green-900 mb-3">✨ 投稿準備完了コンテンツ</h3>
+                  <div className="bg-white rounded-lg p-4 mb-3">
+                    <pre className="whitespace-pre-wrap text-sm font-sans">
+                      {chainResult?.readyToPost?.content || session?.response?.chainHybrid?.summary?.finalContent || ''}
+                    </pre>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <button 
+                      onClick={() => navigator.clipboard.writeText(chainResult?.readyToPost?.content || session?.response?.chainHybrid?.summary?.finalContent || '')}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+                    >
+                      📋 コピー
+                    </button>
+                    <span className="text-sm text-gray-600">
+                      推奨投稿時間: {chainResult?.readyToPost?.timing || '2-4時間以内'}
+                    </span>
+                  </div>
+                  {(chainResult?.readyToPost?.hashtags || []).length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {(chainResult?.readyToPost?.hashtags || []).map((tag: string, idx: number) => (
+                        <span key={idx} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                {/* Phase結果サマリー */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {(chainResult?.phases || session?.response?.chainHybrid?.phases) && Object.entries(chainResult?.phases || session?.response?.chainHybrid?.phases || {}).map(([phase, data]: [string, any]) => (
+                    <div key={phase} className="bg-white rounded-lg p-3 border border-purple-200">
+                      <h4 className="text-sm font-medium text-purple-900 mb-1">
+                        {phase === 'phase1' ? '🔍 Web検索' :
+                         phase === 'phase2' ? '📊 トレンド分析' :
+                         phase === 'phase3' ? '💡 コンセプト' :
+                         phase === 'phase4' ? '✍️ コンテンツ生成' : phase}
+                      </h4>
+                      <p className="text-xs text-gray-600">
+                        {data.trendsFound && `${data.trendsFound}件の記事発見`}
+                        {data.bestOpportunity && `最高機会: ${data.bestOpportunity.substring(0, 20)}...`}
+                        {data.conceptsGenerated && `${data.conceptsGenerated}個のコンセプト`}
+                        {data.contentReady && '✅ 投稿準備完了'}
+                      </p>
+                      <p className="text-xs text-purple-600 mt-1">
+                        実行時間: {data.duration}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 実行戦略 */}
+                {(chainResult?.executionStrategy || session?.response?.chainHybrid?.phases?.phase4?.content?.execution_strategy) && (
+                  <div className="bg-white rounded-lg p-4 border border-purple-200">
+                    <h3 className="font-medium text-purple-900 mb-3">🎯 実行戦略</h3>
+                    <div className="space-y-3">
+                      {(chainResult?.executionStrategy?.immediate_actions || session?.response?.chainHybrid?.phases?.phase4?.content?.execution_strategy?.immediate_actions) && (
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">即時アクション:</p>
+                          <ul className="mt-1 space-y-1">
+                            {(chainResult?.executionStrategy?.immediate_actions || session?.response?.chainHybrid?.phases?.phase4?.content?.execution_strategy?.immediate_actions || []).map((action: string, idx: number) => (
+                              <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                <span className="text-purple-500 mr-2">•</span>
+                                {action}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {(chainResult?.executionStrategy?.optimization_tips || session?.response?.chainHybrid?.phases?.phase4?.content?.execution_strategy?.optimization_tips) && (
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">最適化のヒント:</p>
+                          <ul className="mt-1 space-y-1">
+                            {(chainResult?.executionStrategy?.optimization_tips || session?.response?.chainHybrid?.phases?.phase4?.content?.execution_strategy?.optimization_tips || []).map((tip: string, idx: number) => (
+                              <li key={idx} className="text-sm text-gray-600 flex items-start">
+                                <span className="text-blue-500 mr-2">💡</span>
+                                {tip}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="text-center">
+                  <Link 
+                    href={`/viral/drafts?sessionId=${sessionId}`}
+                    className="inline-block px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium"
+                  >
+                    生成されたコンテンツを管理 →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Chain Fast 結果 */}
+          {(session?.response?.chainFast || session?.metadata?.usedChainFast) && (
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl shadow-lg p-6 border border-green-200">
+              <h2 className="text-xl font-semibold mb-4 flex items-center text-green-900">
+                <span className="mr-2">⚡</span>
+                高速生成結果
+              </h2>
+              
+              {session?.response?.chainFast && (
+                <div>
+                  <div className="mb-6 p-4 bg-white border border-green-200 rounded-lg">
+                    <h3 className="font-semibold text-green-900 mb-3">🎯 トレンド: {session.response.chainFast.trend_topic}</h3>
+                    <div className="flex items-center gap-4 mb-4">
+                      <span className="text-sm text-gray-600">バイラルスコア:</span>
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-500 h-2 rounded-full" 
+                          style={{ width: `${(session.response.chainFast.viral_score || 0) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-sm font-medium">{((session.response.chainFast.viral_score || 0) * 100).toFixed(0)}%</span>
+                    </div>
+                    
+                    <div className="bg-gray-50 rounded-lg p-4 mb-3">
+                      <pre className="whitespace-pre-wrap text-sm font-sans">
+                        {session.response.chainFast.content?.text || ''}
+                      </pre>
+                    </div>
+                    
+                    <div className="flex gap-4 items-center">
+                      <button 
+                        onClick={() => navigator.clipboard.writeText(session.response.chainFast.content?.text || '')}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
+                      >
+                        📋 コピー
+                      </button>
+                      <span className="text-sm text-gray-600">
+                        推奨投稿時間: {session.response.chainFast.content?.optimal_timing || '即時'}
+                      </span>
+                    </div>
+                    
+                    {session.response.chainFast.content?.hashtags?.length > 0 && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {session.response.chainFast.content.hashtags.map((tag: string, idx: number) => (
+                          <span key={idx} className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {session.response.chainFast.strategy && (
+                    <div className="bg-white rounded-lg p-4 border border-green-200">
+                      <h3 className="font-medium text-green-900 mb-3">💡 戦略</h3>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="font-medium">フック:</span> {session.response.chainFast.strategy.hook}</p>
+                        <p><span className="font-medium">エンゲージメントのコツ:</span> {session.response.chainFast.strategy.engagement_tip}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
