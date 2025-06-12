@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { formatInTimeZone } from 'date-fns-tz'
 import { ja } from 'date-fns/locale'
 
@@ -50,9 +51,18 @@ export default function GptSessionDetail() {
 
       if (response.ok) {
         const data = await response.json()
-        setStepData(prev => ({ ...prev, [`step${step}` as keyof StepData]: data }))
+        // 直接ステートを更新（fetchSessionは呼ばない）
+        setStepData(prev => ({ ...prev, [`step${step}` as keyof StepData]: data.response }))
         setCurrentStep(step + 1)
-        fetchSession() // 最新状態を取得
+        // セッションのメタデータも更新
+        setSession((prev: any) => ({
+          ...prev,
+          metadata: {
+            ...prev?.metadata,
+            currentStep: step,
+            [`step${step}CompletedAt`]: new Date().toISOString()
+          }
+        }))
       }
     } catch (error) {
       console.error(`Failed to execute step ${step}:`, error)
@@ -93,12 +103,12 @@ export default function GptSessionDetail() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* ヘッダー */}
         <div className="mb-8">
-          <a href="/viral/gpt" className="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center">
+          <Link href="/viral/gpt" className="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center">
             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             ダッシュボードに戻る
-          </a>
+          </Link>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             GPT分析セッション
@@ -152,18 +162,30 @@ export default function GptSessionDetail() {
               >
                 {loading ? '実行中...' : currentStep === 1 ? '分析を開始' : '続行'}
               </button>
+              
+              {/* Step 3以降で下書き管理へのリンクを表示 */}
+              {currentStep > 3 && (
+                <div className="mt-4">
+                  <Link 
+                    href={`/viral/drafts?sessionId=${sessionId}`}
+                    className="text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    生成されたコンテンツを編集 →
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 
           {session.metadata?.completed && (
             <div className="mt-8 text-center p-4 bg-green-50 rounded-lg">
               <p className="text-green-800 font-medium">✅ すべての分析が完了しました</p>
-              <a 
+              <Link 
                 href={`/viral/drafts?sessionId=${sessionId}`}
                 className="inline-block mt-2 text-blue-600 hover:text-blue-800"
               >
                 生成された下書きを確認 →
-              </a>
+              </Link>
             </div>
           )}
         </div>
