@@ -228,7 +228,8 @@ export default function GptSessionDetail() {
                 </div>
 
                 {/* 記事詳細分析 */}
-                {stepData.step1.articleAnalysis && stepData.step1.articleAnalysis.length > 0 && (
+                {console.log('articleAnalysis:', stepData.step1.articleAnalysis) || null}
+                {stepData.step1.articleAnalysis && stepData.step1.articleAnalysis.length > 0 ? (
                   <div className="mb-4">
                     <h3 className="font-medium text-blue-900 mb-3">📰 記事別詳細分析</h3>
                     <div className="space-y-4">
@@ -274,6 +275,16 @@ export default function GptSessionDetail() {
                       ))}
                     </div>
                   </div>
+                ) : (
+                  stepData.step1 && (
+                    <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+                      <p className="text-yellow-800">
+                        記事詳細分析が見つかりません。
+                        {stepData.step1.articleAnalysis === undefined && ' (articleAnalysisが未定義)'}
+                        {stepData.step1.articleAnalysis?.length === 0 && ' (空の配列)'}
+                      </p>
+                    </div>
+                  )
                 )}
 
                 {/* 現在の出来事 */}
