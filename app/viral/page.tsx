@@ -6,12 +6,13 @@ export default function ViralDashboard() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
+  const [executedSteps, setExecutedSteps] = useState<Set<string>>(new Set())
 
   const runWorkflow = async () => {
     console.log('runWorkflow called')
     setLoading(true)
     setError(null)
-    setResult(null)
+    // 結果をクリアしない（既存の結果を保持）
 
     try {
       const response = await fetch('/api/viral/workflow/auto-generate', {
@@ -33,6 +34,7 @@ export default function ViralDashboard() {
 
       const data = await response.json()
       setResult(data)
+      setExecutedSteps(prev => new Set([...prev, 'workflow']))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'エラーが発生しました')
     } finally {
@@ -61,6 +63,7 @@ export default function ViralDashboard() {
 
       const data = await response.json()
       setResult(data)
+      setExecutedSteps(prev => new Set([...prev, 'trends']))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'エラーが発生しました')
     } finally {
@@ -68,23 +71,51 @@ export default function ViralDashboard() {
     }
   }
 
+  const resetSteps = () => {
+    setResult(null)
+    setError(null)
+    setExecutedSteps(new Set())
+  }
+
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">バイラルコンテンツ自動生成システム</h1>
 
+      <div className="mb-4">
+        <button
+          onClick={resetSteps}
+          className="text-sm bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300"
+        >
+          リセット
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <button
           onClick={analyzeTrends}
-          disabled={loading}
-          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading || executedSteps.has('trends')}
+          className={`px-6 py-3 rounded-lg ${
+            executedSteps.has('trends')
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-          {loading ? '分析中...' : 'ステップ1: トレンド分析のみ (ChatGPT)'}
+          {executedSteps.has('trends') 
+            ? '✓ 完了: ステップ1' 
+            : loading 
+            ? '分析中...' 
+            : 'ステップ1: トレンド分析のみ (ChatGPT)'
+          }
         </button>
 
         <button
           onClick={runWorkflow}
-          disabled={loading}
-          className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading || executedSteps.has('trends')}
+          className={`px-6 py-3 rounded-lg ${
+            executedSteps.has('trends')
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-green-500 text-white hover:bg-green-600'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {loading ? '実行中...' : 'ステップ1+2: 分析＋投稿生成 (ChatGPT→Claude)'}
         </button>
