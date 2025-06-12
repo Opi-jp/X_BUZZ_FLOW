@@ -35,8 +35,15 @@ export async function POST(
     const assistant = await openai.beta.assistants.create({
       name: 'Viral Content Analyst',
       instructions: `あなたは、${config.config.expertise}の専門家で、SNSトレンドアナリストです。
-web_searchツールを使用して最新のニュースやトレンドを検索し、バイラルコンテンツの機会を特定してください。
-すべての出力は日本語で行い、指定されたJSON形式で返してください。`,
+
+【重要な指示】
+1. 必ずweb_searchツールを使用して、最新のニュースやトレンドを検索してください
+2. 推測や過去の知識ではなく、Web検索で見つけた実際の最新情報のみを使用してください
+3. 各トピックについて最低3-5件のWeb検索を実行してください
+4. 検索結果から信頼できる情報源（大手メディア、公式サイト等）を優先してください
+5. すべての出力は日本語で行い、指定されたJSON形式で返してください
+
+バイラルコンテンツの機会を特定し、詳細な分析を行ってください。`,
       tools: [{ type: 'web_search' }],
       model: selectedModel,
       response_format: { type: 'json_object' }
@@ -52,7 +59,10 @@ web_searchツールを使用して最新のニュースやトレンドを検索�
     })
 
     const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: assistant.id
+      assistant_id: assistant.id,
+      instructions: `このメッセージに回答する際は、必ずweb_searchツールを使用してください。
+推測ではなく、実際のWeb検索結果に基づいて回答してください。`,
+      tools: [{ type: 'web_search' }]
     })
 
     // Step 4: Runの完了を待つ
@@ -172,13 +182,22 @@ function buildPrompt(config: any) {
 
 ## タスク: 最新ニュースを検索してバイラルコンテンツの機会を分析
 
-web_searchツールを使用して、以下のトピックに関する最新ニュースを検索し、分析してください：
+【必須要件】
+- 以下の各トピックについて、必ずweb_searchツールを使用して最新情報を検索してください
+- 「おそらく」「推測では」などの表現は使わず、検索結果に基づいた事実のみを記載してください
+- 各検索クエリは具体的に（例：「OpenAI GPT-4 最新ニュース 2025年12月」）
 
+検索すべきトピック：
 1. AI・機械学習の最新動向（OpenAI、Anthropic、Google、Microsoft等）
+   - 検索例：「OpenAI latest news December 2025」「Anthropic Claude updates」
 2. AIと働き方・雇用への影響に関する議論
+   - 検索例：「AI impact on jobs 2025」「AI workplace automation news」
 3. テクノロジー業界の重要な発表や動き
+   - 検索例：「tech industry AI announcements December 2025」
 4. ビジネス界でのAI活用事例
+   - 検索例：「enterprise AI adoption 2025」「AI business case studies」
 5. AI規制・倫理に関する最新の議論
+   - 検索例：「AI regulation news 2025」「AI ethics policy updates」
 
 検索した記事を分析し、以下の観点で包括的な分析を行ってください：
 
@@ -189,6 +208,7 @@ web_searchツールを使用して、以下のトピックに関する最新ニ�
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。**
 **重要: web_searchで見つけた実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
+**重要: 各記事について、実際の記事タイトル、メディア名、公開日を正確に記載してください。**
 
 {
   "articleAnalysis": [
