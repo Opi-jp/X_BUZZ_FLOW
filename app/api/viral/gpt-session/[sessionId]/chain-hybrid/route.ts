@@ -112,7 +112,7 @@ web_searchツールを使用して、以下の検索を実行してください�
       rawOutput: webSearchResult.substring(0, 500) + '...', // 長すぎるので最初の500文字のみ
       opportunities: opportunities,
       duration: phase1Duration,
-      toolCalls: searchResponse.tool_calls?.length || 0,
+      toolCalls: (searchResponse as any).tool_calls?.length || 0,
       // デバッグ用：最初の2つの機会の詳細を追加
       sampleOpportunities: opportunities.slice(0, 2).map(opp => ({
         topic: opp.topic,
