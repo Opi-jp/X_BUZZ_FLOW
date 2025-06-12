@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         if (response?.phase2?.trendingTopics) trendingTopics = response.phase2.trendingTopics
       }
     } catch (dbError) {
-      console.warn('Database error, using mock data:', dbError.message)
+      console.warn('Database error, using mock data:', dbError instanceof Error ? dbError.message : 'Unknown error')
       // モックデータ
       trendingTopics = [
         {
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Phase 3A results:', dbError.message)
+        console.warn('Failed to save Phase 3A results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
     
@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Phase 3A 角度抽出でエラーが発生しました',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error' 
       },
       { status: 500 }
     )

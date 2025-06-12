@@ -39,7 +39,7 @@ export async function POST(
         config = session.metadata as any
       }
     } catch (dbError) {
-      console.warn('Database connection error, using mock config:', dbError.message)
+      console.warn('Database connection error, using mock config:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     
     console.log('=== Chain of Thought: Complete Viral Analysis Flow ===')
@@ -258,7 +258,7 @@ export async function POST(
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Chain of Thought results:', dbError.message)
+        console.warn('Failed to save Chain of Thought results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -322,7 +322,7 @@ export async function POST(
     return NextResponse.json(
       { 
         error: 'Chain of Thought 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

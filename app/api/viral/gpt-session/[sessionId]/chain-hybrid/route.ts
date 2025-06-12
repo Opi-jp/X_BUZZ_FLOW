@@ -39,7 +39,7 @@ export async function POST(
         config = session.metadata as any
       }
     } catch (dbError) {
-      console.warn('Database connection error, using mock config:', dbError.message)
+      console.warn('Database connection error, using mock config:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     
     console.log('=== Chain of Thought: Hybrid Implementation ===')
@@ -383,7 +383,7 @@ JSON形式で以下を含めて回答：
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Chain Hybrid results:', dbError.message)
+        console.warn('Failed to save Chain Hybrid results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -424,7 +424,7 @@ JSON形式で以下を含めて回答：
         )
         draftsCreated = phase4Content.complete_posts.length
       } catch (dbError) {
-        console.warn('Failed to save drafts:', dbError.message)
+        console.warn('Failed to save drafts:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -472,7 +472,7 @@ JSON形式で以下を含めて回答：
     return NextResponse.json(
       { 
         error: 'Chain Hybrid 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

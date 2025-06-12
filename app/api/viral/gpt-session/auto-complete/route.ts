@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         console.error('❌ Step 1 エラー:', error)
         results.step1 = {
           success: false,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
         // Step 1が失敗したら続行不可
         throw new Error('Step 1の実行に失敗しました。Web検索機能を確認してください。')
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
         console.error('❌ Step 2 エラー:', error)
         results.step2 = {
           success: false,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
     }
@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
         console.error('❌ Step 3 エラー:', error)
         results.step3 = {
           success: false,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
     }
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
         console.error('❌ Step 4 エラー:', error)
         results.step4 = {
           success: false,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
     }
@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
         console.error('❌ Step 5 エラー:', error)
         results.step5 = {
           success: false,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
     }

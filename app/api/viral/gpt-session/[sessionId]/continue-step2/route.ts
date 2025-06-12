@@ -39,7 +39,7 @@ export async function POST(
         }
       }
     } catch (dbError) {
-      console.warn('Database error, using mock data:', dbError.message)
+      console.warn('Database error, using mock data:', dbError instanceof Error ? dbError.message : 'Unknown error')
       // Step1のモックデータ
       step1Results = {
         summary: "48時間以内のバズ機会が特定されました",
@@ -119,7 +119,7 @@ export async function POST(
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Step 2 results:', dbError.message)
+        console.warn('Failed to save Step 2 results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -148,7 +148,7 @@ export async function POST(
     return NextResponse.json(
       { 
         error: 'Step 2 続行処理でエラーが発生しました',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error' 
       },
       { status: 500 }
     )

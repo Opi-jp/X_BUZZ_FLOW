@@ -40,7 +40,7 @@ export async function POST(
         config = session.metadata as any
       }
     } catch (dbError) {
-      console.warn('Database connection error, using default config:', dbError.message)
+      console.warn('Database connection error, using default config:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     // 注意: Web検索は GPT-4o + Responses API の組み合わせのみサポート
     const selectedModel = 'gpt-4o' // 固定
@@ -166,7 +166,7 @@ CRITICAL INSTRUCTIONS:
           { 
             error: 'レスポンスの解析に失敗しました',
             debug: {
-              parseError: e.message,
+              parseError: e instanceof Error ? e.message : 'Unknown error',
               rawTextPreview: response.output_text?.substring(0, 200)
             }
           },
@@ -262,7 +262,7 @@ CRITICAL INSTRUCTIONS:
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save results to database:', dbError.message)
+        console.warn('Failed to save results to database:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -300,7 +300,7 @@ CRITICAL INSTRUCTIONS:
     return NextResponse.json(
       { 
         error: 'Step 1 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

@@ -193,7 +193,7 @@ Chain of Thought（段階的思考）に従って、以下の手順で分析を�
     return NextResponse.json(
       { 
         error: 'Step 2 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

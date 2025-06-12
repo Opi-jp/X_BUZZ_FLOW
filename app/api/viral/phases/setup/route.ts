@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
         }
       })
     } catch (dbError) {
-      console.warn('Database save failed, proceeding with in-memory session:', dbError.message)
+      console.warn('Database save failed, proceeding with in-memory session:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     
     return NextResponse.json({
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Phase 1 設定でエラーが発生しました',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error' 
       },
       { status: 500 }
     )

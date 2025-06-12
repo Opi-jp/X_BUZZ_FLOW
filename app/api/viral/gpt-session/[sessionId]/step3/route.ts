@@ -244,7 +244,7 @@ Chain of Thought に従って、以下の手順でコンセプトを作成して
     return NextResponse.json(
       { 
         error: 'Step 3 コンセプト作成でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

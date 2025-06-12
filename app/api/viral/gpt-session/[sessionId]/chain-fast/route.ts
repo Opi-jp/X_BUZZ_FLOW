@@ -39,7 +39,7 @@ export async function POST(
         config = session.metadata as any
       }
     } catch (dbError) {
-      console.warn('Database connection error, using mock config:', dbError.message)
+      console.warn('Database connection error, using mock config:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     
     console.log('=== Chain Fast Mode: Optimized for Vercel ===')
@@ -109,7 +109,7 @@ export async function POST(
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Chain Fast results:', dbError.message)
+        console.warn('Failed to save Chain Fast results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
 
@@ -137,7 +137,7 @@ export async function POST(
     return NextResponse.json(
       { 
         error: 'Chain Fast 分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

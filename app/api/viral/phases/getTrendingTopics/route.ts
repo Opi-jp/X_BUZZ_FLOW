@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (dbError) {
-      console.warn('Database error, using default config:', dbError.message)
+      console.warn('Database error, using default config:', dbError instanceof Error ? dbError.message : 'Unknown error')
     }
     
     const startTime = Date.now()
@@ -127,7 +127,7 @@ Include real URLs and data sources.`
           }
         })
       } catch (dbError) {
-        console.warn('Failed to save Phase 2 results:', dbError.message)
+        console.warn('Failed to save Phase 2 results:', dbError instanceof Error ? dbError.message : 'Unknown error')
       }
     }
     
@@ -159,7 +159,7 @@ Include real URLs and data sources.`
     return NextResponse.json(
       { 
         error: 'Phase 2 トレンド抽出でエラーが発生しました',
-        details: error.message 
+        details: error instanceof Error ? error.message : 'Unknown error' 
       },
       { status: 500 }
     )
