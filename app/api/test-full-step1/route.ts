@@ -70,12 +70,12 @@ web_searchツールを使用して、最新のAIニュースを5件検索して�
     
     if (result && result.articleAnalysis) {
       // URLの検証
-      const validArticles = result.articleAnalysis.filter(a => 
+      const validArticles = result.articleAnalysis.filter((a: any) => 
         a.url && a.url.startsWith('http')
       )
       
       // テーマの反映を確認
-      const hasExpertPerspective = result.articleAnalysis.every(a => 
+      const hasExpertPerspective = result.articleAnalysis.every((a: any) => 
         a.expertPerspective && a.expertPerspective.includes(config.expertise)
       )
       

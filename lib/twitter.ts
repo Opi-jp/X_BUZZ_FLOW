@@ -36,3 +36,32 @@ export async function postTweet(userId: string, content: string) {
     throw error
   }
 }
+
+// schedulerから使用される関数
+export async function postToTwitter(params: {
+  content: string
+  userId: string
+  accessToken?: string
+}) {
+  try {
+    if (!params.accessToken) {
+      // ユーザー情報から取得
+      const user = await prisma.user.findUnique({
+        where: { id: params.userId },
+      })
+      
+      if (!user || !user.accessToken) {
+        throw new Error('User not found or not authenticated')
+      }
+      
+      params.accessToken = user.accessToken
+    }
+
+    const client = getTwitterClient(params.accessToken)
+    const tweet = await client.v2.tweet(params.content)
+    return tweet
+  } catch (error) {
+    console.error('Error posting to Twitter:', error)
+    throw error
+  }
+}
