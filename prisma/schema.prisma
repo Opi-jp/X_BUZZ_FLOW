@@ -347,6 +347,7 @@ model ViralPost {
   hashtags        String[] // ハッシュタグ
   postType        String   @map("post_type") // single, thread, reply
   platform        String   // Twitter等
+  metadata        Json?    @db.Json // 拡張メタデータ
   
   scheduledAt     DateTime? @map("scheduled_at")
   postedAt        DateTime? @map("posted_at")

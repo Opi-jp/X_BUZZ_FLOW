@@ -109,14 +109,17 @@ export async function POST(request: NextRequest) {
             return await prisma.scheduledPost.create({
               data: {
                 content: task.content,
-                scheduledAt: new Date(task.scheduledAt),
-                platform,
-                status: autoSchedule ? 'scheduled' : 'draft',
-                metadata: {
+                scheduledTime: new Date(task.scheduledAt),
+                postType: 'NEW',
+                status: autoSchedule ? 'SCHEDULED' : 'DRAFT',
+                aiGenerated: true,
+                aiPrompt: `Viral Phase 4 - ${task.type}`,
+                postResult: {
                   viralPostId: concept.id,
                   taskType: task.type,
                   sequence: task.sequence,
-                  dependencies: task.dependencies
+                  dependencies: task.dependencies,
+                  platform
                 }
               }
             })
