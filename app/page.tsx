@@ -134,14 +134,18 @@ export default function Home() {
 
   const fetchNewsHighlights = async () => {
     try {
-      const res = await fetch('/api/news/articles?analyzed=true&limit=5')
+      const res = await fetch('/api/news/articles?analyzed=true&limit=5&includeAnalysis=true&sortBy=importance&sortOrder=desc')
       if (res.ok) {
         const data = await res.json()
         const highlights = data.articles
-          .filter((a: any) => a.importance >= 0.7)
+          .filter((a: any) => a.importance && a.importance >= 0.7)
           .map((article: any) => ({
             ...article,
-            keyPoints: article.metadata?.keyPoints || []
+            keyPoints: 
+              article.analysis?.keyPoints || 
+              (article.metadata && typeof article.metadata === 'object' && 'keyPoints' in article.metadata) 
+                ? (article.metadata as any).keyPoints 
+                : []
           }))
         setNewsHighlights(highlights)
       }
@@ -166,6 +170,14 @@ export default function Home() {
       if (res.ok) {
         const data = await res.json()
         setBriefing(data.briefing)
+        
+        // ニュースハイライトもブリーフィングから設定
+        if (data.briefing?.newsHighlights) {
+          console.log('Briefing news highlights:', data.briefing.newsHighlights)
+          setNewsHighlights(data.briefing.newsHighlights)
+        } else {
+          console.log('No news highlights in briefing:', data.briefing)
+        }
         
         // オリジナル投稿案を生成
         setOriginalPosts([

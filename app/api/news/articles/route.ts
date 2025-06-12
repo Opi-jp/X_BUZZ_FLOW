@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const date = searchParams.get('date')
     const processed = searchParams.get('processed')
+    const analyzed = searchParams.get('analyzed') // 分析済みフィルターを追加
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
     const sortBy = searchParams.get('sortBy') || 'publishedAt' // importance or publishedAt
@@ -29,6 +30,13 @@ export async function GET(request: NextRequest) {
     // 処理済みフィルター
     if (processed !== null) {
       where.processed = processed === 'true'
+    }
+
+    // 分析済みフィルター（importanceがnullでない記事）
+    if (analyzed === 'true') {
+      where.importance = {
+        not: null
+      }
     }
 
     // ソート条件を構築
