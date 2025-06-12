@@ -8,6 +8,7 @@ export default function ViralDashboard() {
   const [error, setError] = useState<string | null>(null)
 
   const runWorkflow = async () => {
+    console.log('runWorkflow called')
     setLoading(true)
     setError(null)
     setResult(null)
@@ -40,6 +41,7 @@ export default function ViralDashboard() {
   }
 
   const analyzeTrends = async () => {
+    console.log('analyzeTrends called')
     setLoading(true)
     setError(null)
     setResult(null)
@@ -96,7 +98,11 @@ export default function ViralDashboard() {
 
       {result && (
         <div className="bg-gray-100 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">結果</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            結果
+            {result.workflow && <span className="text-sm text-green-600 ml-2">（ワークフロー実行）</span>}
+            {!result.workflow && result.opportunities && <span className="text-sm text-blue-600 ml-2">（トレンド分析のみ）</span>}
+          </h2>
           
           {result.opportunities && (
             <div className="mb-6">
