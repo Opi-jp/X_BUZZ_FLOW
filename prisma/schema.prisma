@@ -313,3 +313,115 @@ model PerplexityReport {
   @@index([createdAt])
   @@map("perplexity_reports")
 }
+
+// バイラルコンテンツ自動生成システム用モデル
+
+model ViralOpportunity {
+  id              String   @id @default(uuid())
+  topic           String   // トレンドトピック
+  platform        String   // Twitter, TikTok等
+  viralScore      Float    // バズポテンシャル（0-1）
+  timeWindow      Int      // 投稿までの残り時間（時間）
+  angle           String   // コンテンツアングル
+  keywords        String[] // 関連キーワード
+  sourceData      Json     // 元データ（ニュース、トレンド等）
+  status          String   // identified, analyzed, generated, posted
+  analyzedAt      DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  posts           ViralPost[]
+  
+  @@index([platform, status])
+  @@index([viralScore])
+  @@map("viral_opportunities")
+}
+
+model ViralPost {
+  id              String   @id @default(uuid())
+  opportunityId   String   @map("opportunity_id")
+  conceptType     String   // concept1, concept2, concept3
+  content         String   @db.Text // 投稿内容
+  threadContent   Json?    // スレッドの場合の全内容
+  visualGuide     String?  // ビジュアル作成ガイド
+  hashtags        String[] // ハッシュタグ
+  postType        String   // single, thread, reply
+  platform        String   // Twitter等
+  
+  scheduledAt     DateTime? @map("scheduled_at")
+  postedAt        DateTime? @map("posted_at")
+  postUrl         String?   @map("post_url")
+  
+  performance     ViralPostPerformance?
+  opportunity     ViralOpportunity @relation(fields: [opportunityId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([opportunityId])
+  @@index([scheduledAt])
+  @@map("viral_posts")
+}
+
+model ViralPostPerformance {
+  id              String   @id @default(uuid())
+  postId          String   @unique @map("post_id")
+  
+  // 初動メトリクス（30分後）
+  impressions30m  Int?     @map("impressions_30m")
+  likes30m        Int?     @map("likes_30m")
+  retweets30m     Int?     @map("retweets_30m")
+  comments30m     Int?     @map("comments_30m")
+  
+  // 1時間後メトリクス
+  impressions1h   Int?     @map("impressions_1h")
+  likes1h         Int?     @map("likes_1h")
+  retweets1h      Int?     @map("retweets_1h")
+  comments1h      Int?     @map("comments_1h")
+  
+  // 24時間後メトリクス
+  impressions24h  Int?     @map("impressions_24h")
+  likes24h        Int?     @map("likes_24h")
+  retweets24h     Int?     @map("retweets_24h")
+  comments24h     Int?     @map("comments_24h")
+  followers24h    Int?     @map("followers_24h") // フォロワー増加数
+  
+  engagementRate  Float?   @map("engagement_rate")
+  viralCoeff      Float?   @map("viral_coefficient") // バイラル係数
+  
+  post            ViralPost @relation(fields: [postId], references: [id])
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("viral_post_performance")
+}
+
+model ViralAnalysisLog {
+  id              String   @id @default(uuid())
+  model           String   // chatgpt, claude
+  phase           String   // trend_analysis, content_generation等
+  prompt          String   @db.Text
+  response        Json
+  tokens          Int?
+  duration        Int?     // ミリ秒
+  success         Boolean
+  error           String?
+  
+  createdAt       DateTime @default(now())
+  
+  @@index([model, phase])
+  @@map("viral_analysis_logs")
+}
+
+model ViralConfig {
+  id              String   @id @default(uuid())
+  key             String   @unique
+  value           Json
+  description     String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("viral_config")
+}
