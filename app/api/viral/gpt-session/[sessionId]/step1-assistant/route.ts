@@ -44,7 +44,7 @@ export async function POST(
 5. すべての出力は日本語で行い、指定されたJSON形式で返してください
 
 バイラルコンテンツの機会を特定し、詳細な分析を行ってください。`,
-      tools: [{ type: 'web_search' }],
+      tools: [{ type: 'web_search' as any }],
       model: selectedModel,
       response_format: { type: 'json_object' }
     })
@@ -62,7 +62,7 @@ export async function POST(
       assistant_id: assistant.id,
       instructions: `このメッセージに回答する際は、必ずweb_searchツールを使用してください。
 推測ではなく、実際のWeb検索結果に基づいて回答してください。`,
-      tools: [{ type: 'web_search' }]
+      tools: [{ type: 'web_search' as any }]
     })
 
     // Step 4: Runの完了を待つ

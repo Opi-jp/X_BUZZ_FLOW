@@ -16,7 +16,7 @@ export async function GET() {
       instructions: `You are a helpful assistant that MUST use the web_search tool to answer questions.
 Always search for the latest information before responding.
 Respond in Japanese.`,
-      tools: [{ type: 'web_search' }],
+      tools: [{ type: 'web_search' as any }],
       model: 'gpt-4o'
     })
 
@@ -36,7 +36,7 @@ Respond in Japanese.`,
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: assistant.id,
       instructions: 'Remember to use the web_search tool for this query.',
-      tools: [{ type: 'web_search' }]
+      tools: [{ type: 'web_search' as any }]
     })
 
     console.log('Run started:', run.id)
