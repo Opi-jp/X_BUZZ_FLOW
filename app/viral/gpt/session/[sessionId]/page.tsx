@@ -52,9 +52,10 @@ export default function GptSessionDetail() {
   const executeStep = async (step: number) => {
     setLoading(true)
     try {
-      // Step 1の場合は、Responses API版を使うオプション（将来的に有効化）
-      const endpoint = step === 1 && false // 将来的にtrueに変更
-        ? `/api/viral/gpt-session/${sessionId}/step1-responses`
+      // Step 1の場合は、Agent版を使うオプション（現在は通常版を使用）
+      const useAgentAPI = step === 1 && false // 将来的にAgents SDKを使用
+      const endpoint = useAgentAPI
+        ? `/api/viral/gpt-session/${sessionId}/step1-agent`
         : `/api/viral/gpt-session/${sessionId}/step${step}`
       
       const response = await fetch(endpoint, {
