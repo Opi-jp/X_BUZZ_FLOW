@@ -42,6 +42,9 @@ export async function POST(
 3. 各トピックについて最低3-5件のWeb検索を実行してください
 4. 検索結果から信頼できる情報源（大手メディア、公式サイト等）を優先してください
 5. すべての出力は日本語で行い、指定されたJSON形式で返してください
+6. 架空の製品名やモデル名は絶対に使用しないでください
+7. 実際に存在するニュース記事のタイトル、ソース、日付を正確に記載してください
+8. 「2025年6月」の最新ニュースを取得してください（今日の日付: ${new Date().toLocaleDateString('ja-JP')}）
 
 バイラルコンテンツの機会を特定し、詳細な分析を行ってください。`,
       tools: [{ type: 'web_search' as any }],
@@ -170,7 +173,9 @@ function buildPrompt(config: any) {
 【必須要件】
 - 以下の各トピックについて、必ずweb_searchツールを使用して最新情報を検索してください
 - 「おそらく」「推測では」などの表現は使わず、検索結果に基づいた事実のみを記載してください
-- 各検索クエリは具体的に（例：「OpenAI GPT-4 最新ニュース 2025年12月」）
+- 各検索クエリは具体的に（例：「OpenAI news today」「Anthropic Claude latest」）
+- 架空のモデル名（GPT-5、GPT-4o2など）は使用せず、実在するモデル（GPT-4o、Claude 3.5、Gemini 2.5など）のみ記載
+- 実際のニュース記事のURL、公開日、著者名を可能な限り含める
 
 検索すべきトピック：
 1. AI・機械学習の最新動向（OpenAI、Anthropic、Google、Microsoft等）
@@ -198,8 +203,10 @@ function buildPrompt(config: any) {
 {
   "articleAnalysis": [
     {
-      "title": "実際の記事タイトル",
-      "source": "実際のメディア名",
+      "title": "実際の記事タイトル（検索結果から正確に）",
+      "source": "実際のメディア名（例: OpenAI Blog, TechCrunch等）",
+      "publishDate": "YYYY-MM-DD形式の公開日",
+      "url": "記事のURL（可能な場合）",
       "category": "AI/ビジネス/規制/研究/製品発表等",
       "importance": 0.0-1.0,
       "summary": "この記事の内容を100文字程度で要約",

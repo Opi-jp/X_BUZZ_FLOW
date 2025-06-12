@@ -266,11 +266,22 @@ export default function GptSessionDetail() {
                         <div key={idx} className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                           <h4 className="font-semibold text-blue-900 mb-2">{article.title}</h4>
                           <div className="text-sm text-gray-700 space-y-2">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 flex-wrap">
                               <span><span className="font-medium">ソース:</span> {article.source}</span>
+                              {article.publishDate && (
+                                <span><span className="font-medium">公開日:</span> {article.publishDate}</span>
+                              )}
                               <span><span className="font-medium">カテゴリ:</span> {article.category}</span>
                               <span><span className="font-medium">重要度:</span> <span className="text-blue-600 font-semibold">{(article.importance * 100).toFixed(0)}%</span></span>
                             </div>
+                            
+                            {article.url && (
+                              <div className="text-xs">
+                                <a href={article.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                                  記事を読む →
+                                </a>
+                              </div>
+                            )}
                             
                             {article.summary && (
                               <div className="mt-2 p-3 bg-white rounded">
