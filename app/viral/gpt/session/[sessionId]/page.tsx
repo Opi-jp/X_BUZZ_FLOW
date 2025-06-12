@@ -28,6 +28,13 @@ export default function GptSessionDetail() {
     fetchSession()
   }, [sessionId])
 
+  useEffect(() => {
+    if (stepData.step1) {
+      console.log('Step 1 data:', stepData.step1)
+      console.log('articleAnalysis:', stepData.step1.articleAnalysis)
+    }
+  }, [stepData.step1])
+
   const fetchSession = async () => {
     try {
       const response = await fetch(`/api/viral/gpt-session/${sessionId}`)
@@ -228,8 +235,7 @@ export default function GptSessionDetail() {
                 </div>
 
                 {/* 記事詳細分析 */}
-                {console.log('articleAnalysis:', stepData.step1.articleAnalysis) || null}
-                {stepData.step1.articleAnalysis && stepData.step1.articleAnalysis.length > 0 ? (
+                {stepData.step1?.articleAnalysis && stepData.step1.articleAnalysis.length > 0 ? (
                   <div className="mb-4">
                     <h3 className="font-medium text-blue-900 mb-3">📰 記事別詳細分析</h3>
                     <div className="space-y-4">
