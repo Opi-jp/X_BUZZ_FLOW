@@ -153,6 +153,8 @@ ${topOpportunities.map((opp: any, i: number) =>
 
 以下のJSON形式で回答してください：
 
+**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
+
 {
   "viralVelocity": {
     "metrics": [

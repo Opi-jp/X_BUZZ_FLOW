@@ -246,7 +246,7 @@ export default function GptSessionDetail() {
                   <h3 className="font-medium mb-3">バイラルパターン認識</h3>
                   {stepData.step1.viralPatterns?.topOpportunities && (
                     <div className="space-y-3">
-                      {stepData.step1.viralPatterns?.topOpportunities?.slice(0, 3).map((opp: any, idx: number) => (
+                      {stepData.step1.viralPatterns?.topOpportunities?.map((opp: any, idx: number) => (
                         <div key={idx} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
                           <h4 className="font-medium text-gray-900 mb-2">{opp.topic}</h4>
                           <div className="grid grid-cols-3 gap-2 text-sm">

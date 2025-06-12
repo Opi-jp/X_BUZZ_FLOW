@@ -185,7 +185,8 @@ ${newsSection}
 - タイミングの敏感さ（関連性のウィンドウが狭い）
 - プラットフォームの調整（プラットフォーム文化に適合）
 
-以下のJSON形式で回答してください：
+以下のJSON形式で回答してください。
+**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
 
 {
   "currentEvents": {
@@ -210,7 +211,7 @@ ${newsSection}
   "viralPatterns": {
     "topOpportunities": [
       {
-        "topic": "...",
+        "topic": "具体的なトピック名（日本語）",
         "scores": {
           "controversy": 0.0-1.0,
           "emotion": 0.0-1.0,
@@ -221,6 +222,7 @@ ${newsSection}
         },
         "overallScore": 0.0-1.0
       }
+      // 最低5件、最大10件のバズる機会を特定してください
     ]
   },
   "opportunityCount": 数値,
