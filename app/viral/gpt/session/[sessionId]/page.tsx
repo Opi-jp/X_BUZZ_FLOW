@@ -255,7 +255,7 @@ export default function GptSessionDetail() {
                               <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-red-400"
-                                  style={{ width: `${opp.scores.controversy * 100}%` }}
+                                  style={{ width: `${(opp.scores?.controversy || 0) * 100}%` }}
                                 />
                               </div>
                             </div>
@@ -264,7 +264,7 @@ export default function GptSessionDetail() {
                               <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-orange-400"
-                                  style={{ width: `${opp.scores.emotion * 100}%` }}
+                                  style={{ width: `${(opp.scores?.emotion || 0) * 100}%` }}
                                 />
                               </div>
                             </div>
@@ -273,13 +273,13 @@ export default function GptSessionDetail() {
                               <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-green-400"
-                                  style={{ width: `${opp.scores.shareability * 100}%` }}
+                                  style={{ width: `${(opp.scores?.shareability || 0) * 100}%` }}
                                 />
                               </div>
                             </div>
                           </div>
                           <p className="mt-2 text-sm text-gray-700">
-                            総合スコア: <span className="font-semibold">{(opp.overallScore * 100).toFixed(0)}%</span>
+                            総合スコア: <span className="font-semibold">{((opp.overallScore || 0) * 100).toFixed(0)}%</span>
                           </p>
                         </div>
                       ))}
@@ -289,10 +289,10 @@ export default function GptSessionDetail() {
 
                 <div className="bg-blue-50 rounded-lg p-4">
                   <p className="text-blue-900">
-                    <span className="font-semibold">分析結果:</span> {stepData.step1.analysis?.summary}
+                    <span className="font-semibold">分析結果:</span> {stepData.step1.summary || stepData.step1.analysis?.summary}
                   </p>
                   <p className="text-blue-800 mt-2">
-                    バズる機会: <span className="font-bold text-xl">{stepData.step1.analysis?.opportunityCount}件</span>
+                    バズる機会: <span className="font-bold text-xl">{stepData.step1.opportunityCount || stepData.step1.analysis?.opportunityCount || 0}件</span>
                   </p>
                 </div>
               </div>
