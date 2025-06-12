@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
     },
     database: {
       connected: false,
-      tables: {}
+      tables: {} as Record<string, boolean>,
+      error: undefined as string | undefined
     }
   }
 
