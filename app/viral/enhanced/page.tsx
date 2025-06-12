@@ -46,6 +46,7 @@ export default function EnhancedViralAnalysis() {
     setError(null)
 
     try {
+      // まずデータ収集状況をチェック
       const response = await fetch('/api/viral/analysis/phase1-data-collection')
       
       if (!response.ok) {
@@ -53,6 +54,35 @@ export default function EnhancedViralAnalysis() {
       }
 
       const data = await response.json()
+      
+      // バズ投稿が不足している場合、サンプル生成を提案
+      if (!data.dataCollection.readyForAnalysis && data.dataCollection.buzzPosts.total3h === 0) {
+        const generateSample = confirm('バズ投稿データが不足しています。ChatGPTでサンプル投稿を生成しますか？')
+        
+        if (generateSample) {
+          const sampleResponse = await fetch('/api/viral/collect-sample-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              theme: 'AI × 働き方',
+              count: 25
+            })
+          })
+          
+          if (sampleResponse.ok) {
+            // サンプル生成後、再度データ収集状況をチェック
+            const refreshResponse = await fetch('/api/viral/analysis/phase1-data-collection')
+            const refreshData = await refreshResponse.json()
+            setPhase1Data(refreshData)
+            
+            if (refreshData.dataCollection.readyForAnalysis) {
+              setCurrentPhase(2)
+            }
+            return
+          }
+        }
+      }
+      
       setPhase1Data(data)
       
       if (data.dataCollection.readyForAnalysis) {

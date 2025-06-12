@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
     // データ品質評価
     const dataQuality = {
       newsCompleteness: newsStats[0] >= 20 ? 'excellent' : newsStats[0] >= 10 ? 'good' : 'insufficient',
-      buzzPostCompleteness: buzzStats[0] >= 50 ? 'excellent' : buzzStats[0] >= 20 ? 'good' : 'insufficient',
+      buzzPostCompleteness: buzzStats[0] >= 50 ? 'excellent' : buzzStats[0] >= 10 ? 'good' : newsStats[0] >= 20 ? 'acceptable' : 'insufficient',
       sourcesDiversity: newsStats[1].length >= 5 ? 'excellent' : newsStats[1].length >= 3 ? 'good' : 'limited'
     }
 
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
         },
         dataQuality,
         readyForAnalysis: dataQuality.newsCompleteness !== 'insufficient' && 
-                         dataQuality.buzzPostCompleteness !== 'insufficient'
+                         (dataQuality.buzzPostCompleteness !== 'insufficient' || dataQuality.newsCompleteness === 'excellent')
       }
     })
 

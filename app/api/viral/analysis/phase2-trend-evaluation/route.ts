@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
     if (!dataCollection.dataCollection.readyForAnalysis) {
       return NextResponse.json({
         error: 'データ収集が不十分です。Phase 1を完了してください。',
-        dataQuality: dataCollection.dataCollection.dataQuality
+        dataQuality: dataCollection.dataCollection.dataQuality,
+        suggestion: 'ニュースデータは十分ですが、バズ投稿収集を推奨します。ただし、ニュースのみでも分析可能です。'
       }, { status: 400 })
     }
 
@@ -202,18 +203,27 @@ ${i + 1}. 【${news.source?.name}】${news.title}
 `).join('\n')}
 
 #### 高エンゲージメント投稿 (${data.buzzPosts.length}件)
-${data.buzzPosts.slice(0, 15).map((post, i) => `
+${data.buzzPosts.length > 0 ? 
+  data.buzzPosts.slice(0, 15).map((post, i) => `
 ${i + 1}. @${post.authorUsername}
    "${post.content.substring(0, 120)}..."
    💖${post.likesCount} 🔄${post.retweetsCount} 💬${post.repliesCount}
    総エンゲージメント: ${post.likesCount + post.retweetsCount + post.repliesCount}
-`).join('\n')}
+`).join('\n') : 
+  '※ 現在バズ投稿データが不足しています。ニュース分析に加えて、あなたの知識で最近バズった類似投稿例も含めて分析してください。'
+}
 
 #### 既存分析済みトピック (重複回避用)
 ${data.existingOpportunities.map(opp => `• ${opp.topic}`).join('\n')}
 
 ### タスク
 上記データから、バイラル可能性の高いトレンドを特定し、詳細に評価してください。
+
+**重要指示**: バズ投稿データが不足している場合は、あなたの最新知識で以下も含めて分析してください：
+- 最近のAI×働き方関連でバズった投稿例
+- SNSで議論になりやすい論点
+- 具体的な企業名・数値・事例（Klarna、IBM、ChatGPT障害等）
+- 「即反応可能なバズ波」として浮上している社会動向
 
 以下の形式でJSONレスポンスを返してください:
 
@@ -234,7 +244,10 @@ ${data.existingOpportunities.map(opp => `• ${opp.topic}`).join('\n')}
       },
       "sourceData": {
         "relatedNews": ["関連ニュースタイトル"],
-        "relatedPosts": ["関連投稿の要約"],
+        "relatedPosts": ["関連投稿の要約または推定例"],
+        "buzzExamples": ["このトピックでバズりそうな投稿例"],
+        "controversyPoints": ["議論になるポイント"],
+        "concreteData": ["具体的な企業名・数値・事例"],
         "newsCount": 数値,
         "postsCount": 数値
       },
@@ -255,6 +268,9 @@ ${data.existingOpportunities.map(opp => `• ${opp.topic}`).join('\n')}
 - AI×働き方テーマへの関連性
 - タイミングの重要性（旬な話題か）
 - 論争を呼ぶポテンシャル
+
+注意: バズ投稿データが不足している場合は、ニュースの内容と過去のトレンドパターン、および最新のSNS動向を基に分析してください。
+具体的な企業名・数値・事例を積極的に含め、「即反応可能なバズ波」を特定してください。
 `
 }
 
