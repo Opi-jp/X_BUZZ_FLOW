@@ -83,24 +83,22 @@ export async function POST(request: NextRequest) {
       response.posts.map(async (post: any) => {
         return await prisma.buzzPost.create({
           data: {
+            postId: `sample_${Date.now()}_${Math.random().toString(36).substring(7)}`,
             content: post.content,
             authorUsername: post.authorUsername,
-            authorDisplayName: post.authorDisplayName,
+            authorId: `sample_${post.authorUsername}`,
             likesCount: post.likesCount,
             retweetsCount: post.retweetsCount,
             repliesCount: post.repliesCount,
-            impressions: post.impressions,
+            impressionsCount: post.impressions || 0,
             postedAt: new Date(post.postedAt),
             collectedAt: new Date(),
+            url: `https://twitter.com/${post.authorUsername}/status/${Date.now()}`,
             theme: post.theme,
-            metadata: {
-              source: 'chatgpt_generated',
-              sentiment: post.sentiment,
-              aiRelevance: post.aiRelevance,
-              buzzFactors: post.buzzFactors,
-              generatedAt: new Date().toISOString(),
-              prompt: theme
-            }
+            language: 'ja',
+            mediaUrls: [],
+            hashtags: [],
+            authorFollowers: Math.floor(Math.random() * 100000) + 10000
           }
         })
       })
