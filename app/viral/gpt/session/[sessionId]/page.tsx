@@ -51,16 +51,21 @@ export default function GptSessionDetail() {
 
       if (response.ok) {
         const data = await response.json()
+        console.log(`Step ${step} response:`, data)
+        
         // 直接ステートを更新（fetchSessionは呼ばない）
-        setStepData(prev => ({ ...prev, [`step${step}` as keyof StepData]: data.response }))
+        // APIレスポンスからデータを正しく取得
+        const stepResult = data.response || data.analysis || data
+        setStepData(prev => ({ ...prev, [`step${step}` as keyof StepData]: stepResult }))
         setCurrentStep(step + 1)
         // セッションのメタデータも更新
         setSession((prev: any) => ({
           ...prev,
           metadata: {
             ...prev?.metadata,
-            currentStep: step,
-            [`step${step}CompletedAt`]: new Date().toISOString()
+            currentStep: step + 1,  // 次のステップに進む
+            [`step${step}CompletedAt`]: new Date().toISOString(),
+            completed: step === 5  // Step 5の後は完了とする
           }
         }))
       }
@@ -213,9 +218,9 @@ export default function GptSessionDetail() {
                     </svg>
                   </button>
                   
-                  {expandedSections.currentEvents && stepData.step1.analysis?.currentEvents && (
+                  {expandedSections.currentEvents && stepData.step1.currentEvents && (
                     <div className="mt-4 space-y-3">
-                      {Object.entries(stepData.step1.analysis.currentEvents).map(([key, items]: [string, any]) => (
+                      {Object.entries(stepData.step1.currentEvents).map(([key, items]: [string, any]) => (
                         <div key={key} className="bg-gray-50 rounded p-3">
                           <h4 className="text-sm font-medium text-gray-700 mb-2">
                             {key === 'latestNews' && '最新ニュース'}
@@ -239,9 +244,9 @@ export default function GptSessionDetail() {
                 {/* バイラルパターン */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <h3 className="font-medium mb-3">バイラルパターン認識</h3>
-                  {stepData.step1.analysis?.viralPatterns?.topOpportunities && (
+                  {stepData.step1.viralPatterns?.topOpportunities && (
                     <div className="space-y-3">
-                      {stepData.step1.analysis.viralPatterns.topOpportunities.slice(0, 3).map((opp: any, idx: number) => (
+                      {stepData.step1.viralPatterns?.topOpportunities?.slice(0, 3).map((opp: any, idx: number) => (
                         <div key={idx} className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
                           <h4 className="font-medium text-gray-900 mb-2">{opp.topic}</h4>
                           <div className="grid grid-cols-3 gap-2 text-sm">

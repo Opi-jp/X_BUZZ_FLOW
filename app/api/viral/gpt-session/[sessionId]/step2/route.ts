@@ -84,7 +84,7 @@ Step 1で特定したトレンドを詳細に評価し、最適なコンテン�
       success: true,
       sessionId,
       step: 2,
-      analysis: {
+      response: {
         viralVelocity: response.viralVelocity,
         contentAngles: response.contentAngles,
         topOpportunities: response.topOpportunities,

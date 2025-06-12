@@ -82,7 +82,7 @@ export async function POST(
       success: true,
       sessionId,
       step: 1,
-      analysis: {
+      response: {
         currentEvents: response.currentEvents,
         socialListening: response.socialListening,
         viralPatterns: response.viralPatterns,

@@ -117,7 +117,10 @@ Step 3のコンセプトを、すぐに投稿できる完全なコンテンツ�
       success: true,
       sessionId,
       step: 4,
-      fullContents: response.fullContents,
+      response: {
+        fullContents: response.fullContents,
+        optimizationTips: response.optimizationTips
+      },
       metrics: {
         duration,
         tokens: completion.usage?.total_tokens

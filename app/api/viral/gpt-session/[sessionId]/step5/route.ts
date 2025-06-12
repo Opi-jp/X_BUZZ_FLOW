@@ -85,7 +85,13 @@ export async function POST(
       success: true,
       sessionId,
       step: 5,
-      executionStrategy: response.executionStrategy,
+      response: {
+        executionStrategy: response.executionStrategy,
+        optimization: response.optimization,
+        riskAssessment: response.riskAssessment,
+        successMetrics: response.successMetrics,
+        principles: response.principles
+      },
       metrics: {
         duration,
         tokens: completion.usage?.total_tokens,

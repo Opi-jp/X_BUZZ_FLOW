@@ -113,7 +113,10 @@ Step 2で特定した機会に対して、具体的なコンテンツコンセ�
       success: true,
       sessionId,
       step: 3,
-      concepts: response.concepts,
+      response: {
+        concepts: response.concepts,
+        summary: response.summary
+      },
       draftsCreated: drafts.length,
       metrics: {
         duration,
