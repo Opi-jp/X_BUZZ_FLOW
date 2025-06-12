@@ -8,7 +8,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { 
       query = 'AI 最新トレンド 今日',
-      focus = 'creative_ai_trends' 
+      focus = 'creative_ai_trends',
+      newsContext = []
     } = body
 
     // Perplexity APIを使ってトレンド情報を取得
@@ -64,7 +65,6 @@ export async function POST(request: NextRequest) {
     const personalInsights = await generatePersonalInsights(insights, focus)
 
     // バズ予測スコアを計算（ニュースコンテキストも考慮）
-    const newsContext = body.newsContext || []
     const buzzPrediction = calculateBuzzPotential(insights, newsContext)
 
     // レポートをDBに保存（重複チェック付き）
