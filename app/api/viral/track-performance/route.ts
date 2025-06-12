@@ -139,15 +139,12 @@ export async function POST(request: NextRequest) {
         response: {
           metric,
           metrics: {
-            impression_count: metrics.impression_count,
-            like_count: metrics.like_count,
-            retweet_count: metrics.retweet_count,
-            reply_count: metrics.reply_count,
-            quote_count: metrics.quote_count,
-            bookmark_count: metrics.bookmark_count,
-            url_link_clicks: metrics.url_link_clicks,
-            user_profile_clicks: metrics.user_profile_clicks,
-            video_view_count: metrics.video_view_count
+            impression_count: metrics.impression_count || 0,
+            like_count: metrics.like_count || 0,
+            retweet_count: metrics.retweet_count || 0,
+            reply_count: metrics.reply_count || 0,
+            quote_count: metrics.quote_count || 0,
+            bookmark_count: metrics.bookmark_count || 0
           },
           updateData
         },
