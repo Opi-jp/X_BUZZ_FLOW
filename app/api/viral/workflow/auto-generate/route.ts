@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      apiSource: 'workflow-auto-generate',
       workflow: {
         opportunitiesAnalyzed: opportunities.length,
         opportunitiesSelected: topOpportunities.length,

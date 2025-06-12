@@ -100,6 +100,7 @@ export default function ViralDashboard() {
         <div className="bg-gray-100 p-6 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">
             結果
+            {result.apiSource && <span className="text-xs bg-gray-200 px-2 py-1 rounded ml-2">{result.apiSource}</span>}
             {result.workflow && <span className="text-sm text-green-600 ml-2">（ワークフロー実行）</span>}
             {!result.workflow && result.opportunities && <span className="text-sm text-blue-600 ml-2">（トレンド分析のみ）</span>}
           </h2>

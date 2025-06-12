@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: true,
           fromCache: true,
+          apiSource: 'analyze-trends-cached',
           opportunities: recentAnalysis
         })
       }
@@ -120,6 +121,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       fromCache: false,
+      apiSource: 'analyze-trends',
       opportunities,
       analysis: {
         duration,
