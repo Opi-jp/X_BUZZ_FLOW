@@ -49,8 +49,9 @@ export async function POST(
         {
           type: 'web_search' as any
         }
-      ]
-    })
+      ],
+      instructions: `必ずJSON形式で回答してください。web_searchツールを使用して実際のニュース記事を検索し、各記事の実際のURLを含めてください。`
+    } as any)
 
     const duration = Date.now() - startTime
     
