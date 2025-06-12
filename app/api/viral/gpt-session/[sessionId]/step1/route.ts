@@ -58,17 +58,20 @@ export async function POST(
     const response = JSON.parse(completion.choices[0].message.content || '{}')
 
     // Step 1の結果を保存
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
+    
     await prisma.gptAnalysis.update({
       where: { id: sessionId },
       data: {
         response: {
-          ...session.response,
+          ...currentResponse,
           step1: response
         },
         tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...config,
+          ...currentMetadata,
           currentStep: 1,
           step1CompletedAt: new Date().toISOString()
         }

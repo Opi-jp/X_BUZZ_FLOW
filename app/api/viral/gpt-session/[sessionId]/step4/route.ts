@@ -25,10 +25,10 @@ export async function POST(
       )
     }
 
-    const sessionData = session.response as any
-    const metadata = session.metadata as any
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
 
-    if (!sessionData.step3) {
+    if (!currentResponse.step3) {
       return NextResponse.json(
         { error: 'Step 3を先に完了してください' },
         { status: 400 }
@@ -36,7 +36,7 @@ export async function POST(
     }
 
     // Step 4: 完全な投稿可能コンテンツ生成のプロンプト
-    const prompt = buildStep4Prompt(metadata.config, sessionData.step3)
+    const prompt = buildStep4Prompt(currentMetadata.config, currentResponse.step3)
 
     console.log('Executing GPT Step 4 content generation...')
     const startTime = Date.now()
@@ -46,7 +46,7 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `あなたは、${metadata.config.expertise}の専門家で、プロのコンテンツライターです。
+          content: `あなたは、${currentMetadata.config.expertise}の専門家で、プロのコンテンツライターです。
 Step 3のコンセプトを、すぐに投稿できる完全なコンテンツに仕上げてください。
 文字数制限、プラットフォームの特性、エンゲージメントを最大化する要素を考慮してください。`
         },
@@ -68,13 +68,13 @@ Step 3のコンセプトを、すぐに投稿できる完全なコンテンツ�
       where: { id: sessionId },
       data: {
         response: {
-          ...sessionData,
+          ...currentResponse,
           step4: response
         },
         tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...metadata,
+          ...currentMetadata,
           currentStep: 4,
           step4CompletedAt: new Date().toISOString()
         }

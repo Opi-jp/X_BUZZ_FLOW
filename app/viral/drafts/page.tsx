@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { formatInTimeZone } from 'date-fns-tz'
 import { ja } from 'date-fns/locale'
@@ -19,7 +19,7 @@ interface Draft {
   updatedAt: string
 }
 
-export default function DraftsPage() {
+function DraftsContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('sessionId')
   
@@ -323,5 +323,20 @@ export default function DraftsPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function DraftsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">読み込み中...</p>
+        </div>
+      </div>
+    }>
+      <DraftsContent />
+    </Suspense>
   )
 }

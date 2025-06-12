@@ -50,7 +50,7 @@ export default function GptSessionDetail() {
 
       if (response.ok) {
         const data = await response.json()
-        setStepData(prev => ({ ...prev, [`step${step}`]: data }))
+        setStepData(prev => ({ ...prev, [`step${step}` as keyof StepData]: data }))
         setCurrentStep(step + 1)
         fetchSession() // 最新状態を取得
       }
@@ -142,7 +142,7 @@ export default function GptSessionDetail() {
           {currentStep <= 5 && !session.metadata?.completed && (
             <div className="mt-8 text-center">
               <p className="text-gray-600 mb-4">
-                {stepData[`step${currentStep - 1}`]?.nextStep?.message || 
+                {stepData[`step${currentStep - 1}` as keyof StepData]?.nextStep?.message || 
                  `Step ${currentStep}: ${stepInfo[currentStep - 1].title}を実行します`}
               </p>
               <button

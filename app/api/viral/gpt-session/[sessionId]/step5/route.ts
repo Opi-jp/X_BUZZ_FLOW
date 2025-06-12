@@ -25,10 +25,10 @@ export async function POST(
       )
     }
 
-    const sessionData = session.response as any
-    const metadata = session.metadata as any
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
 
-    if (!sessionData.step4) {
+    if (!currentResponse.step4) {
       return NextResponse.json(
         { error: 'Step 4を先に完了してください' },
         { status: 400 }
@@ -36,7 +36,7 @@ export async function POST(
     }
 
     // Step 5: 実行戦略のプロンプト
-    const prompt = buildStep5Prompt(metadata.config, sessionData)
+    const prompt = buildStep5Prompt(currentMetadata.config, currentResponse)
 
     console.log('Executing GPT Step 5 strategy...')
     const startTime = Date.now()
@@ -46,7 +46,7 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `あなたは、${metadata.config.expertise}の専門家で、ソーシャルメディア戦略家です。
+          content: `あなたは、${currentMetadata.config.expertise}の専門家で、ソーシャルメディア戦略家です。
 生成されたコンテンツを最大限に活用するための実行戦略を立案してください。`
         },
         {
@@ -67,13 +67,13 @@ export async function POST(
       where: { id: sessionId },
       data: {
         response: {
-          ...sessionData,
+          ...currentResponse,
           step5: response
         },
         tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...metadata,
+          ...currentMetadata,
           currentStep: 5,
           step5CompletedAt: new Date().toISOString(),
           completed: true
@@ -94,7 +94,7 @@ export async function POST(
       },
       summary: {
         message: '5段階の分析が完了しました！',
-        totalConcepts: sessionData.step3.concepts.length,
+        totalConcepts: currentResponse.step3.concepts.length,
         readyToPosts: response.executionStrategy.immediate.readyPosts || 3,
         nextActions: response.executionStrategy.immediate.tasks
       }

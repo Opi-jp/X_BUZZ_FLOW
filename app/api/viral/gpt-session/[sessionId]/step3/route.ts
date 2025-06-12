@@ -25,10 +25,10 @@ export async function POST(
       )
     }
 
-    const sessionData = session.response as any
-    const metadata = session.metadata as any
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
 
-    if (!sessionData.step2) {
+    if (!currentResponse.step2) {
       return NextResponse.json(
         { error: 'Step 2を先に完了してください' },
         { status: 400 }
@@ -36,7 +36,7 @@ export async function POST(
     }
 
     // Step 3: コンテンツコンセプト作成のプロンプト
-    const prompt = buildStep3Prompt(metadata.config, sessionData.step2)
+    const prompt = buildStep3Prompt(currentMetadata.config, currentResponse.step2)
 
     console.log('Executing GPT Step 3 analysis...')
     const startTime = Date.now()
@@ -46,7 +46,7 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `あなたは、${metadata.config.expertise}の専門家で、バイラルコンテンツクリエイターです。
+          content: `あなたは、${currentMetadata.config.expertise}の専門家で、バイラルコンテンツクリエイターです。
 Step 2で特定した機会に対して、具体的なコンテンツコンセプトを作成してください。`
         },
         {
@@ -67,13 +67,13 @@ Step 2で特定した機会に対して、具体的なコンテンツコンセ�
       where: { id: sessionId },
       data: {
         response: {
-          ...sessionData,
+          ...currentResponse,
           step3: response
         },
         tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...metadata,
+          ...currentMetadata,
           currentStep: 3,
           step3CompletedAt: new Date().toISOString()
         }

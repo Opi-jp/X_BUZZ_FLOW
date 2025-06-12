@@ -25,10 +25,10 @@ export async function POST(
       )
     }
 
-    const sessionData = session.response as any
-    const metadata = session.metadata as any
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
 
-    if (!sessionData.step1) {
+    if (!currentResponse.step1) {
       return NextResponse.json(
         { error: 'Step 1を先に完了してください' },
         { status: 400 }
@@ -36,7 +36,7 @@ export async function POST(
     }
 
     // Step 2: トレンド評価・角度分析のプロンプト
-    const prompt = buildStep2Prompt(metadata.config, sessionData.step1)
+    const prompt = buildStep2Prompt(currentMetadata.config, currentResponse.step1)
 
     console.log('Executing GPT Step 2 analysis...')
     const startTime = Date.now()
@@ -46,7 +46,7 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `あなたは、${metadata.config.expertise}の専門家で、バイラルコンテンツ戦略家です。
+          content: `あなたは、${currentMetadata.config.expertise}の専門家で、バイラルコンテンツ戦略家です。
 Step 1で特定したトレンドを詳細に評価し、最適なコンテンツアングルを特定してください。`
         },
         {
@@ -67,13 +67,13 @@ Step 1で特定したトレンドを詳細に評価し、最適なコンテン�
       where: { id: sessionId },
       data: {
         response: {
-          ...sessionData,
+          ...currentResponse,
           step2: response
         },
         tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
-          ...metadata,
+          ...currentMetadata,
           currentStep: 2,
           step2CompletedAt: new Date().toISOString()
         }
