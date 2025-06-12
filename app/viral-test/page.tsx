@@ -21,10 +21,25 @@ export default function ViralTestDashboard() {
         }) : undefined
       })
 
-      const data = await response.json()
+      let data
+      const contentType = response.headers.get('content-type')
+      
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json()
+        } catch (jsonError) {
+          const text = await response.text()
+          setError(`JSONパースエラー: ${jsonError}. レスポンス: ${text.substring(0, 200)}...`)
+          return
+        }
+      } else {
+        const text = await response.text()
+        setError(`予期しないレスポンス形式 (${contentType}): ${text.substring(0, 200)}...`)
+        return
+      }
       
       if (!response.ok) {
-        setError(`エラー ${response.status}: ${data.error || 'Unknown error'}`)
+        setError(`エラー ${response.status}: ${data.error || JSON.stringify(data)}`)
       } else {
         setResult(data)
       }
