@@ -159,9 +159,9 @@ ${concepts.map((c: any) => {
   - トピック: ${c.topic}
   - フック: ${c.hook}
   - 参照記事:
-${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}`
+${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
   - 角度: ${c.angle}`
-).join('\n\n')}
+}).join('\n\n')}
 
 ## タスク: Step 4 - 完全な投稿可能コンテンツ生成
 

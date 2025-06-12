@@ -16,7 +16,7 @@ export async function GET() {
       input: '今日（2025年6月6日）のAI関連の最新ニュースを3件教えてください。実際のニュースタイトル、ソース、URLを含めてください。',
       tools: [
         {
-          type: 'web_search'
+          type: 'web_search' as any
         }
       ]
     })

@@ -47,7 +47,7 @@ export async function POST(
       input: buildPrompt(config.config),
       tools: [
         {
-          type: 'web_search'
+          type: 'web_search' as any
         }
       ]
     })
