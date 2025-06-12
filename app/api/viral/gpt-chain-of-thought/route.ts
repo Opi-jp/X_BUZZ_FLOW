@@ -101,7 +101,7 @@ Focus on ${expertise} perspective throughout.`
     return NextResponse.json(
       { 
         error: 'Chain of Thought分析でエラーが発生しました',
-        details: error.message
+        details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )
