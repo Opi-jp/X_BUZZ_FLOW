@@ -318,6 +318,7 @@ export default function GptSessionDetail() {
           )}
 
           {/* Step 2 結果 */}
+          {stepData.step2 && console.log('Step 2 data:', stepData.step2) || null}
           {stepData.step2 && (
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
@@ -326,17 +327,55 @@ export default function GptSessionDetail() {
               </h2>
               
               <div className="space-y-4">
-                {stepData.step2.analysis?.topOpportunities?.map((opp: any, idx: number) => (
+                {/* サマリー */}
+                {stepData.step2.summary && (
+                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg p-4 mb-4">
+                    <h3 className="font-semibold text-orange-900 mb-2">📊 角度分析サマリー</h3>
+                    <p className="text-gray-700">{stepData.step2.summary}</p>
+                  </div>
+                )}
+                
+                {/* トップ機会 */}
+                {(stepData.step2.topOpportunities || stepData.step2.analysis?.topOpportunities || []).length > 0 ? (
+                  (stepData.step2.topOpportunities || stepData.step2.analysis?.topOpportunities).map((opp: any, idx: number) => (
                   <div key={idx} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-medium text-lg">{opp.topic}</h3>
                       <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                        スコア: {(opp.viralScore * 100).toFixed(0)}%
+                        スコア: {((opp.viralScore || 0) * 100).toFixed(0)}%
                       </span>
                     </div>
-                    <p className="text-gray-700 mb-2">
-                      <span className="font-medium">最適な角度:</span> {opp.bestAngle}
-                    </p>
+                    <div className="mb-3">
+                      <p className="text-gray-700 mb-2">
+                        <span className="font-medium">最適な角度:</span> {opp.bestAngle}
+                      </p>
+                      <p className="text-gray-600 text-sm mb-1">
+                        <span className="font-medium">なぜこの角度か:</span> {opp.angleReasoning}
+                      </p>
+                    </div>
+                    
+                    {/* コンテンツ角度の詳細 */}
+                    {opp.contentAngles && (
+                      <div className="bg-gray-50 rounded p-3 mb-3">
+                        <h4 className="text-sm font-medium mb-2">コンテンツ角度の提案:</h4>
+                        <ul className="space-y-1 text-sm">
+                          {opp.contentAngles.map((angle: any, angleIdx: number) => (
+                            <li key={angleIdx} className="flex items-start">
+                              <span className="text-gray-500 mr-2">•</span>
+                              <div>
+                                <span className="font-medium">{angle.type}:</span> {angle.description}
+                                {angle.expectedEngagement && (
+                                  <span className="text-xs text-gray-500 ml-2">
+                                    (期待エンゲージメント: {angle.expectedEngagement})
+                                  </span>
+                                )}
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
                     <p className="text-gray-600 text-sm">
                       <span className="font-medium">投稿推奨時間:</span> {opp.timeWindow}
                     </p>
@@ -344,7 +383,15 @@ export default function GptSessionDetail() {
                       <span className="font-medium">推奨事項:</span> {opp.specificRecommendation}
                     </p>
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <p>角度分析データがありません。APIレスポンスを確認してください。</p>
+                    <pre className="mt-4 text-xs text-left bg-gray-100 p-4 rounded overflow-auto">
+                      {JSON.stringify(stepData.step2, null, 2)}
+                    </pre>
+                  </div>
+                )}
               </div>
             </div>
           )}
