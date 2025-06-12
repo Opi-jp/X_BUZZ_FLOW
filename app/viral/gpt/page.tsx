@@ -230,8 +230,8 @@ export default function GptViralDashboard() {
                   ))
                 ) : (
                   <>
-                    <option value="gpt-4o">GPT-4o (最新・推奨)</option>
-                    <option value="gpt-4o-mini">GPT-4o Mini (高速・コスト効率)</option>
+                    <option value="gpt-4o">GPT-4o (最新・推奨・Web検索対応)</option>
+                    <option value="gpt-4o-mini">GPT-4o Mini (高速・低コスト・Web検索非対応)</option>
                     <option value="gpt-4-turbo-preview">GPT-4 Turbo</option>
                     <option value="gpt-4">GPT-4 (従来版)</option>
                     <option value="gpt-3.5-turbo">GPT-3.5 Turbo (旧モデル)</option>

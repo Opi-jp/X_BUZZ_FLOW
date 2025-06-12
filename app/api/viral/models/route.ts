@@ -68,10 +68,10 @@ export async function GET() {
           description = '高速推論モデル'
         } else if (model.id.includes('gpt-4o') && !model.id.includes('mini')) {
           displayName = 'GPT-4o'
-          description = '最新・推奨'
+          description = '最新・推奨・Web検索対応'
         } else if (model.id.includes('gpt-4o-mini')) {
           displayName = 'GPT-4o Mini'
-          description = '高速・コスト効率'
+          description = '高速・低コスト・Web検索非対応'
         } else if (model.id.includes('gpt-4-turbo')) {
           displayName = 'GPT-4 Turbo'
           description = '高性能'

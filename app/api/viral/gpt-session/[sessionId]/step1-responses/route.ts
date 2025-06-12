@@ -30,9 +30,20 @@ export async function POST(
     console.log('Executing GPT Step 1 with Responses API and web search...')
     const startTime = Date.now()
 
+    // モデルがGPT-4oかチェック（web_searchはGPT-4oのみサポート）
+    const selectedModel = config.config.model || 'gpt-4o'
+    const supportsWebSearch = selectedModel === 'gpt-4o'
+    
+    if (!supportsWebSearch) {
+      return NextResponse.json(
+        { error: 'Web検索はGPT-4oモデルのみサポートされています。GPT-4oを選択してください。' },
+        { status: 400 }
+      )
+    }
+
     // Responses APIを使用してウェブ検索を実行
     const response = await openai.responses.create({
-      model: config.config.model || 'gpt-4o',
+      model: selectedModel,
       input: buildPrompt(config.config),
       tools: [
         {
