@@ -47,21 +47,20 @@ export async function POST(
       input: buildPrompt(config.config),
       tools: [
         {
-          type: 'web_search'
+          type: 'web_search_preview' as any
         }
-      ],
-      response_format: { type: 'json_object' }
+      ]
     })
 
     const duration = Date.now() - startTime
     
     // レスポンスを処理
-    const rawResponse = response.content || '{}'
+    const rawResponse = (response as any).output || (response as any).message?.content || JSON.stringify(response)
     console.log('GPT Step 1 response length:', rawResponse.length)
     
     let analysisResult
     try {
-      analysisResult = JSON.parse(rawResponse)
+      analysisResult = typeof rawResponse === 'string' ? JSON.parse(rawResponse) : rawResponse
       console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
     } catch (parseError) {
       console.error('Failed to parse GPT response:', parseError)
@@ -80,7 +79,7 @@ export async function POST(
           ...currentResponse,
           step1: analysisResult
         },
-        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + ((response as any).usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
           ...currentMetadata,
@@ -106,7 +105,7 @@ export async function POST(
       },
       metrics: {
         duration,
-        tokens: response.usage?.total_tokens
+        tokens: (response as any).usage?.total_tokens
       },
       nextStep: {
         step: 2,

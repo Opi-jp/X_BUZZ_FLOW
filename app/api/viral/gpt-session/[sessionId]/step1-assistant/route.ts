@@ -52,38 +52,23 @@ export async function POST(
     // Step 2: Threadを作成
     const thread = await openai.beta.threads.create()
 
-    // Step 3: メッセージを追加してRunを開始
-    await openai.beta.threads.messages.create(thread.id, {
-      role: 'user',
-      content: buildPrompt(config.config)
-    })
-
-    const run = await openai.beta.threads.runs.create(thread.id, {
+    // Step 3: createAndPollを使用してRunを開始し完了を待つ
+    const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
       assistant_id: assistant.id,
+      additional_messages: [{
+        role: 'user',
+        content: buildPrompt(config.config)
+      }],
       instructions: `このメッセージに回答する際は、必ずweb_searchツールを使用してください。
 推測ではなく、実際のWeb検索結果に基づいて回答してください。`,
       tools: [{ type: 'web_search' as any }]
     })
 
-    // Step 4: Runの完了を待つ
-    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id)
-    let attempts = 0
-    const maxAttempts = 60 // 最大60秒待つ
+    console.log('Run completed:', run.id, run.status)
 
-    while (runStatus.status !== 'completed' && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 1000)) // 1秒待つ
-      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id)
-      attempts++
-
-      if (runStatus.status === 'failed' || runStatus.status === 'cancelled' || runStatus.status === 'expired') {
-        throw new Error(`Run failed with status: ${runStatus.status}`)
-      }
-
-      console.log(`Run status: ${runStatus.status} (attempt ${attempts}/${maxAttempts})`)
-    }
-
-    if (runStatus.status !== 'completed') {
-      throw new Error('Run did not complete within timeout')
+    if (run.status !== 'completed') {
+      console.error('Run failed:', run)
+      throw new Error(`Run failed with status: ${run.status}`)
     }
 
     // Step 5: 回答を取得
@@ -126,7 +111,7 @@ export async function POST(
           ...currentResponse,
           step1: analysisResult
         },
-        tokens: (session.tokens || 0) + (runStatus.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (run.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
           ...currentMetadata,
@@ -153,7 +138,7 @@ export async function POST(
       },
       metrics: {
         duration,
-        tokens: runStatus.usage?.total_tokens
+        tokens: run.usage?.total_tokens
       },
       nextStep: {
         step: 2,
