@@ -206,6 +206,27 @@ export default function GptSessionDetail() {
               </h2>
               
               <div className="space-y-4">
+                {/* 分析サマリー */}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-purple-900 mb-3">📝 分析サマリー</h3>
+                  <p className="text-gray-700 mb-4">{stepData.step1.summary}</p>
+                  
+                  {/* キーポイント */}
+                  {stepData.step1.keyPoints && (
+                    <div className="bg-white rounded p-3 border border-purple-200">
+                      <h4 className="font-medium text-purple-800 mb-2">🎯 キーポイント</h4>
+                      <ul className="space-y-1">
+                        {stepData.step1.keyPoints.map((point: string, idx: number) => (
+                          <li key={idx} className="text-sm text-gray-700 flex items-start">
+                            <span className="text-purple-500 mr-2">•</span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
                 {/* 現在の出来事 */}
                 <div className="border border-gray-200 rounded-lg p-4">
                   <button
@@ -288,11 +309,8 @@ export default function GptSessionDetail() {
                 </div>
 
                 <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-blue-900">
-                    <span className="font-semibold">分析結果:</span> {stepData.step1.summary || stepData.step1.analysis?.summary}
-                  </p>
-                  <p className="text-blue-800 mt-2">
-                    バズる機会: <span className="font-bold text-xl">{stepData.step1.opportunityCount || stepData.step1.analysis?.opportunityCount || 0}件</span>
+                  <p className="text-blue-800 text-center">
+                    <span className="text-2xl">🎯</span> バズる機会: <span className="font-bold text-3xl text-blue-900">{stepData.step1.opportunityCount || stepData.step1.analysis?.opportunityCount || 0}</span><span className="text-xl">件</span>
                   </p>
                 </div>
               </div>

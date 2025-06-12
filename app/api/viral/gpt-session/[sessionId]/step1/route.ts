@@ -87,7 +87,8 @@ export async function POST(
         socialListening: response.socialListening,
         viralPatterns: response.viralPatterns,
         opportunityCount: response.opportunityCount,
-        summary: response.summary
+        summary: response.summary,
+        keyPoints: response.keyPoints || []
       },
       metrics: {
         duration,
@@ -226,7 +227,14 @@ ${newsSection}
     ]
   },
   "opportunityCount": 数値,
-  "summary": "全体的な分析サマリー",
+  "summary": "全体的な分析サマリー（200文字程度）",
+  "keyPoints": [
+    "重要なポイント1",
+    "重要なポイント2",
+    "重要なポイント3",
+    "重要なポイント4",
+    "重要なポイント5"
+  ],
   "nextStepMessage": "トレンド分析に基づき、今後48時間以内に[X]件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。"
 }
 `
