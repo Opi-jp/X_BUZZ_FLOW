@@ -26,46 +26,22 @@ Respond in Japanese.`,
     const thread = await openai.beta.threads.create()
     console.log('Thread created:', thread.id)
 
-    // Step 3: メッセージを追加
-    await openai.beta.threads.messages.create(thread.id, {
-      role: 'user',
-      content: 'web_searchツールを使って、OpenAIの最新ニュース（2025年12月）を3件教えてください。各ニュースについて、記事タイトル、ソース、日付を含めてください。'
-    })
-
-    // Step 4: Runを開始
-    const run = await openai.beta.threads.runs.create(thread.id, {
+    // Step 3: メッセージを追加してRunを開始
+    const run = await openai.beta.threads.runs.createAndPoll(thread.id, {
       assistant_id: assistant.id,
+      additional_messages: [{
+        role: 'user',
+        content: 'web_searchツールを使って、OpenAIの最新ニュース（2025年12月）を3件教えてください。各ニュースについて、記事タイトル、ソース、日付を含めてください。'
+      }],
       instructions: 'Remember to use the web_search tool for this query.',
       tools: [{ type: 'web_search' as any }]
     })
 
-    console.log('Run started:', run.id)
+    console.log('Run completed:', run.id, run.status)
 
-    // Step 5: Runの完了を待つ
-    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id)
-    let attempts = 0
-    const maxAttempts = 30 // 最大30秒待つ
-
-    while (runStatus.status !== 'completed' && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id)
-      attempts++
-
-      console.log(`Run status: ${runStatus.status} (attempt ${attempts}/${maxAttempts})`)
-
-      if (runStatus.status === 'failed' || runStatus.status === 'cancelled' || runStatus.status === 'expired') {
-        console.error('Run failed:', runStatus)
-        throw new Error(`Run failed with status: ${runStatus.status}`)
-      }
-
-      // requires_actionの場合の処理
-      if (runStatus.status === 'requires_action') {
-        console.log('Run requires action:', runStatus.required_action)
-      }
-    }
-
-    if (runStatus.status !== 'completed') {
-      throw new Error(`Run did not complete within timeout. Final status: ${runStatus.status}`)
+    if (run.status !== 'completed') {
+      console.error('Run failed:', run)
+      throw new Error(`Run failed with status: ${run.status}`)
     }
 
     // Step 6: 回答を取得
@@ -87,8 +63,8 @@ Respond in Japanese.`,
     return NextResponse.json({
       success: true,
       duration: `${duration}ms`,
-      runStatus: runStatus.status,
-      usage: runStatus.usage,
+      runStatus: run.status,
+      usage: run.usage,
       response,
       metadata: {
         assistantId: assistant.id,
