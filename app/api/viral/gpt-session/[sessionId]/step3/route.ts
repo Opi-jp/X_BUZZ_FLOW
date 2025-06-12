@@ -144,41 +144,51 @@ function buildStep3Prompt(config: any, step2Data: any) {
   const topOpportunities = step2Data.topOpportunities.slice(0, 3)
 
   return `
-現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-## Step 2の分析結果
+## フェーズ3: バズるコンテンツのコンセプト作成
+
+現在時刻: ${new Date().toLocaleString('ja-JP')}
+
+### あなたの設定情報（フェーズ1-2から引き継ぎ）：
+1. あなたの専門分野または業界: ${config.expertise}
+2. 重点を置くプラットフォーム: ${config.platform}
+3. コンテンツのスタイル: ${config.style}
+
+### フェーズ2の分析結果
 ${step2Data.summary}
 
-選択された上位機会:
-${topOpportunities.map((opp: any) => {
+### 選択された上位機会（最もバズる可能性が高い3つ）
+${topOpportunities.map((opp: any, idx: number) => {
   const articles = opp.sourceArticles || []
   return `
-- ${opp.topic} (角度: ${opp.bestAngle})
-  参照記事:
-${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
+${idx + 1}. ${opp.topic}
+   - バイラルスコア: ${opp.viralScore}
+   - 最適な角度: ${opp.bestAngle}
+   - ${config.expertise}ならではの独自性: ${opp.expertUniqueness || ''}
+   - 推奨タイミング: ${opp.timeWindow}
+   - 参照記事:
+${articles.map((article: any) => `     • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
 `
 }).join('\n')}
 
-## タスク: Step 3 - コンテンツコンセプト作成
-
-上位3つの機会それぞれに対して、以下のフレームワークに従ってコンテンツコンセプトを作成してください：
+具体的で実行可能なコンテンツコンセプトを「${config.expertise}」の専門家として作成します。
 
 ### コンテンツコンセプトフレームワーク
-- プラットフォーム: [最適化されたプラットフォーム]
-- 形式: [スレッド/ビデオ/投稿タイプ]
-- フック: 「[注目を集める具体的なオープナー]」
-- 角度: [独自の視点や見方]
+それぞれの機会について、以下を開発します：
+
+- プラットフォーム: ${config.platform}に最適化
+- 形式: ${config.platform}に適した形式（スレッド/単発/ビデオなど）
+- フック: 「${config.expertise}の視点から注目を集める具体的なオープナー」
+- 角度: ${config.expertise}ならではの独自の視点
 - コンテンツ概要:
-  - トレンドにつながるオープニングフック
-  - [物語を構築する3～5つのキーポイント]
-  - 予期せぬ洞察や啓示
-  - エンゲージメントを促進するCTA
-- タイミング: 最大の効果を得るには [X] 時間以内に投稿してください
-- ビジュアル: [具体的な画像/動画の説明]
-- ハッシュタグ: [プラットフォームに最適化されたタグ]
+  - トレンドと${config.expertise}をつなぐオープニングフック
+  - ${config.expertise}の専門知識を活かした3-5つのキーポイント
+  - ${config.expertise}だからこそ語れる予期せぬ洞察
+  - ${config.style}に合ったエンゲージメントCTA
+- タイミング: 最大の効果を得るための投稿時間
+- ビジュアル: ${config.platform}に適した具体的な画像/動画の説明
+- ハッシュタグ: ${config.platform}と${config.expertise}に最適化されたタグ
 
 以下のJSON形式で回答してください：
 
@@ -194,24 +204,24 @@ ${articles.map((article: any) => `    • ${article.title} (${article.url || 'UR
       "type": "controversy/empathy/humor/insight/news",
       "category": "AI依存/働き方改革/世代間ギャップ/未来予測",
       "title": "コンセプトタイトル",
-      "hook": "注目を集める具体的なオープナー（20-30文字）",
-      "angle": "独自の視点や見方",
+      "hook": "${config.expertise}の視点から注目を集める具体的なオープナー（20-30文字）",
+      "angle": "${config.expertise}ならではの独自の視点",
       "contentOutline": {
-        "openingHook": "トレンドにつながるオープニング",
+        "openingHook": "トレンドと${config.expertise}をつなぐオープニング",
         "keyPoints": [
-          "キーポイント1",
-          "キーポイント2",
-          "キーポイント3"
+          "${config.expertise}の専門知識を活かしたポイント1",
+          "${config.expertise}の専門知識を活かしたポイント2",
+          "${config.expertise}の専門知識を活かしたポイント3"
         ],
-        "unexpectedInsight": "予期せぬ洞察や啓示",
-        "cta": "エンゲージメントを促進するCTA"
+        "unexpectedInsight": "${config.expertise}だからこそ語れる予期せぬ洞察",
+        "cta": "${config.style}に合ったエンゲージメントCTA"
       },
       "timing": "X時間以内",
-      "visualDescription": "具体的な画像/動画の説明",
-      "hashtags": ["ハッシュタグ1", "ハッシュタグ2"],
-      "explanation": "なぜこのコンセプトがバズるのかの説明",
-      "targetAudience": "ターゲット層の説明",
-      "buzzFactors": ["バズ要因1", "要因2", "要因3"],
+      "visualDescription": "${config.platform}に適した画像/動画の説明",
+      "hashtags": ["${config.expertise}関連タグ1", "トレンドタグ2"],
+      "explanation": "${config.expertise}の専門家として、なぜこのコンセプトがバズるのかの説明",
+      "targetAudience": "${config.expertise}に興味があるターゲット層の説明",
+      "buzzFactors": ["${config.expertise}ならではのバズ要因1", "要因2", "要因3"],
       "estimatedEngagement": {
         "likes": "1000-5000",
         "retweets": "200-1000",

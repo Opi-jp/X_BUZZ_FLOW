@@ -147,40 +147,56 @@ function buildStep4Prompt(config: any, step3Data: any) {
   const concepts = step3Data.concepts
 
   return `
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+
+## フェーズ3B: コンテンツ作成の完了
+
 現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
 
-## Step 3のコンセプト
-${concepts.map((c: any) => {
+### あなたの設定情報（フェーズ1-3から引き継ぎ）：
+1. あなたの専門分野または業界: ${config.expertise}
+2. 重点を置くプラットフォーム: ${config.platform}
+3. コンテンツのスタイル: ${config.style}
+
+### フェーズ3で作成したコンセプト
+${concepts.map((c: any, idx: number) => {
   const articles = c.sourceArticles || []
-  return `コンセプト${c.conceptNumber}: ${c.title}
-  - トピック: ${c.topic}
-  - フック: ${c.hook}
-  - 参照記事:
-${articles.map((article: any) => `    • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
-  - 角度: ${c.angle}`
-}).join('\n\n')}
+  return `
+コンセプト${idx + 1}: ${c.title}
+- トピック: ${c.topic}
+- フック: ${c.hook}
+- 角度: ${c.angle}
+- ${config.expertise}の視点: ${c.explanation || ''}
+- 参照記事:
+${articles.map((article: any) => `  • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
+`
+}).join('\n')}
 
-## タスク: Step 4 - 完全な投稿可能コンテンツ生成
-
-3つの概念ごとに以下を提供してください：
+各コンセプトの完全な投稿可能なコンテンツを「${config.expertise}」の専門家として作成します。
 
 ### 完全なコンテンツ配信
-- プラットフォームに表示されるとおりに、コピー＆ペースト可能な完全なコンテンツ
-- すべてのテキスト、書式、改行、絵文字、ハッシュタグを含める
-- 完成させてすぐに投稿できるように準備する
-- 視覚的説明: 必要な画像/ビデオの詳細な説明
-- 投稿に関する注意事項: 具体的なタイミングと最適化のヒント
+3つの概念ごとに以下を提供します：
 
-### ${config.platform}の制約
+コンセプト1: [トレンドトピック] - 完全なコンテンツ
+- ${config.platform}に表示されるとおりに、コピー＆ペースト可能な完全なコンテンツを作成
+- ${config.expertise}の専門性を活かしたテキスト
+- ${config.style}に合った書式、改行、絵文字、ハッシュタグを含める
+- 完成させてすぐに投稿できるように準備する
+
+視覚的説明: 必要な画像/ビデオの詳細な説明
+投稿に関する注意事項: 具体的なタイミングと最適化のヒント
+
+### ${config.platform}の制約と${config.expertise}の活かし方
 ${config.platform === 'Twitter' ? `
-- 単発投稿: 140文字以内（日本語）
-- スレッド: 最初の投稿で注目を集め、2-5投稿で展開
-- 改行は2回まで効果的
-- ハッシュタグは2-3個が最適
-` : ''}
+- 単発投稿: 140文字以内（日本語）で${config.expertise}の知見を凝縮
+- スレッド: ${config.expertise}の専門性を段階的に展開（2-5投稿）
+- 最初の投稿で${config.expertise}ならではのフックを提示
+- 改行は2回まで効果的に使用
+- ハッシュタグは${config.expertise}関連とトレンドを組み合わせて2-3個
+` : `
+- ${config.platform}のフォーマットに合わせて${config.expertise}の専門性を表現
+- ${config.style}を維持しながら情報を構成
+`}
 
 以下のJSON形式で回答してください：
 
@@ -193,19 +209,19 @@ ${config.platform === 'Twitter' ? `
       "topic": "対象トピック",
       "platform": "${config.platform}",
       "format": "single/thread",
-      "fullContent": "完全な投稿内容（改行、絵文字、ハッシュタグ含む）",
+      "fullContent": "${config.expertise}の専門家として作成した完全な投稿内容（改行、絵文字、ハッシュタグ含む）",
       "characterCount": 文字数,
-      "visualDescription": "必要な画像/ビデオの詳細な説明",
-      "postingNotes": "具体的なタイミングと最適化のヒント",
+      "visualDescription": "${config.platform}に適した画像/ビデオの詳細な説明",
+      "postingNotes": "${config.expertise}の視点を最大限活かすための投稿タイミングとヒント",
       "alternativeVersions": [
-        "微調整版1（オプション）",
-        "微調整版2（オプション）"
+        "${config.style}の別バージョン1",
+        "${config.style}の別バージョン2"
       ],
       "sourceArticles": [
         {
           "title": "引用する記事タイトル",
           "url": "記事URL（引用ツイートで使用）",
-          "quoteTweet": "この記事を引用ツイートする場合の文面"
+          "quoteTweet": "${config.expertise}の専門家として引用ツイートする場合の文面"
         }
       ]
     }

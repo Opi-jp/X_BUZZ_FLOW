@@ -123,32 +123,42 @@ function buildStep2Prompt(config: any, step1Data: any) {
     .slice(0, 5)
 
   return `
-現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-## Step 1の分析結果
+## フェーズ2: バズる機会評価
+
+現在時刻: ${new Date().toLocaleString('ja-JP')}
+
+### あなたの設定情報（フェーズ1から引き継ぎ）：
+1. あなたの専門分野または業界: ${config.expertise}
+2. 重点を置くプラットフォーム: ${config.platform}
+3. コンテンツのスタイル: ${config.style}
+
+### フェーズ1の分析結果
 ${step1Data.summary}
 
-## 参照記事（重要度順）
+### 収集した重要記事（重要度順）
 ${topArticles.map((article: any, idx: number) => `
 ${idx + 1}. ${article.title}
    - ソース: ${article.source}
    - URL: ${article.url || 'URLなし'}
    - 公開日: ${article.publishDate || '日付不明'}
    - 要約: ${article.summary}
+   - ${config.expertise}の視点: ${article.expertPerspective || ''}
 `).join('\n')}
 
-特定された上位機会:
-${topOpportunities.map((opp: any, i: number) => 
-  `${i + 1}. ${opp.topic} (スコア: ${opp.overallScore})`
-).join('\n')}
+### 特定されたバズる機会（上位5件）
+${topOpportunities.map((opp: any, i: number) => `
+${i + 1}. ${opp.topic}
+   - 総合スコア: ${opp.overallScore}
+   - ${config.expertise}の視点: ${opp.expertAngle || ''}
+   - 理由: ${opp.reasoning || ''}
+`).join('\n')}
 
-## タスク: Step 2 - トレンド評価・角度分析
+それぞれのトレンドトピックのバズるポテンシャルを「${config.expertise}」の専門家として評価します。
 
 ### 1. ウイルス速度指標の評価
-各トレンドについて以下を評価してください：
+各トレンドについて、「${config.expertise}」の視点から以下を評価してください：
 - 検索ボリュームの急増と成長率
 - ソーシャルメンションの加速
 - 複数プラットフォームの存在
@@ -156,14 +166,14 @@ ${topOpportunities.map((opp: any, i: number) =>
 - メディア報道の勢い
 
 ### 2. コンテンツアングル識別
-各トレンドに対して最適な角度を特定：
-- 反対派は世論に異議を唱える
-- 専門家による内部視点の分析
-- 個人的なつながりの物語
-- 教育の内訳
-- 次に何が起こるかを予測するコンテンツ
-- 舞台裏の洞察
-- 過去のイベントとの比較内容
+「${config.expertise}」の専門家として、実行可能なトレンドごとに独自の角度を特定：
+- 反対派視点: 一般的な意見に対して${config.expertise}の観点から異議を唱える
+- 専門家分析: ${config.expertise}の専門知識を活かした内部視点
+- 個人的な物語: ${config.expertise}の経験に基づく個人的なつながり
+- 教育的解説: ${config.expertise}の知識を活かした分かりやすい解説
+- 未来予測: ${config.expertise}の視点から次に何が起こるかを予測
+- 舞台裏の洞察: ${config.expertise}の経験から見える舞台裏
+- 比較分析: ${config.expertise}の観点から過去のイベントとの比較
 
 以下のJSON形式で回答してください：
 
@@ -204,19 +214,20 @@ ${topOpportunities.map((opp: any, i: number) =>
       "topic": "...",
       "viralScore": 0.0-1.0,
       "bestAngle": "...",
-      "angleReasoning": "なぜこの角度が最適か",
+      "angleReasoning": "${config.expertise}の専門家として、なぜこの角度が最適か",
+      "expertUniqueness": "${config.expertise}ならではの独自性",
       "timeWindow": "XX時間以内",
-      "specificRecommendation": "具体的な推奨事項",
+      "specificRecommendation": "${config.platform}で${config.style}を活かした具体的な推奨事項",
       "sourceArticles": [
         {
           "title": "参照した記事タイトル",
           "url": "記事URL",
-          "relevance": "この記事がどう関連するか"
+          "relevance": "${config.expertise}の視点でこの記事をどう活用するか"
         }
       ]
     }
   ],
-  "summary": "Step 2の分析サマリー",
+  "summary": "「${config.expertise}」の専門家としてのStep 2分析サマリー",
   "nextStepMessage": "特定の角度から、最もバズる可能性の高い機会をご紹介します。コンテンツのコンセプトについては、「続行」と入力してください。"
 }
 `

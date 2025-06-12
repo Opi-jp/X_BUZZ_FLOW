@@ -121,46 +121,64 @@ function buildStep5Prompt(config: any, sessionData: any) {
   const fullContents = sessionData.step4.fullContents
 
   return `
-現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-## 生成されたコンテンツ
+## フェーズ4: 実行戦略
+
+現在時刻: ${new Date().toLocaleString('ja-JP')}
+
+### あなたの設定情報（フェーズ1-3Bから引き継ぎ）：
+1. あなたの専門分野または業界: ${config.expertise}
+2. 重点を置くプラットフォーム: ${config.platform}
+3. コンテンツのスタイル: ${config.style}
+
+### 生成されたコンテンツの概要
 ${fullContents.map((c: any, i: number) => {
   const articles = c.sourceArticles || []
-  return `コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
-  文字数: ${c.characterCount}
-  形式: ${c.format}
-  参照記事: ${articles.length}件
-${articles.map((article: any) => `    • ${article.url || 'URLなし'}`).join('\n')}`
-}).join('\n\n')}
+  return `
+コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
+- 文字数: ${c.characterCount}
+- 形式: ${c.format}
+- ${config.expertise}の視点: ${concepts[i]?.explanation || ''}
+- 参照記事: ${articles.length}件
+${articles.map((article: any) => `  • ${article.url || 'URLなし'}`).join('\n')}
+`
+}).join('\n')}
 
-## タスク: Step 5 - 実行戦略
-
-以下の実装ガイダンスを提供してください：
+「${config.expertise}」の専門家として、実装ガイダンスを提供します。
 
 ### 実行タイムライン
-- 即時（2～4時間）：コンテンツ作成、ビジュアル準備、プラットフォームのセットアップ
-- 投稿期間（4～24時間）: 最適なタイミング、リアルタイム監視、対応戦略
-- フォローアップ（24～48時間）：増幅戦術、フォローアップコンテンツ、パフォーマンス分析
+- 即時（2～4時間）：
+  - ${config.expertise}の専門性を示すコンテンツの最終調整
+  - ${config.platform}に適したビジュアル準備
+  - ${config.expertise}コミュニティへの事前告知
+  
+- 投稿期間（4～24時間）:
+  - ${config.expertise}の視点を最大限活かす最適なタイミング
+  - ${config.expertise}コミュニティの反応をリアルタイム監視
+  - ${config.style}に合った対応戦略
+  
+- フォローアップ（24～48時間）：
+  - ${config.expertise}の専門性を活かした追加コンテンツ
+  - ${config.platform}での継続的な会話の維持
+  - ${config.expertise}視点でのパフォーマンス分析
 
 ### 最適化技術
-- リアルタイム調整のためのエンゲージメントの監視
-- 関連するバズるコンテンツに関する戦略的なコメント
-- 複数プラットフォーム共有で最大限のリーチを実現
-- 知名度を高めるためのインフルエンサーとのエンゲージメント
+- ${config.expertise}コミュニティのエンゲージメント監視
+- ${config.expertise}の視点から関連コンテンツへの戦略的コメント
+- ${config.expertise}の専門性を活かした複数プラットフォーム展開
+- ${config.expertise}分野のインフルエンサーとのエンゲージメント
 
 ### リスクアセスメント
-- 論争リスクとブランドの整合性
-- 競争飽和分析
-- プラットフォームアルゴリズムの互換性
+- ${config.expertise}の専門性と論争リスクのバランス
+- ${config.expertise}分野での競争飽和分析
+- ${config.platform}アルゴリズムと${config.expertise}コンテンツの相性
 
 ### 成功指標
-- エンゲージメント率とベースライン
-- シェア速度とバイラル係数
-- クロスプラットフォームパフォーマンス
-- フォロワーの増加と視聴者の質
+- ${config.expertise}コミュニティでのエンゲージメント率
+- ${config.expertise}関連のシェア速度とバイラル係数
+- ${config.platform}での${config.expertise}フォロワーの増加
+- ${config.expertise}に興味を持つ質の高い視聴者の獲得
 
 以下のJSON形式で回答してください：
 
@@ -231,11 +249,18 @@ ${articles.map((article: any) => `    • ${article.url || 'URLなし'}`).join('
     }
   },
   "principles": {
-    "speedOverPerfection": "完璧さよりもスピードを重視する理由",
-    "authenticityOverOpportunism": "真実性を保つ方法",
-    "timingOverBrilliance": "タイミングの重要性",
-    "engagementOverReach": "エンゲージメント重視の戦略"
-  }
+    "speedOverPerfection": "${config.expertise}の視点で、完璧さよりもスピードを重視する理由",
+    "authenticityOverOpportunism": "${config.expertise}の専門家として真実性を保つ方法",
+    "timingOverBrilliance": "${config.expertise}分野でのタイミングの重要性",
+    "engagementOverReach": "${config.expertise}コミュニティでのエンゲージメント重視戦略"
+  },
+  "conclusion": "品質を維持しながら迅速に実行します。バズるウィンドウはすぐに閉じますが、${config.expertise}の専門家として適切なコンテンツを適切なタイミングで提供することで、リーチを飛躍的に拡大できます。"
 }
+
+ウイルス予測の原則:
+- 完璧さよりもスピード - ${config.expertise}分野でもウイルスの窓は狭い
+- 機会主義よりも真実性 - ${config.expertise}の専門性を活かした本物のコンテンツ
+- 才能よりもタイミング - ${config.expertise}の視点でトレンドに乗る
+- リーチよりもエンゲージメント - ${config.expertise}コミュニティでのシェアとコメントに重点
 `
 }
