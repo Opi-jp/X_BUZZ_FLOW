@@ -143,6 +143,8 @@ export default function ViralDashboard() {
           className={`px-6 py-3 rounded-lg ${
             executedSteps.has('workflow')
               ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : loading
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
               : executedSteps.has('trends')
               ? 'bg-orange-500 text-white hover:bg-orange-600'
               : 'bg-green-500 text-white hover:bg-green-600'
@@ -151,7 +153,7 @@ export default function ViralDashboard() {
           {executedSteps.has('workflow')
             ? '✓ 完了: 全ステップ'
             : loading 
-            ? '実行中...' 
+            ? '待機中...' 
             : executedSteps.has('trends')
             ? 'ステップ2: 投稿生成のみ (Claude)'
             : 'ステップ1+2: 分析＋投稿生成 (ChatGPT→Claude)'
