@@ -83,6 +83,7 @@ export async function POST(
       sessionId,
       step: 1,
       response: {
+        articleAnalysis: response.articleAnalysis || [],
         currentEvents: response.currentEvents,
         socialListening: response.socialListening,
         viralPatterns: response.viralPatterns,
@@ -190,6 +191,21 @@ ${newsSection}
 **重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
 
 {
+  "articleAnalysis": [
+    {
+      "title": "記事タイトル",
+      "source": "ソース名",
+      "category": "カテゴリ",
+      "importance": 0.0-1.0,
+      "summary": "この記事の要約（100文字程度）",
+      "keyPoints": [
+        "重要ポイント1",
+        "重要ポイント2",
+        "重要ポイント3"
+      ],
+      "viralPotential": "なぜこの記事がバズる可能性があるか"
+    }
+  ],
   "currentEvents": {
     "latestNews": [{"title": "...", "impact": 0.0-1.0, "category": "..."}],
     "celebrityEvents": [...],
