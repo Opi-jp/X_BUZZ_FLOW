@@ -27,38 +27,31 @@ export async function POST(
 
     const config = session.metadata as any
 
-    // Step 1: データ収集・初期分析のプロンプト
-    const prompt = buildStep1PromptDirect(config.config)
-
-    console.log('Executing GPT Step 1 analysis...')
+    console.log('Executing GPT Step 1 with Responses API and web search...')
     const startTime = Date.now()
 
-    const completion = await openai.chat.completions.create({
-      model: config.config.model || 'gpt-4-turbo-preview',
-      messages: [
+    // Responses APIを使用してウェブ検索を実行
+    const response = await openai.responses.create({
+      model: config.config.model || 'gpt-4o',
+      input: buildPrompt(config.config),
+      tools: [
         {
-          role: 'system',
-          content: `あなたは、${config.config.expertise}の専門家で、SNSトレンドアナリストです。
-現在の出来事を包括的に分析し、バイラルコンテンツの機会を特定してください。`
-        },
-        {
-          role: 'user',
-          content: prompt
+          type: 'web_search'
         }
       ],
-      temperature: 0.7,
-      max_tokens: 3000,
       response_format: { type: 'json_object' }
     })
 
     const duration = Date.now() - startTime
-    const rawResponse = completion.choices[0].message.content || '{}'
-    console.log('GPT Step 1 raw response length:', rawResponse.length)
     
-    let response
+    // レスポンスを処理
+    const rawResponse = response.content || '{}'
+    console.log('GPT Step 1 response length:', rawResponse.length)
+    
+    let analysisResult
     try {
-      response = JSON.parse(rawResponse)
-      console.log('Parsed response - articleAnalysis count:', response.articleAnalysis?.length || 0)
+      analysisResult = JSON.parse(rawResponse)
+      console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
     } catch (parseError) {
       console.error('Failed to parse GPT response:', parseError)
       console.error('Raw response:', rawResponse.substring(0, 500))
@@ -74,14 +67,15 @@ export async function POST(
       data: {
         response: {
           ...currentResponse,
-          step1: response
+          step1: analysisResult
         },
-        tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
           ...currentMetadata,
           currentStep: 1,
-          step1CompletedAt: new Date().toISOString()
+          step1CompletedAt: new Date().toISOString(),
+          usedResponsesAPI: true
         }
       }
     })
@@ -91,23 +85,23 @@ export async function POST(
       sessionId,
       step: 1,
       response: {
-        articleAnalysis: response.articleAnalysis || [],
-        currentEvents: response.currentEvents,
-        socialListening: response.socialListening,
-        viralPatterns: response.viralPatterns,
-        opportunityCount: response.opportunityCount,
-        summary: response.summary,
-        keyPoints: response.keyPoints || []
+        articleAnalysis: analysisResult.articleAnalysis || [],
+        currentEvents: analysisResult.currentEvents,
+        socialListening: analysisResult.socialListening,
+        viralPatterns: analysisResult.viralPatterns,
+        opportunityCount: analysisResult.opportunityCount,
+        summary: analysisResult.summary,
+        keyPoints: analysisResult.keyPoints || []
       },
       metrics: {
         duration,
-        tokens: completion.usage?.total_tokens
+        tokens: response.usage?.total_tokens
       },
       nextStep: {
         step: 2,
         url: `/api/viral/gpt-session/${sessionId}/step2`,
         description: 'トレンド評価・角度分析',
-        message: response.nextStepMessage || `トレンド分析に基づき、今後48時間以内に${response.opportunityCount}件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。`
+        message: analysisResult.nextStepMessage || `トレンド分析に基づき、今後48時間以内に${analysisResult.opportunityCount}件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。`
       }
     })
 
@@ -121,32 +115,7 @@ export async function POST(
   }
 }
 
-async function getLatestNewsData() {
-  const news = await prisma.newsArticle.findMany({
-    where: {
-      publishedAt: { gte: new Date(Date.now() - 48 * 60 * 60 * 1000) },
-      processed: true
-    },
-    orderBy: { publishedAt: 'desc' },
-    take: 50,
-    include: { 
-      source: true,
-      analysis: true 
-    }
-  })
-
-  return news.map(article => ({
-    title: article.title,
-    summary: article.analysis?.japaneseSummary || article.summary,
-    source: article.source.name,
-    category: article.category,
-    importance: article.importance,
-    url: article.url,
-    publishedAt: article.publishedAt
-  }))
-}
-
-function buildStep1PromptDirect(config: any) {
+function buildPrompt(config: any) {
   return `
 現在時刻: ${new Date().toLocaleString('ja-JP')}
 専門分野: ${config.expertise}
@@ -155,20 +124,16 @@ function buildStep1PromptDirect(config: any) {
 
 ## タスク: Step 1 - データ収集・初期分析
 
-あなたは最新のAI・テクノロジー・ビジネストレンドに精通しており、2025年の最新動向を把握しています。
-現在（${new Date().toLocaleDateString('ja-JP')}）の最新ニュースやトレンドを想定して、以下の分析を行ってください。
+ウェブ検索を使用して、以下に関する最新のニュースやトレンドを調査してください：
 
-### 分析対象（2025年12月の実際の最新トレンドを想定）
-- OpenAI（GPT-4o、o1、o3モデル）、Anthropic（Claude 3.5）、Google（Gemini 2.0）、Microsoft等のAI企業の最新動向
-- AIエージェントやAGI（汎用人工知能）に関する議論
-- AIと働き方・雇用への影響（AIによる自動化、新しい職種の創出）
-- テクノロジー業界の重要な発表（新モデル、API、製品リリース）
-- 企業のAI導入事例と成功・失敗事例
-- AI規制・安全性・倫理に関する各国の動き
-- AIスタートアップの資金調達や新サービス
-- その他、現在話題になっているであろうテック関連ニュース
+1. AI・機械学習の最新動向（OpenAI、Anthropic、Google、Microsoft等）
+2. AIと働き方・雇用への影響に関する議論
+3. テクノロジー業界の重要な発表や動き
+4. ビジネス界でのAI活用事例
+5. AI規制・倫理に関する最新の議論
+6. その他、現在話題になっているテック関連ニュース
 
-以下の観点で包括的な分析を行ってください：
+検索した記事を分析し、以下の観点で包括的な分析を行ってください：
 
 ### 1. 現在の出来事の分析
 以下の8カテゴリで現在起きている重要な出来事を分析：
@@ -182,7 +147,7 @@ function buildStep1PromptDirect(config: any) {
 - インターネットドラマとプラットフォーム論争
 
 ### 2. ソーシャルリスニング研究
-以下のプラットフォームでの動向を分析（実際のデータがない場合は推測）：
+以下のプラットフォームでの動向を分析（実際のデータまたは推測）：
 - Twitterのトレンドトピックとハッシュタグの速度
 - TikTokサウンドとチャレンジの出現
 - Redditのホットな投稿とコメントの感情
@@ -202,13 +167,13 @@ function buildStep1PromptDirect(config: any) {
 
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
-**重要: 最新の実際のトレンドを想定して、10-15件程度の具体的なニュース記事を生成し、articleAnalysis配列に詳細分析を含めてください。**
+**重要: 検索した実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
 
 {
   "articleAnalysis": [
     {
-      "title": "実際にありそうな具体的な記事タイトル",
-      "source": "TechCrunch/The Verge/日経新聞/Bloomberg等の実際のメディア名",
+      "title": "実際の記事タイトル",
+      "source": "実際のメディア名",
       "category": "AI/ビジネス/規制/研究/製品発表等",
       "importance": 0.0-1.0,
       "summary": "この記事の内容を100文字程度で要約",

@@ -52,7 +52,12 @@ export default function GptSessionDetail() {
   const executeStep = async (step: number) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/viral/gpt-session/${sessionId}/step${step}`, {
+      // Step 1の場合は、Responses API版を使うオプション（将来的に有効化）
+      const endpoint = step === 1 && false // 将来的にtrueに変更
+        ? `/api/viral/gpt-session/${sessionId}/step1-responses`
+        : `/api/viral/gpt-session/${sessionId}/step${step}`
+      
+      const response = await fetch(endpoint, {
         method: 'POST'
       })
 
