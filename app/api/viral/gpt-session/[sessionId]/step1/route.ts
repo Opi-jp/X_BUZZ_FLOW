@@ -29,6 +29,7 @@ export async function POST(
 
     // 最新ニュースデータを取得
     const newsData = await getLatestNewsData()
+    console.log('News data count:', newsData.length)
 
     // Step 1: データ収集・初期分析のプロンプト
     const prompt = buildStep1Prompt(config.config, newsData)
@@ -55,7 +56,18 @@ export async function POST(
     })
 
     const duration = Date.now() - startTime
-    const response = JSON.parse(completion.choices[0].message.content || '{}')
+    const rawResponse = completion.choices[0].message.content || '{}'
+    console.log('GPT Step 1 raw response length:', rawResponse.length)
+    
+    let response
+    try {
+      response = JSON.parse(rawResponse)
+      console.log('Parsed response - articleAnalysis count:', response.articleAnalysis?.length || 0)
+    } catch (parseError) {
+      console.error('Failed to parse GPT response:', parseError)
+      console.error('Raw response:', rawResponse.substring(0, 500))
+      throw new Error('GPT応答の解析に失敗しました')
+    }
 
     // Step 1の結果を保存
     const currentResponse = session.response as Record<string, any> || {}
@@ -190,10 +202,10 @@ ${newsSection}
 
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
+**重要: 上記のニュースデータすべてについて、articleAnalysis配列に詳細分析を含めてください。**
 
 {
   "articleAnalysis": [
-    // 上記のニュースデータすべてについて、以下の形式で詳細分析を行ってください
     {
       "title": "記事タイトル（元のタイトルをそのまま使用）",
       "source": "ソース名",
