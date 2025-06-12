@@ -138,7 +138,17 @@ export async function POST(request: NextRequest) {
         prompt: `${postId} - ${metric}`,
         response: {
           metric,
-          metrics,
+          metrics: {
+            impression_count: metrics.impression_count,
+            like_count: metrics.like_count,
+            retweet_count: metrics.retweet_count,
+            reply_count: metrics.reply_count,
+            quote_count: metrics.quote_count,
+            bookmark_count: metrics.bookmark_count,
+            url_link_clicks: metrics.url_link_clicks,
+            user_profile_clicks: metrics.user_profile_clicks,
+            video_view_count: metrics.video_view_count
+          },
           updateData
         },
         success: true
