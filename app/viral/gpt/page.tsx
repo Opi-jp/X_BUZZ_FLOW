@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { formatInTimeZone } from 'date-fns-tz'
 import { ja } from 'date-fns/locale'
+import Link from 'next/link'
 
 export default function GptViralDashboard() {
   const [sessions, setSessions] = useState<any[]>([])
@@ -157,15 +158,15 @@ export default function GptViralDashboard() {
                 <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-10">
                   <div className="p-2">
                     <h3 className="text-sm font-semibold text-gray-600 px-3 py-2">バイラル機能</h3>
-                    <a href="/viral/gpt" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                    <Link href="/viral/gpt" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
                       📊 GPT分析（現在のページ）
-                    </a>
-                    <a href="/viral/drafts" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
+                    </Link>
+                    <Link href="/viral/drafts" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded">
                       📝 下書き管理
-                    </a>
-                    <a href="/viral/gpt/auto-execute" className="block px-3 py-2 text-sm text-green-700 hover:bg-green-50 rounded font-semibold">
+                    </Link>
+                    <Link href="/viral/gpt/auto-execute" className="block px-3 py-2 text-sm text-green-700 hover:bg-green-50 rounded font-semibold">
                       🚀 自動実行（新機能）
-                    </a>
+                    </Link>
                     
                     <div className="border-t my-2"></div>
                     <h3 className="text-sm font-semibold text-gray-600 px-3 py-2">データ収集・管理</h3>

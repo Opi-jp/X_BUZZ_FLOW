@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function ViralSystemSummary() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -111,19 +113,19 @@ export default function ViralSystemSummary() {
           <h2 className="text-2xl font-semibold mb-4">🚀 アクセス方法</h2>
           
           <div className="grid md:grid-cols-3 gap-4">
-            <a href="/viral/gpt" className="block p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-center">
+            <Link href="/viral/gpt" className="block p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-center">
               <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               GPT分析ダッシュボード
-            </a>
+            </Link>
             
-            <a href="/viral/drafts" className="block p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 text-center">
+            <Link href="/viral/drafts" className="block p-4 bg-green-500 text-white rounded-lg hover:bg-green-600 text-center">
               <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               下書き管理
-            </a>
+            </Link>
             
             <a href="/dashboard-old" className="block p-4 bg-gray-500 text-white rounded-lg hover:bg-gray-600 text-center">
               <svg className="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
