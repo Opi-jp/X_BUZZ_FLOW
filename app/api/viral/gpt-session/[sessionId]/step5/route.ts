@@ -12,6 +12,13 @@ export async function POST(
 ) {
   try {
     const { sessionId } = await params
+    
+    // キャッシュを無効化
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
 
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
@@ -21,251 +28,400 @@ export async function POST(
     if (!session) {
       return NextResponse.json(
         { error: 'セッションが見つかりません' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
-    const currentResponse = session.response as Record<string, any> || {}
-    const currentMetadata = session.metadata as Record<string, any> || {}
+    const config = session.metadata as any
+    const sessionData = session.response as any
 
-    if (!currentResponse.step4) {
+    if (!sessionData?.step4) {
       return NextResponse.json(
-        { error: 'Step 4を先に完了してください' },
-        { status: 400 }
+        { error: 'Step 4のデータが見つかりません。まずStep 4を実行してください。' },
+        { status: 400, headers }
       )
     }
 
-    // Step 5: 実行戦略のプロンプト
-    const prompt = buildStep5Prompt(currentMetadata.config, currentResponse)
+    console.log('=== Step 5: Execution Strategy with Function Calling ===')
+    console.log('Session ID:', sessionId)
+    console.log('Ready contents:', sessionData.step4?.complete_contents?.length || 0)
 
-    console.log('Executing GPT Step 5 strategy...')
     const startTime = Date.now()
 
-    const completion = await openai.chat.completions.create({
-      model: currentMetadata.config.model || 'gpt-4-turbo-preview',
+    // Function Definition for execution strategy
+    const createExecutionStrategyFunction = {
+      name: 'create_execution_strategy',
+      description: '生成されたコンテンツの実行戦略とKPIを策定',
+      parameters: {
+        type: 'object',
+        properties: {
+          immediate_actions: {
+            type: 'object',
+            properties: {
+              pre_launch_checklist: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    task: { type: 'string', description: 'タスク内容' },
+                    priority: { type: 'string', description: '優先度（high/medium/low）' },
+                    estimated_time: { type: 'string', description: '所要時間' }
+                  },
+                  required: ['task', 'priority', 'estimated_time']
+                }
+              },
+              content_finalization: {
+                type: 'array',
+                items: { type: 'string' },
+                description: '最終調整項目'
+              },
+              platform_preparation: {
+                type: 'object',
+                properties: {
+                  profile_optimization: { type: 'array', items: { type: 'string' } },
+                  scheduling_setup: { type: 'string', description: 'スケジューリング設定' },
+                  monitoring_tools: { type: 'array', items: { type: 'string' } }
+                },
+                required: ['profile_optimization', 'scheduling_setup', 'monitoring_tools']
+              }
+            },
+            required: ['pre_launch_checklist', 'content_finalization', 'platform_preparation']
+          },
+          posting_strategy: {
+            type: 'object',
+            properties: {
+              posting_schedule: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    content_index: { type: 'number', description: 'コンテンツインデックス' },
+                    optimal_datetime: { type: 'string', description: '最適投稿日時' },
+                    reason: { type: 'string', description: '理由' },
+                    expected_performance: {
+                      type: 'object',
+                      properties: {
+                        impressions: { type: 'string', description: '予想インプレッション' },
+                        engagement_rate: { type: 'string', description: '予想エンゲージメント率' },
+                        viral_probability: { type: 'number', description: 'バイラル確率（0-1）' }
+                      },
+                      required: ['impressions', 'engagement_rate', 'viral_probability']
+                    }
+                  },
+                  required: ['content_index', 'optimal_datetime', 'reason', 'expected_performance']
+                }
+              },
+              engagement_tactics: {
+                type: 'object',
+                properties: {
+                  first_hour_actions: { type: 'array', items: { type: 'string' } },
+                  community_engagement: { type: 'array', items: { type: 'string' } },
+                  influencer_outreach: { type: 'array', items: { type: 'string' } }
+                },
+                required: ['first_hour_actions', 'community_engagement', 'influencer_outreach']
+              },
+              cross_promotion: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'クロスプロモーション戦略'
+              }
+            },
+            required: ['posting_schedule', 'engagement_tactics', 'cross_promotion']
+          },
+          monitoring_plan: {
+            type: 'object',
+            properties: {
+              key_metrics: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    metric_name: { type: 'string', description: 'メトリクス名' },
+                    target_value: { type: 'string', description: '目標値' },
+                    measurement_timing: { type: 'string', description: '測定タイミング' }
+                  },
+                  required: ['metric_name', 'target_value', 'measurement_timing']
+                }
+              },
+              response_protocols: {
+                type: 'object',
+                properties: {
+                  positive_momentum: { type: 'array', items: { type: 'string' } },
+                  negative_feedback: { type: 'array', items: { type: 'string' } },
+                  viral_moment: { type: 'array', items: { type: 'string' } }
+                },
+                required: ['positive_momentum', 'negative_feedback', 'viral_moment']
+              },
+              pivot_criteria: {
+                type: 'array',
+                items: { type: 'string' },
+                description: 'ピボット判断基準'
+              }
+            },
+            required: ['key_metrics', 'response_protocols', 'pivot_criteria']
+          },
+          follow_up_strategy: {
+            type: 'object',
+            properties: {
+              content_amplification: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    timing: { type: 'string', description: 'タイミング' },
+                    action: { type: 'string', description: 'アクション' },
+                    expected_impact: { type: 'string', description: '期待効果' }
+                  },
+                  required: ['timing', 'action', 'expected_impact']
+                }
+              },
+              secondary_content: {
+                type: 'array',
+                items: { type: 'string' },
+                description: '二次コンテンツ案'
+              },
+              long_term_value: {
+                type: 'object',
+                properties: {
+                  content_repurposing: { type: 'array', items: { type: 'string' } },
+                  learning_extraction: { type: 'array', items: { type: 'string' } },
+                  community_building: { type: 'array', items: { type: 'string' } }
+                },
+                required: ['content_repurposing', 'learning_extraction', 'community_building']
+              }
+            },
+            required: ['content_amplification', 'secondary_content', 'long_term_value']
+          },
+          success_criteria: {
+            type: 'object',
+            properties: {
+              minimum_goals: {
+                type: 'object',
+                properties: {
+                  impressions: { type: 'string' },
+                  engagement_rate: { type: 'string' },
+                  follower_growth: { type: 'string' }
+                },
+                required: ['impressions', 'engagement_rate', 'follower_growth']
+              },
+              stretch_goals: {
+                type: 'object',
+                properties: {
+                  viral_reach: { type: 'string' },
+                  media_coverage: { type: 'string' },
+                  business_impact: { type: 'string' }
+                },
+                required: ['viral_reach', 'media_coverage', 'business_impact']
+              },
+              timeline: { type: 'string', description: '評価期間' }
+            },
+            required: ['minimum_goals', 'stretch_goals', 'timeline']
+          }
+        },
+        required: ['immediate_actions', 'posting_strategy', 'monitoring_plan', 'follow_up_strategy', 'success_criteria']
+      }
+    }
+
+    // Chain of Thought プロンプト構築
+    const cotPrompt = buildExecutionStrategyPrompt(config.config, sessionData)
+
+    // GPT-4o Function Calling実行
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: `あなたは、${currentMetadata.config?.expertise || currentMetadata.expertise || 'AIと働き方'}の専門家で、ソーシャルメディア戦略家です。
-生成されたコンテンツを最大限に活用するための実行戦略を立案してください。`
+          content: `あなたは、${config.config?.expertise || 'AI × 働き方'}の専門家で、ソーシャルメディア戦略のプロです。
+          
+生成されたコンテンツを最大限に活用するための包括的な実行戦略を策定します。
+
+Chain of Thought（段階的思考）に従って：
+1. **即時行動計画** - 投稿前の準備と最終チェック
+2. **投稿戦略** - タイミング、順序、エンゲージメント戦術
+3. **モニタリング計画** - KPI設定と対応プロトコル
+4. **フォローアップ戦略** - 勢いの維持と長期的価値の創出
+
+必ずcreate_execution_strategy関数を呼び出して、詳細な実行計画を返してください。`
         },
         {
           role: 'user',
-          content: prompt
+          content: cotPrompt
         }
       ],
-      temperature: 0.6,
-      max_tokens: 3000,
-      response_format: { type: 'json_object' }
+      functions: [createExecutionStrategyFunction],
+      function_call: { name: 'create_execution_strategy' },
+      temperature: 0.7,
+      max_tokens: 4000
     })
 
     const duration = Date.now() - startTime
-    const response = JSON.parse(completion.choices[0].message.content || '{}')
+    console.log('Step 5 duration:', duration, 'ms')
 
-    // Step 5の結果を保存
+    // Function Callingの結果を取得
+    const functionCall = response.choices[0]?.message?.function_call
+    let strategyResult = null
+
+    if (functionCall && functionCall.name === 'create_execution_strategy') {
+      try {
+        strategyResult = JSON.parse(functionCall.arguments)
+        console.log('Execution strategy created successfully')
+      } catch (e) {
+        console.error('Failed to parse execution strategy:', e)
+        return NextResponse.json(
+          { error: '実行戦略の解析に失敗しました' },
+          { status: 500, headers }
+        )
+      }
+    } else {
+      return NextResponse.json(
+        { error: '実行戦略Function Callingが実行されませんでした' },
+        { status: 500, headers }
+      )
+    }
+
+    // 結果をデータベースに保存
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
+    
     await prisma.gptAnalysis.update({
       where: { id: sessionId },
       data: {
         response: {
           ...currentResponse,
-          step5: response
+          step5: strategyResult
         },
-        tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
           ...currentMetadata,
           currentStep: 5,
           step5CompletedAt: new Date().toISOString(),
-          completed: true
+          analysisComplete: true,
+          usedFunctionCalling: true
         }
       }
     })
+
+    // サマリー情報の生成
+    const totalDuration = currentMetadata.step1Duration + 
+                         currentMetadata.step2Duration + 
+                         currentMetadata.step3Duration + 
+                         duration
+    
+    const summary = {
+      analysisComplete: true,
+      totalSteps: 5,
+      totalDuration: `${Math.round(totalDuration / 1000)}秒`,
+      totalTokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
+      readyContents: sessionData.step4?.complete_contents?.length || 0,
+      nextActions: strategyResult.immediate_actions?.pre_launch_checklist?.map((item: any) => item.task) || [],
+      estimatedReach: sessionData.step4?.content_summary?.estimated_reach || 'N/A',
+      launchReadiness: '100%'
+    }
 
     return NextResponse.json({
       success: true,
       sessionId,
       step: 5,
-      response: {
-        executionStrategy: response.executionStrategy,
-        optimization: response.optimization,
-        riskAssessment: response.riskAssessment,
-        successMetrics: response.successMetrics,
-        principles: response.principles
-      },
+      method: 'Chain of Thought + Function Calling',
+      response: strategyResult,
       metrics: {
         duration,
-        tokens: completion.usage?.total_tokens,
-        totalSessionTokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
-        totalSessionDuration: (session.duration || 0) + duration
+        tokensUsed: response.usage?.total_tokens || 0
       },
-      summary: {
-        message: '5段階の分析が完了しました！',
-        totalConcepts: currentResponse.step3.concepts.length,
-        readyToPosts: response.executionStrategy.immediate.readyPosts || 3,
-        nextActions: response.executionStrategy.immediate.tasks
-      }
-    })
+      summary,
+      message: '🎉 5段階の分析が完了しました！実行戦略に基づいて、バイラルコンテンツの投稿準備が整いました。'
+    }, { headers })
 
   } catch (error) {
-    console.error('GPT Step 5 error:', error)
+    console.error('Step 5 execution strategy error:', error)
     
     return NextResponse.json(
-      { error: 'Step 5 実行戦略でエラーが発生しました' },
+      { 
+        error: 'Step 5 実行戦略でエラーが発生しました',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
 }
 
-function buildStep5Prompt(config: any, sessionData: any) {
-  const concepts = sessionData.step3.concepts
-  const fullContents = sessionData.step4.fullContents
+function buildExecutionStrategyPrompt(config: any, sessionData: any) {
+  const step3Concepts = sessionData.step3?.concepts || []
+  const step4Contents = sessionData.step4?.complete_contents || []
+  const currentDateJST = new Date()
+  const formattedDate = currentDateJST.toLocaleDateString('ja-JP', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    timeZone: 'Asia/Tokyo'
+  })
   
-  // Handle nested config structure
-  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
-  const platform = config.config?.platform || config.platform || 'Twitter'
-  const style = config.config?.style || config.style || '洞察的'
+  const expertise = config?.expertise || 'AI × 働き方'
+  const platform = config?.platform || 'Twitter'
+  const style = config?.style || '洞察的'
 
-  return `
-あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+  // 今後48時間の最適投稿時間を計算
+  const optimalTimes = []
+  for (let i = 0; i < 3; i++) {
+    const date = new Date(currentDateJST)
+    date.setHours(date.getHours() + (i * 16) + 4) // 4時間後、20時間後、36時間後
+    optimalTimes.push(date.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }))
+  }
 
-## フェーズ4: 実行戦略
+  return `**Chain of Thought: バイラル実行戦略の策定**
 
-現在時刻: ${new Date().toLocaleString('ja-JP')}
+設定情報:
+- 専門分野: ${expertise}
+- プラットフォーム: ${platform}
+- スタイル: ${style}
+- 現在時刻: ${currentDateJST.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}
 
-### あなたの設定情報（フェーズ1-3Bから引き継ぎ）：
-1. あなたの専門分野または業界: ${expertise}
-2. 重点を置くプラットフォーム: ${platform}
-3. コンテンツのスタイル: ${style}
+**生成されたコンテンツの概要:**
+${step4Contents.map((content: any, index: number) => `
+コンテンツ${index + 1}: ${content.topic}
+- 単発投稿: ${content.content_variations?.single_post?.character_count}文字
+- スレッド: ${content.content_variations?.thread_posts?.length}投稿
+- 最適時間: ${content.posting_optimization?.best_time}
+- ビジュアル: ${content.visual_guide?.image_type}
+`).join('\n')}
 
-### 生成されたコンテンツの概要
-${fullContents.map((c: any, i: number) => {
-  const articles = c.sourceArticles || []
-  return `
-コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
-- 文字数: ${c.characterCount}
-- 形式: ${c.format}
-- ${expertise}の視点: ${concepts[i]?.explanation || ''}
-- 参照記事: ${articles.length}件
-${articles.map((article: any) => `  • ${article.url || 'URLなし'}`).join('\n')}
-`
-}).join('\n')}
+**予想される投稿時間候補:**
+${optimalTimes.map((time, index) => `${index + 1}. ${time}`).join('\n')}
 
-「${expertise}」の専門家として、実装ガイダンスを提供します。
+**Chain of Thought 戦略策定手順:**
 
-### 実行タイムライン
-- 即時（2～4時間）：
-  - ${expertise}の専門性を示すコンテンツの最終調整
-  - ${platform}に適したビジュアル準備
-  - ${expertise}コミュニティへの事前告知
-  
-- 投稿期間（4～24時間）:
-  - ${expertise}の視点を最大限活かす最適なタイミング
-  - ${expertise}コミュニティの反応をリアルタイム監視
-  - ${style}に合った対応戦略
-  
-- フォローアップ（24～48時間）：
-  - ${expertise}の専門性を活かした追加コンテンツ
-  - ${platform}での継続的な会話の維持
-  - ${expertise}視点でのパフォーマンス分析
+🚀 **思考ステップ1: 即時行動計画**
+投稿前2-4時間で実施すべきタスク：
+- プロフィール最適化（${expertise}の専門性を強調）
+- ビジュアル素材の準備
+- モニタリングツールの設定
+- エンゲージメント初動メンバーへの連絡
 
-### 最適化技術
-- ${expertise}コミュニティのエンゲージメント監視
-- ${expertise}の視点から関連コンテンツへの戦略的コメント
-- ${expertise}の専門性を活かした複数プラットフォーム展開
-- ${expertise}分野のインフルエンサーとのエンゲージメント
+📅 **思考ステップ2: 投稿スケジュール**
+${platform}の特性と${expertise}コミュニティの活動時間を考慮：
+- 各コンテンツの最適投稿時間
+- 投稿間隔（最低4時間）
+- 曜日と時間帯の戦略的選択
 
-### リスクアセスメント
-- ${expertise}の専門性と論争リスクのバランス
-- ${expertise}分野での競争飽和分析
-- ${platform}アルゴリズムと${expertise}コンテンツの相性
+📊 **思考ステップ3: KPIとモニタリング**
+${expertise}分野での成功指標：
+- 初動1時間のエンゲージメント率
+- 6時間後のリーチ拡大
+- 24時間後のフォロワー増加
+- 48時間後の総合評価
 
-### 成功指標
-- ${expertise}コミュニティでのエンゲージメント率
-- ${expertise}関連のシェア速度とバイラル係数
-- ${platform}での${expertise}フォロワーの増加
-- ${expertise}に興味を持つ質の高い視聴者の獲得
+🔄 **思考ステップ4: フォローアップ戦略**
+勢いを維持し、長期的価値を創出：
+- ポジティブな反応への対応
+- 二次コンテンツの準備
+- 学習の抽出と次回への活用
 
-以下のJSON形式で回答してください：
+**重要な考慮事項:**
+- ${expertise}コミュニティの特性と行動パターン
+- ${platform}のアルゴリズム最新動向（2025年6月）
+- ${style}を維持しながらのエンゲージメント最大化
+- リスク管理と迅速な対応体制
 
-**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
-
-{
-  "executionStrategy": {
-    "immediate": {
-      "timeframe": "2-4時間",
-      "tasks": [
-        "具体的なタスク1",
-        "具体的なタスク2",
-        "具体的なタスク3"
-      ],
-      "priorityOrder": [1, 2, 3],
-      "readyPosts": 3
-    },
-    "postingWindow": {
-      "timeframe": "4-24時間",
-      "optimalTimes": [
-        {"content": 1, "time": "YYYY-MM-DD HH:MM", "reason": "理由"},
-        {"content": 2, "time": "YYYY-MM-DD HH:MM", "reason": "理由"},
-        {"content": 3, "time": "YYYY-MM-DD HH:MM", "reason": "理由"}
-      ],
-      "monitoringPlan": "モニタリング計画",
-      "responseStrategy": "レスポンス戦略"
-    },
-    "followUp": {
-      "timeframe": "24-48時間",
-      "amplificationTactics": ["戦術1", "戦術2"],
-      "followUpContent": ["フォローアップ案1", "案2"],
-      "performanceAnalysis": "分析計画"
-    }
-  },
-  "optimization": {
-    "engagementMonitoring": "エンゲージメント監視方法",
-    "strategicComments": ["コメント戦略1", "戦略2"],
-    "crossPlatformSharing": ["共有戦略1", "戦略2"],
-    "influencerEngagement": ["インフルエンサー戦略"]
-  },
-  "riskAssessment": {
-    "controversyRisk": {
-      "level": "low/medium/high",
-      "mitigation": "緩和策"
-    },
-    "competitiveSaturation": {
-      "analysis": "競争分析",
-      "differentiation": "差別化戦略"
-    },
-    "algorithmCompatibility": {
-      "score": 0.0-1.0,
-      "optimization": "最適化方法"
-    }
-  },
-  "successMetrics": {
-    "engagementRate": {
-      "baseline": "X%",
-      "target": "Y%"
-    },
-    "shareVelocity": {
-      "expectedRange": "X-Y shares/hour"
-    },
-    "crossPlatform": {
-      "reach": "予想リーチ"
-    },
-    "followerGrowth": {
-      "expectedRange": "X-Y followers"
-    }
-  },
-  "principles": {
-    "speedOverPerfection": "${config?.expertise || 'AI × 働き方'}の視点で、完璧さよりもスピードを重視する理由",
-    "authenticityOverOpportunism": "${config?.expertise || 'AI × 働き方'}の専門家として真実性を保つ方法",
-    "timingOverBrilliance": "${config?.expertise || 'AI × 働き方'}分野でのタイミングの重要性",
-    "engagementOverReach": "${config?.expertise || 'AI × 働き方'}コミュニティでのエンゲージメント重視戦略"
-  },
-  "conclusion": "品質を維持しながら迅速に実行します。バズるウィンドウはすぐに閉じますが、${config?.expertise || 'AI × 働き方'}の専門家として適切なコンテンツを適切なタイミングで提供することで、リーチを飛躍的に拡大できます。"
-}
-
-ウイルス予測の原則:
-- 完璧さよりもスピード - ${config?.expertise || 'AI × 働き方'}分野でもウイルスの窓は狭い
-- 機会主義よりも真実性 - ${config?.expertise || 'AI × 働き方'}の専門性を活かした本物のコンテンツ
-- 才能よりもタイミング - ${config?.expertise || 'AI × 働き方'}の視点でトレンドに乗る
-- リーチよりもエンゲージメント - ${config?.expertise || 'AI × 働き方'}コミュニティでのシェアとコメントに重点
-`
+各コンテンツを最大限に活用するための包括的な実行戦略を策定してください。`
 }

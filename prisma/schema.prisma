@@ -453,10 +453,10 @@ model ContentDraft {
   title                 String
   content               String   @db.Text
   explanation           String   @db.Text // なぜバズるかの説明
-  buzzFactors           String[] @map("buzz_factors")
+  buzzFactors           Json     @map("buzz_factors")
   targetAudience        String   @map("target_audience")
   estimatedEngagement   Json     @map("estimated_engagement")
-  hashtags              String[]
+  hashtags              Json
   status                String   @default("draft") // draft, reviewed, scheduled, posted
   editedContent         String?  @map("edited_content") @db.Text
   editorNotes           String?  @map("editor_notes") @db.Text

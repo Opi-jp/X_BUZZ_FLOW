@@ -152,6 +152,14 @@ Chain of Thought に従って、以下の手順でコンセプトを作成して
       try {
         conceptResult = JSON.parse(functionCall.arguments)
         console.log('Content concepts generated:', conceptResult.concepts?.length || 0)
+        
+        // デバッグ用：最初のコンセプトの構造を確認
+        if (conceptResult.concepts && conceptResult.concepts.length > 0) {
+          const firstConcept = conceptResult.concepts[0]
+          console.log('First concept keys:', Object.keys(firstConcept))
+          console.log('buzz_factors:', firstConcept.buzz_factors)
+          console.log('buzz_factors type:', Array.isArray(firstConcept.buzz_factors) ? 'array' : typeof firstConcept.buzz_factors)
+        }
       } catch (e) {
         console.error('Failed to parse concept function arguments:', e)
         return NextResponse.json(
@@ -189,18 +197,33 @@ Chain of Thought に従って、以下の手順でコンセプトを作成して
     // コンセプトを下書きとして保存
     const drafts = await Promise.all(
       (conceptResult.concepts || []).map(async (concept: any, index: number) => {
+        // buzzFactorsとhashtagsが確実に配列であることを保証
+        let buzzFactors: string[] = []
+        if (Array.isArray(concept.buzz_factors)) {
+          buzzFactors = concept.buzz_factors
+            .filter((f: any) => f != null)
+            .map((f: any) => String(f))
+        }
+        
+        let hashtags: string[] = []
+        if (Array.isArray(concept.hashtags)) {
+          hashtags = concept.hashtags
+            .filter((h: any) => h != null)
+            .map((h: any) => String(h))
+        }
+        
         return await prisma.contentDraft.create({
           data: {
             analysisId: sessionId,
             conceptType: concept.format || 'single',
-            category: concept.topic,
-            title: concept.title,
-            content: concept.hook,
-            explanation: concept.angle,
-            buzzFactors: concept.buzz_factors || [],
-            targetAudience: concept.target_audience || '',
+            category: concept.topic || 'その他',
+            title: concept.title || '無題',
+            content: concept.hook || '',
+            explanation: concept.angle || '',
+            buzzFactors: buzzFactors.length > 0 ? buzzFactors : ['一般的な関心'],
+            targetAudience: concept.target_audience || '一般',
             estimatedEngagement: concept.estimated_engagement || {},
-            hashtags: concept.hashtags || [],
+            hashtags: hashtags.length > 0 ? hashtags : ['#AI', '#働き方'],
             metadata: {
               conceptNumber: index + 1,
               platform: concept.platform,

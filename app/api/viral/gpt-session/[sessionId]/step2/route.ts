@@ -44,7 +44,7 @@ export async function POST(
 
     console.log('=== Step 2: Chain of Thought + Function Calling ===')
     console.log('Session ID:', sessionId)
-    console.log('Available viral opportunities:', step1Data.viralOpportunities?.length || 0)
+    console.log('Available viral opportunities:', step1Data.viralPatterns?.topOpportunities?.length || 0)
 
     const startTime = Date.now()
 
@@ -201,7 +201,7 @@ Chain of Thought（段階的思考）に従って、以下の手順で分析を�
 }
 
 function buildChainOfThoughtPrompt(config: any, step1Data: any) {
-  const opportunities = step1Data.viralOpportunities || []
+  const opportunities = step1Data.viralPatterns?.topOpportunities || []
   const currentDateJST = new Date().toLocaleDateString('ja-JP', { 
     year: 'numeric', 
     month: 'long', 
@@ -225,9 +225,9 @@ function buildChainOfThoughtPrompt(config: any, step1Data: any) {
 **ステップ1で特定されたバズ機会:**
 ${opportunities.map((opp: any, index: number) => `
 ${index + 1}. ${opp.topic}
-   - 洞察: ${opp.insight}
-   - ソース: ${opp.url}
-   - 初期スコア: ${opp.viralScore}
+   - 専門家視点: ${opp.expertAngle}
+   - 理由: ${opp.reasoning}
+   - 初期スコア: ${opp.overallScore}
 `).join('\n')}
 
 **Chain of Thought 分析手順:**

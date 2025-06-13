@@ -12,6 +12,13 @@ export async function POST(
 ) {
   try {
     const { sessionId } = await params
+    
+    // キャッシュを無効化
+    const headers = {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    }
 
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
@@ -21,229 +28,314 @@ export async function POST(
     if (!session) {
       return NextResponse.json(
         { error: 'セッションが見つかりません' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
-    const currentResponse = session.response as Record<string, any> || {}
-    const currentMetadata = session.metadata as Record<string, any> || {}
+    const config = session.metadata as any
+    const step3Data = (session.response as any)?.step3
 
-    if (!currentResponse.step3) {
+    if (!step3Data) {
       return NextResponse.json(
-        { error: 'Step 3を先に完了してください' },
-        { status: 400 }
+        { error: 'Step 3のデータが見つかりません。まずStep 3を実行してください。' },
+        { status: 400, headers }
       )
     }
 
-    // Step 4: 完全な投稿可能コンテンツ生成のプロンプト
-    const prompt = buildStep4Prompt(currentMetadata.config, currentResponse.step3)
+    console.log('=== Step 4: Complete Content Generation with Function Calling ===')
+    console.log('Session ID:', sessionId)
+    console.log('Available concepts:', step3Data.concepts?.length || 0)
 
-    console.log('Executing GPT Step 4 content generation...')
     const startTime = Date.now()
 
-    const completion = await openai.chat.completions.create({
-      model: currentMetadata.config.model || 'gpt-4-turbo-preview',
+    // Function Definition for complete content generation
+    const generateCompleteContentFunction = {
+      name: 'generate_complete_content',
+      description: '各コンセプトの完全な投稿可能コンテンツを生成',
+      parameters: {
+        type: 'object',
+        properties: {
+          complete_contents: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                concept_index: { type: 'number', description: 'コンセプトのインデックス（0-2）' },
+                topic: { type: 'string', description: 'トピック名' },
+                content_variations: {
+                  type: 'object',
+                  properties: {
+                    single_post: {
+                      type: 'object',
+                      properties: {
+                        text: { type: 'string', description: '完全な投稿テキスト（140文字以内）' },
+                        hashtags: { type: 'array', items: { type: 'string' }, description: 'ハッシュタグ' },
+                        character_count: { type: 'number', description: '文字数' }
+                      },
+                      required: ['text', 'hashtags', 'character_count']
+                    },
+                    thread_posts: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          post_number: { type: 'number', description: '投稿番号（1-5）' },
+                          text: { type: 'string', description: '投稿テキスト' },
+                          character_count: { type: 'number', description: '文字数' }
+                        },
+                        required: ['post_number', 'text', 'character_count']
+                      }
+                    }
+                  },
+                  required: ['single_post', 'thread_posts']
+                },
+                visual_guide: {
+                  type: 'object',
+                  properties: {
+                    description: { type: 'string', description: 'ビジュアル要素の説明' },
+                    image_type: { type: 'string', description: '画像タイプ（infographic/photo/illustration）' },
+                    key_elements: { type: 'array', items: { type: 'string' }, description: '重要な視覚要素' }
+                  },
+                  required: ['description', 'image_type', 'key_elements']
+                },
+                posting_optimization: {
+                  type: 'object',
+                  properties: {
+                    best_time: { type: 'string', description: '最適な投稿時間（例: 18:00-20:00）' },
+                    engagement_hooks: { type: 'array', items: { type: 'string' }, description: 'エンゲージメントを高める要素' },
+                    first_comment: { type: 'string', description: '最初のコメント案' }
+                  },
+                  required: ['best_time', 'engagement_hooks', 'first_comment']
+                }
+              },
+              required: ['concept_index', 'topic', 'content_variations', 'visual_guide', 'posting_optimization']
+            }
+          },
+          platform_specific_tips: {
+            type: 'object',
+            properties: {
+              twitter_algorithm: { type: 'array', items: { type: 'string' }, description: 'Twitterアルゴリズム最適化のヒント' },
+              trending_elements: { type: 'array', items: { type: 'string' }, description: 'トレンド要素の活用方法' },
+              engagement_strategy: { type: 'string', description: 'エンゲージメント戦略' }
+            },
+            required: ['twitter_algorithm', 'trending_elements', 'engagement_strategy']
+          },
+          content_summary: {
+            type: 'object',
+            properties: {
+              total_posts_ready: { type: 'number', description: '投稿準備完了数' },
+              estimated_reach: { type: 'string', description: '予想リーチ' },
+              confidence_score: { type: 'number', description: '成功確信度（0-1）' }
+            },
+            required: ['total_posts_ready', 'estimated_reach', 'confidence_score']
+          }
+        },
+        required: ['complete_contents', 'platform_specific_tips', 'content_summary']
+      }
+    }
+
+    // Chain of Thought プロンプト構築
+    const cotPrompt = buildContentGenerationPrompt(config.config, step3Data)
+
+    // GPT-4o Function Calling実行
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
       messages: [
         {
           role: 'system',
-          content: `あなたは、${currentMetadata.config?.expertise || currentMetadata.expertise || 'AIと働き方'}の専門家で、プロのコンテンツライターです。
-Step 3のコンセプトを、すぐに投稿できる完全なコンテンツに仕上げてください。
-文字数制限、プラットフォームの特性、エンゲージメントを最大化する要素を考慮してください。`
+          content: `あなたは、${config.config?.expertise || 'AI × 働き方'}の専門家で、バイラルコンテンツのプロです。
+          
+Step 3で作成されたコンセプトを、即座に投稿可能な完全なコンテンツに仕上げます。
+
+Chain of Thought（段階的思考）に従って：
+1. **コンセプト理解** - 各コンセプトの核心を把握
+2. **プラットフォーム最適化** - Twitter特有の制約と機会を活用
+3. **エンゲージメント設計** - バイラル要素の組み込み
+4. **実装詳細** - 文字数、改行、絵文字、ハッシュタグの最適化
+
+必ずgenerate_complete_content関数を呼び出して、構造化されたコンテンツを返してください。`
         },
         {
           role: 'user',
-          content: prompt
+          content: cotPrompt
         }
       ],
-      temperature: 0.7,
-      max_tokens: 4000,
-      response_format: { type: 'json_object' }
+      functions: [generateCompleteContentFunction],
+      function_call: { name: 'generate_complete_content' },
+      temperature: 0.8,
+      max_tokens: 4000
     })
 
     const duration = Date.now() - startTime
-    const response = JSON.parse(completion.choices[0].message.content || '{}')
+    console.log('Step 4 duration:', duration, 'ms')
 
-    // Step 4の結果を保存
+    // Function Callingの結果を取得
+    const functionCall = response.choices[0]?.message?.function_call
+    let contentResult = null
+
+    if (functionCall && functionCall.name === 'generate_complete_content') {
+      try {
+        contentResult = JSON.parse(functionCall.arguments)
+        console.log('Generated complete contents:', contentResult.complete_contents?.length || 0)
+      } catch (e) {
+        console.error('Failed to parse content generation result:', e)
+        return NextResponse.json(
+          { error: 'コンテンツ生成結果の解析に失敗しました' },
+          { status: 500, headers }
+        )
+      }
+    } else {
+      return NextResponse.json(
+        { error: 'コンテンツ生成Function Callingが実行されませんでした' },
+        { status: 500, headers }
+      )
+    }
+
+    // 結果をデータベースに保存
+    const currentResponse = session.response as Record<string, any> || {}
+    const currentMetadata = session.metadata as Record<string, any> || {}
+    
     await prisma.gptAnalysis.update({
       where: { id: sessionId },
       data: {
         response: {
           ...currentResponse,
-          step4: response
+          step4: contentResult
         },
-        tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
+        tokens: (session.tokens || 0) + (response.usage?.total_tokens || 0),
         duration: (session.duration || 0) + duration,
         metadata: {
           ...currentMetadata,
           currentStep: 4,
-          step4CompletedAt: new Date().toISOString()
+          step4CompletedAt: new Date().toISOString(),
+          usedFunctionCalling: true
         }
       }
     })
 
-    // 完全なコンテンツで下書きを更新
+    // 既存のContentDraftを更新（もし存在すれば）
     const drafts = await prisma.contentDraft.findMany({
       where: { analysisId: sessionId }
     })
 
-    await Promise.all(
-      response.fullContents.map(async (content: any, index: number) => {
-        const draft = drafts.find(d => {
-          const meta = d.metadata as any
-          return meta.conceptNumber === content.conceptNumber
-        })
-
-        if (draft) {
-          await prisma.contentDraft.update({
-            where: { id: draft.id },
-            data: {
-              content: content.fullContent,
-              editedContent: content.fullContent, // 初期値として同じ内容を設定
-              metadata: {
-                ...(draft.metadata as any),
-                fullContentGenerated: true,
-                visualDescription: content.visualDescription,
-                postingNotes: content.postingNotes,
-                platform: content.platform,
-                format: content.format
+    if (drafts.length > 0 && contentResult.complete_contents) {
+      await Promise.all(
+        contentResult.complete_contents.map(async (content: any) => {
+          const draft = drafts[content.concept_index]
+          if (draft) {
+            await prisma.contentDraft.update({
+              where: { id: draft.id },
+              data: {
+                content: content.content_variations.single_post.text,
+                editedContent: content.content_variations.single_post.text,
+                hashtags: content.content_variations.single_post.hashtags,
+                metadata: {
+                  ...(draft.metadata as any || {}),
+                  step4_content: content,
+                  visual_guide: content.visual_guide,
+                  posting_optimization: content.posting_optimization
+                }
               }
-            }
-          })
-        }
-      })
-    )
+            })
+          }
+        })
+      )
+    }
 
     return NextResponse.json({
       success: true,
       sessionId,
       step: 4,
-      response: {
-        fullContents: response.fullContents,
-        optimizationTips: response.optimizationTips
-      },
+      method: 'Chain of Thought + Function Calling',
+      response: contentResult,
       metrics: {
         duration,
-        tokens: completion.usage?.total_tokens
+        tokensUsed: response.usage?.total_tokens || 0,
+        contentsGenerated: contentResult.complete_contents?.length || 0
       },
       nextStep: {
         step: 5,
         url: `/api/viral/gpt-session/${sessionId}/step5`,
-        description: '実行戦略',
-        message: response.nextStepMessage || '投稿できる完全なバズるコンテンツができました。実行戦略については「続行」と入力してください。'
+        description: '実行戦略・KPI設定',
+        message: `${contentResult.complete_contents?.length || 0}個の完全なコンテンツを生成しました。実行戦略の策定に進みます。`
       }
-    })
+    }, { headers })
 
   } catch (error) {
-    console.error('GPT Step 4 error:', error)
+    console.error('Step 4 content generation error:', error)
     
     return NextResponse.json(
-      { error: 'Step 4 コンテンツ生成でエラーが発生しました' },
+      { 
+        error: 'Step 4 コンテンツ生成でエラーが発生しました',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
 }
 
-function buildStep4Prompt(config: any, step3Data: any) {
-  const concepts = step3Data.concepts
+function buildContentGenerationPrompt(config: any, step3Data: any) {
+  const concepts = step3Data.concepts || []
+  const currentDateJST = new Date().toLocaleDateString('ja-JP', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    timeZone: 'Asia/Tokyo'
+  })
   
-  // Handle nested config structure
-  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
-  const platform = config.config?.platform || config.platform || 'Twitter'
-  const style = config.config?.style || config.style || '洞察的'
+  const expertise = config?.expertise || 'AI × 働き方'
+  const platform = config?.platform || 'Twitter'
+  const style = config?.style || '洞察的'
 
-  return `
-あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+  return `**Chain of Thought: 完全なバイラルコンテンツ生成**
 
-## フェーズ3B: コンテンツ作成の完了
+設定情報:
+- 専門分野: ${expertise}
+- プラットフォーム: ${platform}
+- スタイル: ${style}
+- 現在時刻: ${currentDateJST}
 
-現在時刻: ${new Date().toLocaleString('ja-JP')}
+**Step 3で生成されたコンセプト:**
+${concepts.map((concept: any, index: number) => `
+${index + 1}. ${concept.topic}
+   - タイトル: ${concept.title}
+   - フック: ${concept.hook}
+   - アングル: ${concept.angle}
+   - ターゲット: ${concept.target_audience}
+   - タイミング: ${concept.timing}
+   - 信頼スコア: ${concept.confidence_score}
+`).join('\n')}
 
-### あなたの設定情報（フェーズ1-3から引き継ぎ）：
-1. あなたの専門分野または業界: ${expertise}
-2. 重点を置くプラットフォーム: ${platform}
-3. コンテンツのスタイル: ${style}
+**Chain of Thought 実装手順:**
 
-### フェーズ3で作成したコンセプト
-${concepts.map((c: any, idx: number) => {
-  const articles = c.sourceArticles || []
-  return `
-コンセプト${idx + 1}: ${c.title}
-- トピック: ${c.topic}
-- フック: ${c.hook}
-- 角度: ${c.angle}
-- ${expertise}の視点: ${c.explanation || ''}
-- 参照記事:
-${articles.map((article: any) => `  • ${article.title} (${article.url || 'URLなし'})`).join('\n')}
-`
-}).join('\n')}
+🎯 **思考ステップ1: コンテンツ変換**
+各コンセプトを${platform}の制約に合わせて完全なコンテンツに変換：
+- 単発投稿版（140文字以内）
+- スレッド版（2-5投稿）
 
-各コンセプトの完全な投稿可能なコンテンツを「${expertise}」の専門家として作成します。
+📱 **思考ステップ2: プラットフォーム最適化**
+${platform}のアルゴリズムとユーザー行動に最適化：
+- 最初の20文字で注目を集める
+- 適切な改行と空白の使用
+- エンゲージメントを促す要素
 
-### 完全なコンテンツ配信
-3つの概念ごとに以下を提供します：
+🎨 **思考ステップ3: ビジュアル設計**
+各コンテンツに最適なビジュアル要素：
+- 画像タイプの選択
+- 重要な視覚要素の特定
+- ${expertise}の専門性を視覚化
 
-コンセプト1: [トレンドトピック] - 完全なコンテンツ
-- ${platform}に表示されるとおりに、コピー＆ペースト可能な完全なコンテンツを作成
-- ${expertise}の専門性を活かしたテキスト
-- ${style}に合った書式、改行、絵文字、ハッシュタグを含める
-- 完成させてすぐに投稿できるように準備する
+⏰ **思考ステップ4: 投稿最適化**
+最大のインパクトを得るための詳細：
+- 最適な投稿時間帯
+- 初回コメントの準備
+- エンゲージメントフック
 
-視覚的説明: 必要な画像/ビデオの詳細な説明
-投稿に関する注意事項: 具体的なタイミングと最適化のヒント
+**重要な制約:**
+- 日本語での140文字制限を厳守
+- ${expertise}の専門性を明確に示す
+- ${style}のトーンを一貫して維持
+- 即座にコピー&ペースト可能な形式
 
-### ${platform}の制約と${expertise}の活かし方
-${platform === 'Twitter' ? `
-- 単発投稿: 140文字以内（日本語）で${expertise}の知見を凝縮
-- スレッド: ${expertise}の専門性を段階的に展開（2-5投稿）
-- 最初の投稿で${expertise}ならではのフックを提示
-- 改行は2回まで効果的に使用
-- ハッシュタグは${expertise}関連とトレンドを組み合わせて2-3個
-` : `
-- ${platform}のフォーマットに合わせて${expertise}の専門性を表現
-- ${style}を維持しながら情報を構成
-`}
-
-以下のJSON形式で回答してください：
-
-**重要: すべての内容を日本語で記述してください。英語は使用しないでください。**
-
-{
-  "fullContents": [
-    {
-      "conceptNumber": 1,
-      "topic": "対象トピック",
-      "platform": "${platform}",
-      "format": "single/thread",
-      "fullContent": "${expertise}の専門家として作成した完全な投稿内容（改行、絵文字、ハッシュタグ含む）",
-      "characterCount": 文字数,
-      "visualDescription": "${platform}に適した画像/ビデオの詳細な説明",
-      "postingNotes": "${expertise}の視点を最大限活かすための投稿タイミングとヒント",
-      "alternativeVersions": [
-        "${style}の別バージョン1",
-        "${style}の別バージョン2"
-      ],
-      "sourceArticles": [
-        {
-          "title": "引用する記事タイトル",
-          "url": "記事URL（引用ツイートで使用）",
-          "quoteTweet": "${expertise}の専門家として引用ツイートする場合の文面"
-        }
-      ]
-    }
-  ],
-  "optimizationTips": {
-    "bestTiming": "最適な投稿時間帯",
-    "engagementTactics": ["エンゲージメントを高める戦術"],
-    "avoidPitfalls": ["避けるべき落とし穴"]
-  },
-  "nextStepMessage": "投稿できる完全なバズるコンテンツができました。実行戦略については「続行」と入力してください。"
-}
-
-重要:
-- ${expertise}の視点を維持
-- ${style}のトーンを保つ
-- 文字数制限を厳守
-- エンゲージメントを最大化する要素を含める
-- すぐにコピー＆ペーストできる状態にする
-`
+各コンセプトについて、完全に仕上がった投稿可能なコンテンツを生成してください。`
 }
