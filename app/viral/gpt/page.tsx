@@ -9,7 +9,7 @@ export default function GptViralDashboard() {
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [config, setConfig] = useState({
-    expertise: 'AI × 働き方',
+    expertise: '',
     platform: 'Twitter',
     style: '解説 × エンタメ',
     model: 'gpt-4o'

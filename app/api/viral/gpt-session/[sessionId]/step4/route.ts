@@ -31,7 +31,8 @@ export async function POST(
       )
     }
 
-    const config = session.metadata as any
+    const metadata = session.metadata as any
+    const config = metadata?.config || {}
     const step3Data = (session.response as any)?.step3
 
     if (!step3Data) {
@@ -134,7 +135,7 @@ export async function POST(
     }
 
     // Chain of Thought プロンプト構築
-    const cotPrompt = buildContentGenerationPrompt(config.config, step3Data)
+    const cotPrompt = buildContentGenerationPrompt(config, step3Data)
 
     // GPT-4o Function Calling実行
     const response = await openai.chat.completions.create({
@@ -285,9 +286,9 @@ function buildContentGenerationPrompt(config: any, step3Data: any) {
     timeZone: 'Asia/Tokyo'
   })
   
-  const expertise = config?.expertise || 'AI × 働き方'
-  const platform = config?.platform || 'Twitter'
-  const style = config?.style || '洞察的'
+  const expertise = config.expertise
+  const platform = config.platform
+  const style = config.style
 
   return `**Chain of Thought: 完全なバイラルコンテンツ生成**
 

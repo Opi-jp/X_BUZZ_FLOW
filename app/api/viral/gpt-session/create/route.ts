@@ -8,12 +8,16 @@ export async function POST(request: NextRequest) {
       config = {}
     } = body
     
-    const {
-      expertise = 'AI × 働き方、25年のクリエイティブ経験',
-      platform = 'Twitter',
-      style = '解説 × エンタメ',
-      model = 'gpt-4o'
-    } = config
+    // デフォルト値を設定しない - ユーザーが必ず設定を提供することを期待
+    const { expertise, platform, style, model = 'gpt-4o' } = config
+    
+    // 必須フィールドの検証
+    if (!expertise || !platform || !style) {
+      return NextResponse.json(
+        { error: '必須設定が不足しています: expertise, platform, style' },
+        { status: 400 }
+      )
+    }
 
     // 新しい分析セッションを作成
     const session = await prisma.gptAnalysis.create({

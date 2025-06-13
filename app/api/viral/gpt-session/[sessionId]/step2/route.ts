@@ -31,7 +31,8 @@ export async function POST(
       )
     }
 
-    const config = session.metadata as any
+    const metadata = session.metadata as any
+    const config = metadata?.config || {}
     const step1Data = (session.response as any)?.step1
 
     if (!step1Data) {
@@ -91,7 +92,7 @@ export async function POST(
     }
 
     // Chain of Thought プロンプト構築
-    const cotPrompt = buildChainOfThoughtPrompt(config.config, step1Data)
+    const cotPrompt = buildChainOfThoughtPrompt(config, step1Data)
 
     // GPT-4o Function Calling実行
     const response = await openai.chat.completions.create({
@@ -208,10 +209,9 @@ function buildChainOfThoughtPrompt(config: any, step1Data: any) {
     timeZone: 'Asia/Tokyo'
   })
   
-  // Handle nested config structure
-  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
-  const platform = config.config?.platform || config.platform || 'Twitter'
-  const style = config.config?.style || config.style || '洞察的'
+  const expertise = config.expertise
+  const platform = config.platform
+  const style = config.style
 
   return `## フェーズ2: バズる機会評価
 

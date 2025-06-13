@@ -363,9 +363,9 @@ function buildExecutionStrategyPrompt(config: any, sessionData: any) {
     timeZone: 'Asia/Tokyo'
   })
   
-  const expertise = config?.expertise || 'AI × 働き方'
-  const platform = config?.platform || 'Twitter'
-  const style = config?.style || '洞察的'
+  const expertise = config.expertise
+  const platform = config.platform
+  const style = config.style
 
   // 今後48時間の最適投稿時間を計算
   const optimalTimes = []

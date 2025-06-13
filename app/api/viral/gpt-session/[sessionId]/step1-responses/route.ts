@@ -34,7 +34,8 @@ export async function POST(
       )
     }
 
-    const config = session.metadata as any
+    const metadata = session.metadata as any
+    const config = metadata?.config || {}
 
     console.log('Executing GPT Step 1 with two-phase approach...')
 
@@ -56,7 +57,7 @@ export async function POST(
     // タイムアウト対策: より短い収集プロンプト
     const collectionResponse = await openai.responses.create({
       model: selectedModel,
-      input: buildCollectionPrompt(config.config),
+      input: buildCollectionPrompt(config),
       tools: [
         {
           type: 'web_search' as any
@@ -112,13 +113,13 @@ export async function POST(
           role: 'system',
           content: `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
           
-専門分野: ${config.config?.expertise || 'AI × 働き方'}
-プラットフォーム: ${config.config?.platform || 'Twitter'}
-スタイル: ${config.config?.style || '洞察的'}`
+専門分野: ${config.expertise}
+プラットフォーム: ${config.platform}
+スタイル: ${config.style}`
         },
         {
           role: 'user',
-          content: buildAnalysisPrompt(config.config, articles) + '\n\n必ずJSON形式で回答してください。'
+          content: buildAnalysisPrompt(config, articles) + '\n\n必ずJSON形式で回答してください。'
         }
       ],
       temperature: 0.7,
@@ -206,13 +207,24 @@ export async function POST(
 }
 
 function buildCollectionPrompt(config: any) {
-  const today = new Date().toLocaleDateString('ja-JP')
+  const today = new Date()
+  const todayStr = today.toLocaleDateString('ja-JP')
+  const monthYear = today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })
+  const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const weekAgoStr = weekAgo.toISOString().split('T')[0]
   
   return `
-現在の日付: ${today}
-専門分野: ${config?.expertise || 'AI × 働き方'}
+現在の日付: ${todayStr}
+専門分野: ${config.expertise}
 
-web_searchツールを使用して、以下のカテゴリから48時間以内の最新記事を検索してください：
+web_searchツールを使用して、最新記事を検索してください。
+
+重要: 検索クエリには以下を含めてください：
+- "${monthYear}" または "latest" または "newest" または "past week"
+- "after:${weekAgoStr}" を検索クエリに含める
+- 1週間以上前の古い記事は除外
+
+以下のカテゴリから最新の記事を検索（${todayStr}を含む最近の情報のみ）：
 
 1. AI・テクノロジーの最新動向
 2. ビジネス・働き方の変革
@@ -250,7 +262,7 @@ function buildAnalysisPrompt(config: any, articles: any[]) {
 現在時刻: ${today.toLocaleString('ja-JP')}
 今日の日付: ${formattedDate}
 
-以下の${articles.length}件の記事を「${config?.expertise || 'AI × 働き方'}」の専門家として分析し、48時間以内にバズるチャンスを特定してください。
+以下の${articles.length}件の記事を「${config.expertise}」の専門家として分析し、48時間以内にバズるチャンスを特定してください。
 
 収集した記事：
 ${articles.map((article, i) => `
@@ -271,7 +283,7 @@ function buildPromptConcise(config: any) {
   
   return `
 あなたは、バズるコンテンツ戦略家です。
-専門分野: ${config?.expertise || 'AI × 働き方'}
+専門分野: ${config.expertise}
 
 web_searchツールを使用して、48時間以内にバズる可能性が高い最新ニュースを5件検索してください。
 
@@ -285,7 +297,7 @@ web_searchツールを使用して、48時間以内にバズる可能性が高�
       "source": "メディア名",
       "summary": "要約（50文字以内）",
       "keyPoints": ["ポイント1（20文字以内）", "ポイント2", "ポイント3"],
-      "expertPerspective": "${config?.expertise || 'AI × 働き方'}視点での解釈",
+      "expertPerspective": "${config.expertise}視点での解釈",
       "viralPotential": "バズる理由（簡潔に）"
     }
   ],
@@ -308,65 +320,70 @@ function buildPrompt(config: any) {
 今日の日付: ${formattedDate}
 
 ### あなたの設定情報：
-1. あなたの専門分野または業界: ${config.config?.expertise || config.expertise || 'AIと働き方'}
-2. 重点を置くプラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-3. コンテンツのスタイル: ${config.config?.style || config.style || '洞察的'}
+1. あなたの専門分野または業界: ${config.expertise}
+2. 重点を置くプラットフォーム: ${config.platform}
+3. コンテンツのスタイル: ${config.style}
 
 現在の出来事を分析して、あなたのコンテンツがバズるチャンスを特定します。
 
 【重要な指示】
-- あなたは「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、すべての情報を解釈してください
-- web_searchツールを使用して、2025年6月の最新ニュースを検索してください
-- 「latest」「today」「June 2025」などの時間指定を検索クエリに含めてください
-- 2025年5月31日以降のニュースのみを含めてください
+- あなたは「${config.expertise}」の専門家として、すべての情報を解釈してください
+- web_searchツールを使用して、最新ニュースを検索してください
+- 必ず検索クエリに以下のような時間指定を含めてください：
+  - 現在の年月を含む
+  - "latest" または "newest" または "最新"
+  - "this week" または "今週"
+- 1週間以上前の古い記事は除外してください
 - 必ず各記事の実際のURLを取得し、"url"フィールドに含めてください
-- 各カテゴリのニュースを「${config.config?.expertise || config.expertise || 'AIと働き方'}」の視点から解釈し、独自の切り口を見つけてください
+- 各カテゴリのニュースを「${config.expertise}」の視点から解釈し、独自の切り口を見つけてください
 
 ### 現在の出来事の分析
-以下の8カテゴリから最新のニュースやトレンドを調査し、「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、それぞれのニュースがあなたの専門分野とどう関連するか、どのような独自の視点を提供できるかを分析してください：
+各カテゴリについて、以下のような時間指定を含む検索クエリを使用してください。
+
+以下の8カテゴリから最新ニュースを調査し、「${config.expertise}」の専門家として分析してください：
 
 1. **最新ニュースとテクノロジー**
    - AI・機械学習の最新動向
    - テクノロジー業界の重要な発表
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の視点での解釈を追加
+   → ${config.expertise}の視点での解釈を追加
 
 2. **有名人の事件と世間の反応**
    - セレブリティの最新ニュース
    - 炎上事件や話題の発言
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}に関連付けた独自コメント
+   → ${config.expertise}に関連付けた独自コメント
 
 3. **政治的展開と議論**
    - 政治的な決定や政策変更
    - 選挙や政治スキャンダル
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}への影響や関連性
+   → ${config.expertise}への影響や関連性
 
 4. **ビジネスニュースと企業論争**
    - 企業の大型買収や倒産
    - CEO交代や企業スキャンダル
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の観点からの分析
+   → ${config.expertise}の観点からの分析
 
 5. **文化的瞬間と社会運動**
    - バイラルになった文化的現象
    - 社会運動やプロテスト
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}との接点や影響
+   → ${config.expertise}との接点や影響
 
 6. **スポーツイベントと予想外の結果**
    - 大きなスポーツイベントの結果
    - アスリートの話題
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の視点での考察
+   → ${config.expertise}の視点での考察
 
 7. **インターネットドラマとプラットフォーム論争**
    - SNSでの炎上事件
    - プラットフォームの方針変更
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}に基づく見解
+   → ${config.expertise}に基づく見解
 
 8. **その他の話題性の高いニュース**
    - 自然災害や事故
    - エンターテインメント業界のニュース
-   → ${config.config?.expertise || config.expertise || 'AIと働き方'}からの独自解釈
+   → ${config.expertise}からの独自解釈
 
 ### ソーシャルリスニング研究
-以下のプラットフォームでの動向を「${config.config?.expertise || config.expertise || 'AIと働き方'}」の視点から分析：
+以下のプラットフォームでの動向を「${config.expertise}」の視点から分析：
 - Twitterのトレンドトピックとハッシュタグの速度
 - TikTokサウンドとチャレンジの出現
 - Redditのホットな投稿とコメントの感情
@@ -376,17 +393,17 @@ function buildPrompt(config: any) {
 - ソーシャルメディアのエンゲージメントパターン
 
 ### ウイルスパターン認識
-「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、各トピックを以下の6軸で評価（0-1のスコア）：
+「${config.expertise}」の専門家として、各トピックを以下の6軸で評価（0-1のスコア）：
 - 論争レベル（強い意見を生み出す）
 - 感情の強さ（怒り、喜び、驚き、憤慨）
 - 共感性要因（多くの人に影響を与える）
 - 共有可能性（人々が広めたいと思うこと）
 - タイミングの敏感さ（関連性のウィンドウが狭い）
-- プラットフォームの調整（${config?.platform || 'Twitter'}文化に適合）
+- プラットフォームの調整（${config.platform}文化に適合）
 
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。**
-**重要: 「${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}」の専門家として、各記事にあなたの独自の視点や解釈を加えてください。**
+**重要: 「${config.expertise}」の専門家として、各記事にあなたの独自の視点や解釈を加えてください。**
 **重要: 検索した実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
 **重要: 各記事のURLフィールドは必須です。Web検索で見つけた実際のURLを含めてください。**
 
@@ -405,8 +422,8 @@ function buildPrompt(config: any) {
         "重要ポイント2",
         "重要ポイント3"
       ],
-      "expertPerspective": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の専門家としての独自の解釈や関連付け",
-      "viralPotential": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点から見たバズる可能性とその理由"
+      "expertPerspective": "${config.expertise}の専門家としての独自の解釈や関連付け",
+      "viralPotential": "${config.expertise}の視点から見たバズる可能性とその理由"
     }
   ],
   "currentEvents": {
@@ -419,21 +436,21 @@ function buildPrompt(config: any) {
     "topOpportunities": [
       {
         "topic": "具体的なトピック名（日本語）",
-        "expertAngle": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点からの独自アングル",
+        "expertAngle": "${config.expertise}の視点からの独自アングル",
         "overallScore": 0.0-1.0,
-        "reasoning": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の専門家として、なぜこれがバズるのかの説明"
+        "reasoning": "${config.expertise}の専門家として、なぜこれがバズるのかの説明"
       }
       // 必ず5件以上のバズる機会を特定してください
     ]
   },
   "opportunityCount": 数値（5以上）,
-  "summary": "「${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}」の専門家としての全体的な分析サマリー（200文字程度）",
+  "summary": "「${config.expertise}」の専門家としての全体的な分析サマリー（200文字程度）",
   "keyPoints": [
-    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント1",
-    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント2",
-    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント3",
-    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント4",
-    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント5"
+    "${config.expertise}の視点から見た重要ポイント1",
+    "${config.expertise}の視点から見た重要ポイント2",
+    "${config.expertise}の視点から見た重要ポイント3",
+    "${config.expertise}の視点から見た重要ポイント4",
+    "${config.expertise}の視点から見た重要ポイント5"
   ],
   "nextStepMessage": "トレンド分析に基づき、今後48時間以内に[X]件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。"
 }
