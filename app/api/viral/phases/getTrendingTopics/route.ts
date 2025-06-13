@@ -116,12 +116,12 @@ Include real URLs and data sources.`
               ...currentResponse,
               phase2: phase2Results
             },
-            status: 'phase2_completed',
             tokens: (session.tokens || 0) + 1500, // 概算
             duration: (session.duration || 0) + duration,
             metadata: {
               ...(session.metadata as any || {}),
               currentPhase: 2,
+              phase2Status: 'completed',
               phase2CompletedAt: new Date().toISOString()
             }
           }

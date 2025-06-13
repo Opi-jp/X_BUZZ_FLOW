@@ -140,12 +140,12 @@ export async function POST(request: NextRequest) {
               ...currentResponse,
               phase3a: phase3aResults
             },
-            status: 'phase3a_completed',
             tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
             duration: (session.duration || 0) + duration,
             metadata: {
               ...(session.metadata as any || {}),
               currentPhase: '3a',
+              phase3aStatus: 'completed',
               phase3aCompletedAt: new Date().toISOString()
             }
           }

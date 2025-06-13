@@ -140,7 +140,7 @@ export async function POST(
       metrics: {
         duration,
         tokens: completion.usage?.total_tokens,
-        totalDuration: session ? session.duration + duration : duration
+        totalDuration: session ? (session.duration || 0) + duration : duration
       },
       nextStep: {
         step: 'complete',

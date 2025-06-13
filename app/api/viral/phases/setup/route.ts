@@ -22,7 +22,13 @@ export async function POST(request: NextRequest) {
       await prisma.gptAnalysis.create({
         data: {
           id: sessionId,
-          status: 'phase1_completed',
+          analysisType: 'phase_analysis',
+          prompt: JSON.stringify({
+            theme,
+            platform,
+            tone,
+            phase: 1
+          }),
           response: {
             phase1: {
               config: { theme, platform, tone },
@@ -32,7 +38,8 @@ export async function POST(request: NextRequest) {
           metadata: {
             currentPhase: 1,
             config: { theme, platform, tone },
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            phase1Status: 'completed'
           },
           tokens: 0,
           duration: 0
