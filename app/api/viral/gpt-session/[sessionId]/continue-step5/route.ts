@@ -117,12 +117,12 @@ export async function POST(
             },
             tokens: (session.tokens || 0) + (completion.usage?.total_tokens || 0),
             duration: (session.duration || 0) + duration,
-            status: 'completed', // 全段階完了
             metadata: {
               ...(session.metadata as any || {}),
               currentStep: 5,
               step5CompletedAt: new Date().toISOString(),
-              chainOfThoughtCompleted: true
+              chainOfThoughtCompleted: true,
+              completed: true // 全段階完了
             }
           }
         })
