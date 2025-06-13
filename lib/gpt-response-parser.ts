@@ -13,6 +13,12 @@ export interface ParsedResponse {
  * Responses APIのレスポンスからテキストを抽出
  */
 export function extractTextFromResponse(response: any): string {
+  // nullやundefinedのチェック
+  if (!response) {
+    console.warn('Response is null or undefined')
+    return ''
+  }
+  
   // ケース1: 配列形式のレスポンス
   if (Array.isArray(response)) {
     const messageItem = response.find((item: any) => item.type === 'message')
@@ -22,9 +28,9 @@ export function extractTextFromResponse(response: any): string {
     
     // その他の配列要素から探す
     for (const item of response) {
-      if (item.output) return item.output
-      if (item.text) return item.text
-      if (item.content) return item.content
+      if (item.output && typeof item.output === 'string') return item.output
+      if (item.text && typeof item.text === 'string') return item.text
+      if (item.content && typeof item.content === 'string') return item.content
     }
   }
   
@@ -75,6 +81,12 @@ export function extractTextFromResponse(response: any): string {
  * テキストからJSONを抽出して解析
  */
 export function extractJsonFromText(text: string): any {
+  // 文字列チェック
+  if (typeof text !== 'string') {
+    console.warn('extractJsonFromText: input is not a string:', typeof text)
+    return null
+  }
+  
   // 方法1: Markdownコードブロック（末尾にスペースがある場合も対応）
   const markdownJsonMatch = text.match(/```json\s*\n?([\s\S]*?)\n?\s*```/)
   if (markdownJsonMatch) {

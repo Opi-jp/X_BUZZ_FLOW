@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import OpenAI from 'openai'
+import { parseGptResponse, extractTextFromResponse } from '@/lib/gpt-response-parser'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -55,32 +56,17 @@ export async function POST(
 
     const duration = Date.now() - startTime
     
-    // レスポンスを処理
-    let rawResponse = ''
-    if (Array.isArray(response)) {
-      // メッセージを探す
-      const messageItem = response.find((item: any) => item.type === 'message')
-      if (messageItem && messageItem.content && messageItem.content[0]) {
-        rawResponse = messageItem.content[0].text || ''
-      }
-    } else {
-      rawResponse = (response as any).output || JSON.stringify(response)
+    // parseGptResponseを使用してレスポンスを処理
+    const parsedResponse = parseGptResponse(response)
+    
+    if (!parsedResponse.success) {
+      console.error('Failed to parse GPT response:', parsedResponse.error)
+      console.error('Raw text:', parsedResponse.rawText?.substring(0, 500))
+      throw new Error(`GPT応答の解析に失敗しました: ${parsedResponse.error}`)
     }
     
-    console.log('GPT Step 1 response length:', rawResponse.length)
-    
-    let analysisResult
-    try {
-      // JSON部分を抽出（必要に応じて）
-      const jsonMatch = rawResponse.match(/\{[\s\S]*\}/)
-      const jsonStr = jsonMatch ? jsonMatch[0] : rawResponse
-      analysisResult = JSON.parse(jsonStr)
-      console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
-    } catch (parseError) {
-      console.error('Failed to parse GPT response:', parseError)
-      console.error('Raw response:', rawResponse.substring(0, 500))
-      throw new Error('GPT応答の解析に失敗しました')
-    }
+    const analysisResult = parsedResponse.data
+    console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
 
     // Step 1の結果を保存
     const currentResponse = session.response as Record<string, any> || {}
