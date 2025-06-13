@@ -7,10 +7,10 @@ import { authOptions } from '@/lib/auth-options'
 // GET: 投稿のパフォーマンスデータを取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ draftId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { draftId } = await params
+    const { id: draftId } = await params
 
     // 下書きを取得
     const draft = await prisma.contentDraft.findUnique({
@@ -104,7 +104,7 @@ export async function GET(
 // POST: パフォーマンスデータを更新（Twitter APIから取得）
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ draftId: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -116,7 +116,7 @@ export async function POST(
       )
     }
 
-    const { draftId } = await params
+    const { id: draftId } = await params
     const body = await request.json()
     const { tweetId, metric } = body
 
