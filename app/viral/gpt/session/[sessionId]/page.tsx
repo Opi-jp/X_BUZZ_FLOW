@@ -26,6 +26,7 @@ export default function GptSessionDetail() {
   const [chainResult, setChainResult] = useState<any>(null)
   const [executingChain, setExecutingChain] = useState(false)
   const [fastResult, setFastResult] = useState<any>(null)
+  const [stepProgress, setStepProgress] = useState<Record<number, number>>({})
 
   useEffect(() => {
     fetchSession()
@@ -54,7 +55,20 @@ export default function GptSessionDetail() {
 
   const executeStep = async (step: number) => {
     setLoading(true)
+    setStepProgress(prev => ({ ...prev, [step]: 0 }))
+    
     try {
+      // プログレスバーのシミュレーション
+      const progressInterval = setInterval(() => {
+        setStepProgress(prev => {
+          const current = prev[step] || 0
+          if (current < 90) {
+            return { ...prev, [step]: current + Math.random() * 15 }
+          }
+          return prev
+        })
+      }, 500)
+      
       // Step 1の場合は、使用するAPIを選択
       let endpoint = `/api/viral/gpt-session/${sessionId}/step${step}`
       
@@ -67,6 +81,9 @@ export default function GptSessionDetail() {
       const response = await fetch(endpoint, {
         method: 'POST'
       })
+
+      clearInterval(progressInterval)
+      setStepProgress(prev => ({ ...prev, [step]: 100 }))
 
       if (response.ok) {
         const data = await response.json()
@@ -92,6 +109,13 @@ export default function GptSessionDetail() {
       console.error(`Failed to execute step ${step}:`, error)
     } finally {
       setLoading(false)
+      // プログレスを少し遅延させてからリセット
+      setTimeout(() => {
+        setStepProgress(prev => {
+          const { [step]: _, ...rest } = prev
+          return rest
+        })
+      }, 1000)
     }
   }
 
@@ -101,10 +125,39 @@ export default function GptSessionDetail() {
 
   const executeChainOfThought = async () => {
     setExecutingChain(true)
+    // 全ステップのプログレスを初期化
+    setStepProgress({ 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 })
+    
     try {
+      // プログレスバーのシミュレーション（約15秒ずつ）
+      const progressIntervals: NodeJS.Timeout[] = []
+      
+      // 各ステップの進捗をシミュレート
+      for (let i = 1; i <= 5; i++) {
+        const delay = (i - 1) * 12000 // 各ステップの開始時間
+        setTimeout(() => {
+          const interval = setInterval(() => {
+            setStepProgress(prev => {
+              const current = prev[i] || 0
+              if (current < 95) {
+                return { ...prev, [i]: Math.min(current + Math.random() * 20, 95) }
+              }
+              return prev
+            })
+          }, 1000)
+          progressIntervals.push(interval)
+        }, delay)
+      }
+      
       const response = await fetch(`/api/viral/gpt-session/${sessionId}/chain-hybrid`, {
         method: 'POST'
       })
+
+      // すべてのインターバルをクリア
+      progressIntervals.forEach(interval => clearInterval(interval))
+      
+      // すべてのステップを100%に
+      setStepProgress({ 1: 100, 2: 100, 3: 100, 4: 100, 5: 100 })
 
       if (response.ok) {
         const data = await response.json()
@@ -224,6 +277,21 @@ export default function GptSessionDetail() {
                 </div>
               )}
               
+              {/* プログレスバー表示 */}
+              {stepProgress[currentStep] !== undefined && (
+                <div className="mb-4 max-w-md mx-auto">
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-blue-500 transition-all duration-500 ease-out"
+                      style={{ width: `${stepProgress[currentStep]}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 text-center">
+                    {Math.round(stepProgress[currentStep])}% 完了
+                  </p>
+                </div>
+              )}
+              
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => executeStep(currentStep)}
@@ -235,13 +303,35 @@ export default function GptSessionDetail() {
                 
                 {/* Chain of Thought一括実行ボタン */}
                 {currentStep === 1 && !session.metadata?.chainHybridCompleted && (
-                  <button
-                    onClick={executeChainOfThought}
-                    disabled={executingChain || loading}
-                    className="px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                  >
-                    {executingChain ? '実行中... (約60秒)' : '🚀 Chain of Thought一括実行'}
-                  </button>
+                  <>
+                    <button
+                      onClick={executeChainOfThought}
+                      disabled={executingChain || loading}
+                      className="px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    >
+                      {executingChain ? '実行中... (約60秒)' : '🚀 Chain of Thought一括実行'}
+                    </button>
+                    
+                    {/* Chain of Thought実行中のプログレス表示 */}
+                    {executingChain && (
+                      <div className="mt-4 space-y-2 max-w-md mx-auto">
+                        {[1, 2, 3, 4, 5].map(step => (
+                          <div key={step} className="flex items-center gap-2">
+                            <span className="text-xs text-gray-600 w-16">Step {step}:</span>
+                            <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-purple-500 transition-all duration-500 ease-out"
+                                style={{ width: `${stepProgress[step] || 0}%` }}
+                              />
+                            </div>
+                            <span className="text-xs text-gray-500 w-10 text-right">
+                              {Math.round(stepProgress[step] || 0)}%
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
               
@@ -485,51 +575,93 @@ export default function GptSessionDetail() {
                 )}
                 
                 {/* トップ機会 */}
-                {(stepData.step2.topOpportunities || stepData.step2.analysis?.topOpportunities || []).length > 0 ? (
-                  (stepData.step2.topOpportunities || stepData.step2.analysis?.topOpportunities).map((opp: any, idx: number) => (
+                {(stepData.step2.opportunities || []).length > 0 ? (
+                  stepData.step2.opportunities.map((opp: any, idx: number) => (
                   <div key={idx} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-medium text-lg">{opp.topic}</h3>
                       <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-                        スコア: {((opp.viralScore || 0) * 100).toFixed(0)}%
+                        予測: {((opp.engagement_prediction || 0) * 100).toFixed(0)}%
                       </span>
                     </div>
                     <div className="mb-3">
                       <p className="text-gray-700 mb-2">
-                        <span className="font-medium">最適な角度:</span> {opp.bestAngle}
+                        <span className="font-medium">コンテンツ角度:</span> {opp.content_angle}
                       </p>
                       <p className="text-gray-600 text-sm mb-1">
-                        <span className="font-medium">なぜこの角度か:</span> {opp.angleReasoning}
+                        <span className="font-medium">ターゲット感情:</span> {opp.target_emotion}
                       </p>
                     </div>
                     
-                    {/* コンテンツ角度の詳細 */}
-                    {opp.contentAngles && (
-                      <div className="bg-gray-50 rounded p-3 mb-3">
-                        <h4 className="text-sm font-medium mb-2">コンテンツ角度の提案:</h4>
-                        <ul className="space-y-1 text-sm">
-                          {opp.contentAngles.map((angle: any, angleIdx: number) => (
-                            <li key={angleIdx} className="flex items-start">
-                              <span className="text-gray-500 mr-2">•</span>
-                              <div>
-                                <span className="font-medium">{angle.type}:</span> {angle.description}
-                                {angle.expectedEngagement && (
-                                  <span className="text-xs text-gray-500 ml-2">
-                                    (期待エンゲージメント: {angle.expectedEngagement})
-                                  </span>
-                                )}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
+                    {/* バイラルパターン認識 */}
+                    <div className="bg-gray-50 rounded p-3 mb-3">
+                      <h4 className="text-sm font-medium mb-2">🔥 バイラルパターン認識:</h4>
+                      <div className="space-y-2">
+                        <div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">議論性:</span>
+                            <span className="font-medium">{(opp.controversy_level * 100).toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-red-400"
+                              style={{ width: `${opp.controversy_level * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">感情強度:</span>
+                            <span className="font-medium">{(opp.emotion_intensity * 100).toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-orange-400"
+                              style={{ width: `${opp.emotion_intensity * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">共感性:</span>
+                            <span className="font-medium">{(opp.relatability_factor * 100).toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-blue-400"
+                              style={{ width: `${opp.relatability_factor * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-gray-600">シェア性:</span>
+                            <span className="font-medium">{(opp.shareability * 100).toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-green-400"
+                              style={{ width: `${opp.shareability * 100}%` }}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    )}
+                    </div>
                     
                     <p className="text-gray-600 text-sm">
-                      <span className="font-medium">投稿推奨時間:</span> {opp.timeWindow}
+                      <span className="font-medium">投稿推奨時間:</span> {opp.opportunity_window}
                     </p>
                     <p className="text-gray-600 text-sm mt-1">
-                      <span className="font-medium">推奨事項:</span> {opp.specificRecommendation}
+                      <span className="font-medium">バイラル速度:</span> 
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ml-1 ${
+                        opp.viral_velocity === 'explosive' ? 'bg-red-100 text-red-800' :
+                        opp.viral_velocity === 'fast' ? 'bg-orange-100 text-orange-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {opp.viral_velocity === 'explosive' ? '🚀 爆発的' :
+                         opp.viral_velocity === 'fast' ? '⚡ 高速' :
+                         '🌱 段階的'}
+                      </span>
                     </p>
                   </div>
                   ))
