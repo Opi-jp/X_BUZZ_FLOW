@@ -11,14 +11,16 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> }
 ) {
+  const startTime = Date.now() // スコープ外に移動
+  
+  // Vercelタイムアウト対策: レスポンスヘッダー設定
+  const headers = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+  }
+  
   try {
     const { sessionId } = await params
-
-    // Vercelタイムアウト対策: レスポンスヘッダー設定
-    const headers = {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-    }
 
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
@@ -35,7 +37,6 @@ export async function POST(
     const config = session.metadata as any
 
     console.log('Executing GPT Step 1 with two-phase approach...')
-    const startTime = Date.now()
 
     // モデルがGPT-4oかチェック（web_searchはGPT-4oのみサポート）
     const selectedModel = config.config.model || 'gpt-4o'
