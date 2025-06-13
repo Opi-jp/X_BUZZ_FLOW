@@ -25,7 +25,11 @@ export async function POST(request: Request) {
     const startTime = Date.now()
     
     // プロンプトを構築
-    const prompt = `You are a viral content strategist specializing in ${config.expertise}.
+    const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
+    const platform = config.config?.platform || config.platform || 'Twitter'
+    const style = config.config?.style || config.style || '洞察的'
+    
+    const prompt = `You are a viral content strategist specializing in ${expertise}.
 
 CURRENT DATE AND TIME: ${now.toISOString()}
 Japan Standard Time: ${now.toLocaleDateString('ja-JP', { timeZone: 'Asia/Tokyo' })}
@@ -38,15 +42,15 @@ CRITICAL REQUIREMENTS:
    - "AI work transformation June 2025"
    - "リモートワーク AI活用 最新 6月"
    - "future of work AI June 12 2025"
-   - "${config.expertise} latest news"
+   - "${expertise} latest news"
 3. Every article MUST have a real URL (https://...)
 4. Focus on articles from the last 7 days
 5. Include source credibility (major tech sites preferred)
 
 YOUR CONFIGURATION:
-- Expertise: ${config.expertise}
-- Platform: ${config.platform}
-- Style: ${config.style}
+- Expertise: ${expertise}
+- Platform: ${platform}
+- Style: ${style}
 
 SEARCH THESE CATEGORIES:
 1. AI and work transformation
@@ -68,8 +72,8 @@ OUTPUT FORMAT (JSON only, no markdown):
       "importance": 0.0-1.0,
       "summary": "Brief summary in Japanese",
       "keyPoints": ["point 1", "point 2", "point 3"],
-      "expertPerspective": "How this relates to ${config.expertise}",
-      "viralPotential": "Why this could go viral from ${config.expertise} perspective"
+      "expertPerspective": "How this relates to ${expertise}",
+      "viralPotential": "Why this could go viral from ${expertise} perspective"
     }
   ],
   "stats": {

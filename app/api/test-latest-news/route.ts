@@ -26,7 +26,7 @@ export async function GET() {
     
     // より具体的な日付指定のプロンプト
     const prompt = `
-あなたは${config.expertise}の専門家です。
+あなたは${config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'}の専門家です。
 現在の日付: ${currentDate}
 時刻: ${now.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}
 
@@ -51,7 +51,7 @@ export async function GET() {
       "publishDate": "YYYY-MM-DD（必須：${sevenDaysAgo}以降）",
       "source": "メディア名",
       "summary": "100文字程度の要約（日本語）",
-      "expertPerspective": "${config.expertise}の専門家として：[具体的な洞察]",
+      "expertPerspective": "${config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'}の専門家として：[具体的な洞察]",
       "viralPotential": "X(Twitter)でバズる理由：[具体的な理由]"
     }
   ],
@@ -60,7 +60,7 @@ export async function GET() {
     "to": "${currentDate}",
     "articlesInRange": 数値
   },
-  "summary": "全体のまとめ（${config.expertise}の視点から）"
+  "summary": "全体のまとめ（${config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'}の視点から）"
 }`
 
     const response = await openai.responses.create({

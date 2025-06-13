@@ -94,7 +94,8 @@ export async function GET() {
 
 function buildTestPrompt(config: any) {
   const now = new Date()
-  return `You are a viral content strategist specializing in ${config.expertise}.
+  const expertise = config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'
+  return `You are a viral content strategist specializing in ${expertise}.
 
 Current date: ${now.toISOString()}
 
@@ -102,7 +103,7 @@ Use web_search to find 10 real news articles from the last 7 days.
 Focus on:
 1. AI and technology news
 2. Creative industry developments
-3. ${config.expertise} related topics
+3. ${expertise} related topics
 
 For each article, provide:
 {
@@ -113,7 +114,7 @@ For each article, provide:
       "publishDate": "YYYY-MM-DD",
       "source": "Publisher name",
       "summary": "Brief summary in Japanese",
-      "expertPerspective": "Your insight as ${config.expertise} expert",
+      "expertPerspective": "Your insight as ${expertise} expert",
       "viralPotential": "Why this could go viral"
     }
   ]

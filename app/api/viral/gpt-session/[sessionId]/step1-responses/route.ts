@@ -152,65 +152,65 @@ function buildPrompt(config: any) {
 今日の日付: ${formattedDate}
 
 ### あなたの設定情報：
-1. あなたの専門分野または業界: ${config.expertise}
-2. 重点を置くプラットフォーム: ${config.platform}
-3. コンテンツのスタイル: ${config.style}
+1. あなたの専門分野または業界: ${config.config?.expertise || config.expertise || 'AIと働き方'}
+2. 重点を置くプラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
+3. コンテンツのスタイル: ${config.config?.style || config.style || '洞察的'}
 
 現在の出来事を分析して、あなたのコンテンツがバズるチャンスを特定します。
 
 【重要な指示】
-- あなたは「${config.expertise}」の専門家として、すべての情報を解釈してください
+- あなたは「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、すべての情報を解釈してください
 - web_searchツールを使用して、2025年6月の最新ニュースを検索してください
 - 「latest」「today」「June 2025」などの時間指定を検索クエリに含めてください
 - 2025年5月31日以降のニュースのみを含めてください
 - 必ず各記事の実際のURLを取得し、"url"フィールドに含めてください
-- 各カテゴリのニュースを「${config.expertise}」の視点から解釈し、独自の切り口を見つけてください
+- 各カテゴリのニュースを「${config.config?.expertise || config.expertise || 'AIと働き方'}」の視点から解釈し、独自の切り口を見つけてください
 
 ### 現在の出来事の分析
-以下の8カテゴリから最新のニュースやトレンドを調査し、「${config.expertise}」の専門家として、それぞれのニュースがあなたの専門分野とどう関連するか、どのような独自の視点を提供できるかを分析してください：
+以下の8カテゴリから最新のニュースやトレンドを調査し、「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、それぞれのニュースがあなたの専門分野とどう関連するか、どのような独自の視点を提供できるかを分析してください：
 
 1. **最新ニュースとテクノロジー**
    - AI・機械学習の最新動向
    - テクノロジー業界の重要な発表
-   → ${config.expertise}の視点での解釈を追加
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の視点での解釈を追加
 
 2. **有名人の事件と世間の反応**
    - セレブリティの最新ニュース
    - 炎上事件や話題の発言
-   → ${config.expertise}に関連付けた独自コメント
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}に関連付けた独自コメント
 
 3. **政治的展開と議論**
    - 政治的な決定や政策変更
    - 選挙や政治スキャンダル
-   → ${config.expertise}への影響や関連性
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}への影響や関連性
 
 4. **ビジネスニュースと企業論争**
    - 企業の大型買収や倒産
    - CEO交代や企業スキャンダル
-   → ${config.expertise}の観点からの分析
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の観点からの分析
 
 5. **文化的瞬間と社会運動**
    - バイラルになった文化的現象
    - 社会運動やプロテスト
-   → ${config.expertise}との接点や影響
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}との接点や影響
 
 6. **スポーツイベントと予想外の結果**
    - 大きなスポーツイベントの結果
    - アスリートの話題
-   → ${config.expertise}の視点での考察
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}の視点での考察
 
 7. **インターネットドラマとプラットフォーム論争**
    - SNSでの炎上事件
    - プラットフォームの方針変更
-   → ${config.expertise}に基づく見解
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}に基づく見解
 
 8. **その他の話題性の高いニュース**
    - 自然災害や事故
    - エンターテインメント業界のニュース
-   → ${config.expertise}からの独自解釈
+   → ${config.config?.expertise || config.expertise || 'AIと働き方'}からの独自解釈
 
 ### ソーシャルリスニング研究
-以下のプラットフォームでの動向を「${config.expertise}」の視点から分析：
+以下のプラットフォームでの動向を「${config.config?.expertise || config.expertise || 'AIと働き方'}」の視点から分析：
 - Twitterのトレンドトピックとハッシュタグの速度
 - TikTokサウンドとチャレンジの出現
 - Redditのホットな投稿とコメントの感情
@@ -220,7 +220,7 @@ function buildPrompt(config: any) {
 - ソーシャルメディアのエンゲージメントパターン
 
 ### ウイルスパターン認識
-「${config.expertise}」の専門家として、各トピックを以下の6軸で評価（0-1のスコア）：
+「${config.config?.expertise || config.expertise || 'AIと働き方'}」の専門家として、各トピックを以下の6軸で評価（0-1のスコア）：
 - 論争レベル（強い意見を生み出す）
 - 感情の強さ（怒り、喜び、驚き、憤慨）
 - 共感性要因（多くの人に影響を与える）

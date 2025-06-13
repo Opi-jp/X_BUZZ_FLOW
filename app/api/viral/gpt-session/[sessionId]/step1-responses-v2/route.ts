@@ -55,7 +55,7 @@ export async function POST(
     const startTime = Date.now()
 
     // より明確な指示でプロンプトを構築
-    const enhancedPrompt = buildEnhancedPrompt(config.config)
+    const enhancedPrompt = buildEnhancedPrompt(config.config || config)
     
     console.log('Prompt preview:', enhancedPrompt.substring(0, 300) + '...')
 

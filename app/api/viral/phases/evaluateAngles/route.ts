@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
           role: 'system',
           content: `あなたはバズコンテンツ戦略家です。与えられたトピックに対して、バズを引き起こす可能性のある独自の視点（角度）を抽出してください。
 
-専門分野: ${config.theme}
-プラットフォーム: ${config.platform}
-スタイル: ${config.tone}
+専門分野: ${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}
+プラットフォーム: ${config.config?.platform || config.platform || 'X'}
+スタイル: ${config.config?.tone || config.tone || config.config?.style || config.style || '解説とエンタメ'}
 
 重要: 必ずJSON形式で出力してください。`
         },
@@ -194,9 +194,9 @@ export async function POST(request: NextRequest) {
 function buildAngleEvaluationPrompt(config: any, trendingTopics: any[]) {
   return `以下のトピックに対して、バズを引き起こす可能性のある視点（角度）を2つずつ考えてください。
 
-専門分野: ${config.theme}
-プラットフォーム: ${config.platform}
-スタイル: ${config.tone}
+専門分野: ${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}
+プラットフォーム: ${config.config?.platform || config.platform || 'X'}
+スタイル: ${config.config?.tone || config.tone || config.config?.style || config.style || '解説とエンタメ'}
 
 トピック一覧:
 ${trendingTopics.map((topic, i) => `${i + 1}. ${topic.topic}

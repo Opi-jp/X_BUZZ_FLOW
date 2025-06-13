@@ -18,7 +18,7 @@ export async function GET() {
     
     // Step 1のプロンプト（シンプル版）
     const prompt = `
-あなたは${config.expertise}の専門家です。
+あなたは${config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'}の専門家です。
 現在の日付: ${new Date().toLocaleDateString('ja-JP')}
 
 web_searchツールを使用して、最新のAIニュースを5件検索してください。
@@ -32,7 +32,7 @@ web_searchツールを使用して、最新のAIニュースを5件検索して�
       "publishDate": "YYYY-MM-DD",
       "source": "メディア名",
       "summary": "要約（日本語）",
-      "expertPerspective": "${config.expertise}の視点からの洞察",
+      "expertPerspective": "${config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'}の視点からの洞察",
       "viralPotential": "バズる可能性とその理由"
     }
   ],
@@ -76,7 +76,7 @@ web_searchツールを使用して、最新のAIニュースを5件検索して�
       
       // テーマの反映を確認
       const hasExpertPerspective = result.articleAnalysis.every((a: any) => 
-        a.expertPerspective && a.expertPerspective.includes(config.expertise)
+        a.expertPerspective && a.expertPerspective.includes(config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション')
       )
       
       return NextResponse.json({

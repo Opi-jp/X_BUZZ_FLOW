@@ -72,9 +72,9 @@ export async function POST(
           content: `あなたはバイラルコンテンツ戦略家です。Chain of Thoughtプロセスの第2段階を実行してください。
 
 前段階（Step 1）の結果を基に、各バズ機会の詳細評価を行います。
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}`
+専門分野: ${config.config?.expertise || config.expertise || 'AIと働き方'}
+プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
+スタイル: ${config.config?.style || config.style || '洞察的'}`
         },
         {
           role: 'user', 
@@ -183,7 +183,7 @@ ${String.fromCharCode(65 + i)}. ${opp.topic || opp.title}
 - リアルタイム話題性の持続力
 
 **2. コンテンツアングル特定**
-各機会に対する${config.expertise}専門家としての独自角度：
+各機会に対する${config.config?.expertise || config.expertise || 'AIと働き方'}専門家としての独自角度：
 - 反対意見・異論提起の角度
 - 専門家内部視点による分析角度
 - 個人体験・実例との接続角度
@@ -192,7 +192,7 @@ ${String.fromCharCode(65 + i)}. ${opp.topic || opp.title}
 - 舞台裏・裏側情報の角度
 - 他事例・過去事例との比較角度
 
-**3. ${config.platform}プラットフォーム最適化**
+**3. ${config.config?.platform || config.platform || 'Twitter'}プラットフォーム最適化**
 - エンゲージメント誘発要素
 - 共有・拡散メカニズム
 - ターゲット層の反応予測

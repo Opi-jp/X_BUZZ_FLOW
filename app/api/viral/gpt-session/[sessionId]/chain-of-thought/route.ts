@@ -342,9 +342,9 @@ function buildIntegratedChainOfThoughtPrompt(config: any) {
 現在時刻: ${currentDateJST}
 
 **あなたの設定:**
-- 専門分野: ${config.expertise}
-- プラットフォーム: ${config.platform}
-- スタイル: ${config.style}
+- 専門分野: ${config.config?.expertise || config.expertise || 'AI × 働き方'}
+- プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
+- スタイル: ${config.config?.style || config.style || '解説 × エンタメ'}
 
 **Chain of Thought 実行指示:**
 
@@ -353,7 +353,7 @@ function buildIntegratedChainOfThoughtPrompt(config: any) {
 🔍 **フェーズ1: リアルタイムトレンド発見**
 Web検索を実行して現在のバイラル機会を発見し、search_viral_trendsを呼び出してください。
 検索対象:
-- "${config.expertise} 最新ニュース ${currentDateJST}"
+- "${config.config?.expertise || config.expertise || 'AI × 働き方'} 最新ニュース ${currentDateJST}"
 - "AI技術 論争 ${currentDateJST}"
 - "働き方改革 話題 ${currentDateJST}"
 - "テクノロジー トレンド ${currentDateJST}"
@@ -364,7 +364,7 @@ Web検索を実行して現在のバイラル機会を発見し、search_viral_t
 
 💡 **フェーズ3: 戦略的コンセプト設計**
 フェーズ2の最高評価機会から3つのコンセプトを生成し、create_content_conceptsを呼び出してください。
-要件: ${config.expertise}の専門性を活かした独自角度、${config.platform}最適化
+要件: ${config.config?.expertise || config.expertise || 'AI × 働き方'}の専門性を活かした独自角度、${config.config?.platform || config.platform || 'Twitter'}最適化
 
 ✨ **フェーズ4: 投稿準備完了コンテンツ生成**
 フェーズ3の最優秀コンセプトから実際の投稿コンテンツを作成し、generate_complete_contentを呼び出してください。

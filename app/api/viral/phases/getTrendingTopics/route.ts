@@ -177,9 +177,9 @@ function buildTrendExtractionPrompt(config: any) {
   return `あなたはバズコンテンツ戦略家です。
 以下の専門情報に基づいて、今後48時間以内に注目される可能性が高いトレンドトピックを3〜5件抽出してください。
 
-- 専門分野：${config.theme}
-- プラットフォーム：${config.platform}  
-- スタイル：${config.tone}
+- 専門分野：${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}
+- プラットフォーム：${config.config?.platform || config.platform || 'X'}  
+- スタイル：${config.config?.tone || config.tone || config.config?.style || config.style || '解説とエンタメ'}
 - 現在時刻：${currentDate}
 
 web_searchツールを使用して最新の情報を収集し、各トピックに対し以下の情報を含めてください：
@@ -202,14 +202,14 @@ web_searchツールを使用して最新の情報を収集し、各トピック�
     "source": "拡散元",
     "dataUrl": "参照URL",
     "buzzPotential": 0.85,
-    "relevantTo": "${config.theme}",
-    "reasoning": "なぜこのトピックが${config.theme}に関連するか"
+    "relevantTo": "${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}",
+    "reasoning": "なぜこのトピックが${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}に関連するか"
   }
 ]
 
 重要：
 - 実在するトピック・ニュースのみ
-- ${config.theme}に関連性があるもの
+- ${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}に関連性があるもの
 - 48時間以内にバズる可能性があるもの
 - 実際のURLを含める`
 }
@@ -220,15 +220,15 @@ function extractTopicsFromText(text: string, config: any): any[] {
   
   const fallbackTopics = [
     {
-      topic: `${config.theme}の最新動向`,
+      topic: `${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}の最新動向`,
       summary: "業界の最新トレンドと動向",
       emotion: "anticipation",
       spreadPattern: "multi-platform", 
       source: "専門家",
       dataUrl: "https://example.com",
       buzzPotential: 0.75,
-      relevantTo: config.theme,
-      reasoning: `${config.theme}分野の専門性を活かした内容`
+      relevantTo: config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方',
+      reasoning: `${config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方'}分野の専門性を活かした内容`
     },
     {
       topic: "技術革新とその影響",
@@ -238,7 +238,7 @@ function extractTopicsFromText(text: string, config: any): any[] {
       source: "メディア", 
       dataUrl: "https://example.com",
       buzzPotential: 0.80,
-      relevantTo: config.theme,
+      relevantTo: config.config?.theme || config.theme || config.config?.expertise || config.expertise || 'AIと働き方',
       reasoning: "技術変化への専門的見解が求められている"
     }
   ]

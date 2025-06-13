@@ -208,13 +208,18 @@ function buildChainOfThoughtPrompt(config: any, step1Data: any) {
     day: 'numeric',
     timeZone: 'Asia/Tokyo'
   })
+  
+  // Handle nested config structure
+  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
+  const platform = config.config?.platform || config.platform || 'Twitter'
+  const style = config.config?.style || config.style || '洞察的'
 
   return `**Chain of Thought: バイラルトレンド詳細分析**
 
 設定情報:
-- 専門分野: ${config.expertise}
-- プラットフォーム: ${config.platform}
-- スタイル: ${config.style}
+- 専門分野: ${expertise}
+- プラットフォーム: ${platform}
+- スタイル: ${style}
 - 現在時刻: ${currentDateJST}
 
 **ステップ1で特定されたバズ機会:**
@@ -237,7 +242,7 @@ ${index + 1}. ${opp.topic}
 - 共感性要因（多くの人に影響を与えるか）
 - 共有可能性（人々が広めたいと思うか）
 - タイミング敏感性（関連性のウィンドウの狭さ）
-- プラットフォーム適合性（${config.platform}文化への適合度）
+- プラットフォーム適合性（${platform}文化への適合度）
 
 ⚡ **思考ステップ3: 拡散メカニズム予測**
 - バイラル速度（slow/medium/fast/explosive）

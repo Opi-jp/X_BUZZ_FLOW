@@ -46,7 +46,7 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `あなたは、${currentMetadata.config.expertise}の専門家で、ソーシャルメディア戦略家です。
+          content: `あなたは、${currentMetadata.config?.expertise || currentMetadata.expertise || 'AIと働き方'}の専門家で、ソーシャルメディア戦略家です。
 生成されたコンテンツを最大限に活用するための実行戦略を立案してください。`
         },
         {
@@ -119,6 +119,11 @@ export async function POST(
 function buildStep5Prompt(config: any, sessionData: any) {
   const concepts = sessionData.step3.concepts
   const fullContents = sessionData.step4.fullContents
+  
+  // Handle nested config structure
+  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
+  const platform = config.config?.platform || config.platform || 'Twitter'
+  const style = config.config?.style || config.style || '洞察的'
 
   return `
 あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
@@ -128,9 +133,9 @@ function buildStep5Prompt(config: any, sessionData: any) {
 現在時刻: ${new Date().toLocaleString('ja-JP')}
 
 ### あなたの設定情報（フェーズ1-3Bから引き継ぎ）：
-1. あなたの専門分野または業界: ${config.expertise}
-2. 重点を置くプラットフォーム: ${config.platform}
-3. コンテンツのスタイル: ${config.style}
+1. あなたの専門分野または業界: ${expertise}
+2. 重点を置くプラットフォーム: ${platform}
+3. コンテンツのスタイル: ${style}
 
 ### 生成されたコンテンツの概要
 ${fullContents.map((c: any, i: number) => {
@@ -139,46 +144,46 @@ ${fullContents.map((c: any, i: number) => {
 コンテンツ${i + 1}: ${concepts[i]?.topic || 'N/A'}
 - 文字数: ${c.characterCount}
 - 形式: ${c.format}
-- ${config.expertise}の視点: ${concepts[i]?.explanation || ''}
+- ${expertise}の視点: ${concepts[i]?.explanation || ''}
 - 参照記事: ${articles.length}件
 ${articles.map((article: any) => `  • ${article.url || 'URLなし'}`).join('\n')}
 `
 }).join('\n')}
 
-「${config.expertise}」の専門家として、実装ガイダンスを提供します。
+「${expertise}」の専門家として、実装ガイダンスを提供します。
 
 ### 実行タイムライン
 - 即時（2～4時間）：
-  - ${config.expertise}の専門性を示すコンテンツの最終調整
-  - ${config.platform}に適したビジュアル準備
-  - ${config.expertise}コミュニティへの事前告知
+  - ${expertise}の専門性を示すコンテンツの最終調整
+  - ${platform}に適したビジュアル準備
+  - ${expertise}コミュニティへの事前告知
   
 - 投稿期間（4～24時間）:
-  - ${config.expertise}の視点を最大限活かす最適なタイミング
-  - ${config.expertise}コミュニティの反応をリアルタイム監視
-  - ${config.style}に合った対応戦略
+  - ${expertise}の視点を最大限活かす最適なタイミング
+  - ${expertise}コミュニティの反応をリアルタイム監視
+  - ${style}に合った対応戦略
   
 - フォローアップ（24～48時間）：
-  - ${config.expertise}の専門性を活かした追加コンテンツ
-  - ${config.platform}での継続的な会話の維持
-  - ${config.expertise}視点でのパフォーマンス分析
+  - ${expertise}の専門性を活かした追加コンテンツ
+  - ${platform}での継続的な会話の維持
+  - ${expertise}視点でのパフォーマンス分析
 
 ### 最適化技術
-- ${config.expertise}コミュニティのエンゲージメント監視
-- ${config.expertise}の視点から関連コンテンツへの戦略的コメント
-- ${config.expertise}の専門性を活かした複数プラットフォーム展開
-- ${config.expertise}分野のインフルエンサーとのエンゲージメント
+- ${expertise}コミュニティのエンゲージメント監視
+- ${expertise}の視点から関連コンテンツへの戦略的コメント
+- ${expertise}の専門性を活かした複数プラットフォーム展開
+- ${expertise}分野のインフルエンサーとのエンゲージメント
 
 ### リスクアセスメント
-- ${config.expertise}の専門性と論争リスクのバランス
-- ${config.expertise}分野での競争飽和分析
-- ${config.platform}アルゴリズムと${config.expertise}コンテンツの相性
+- ${expertise}の専門性と論争リスクのバランス
+- ${expertise}分野での競争飽和分析
+- ${platform}アルゴリズムと${expertise}コンテンツの相性
 
 ### 成功指標
-- ${config.expertise}コミュニティでのエンゲージメント率
-- ${config.expertise}関連のシェア速度とバイラル係数
-- ${config.platform}での${config.expertise}フォロワーの増加
-- ${config.expertise}に興味を持つ質の高い視聴者の獲得
+- ${expertise}コミュニティでのエンゲージメント率
+- ${expertise}関連のシェア速度とバイラル係数
+- ${platform}での${expertise}フォロワーの増加
+- ${expertise}に興味を持つ質の高い視聴者の獲得
 
 以下のJSON形式で回答してください：
 

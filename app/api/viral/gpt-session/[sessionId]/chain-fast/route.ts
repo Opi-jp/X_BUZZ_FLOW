@@ -56,18 +56,18 @@ export async function POST(
           role: 'system',
           content: `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-専門分野「${config.config.expertise}」で、${config.config.platform}向けのバズるコンテンツを高速生成してください。`
+専門分野「${config.config?.expertise || config.expertise || 'AI × 働き方'}」で、${config.config?.platform || config.platform || 'Twitter'}向けのバズるコンテンツを高速生成してください。`
         },
         {
           role: 'user',
-          content: `現在の${config.config.expertise}に関するトレンドから、48時間以内にバズる可能性が最も高い投稿を1つ生成してください。
+          content: `現在の${config.config?.expertise || config.expertise || 'AI × 働き方'}に関するトレンドから、48時間以内にバズる可能性が最も高い投稿を1つ生成してください。
 
 以下のJSON形式で回答：
 {
   "trend_topic": "特定したトレンドトピック",
   "viral_score": 0.8,
   "content": {
-    "text": "${config.config.platform}用の完全な投稿テキスト（改行・絵文字含む）",
+    "text": "${config.config?.platform || config.platform || 'Twitter'}用の完全な投稿テキスト（改行・絵文字含む）",
     "hashtags": ["#タグ1", "#タグ2", "#タグ3"],
     "optimal_timing": "最適投稿時間"
   },
@@ -123,7 +123,7 @@ export async function POST(
       readyToPost: {
         status: true,
         content: result.content?.text || '',
-        platform: config.config.platform,
+        platform: config.config?.platform || config.platform || 'Twitter',
         timing: result.content?.optimal_timing || '2-4時間以内',
         hashtags: result.content?.hashtags || []
       },

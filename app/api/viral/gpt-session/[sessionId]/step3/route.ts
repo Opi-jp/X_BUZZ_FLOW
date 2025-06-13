@@ -260,13 +260,18 @@ function buildContentConceptPrompt(config: any, step2Data: any) {
     day: 'numeric',
     timeZone: 'Asia/Tokyo'
   })
+  
+  // Handle nested config structure
+  const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
+  const platform = config.config?.platform || config.platform || 'Twitter'
+  const style = config.config?.style || config.style || '洞察的'
 
   return `**Chain of Thought: バイラルコンテンツコンセプト生成**
 
 設定情報:
-- 専門分野: ${config.expertise}
-- プラットフォーム: ${config.platform}
-- スタイル: ${config.style}
+- 専門分野: ${expertise}
+- プラットフォーム: ${platform}
+- スタイル: ${style}
 - 現在時刻: ${currentDateJST}
 
 **Step 2 分析結果:**
@@ -291,16 +296,16 @@ ${index + 1}. ${opp.topic}
 **Chain of Thought コンセプト作成手順:**
 
 🎯 **思考ステップ1: 機会選択**
-Step 2の分析結果から、最もバズる可能性が高い3つの機会を選択し、${config.expertise}の専門性を活かせる角度を特定
+Step 2の分析結果から、最もバズる可能性が高い3つの機会を選択し、${expertise}の専門性を活かせる角度を特定
 
 💡 **思考ステップ2: 専門性統合**
-${config.expertise}の知見を活かして：
+${expertise}の知見を活かして：
 - 一般的な視点とは異なる独自の角度
 - 専門家だからこそ語れる洞察
-- ${config.style}スタイルに合ったアプローチ
+- ${style}スタイルに合ったアプローチ
 
 📱 **思考ステップ3: プラットフォーム最適化**
-${config.platform}の特性に合わせて：
+${platform}の特性に合わせて：
 - 最適な投稿形式（単発/スレッド/動画）
 - プラットフォーム文化に適合したトーン
 - エンゲージメントを最大化するCTA
@@ -310,7 +315,7 @@ ${config.platform}の特性に合わせて：
 - 成功確信度の算出
 - タイミング戦略の決定
 
-この分析を基に、create_viral_content_concepts関数を呼び出して、${config.expertise}の専門家として3つの具体的で実行可能なコンセプトを提供してください。
+この分析を基に、create_viral_content_concepts関数を呼び出して、${expertise}の専門家として3つの具体的で実行可能なコンセプトを提供してください。
 
-各コンセプトは48時間以内に実行可能で、${config.platform}での最大エンゲージメントを狙えるものにしてください。`
+各コンセプトは48時間以内に実行可能で、${platform}での最大エンゲージメントを狙えるものにしてください。`
 }
