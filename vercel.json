@@ -27,22 +27,22 @@
       "maxDuration": 60
     },
     "app/api/viral/gpt-session/[sessionId]/chain-hybrid/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/viral/gpt-session/[sessionId]/step1-responses/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/viral/gpt-session/[sessionId]/step2/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/viral/gpt-session/[sessionId]/step3/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/viral/gpt-session/[sessionId]/step4/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/viral/gpt-session/[sessionId]/step5/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 300
     }
   },
   "regions": ["iad1"]

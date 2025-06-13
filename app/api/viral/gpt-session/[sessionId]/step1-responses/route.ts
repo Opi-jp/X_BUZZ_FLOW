@@ -14,6 +14,12 @@ export async function POST(
   try {
     const { sessionId } = await params
 
+    // Vercelタイムアウト対策: レスポンスヘッダー設定
+    const headers = {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    }
+
     // セッション情報を取得
     const session = await prisma.gptAnalysis.findUnique({
       where: { id: sessionId }
@@ -22,7 +28,7 @@ export async function POST(
     if (!session) {
       return NextResponse.json(
         { error: 'セッションが見つかりません' },
-        { status: 404 }
+        { status: 404, headers }
       )
     }
 
@@ -38,7 +44,7 @@ export async function POST(
     if (!supportsWebSearch) {
       return NextResponse.json(
         { error: 'Web検索はGPT-4oモデルのみサポートされています。GPT-4oを選択してください。' },
-        { status: 400 }
+        { status: 400, headers }
       )
     }
 
@@ -46,6 +52,7 @@ export async function POST(
     console.log('Phase 1: Collecting articles with web search...')
     const phase1Start = Date.now()
     
+    // タイムアウト対策: より短い収集プロンプト
     const collectionResponse = await openai.responses.create({
       model: selectedModel,
       input: buildCollectionPrompt(config.config),
@@ -54,7 +61,7 @@ export async function POST(
           type: 'web_search' as any
         }
       ],
-      instructions: `web_searchツールを使用して記事を検索し、URLとタイトルのリストをJSON形式で返してください。説明文は含めないでください。`
+      instructions: `web_searchツールを使用して最新記事を5-7個検索し、URLとタイトルのリストをJSON形式で返してください。`
     } as any)
 
     const phase1Duration = Date.now() - phase1Start
@@ -114,7 +121,7 @@ export async function POST(
         }
       ],
       temperature: 0.7,
-      max_tokens: 4000,
+      max_tokens: 3000, // トークン数を削減
       response_format: { type: 'json_object' }
     })
     
@@ -174,7 +181,7 @@ export async function POST(
         description: 'トレンド評価・角度分析',
         message: analysisResult.nextStepMessage || `トレンド分析に基づき、今後48時間以内に${analysisResult.opportunityCount}件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。`
       }
-    })
+    }, { headers })
 
   } catch (error) {
     console.error('GPT Step 1 error:', error)
@@ -184,12 +191,15 @@ export async function POST(
       response: (error as any)?.response?.data || (error as any)?.response
     })
     
+    const totalDuration = Date.now() - startTime
+    
     return NextResponse.json(
       { 
         error: 'Step 1 分析でエラーが発生しました',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        timeout: totalDuration > 55000 ? 'タイムアウトの可能性があります' : undefined
       },
-      { status: 500 }
+      { status: 500, headers }
     )
   }
 }
