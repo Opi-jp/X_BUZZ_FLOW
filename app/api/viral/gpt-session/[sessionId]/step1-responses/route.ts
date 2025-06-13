@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import OpenAI from 'openai'
-import { parseGptResponse, extractTextFromResponse } from '@/lib/gpt-response-parser'
+import { parseGptResponse, extractTextFromResponse, extractJsonFromText } from '@/lib/gpt-response-parser'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -63,14 +63,28 @@ export async function POST(
     let articles = []
     try {
       const collectionText = extractTextFromResponse(collectionResponse)
-      const jsonMatch = collectionText.match(/\{[\s\S]*\}/)
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0])
-        articles = parsed.articles || []
+      console.log('Collection response type:', typeof collectionResponse)
+      console.log('Collection text length:', collectionText.length)
+      console.log('Collection text preview:', collectionText.substring(0, 200))
+      
+      // extractJsonFromTextを使用してより確実にJSONを抽出
+      const parsed = extractJsonFromText(collectionText)
+      if (parsed && parsed.articles) {
+        articles = parsed.articles
+      } else {
+        // フォールバック: 直接JSONマッチを試みる
+        const jsonMatch = collectionText.match(/\{[\s\S]*\}/)
+        if (jsonMatch) {
+          const parsedJson = JSON.parse(jsonMatch[0])
+          articles = parsedJson.articles || []
+        }
       }
+      
+      console.log(`Extracted ${articles.length} articles`)
     } catch (e) {
       console.error('Failed to parse article collection:', e)
-      throw new Error('記事収集に失敗しました')
+      console.error('Collection response:', JSON.stringify(collectionResponse).substring(0, 500))
+      throw new Error('記事収集に失敗しました: ' + (e instanceof Error ? e.message : String(e)))
     }
     
     console.log(`Phase 1 completed: ${articles.length} articles collected in ${phase1Duration}ms`)
@@ -96,7 +110,7 @@ export async function POST(
         },
         {
           role: 'user',
-          content: buildAnalysisPrompt(config.config, articles)
+          content: buildAnalysisPrompt(config.config, articles) + '\n\n必ずJSON形式で回答してください。'
         }
       ],
       temperature: 0.7,
@@ -164,9 +178,17 @@ export async function POST(
 
   } catch (error) {
     console.error('GPT Step 1 error:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      response: (error as any)?.response?.data || (error as any)?.response
+    })
     
     return NextResponse.json(
-      { error: 'Step 1 分析でエラーが発生しました' },
+      { 
+        error: 'Step 1 分析でエラーが発生しました',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
