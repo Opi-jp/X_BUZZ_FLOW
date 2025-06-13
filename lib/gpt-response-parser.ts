@@ -157,6 +157,33 @@ export function extractJsonFromText(text: string): any {
     console.warn('Direct JSON parse failed:', e)
   }
   
+  // 方法6: 不完全なJSONの修復を試みる
+  try {
+    // 末尾が切れている可能性がある場合の処理
+    let fixedText = text.trim()
+    
+    // 開いているブラケットやブレースを数える
+    const openBraces = (fixedText.match(/\{/g) || []).length
+    const closeBraces = (fixedText.match(/\}/g) || []).length
+    const openBrackets = (fixedText.match(/\[/g) || []).length
+    const closeBrackets = (fixedText.match(/\]/g) || []).length
+    
+    // 閉じタグが不足している場合は追加
+    for (let i = 0; i < openBrackets - closeBrackets; i++) {
+      fixedText += ']'
+    }
+    for (let i = 0; i < openBraces - closeBraces; i++) {
+      fixedText += '}'
+    }
+    
+    // 最後のカンマを削除（あれば）
+    fixedText = fixedText.replace(/,\s*([}\]])/, '$1')
+    
+    return JSON.parse(fixedText)
+  } catch (e) {
+    console.warn('JSON repair failed:', e)
+  }
+  
   return null
 }
 

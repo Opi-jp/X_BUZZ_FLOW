@@ -28,7 +28,7 @@ export async function POST(
 
     const config = session.metadata as any
 
-    console.log('Executing GPT Step 1 with Responses API and web search...')
+    console.log('Executing GPT Step 1 with two-phase approach...')
     const startTime = Date.now()
 
     // モデルがGPT-4oかチェック（web_searchはGPT-4oのみサポート）
@@ -42,31 +42,73 @@ export async function POST(
       )
     }
 
-    // Responses APIを使用してウェブ検索を実行
-    const response = await openai.responses.create({
+    // Phase 1: 記事収集（Responses API + Web検索）
+    console.log('Phase 1: Collecting articles with web search...')
+    const phase1Start = Date.now()
+    
+    const collectionResponse = await openai.responses.create({
       model: selectedModel,
-      input: buildPrompt(config.config),
+      input: buildCollectionPrompt(config.config),
       tools: [
         {
           type: 'web_search' as any
         }
       ],
-      instructions: `必ずJSON形式で回答してください。web_searchツールを使用して実際のニュース記事を検索し、各記事の実際のURLを含めてください。`
+      instructions: `web_searchツールを使用して記事を検索し、URLとタイトルのリストをJSON形式で返してください。説明文は含めないでください。`
     } as any)
 
-    const duration = Date.now() - startTime
+    const phase1Duration = Date.now() - phase1Start
     
-    // parseGptResponseを使用してレスポンスを処理
-    const parsedResponse = parseGptResponse(response)
-    
-    if (!parsedResponse.success) {
-      console.error('Failed to parse GPT response:', parsedResponse.error)
-      console.error('Raw text:', parsedResponse.rawText?.substring(0, 500))
-      throw new Error(`GPT応答の解析に失敗しました: ${parsedResponse.error}`)
+    // Phase 1の結果から記事リストを抽出
+    let articles = []
+    try {
+      const collectionText = extractTextFromResponse(collectionResponse)
+      const jsonMatch = collectionText.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0])
+        articles = parsed.articles || []
+      }
+    } catch (e) {
+      console.error('Failed to parse article collection:', e)
+      throw new Error('記事収集に失敗しました')
     }
     
-    const analysisResult = parsedResponse.data
-    console.log('Parsed response - articleAnalysis count:', analysisResult.articleAnalysis?.length || 0)
+    console.log(`Phase 1 completed: ${articles.length} articles collected in ${phase1Duration}ms`)
+    
+    if (articles.length === 0) {
+      throw new Error('記事が見つかりませんでした')
+    }
+    
+    // Phase 2: 詳細分析（Chat Completions API）
+    console.log('Phase 2: Analyzing articles with Chat API...')
+    const phase2Start = Date.now()
+    
+    const analysisCompletion = await openai.chat.completions.create({
+      model: selectedModel,
+      messages: [
+        {
+          role: 'system',
+          content: `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+          
+専門分野: ${config.config?.expertise || 'AI × 働き方'}
+プラットフォーム: ${config.config?.platform || 'Twitter'}
+スタイル: ${config.config?.style || '洞察的'}`
+        },
+        {
+          role: 'user',
+          content: buildAnalysisPrompt(config.config, articles)
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 4000,
+      response_format: { type: 'json_object' }
+    })
+    
+    const phase2Duration = Date.now() - phase2Start
+    const totalDuration = Date.now() - startTime
+    
+    const analysisResult = JSON.parse(analysisCompletion.choices[0].message.content || '{}')
+    console.log('Phase 2 completed - opportunities:', analysisResult.opportunityCount)
 
     // Step 1の結果を保存
     const currentResponse = session.response as Record<string, any> || {}
@@ -79,13 +121,15 @@ export async function POST(
           ...currentResponse,
           step1: analysisResult
         },
-        tokens: (session.tokens || 0) + ((response as any).usage?.total_tokens || 0),
-        duration: (session.duration || 0) + duration,
+        tokens: (session.tokens || 0) + (analysisCompletion.usage?.total_tokens || 0),
+        duration: (session.duration || 0) + totalDuration,
         metadata: {
           ...currentMetadata,
           currentStep: 1,
           step1CompletedAt: new Date().toISOString(),
-          usedResponsesAPI: true
+          usedTwoPhaseApproach: true,
+          phase1Duration,
+          phase2Duration
         }
       }
     })
@@ -104,8 +148,11 @@ export async function POST(
         keyPoints: analysisResult.keyPoints || []
       },
       metrics: {
-        duration,
-        tokens: (response as any).usage?.total_tokens
+        duration: totalDuration,
+        phase1Duration,
+        phase2Duration,
+        articlesCollected: articles.length,
+        tokens: analysisCompletion.usage?.total_tokens
       },
       nextStep: {
         step: 2,
@@ -123,6 +170,96 @@ export async function POST(
       { status: 500 }
     )
   }
+}
+
+function buildCollectionPrompt(config: any) {
+  const today = new Date().toLocaleDateString('ja-JP')
+  
+  return `
+現在の日付: ${today}
+専門分野: ${config?.expertise || 'AI × 働き方'}
+
+web_searchツールを使用して、以下のカテゴリから48時間以内の最新記事を検索してください：
+
+1. AI・テクノロジーの最新動向
+2. ビジネス・働き方の変革
+3. 注目の企業ニュース
+4. 話題の社会現象
+5. クリエイティブ・デザイン業界
+6. スタートアップ・イノベーション
+7. 政策・規制の動き
+8. 文化・エンターテイメント
+
+各カテゴリから1-2件、合計10-15件の記事を収集し、以下のJSON形式で返してください：
+
+{
+  "articles": [
+    {
+      "title": "記事の正確なタイトル",
+      "url": "https://実際のURL",
+      "publishDate": "YYYY-MM-DD",
+      "source": "メディア名",
+      "category": "カテゴリ名"
+    }
+  ]
+}
+
+重要：実在する記事のURLのみを含めてください。`
+}
+
+function buildAnalysisPrompt(config: any, articles: any[]) {
+  const today = new Date()
+  const formattedDate = today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+  
+  return `
+## フェーズ1: 収集した記事の詳細分析
+
+現在時刻: ${today.toLocaleString('ja-JP')}
+今日の日付: ${formattedDate}
+
+以下の${articles.length}件の記事を「${config?.expertise || 'AI × 働き方'}」の専門家として分析し、48時間以内にバズるチャンスを特定してください。
+
+収集した記事：
+${articles.map((article, i) => `
+${i + 1}. ${article.title}
+   URL: ${article.url}
+   日付: ${article.publishDate}
+   ソース: ${article.source}
+   カテゴリ: ${article.category}
+`).join('')}
+
+${buildPrompt(config).split('以下のJSON形式で回答してください。')[1] || ''}
+`
+}
+
+function buildPromptConcise(config: any) {
+  const today = new Date()
+  const formattedDate = today.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+  
+  return `
+あなたは、バズるコンテンツ戦略家です。
+専門分野: ${config?.expertise || 'AI × 働き方'}
+
+web_searchツールを使用して、48時間以内にバズる可能性が高い最新ニュースを5件検索してください。
+
+以下のJSON形式で回答（簡潔に）：
+{
+  "articleAnalysis": [
+    {
+      "title": "記事タイトル",
+      "url": "https://実際のURL（必須）",
+      "publishDate": "YYYY-MM-DD",
+      "source": "メディア名",
+      "summary": "要約（50文字以内）",
+      "keyPoints": ["ポイント1（20文字以内）", "ポイント2", "ポイント3"],
+      "expertPerspective": "${config?.expertise || 'AI × 働き方'}視点での解釈",
+      "viralPotential": "バズる理由（簡潔に）"
+    }
+  ],
+  "opportunityCount": 5,
+  "summary": "全体まとめ（100文字以内）",
+  "keyPoints": ["重要点1", "重要点2", "重要点3", "重要点4", "重要点5"]
+}`
 }
 
 function buildPrompt(config: any) {
@@ -240,37 +377,16 @@ function buildPrompt(config: any) {
     }
   ],
   "currentEvents": {
-    "latestNews": [{"title": "...", "impact": 0.0-1.0, "category": "..."}],
-    "celebrityEvents": [...],
-    "politicalDevelopments": [...],
-    "techAnnouncements": [...],
-    "businessNews": [...],
-    "culturalMoments": [...],
-    "sportsEvents": [...],
-    "internetDrama": [...]
+    "topCategories": ["カテゴリ1のトレンド", "カテゴリ2のトレンド", "カテゴリ3のトレンド"]
   },
   "socialListening": {
-    "twitter": {"trends": [...], "velocity": 0.0-1.0},
-    "tiktok": {"sounds": [...], "challenges": [...]},
-    "reddit": {"hotPosts": [...], "sentiment": "..."},
-    "googleTrends": {"risingQueries": [...]},
-    "youtube": {"trendingTopics": [...]},
-    "newsComments": {"sentiment": "...", "volume": 0.0-1.0},
-    "socialEngagement": {"patterns": [...]}
+    "topPlatforms": ["プラットフォーム1のトレンド", "プラットフォーム2のトレンド"]
   },
   "viralPatterns": {
     "topOpportunities": [
       {
         "topic": "具体的なトピック名（日本語）",
         "expertAngle": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点からの独自アングル",
-        "scores": {
-          "controversy": 0.0-1.0,
-          "emotion": 0.0-1.0,
-          "relatability": 0.0-1.0,
-          "shareability": 0.0-1.0,
-          "timing": 0.0-1.0,
-          "platformFit": 0.0-1.0
-        },
         "overallScore": 0.0-1.0,
         "reasoning": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の専門家として、なぜこれがバズるのかの説明"
       }
