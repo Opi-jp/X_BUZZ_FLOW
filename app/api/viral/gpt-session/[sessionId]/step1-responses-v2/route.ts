@@ -327,9 +327,9 @@ function buildEnhancedPrompt(config: any) {
   return `あなたはバイラルコンテンツ戦略家です。
 
 設定情報:
-1. 専門分野: ${config.expertise}
-2. プラットフォーム: ${config.platform}
-3. スタイル: ${config.style}
+1. 専門分野: ${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}
+2. プラットフォーム: ${config?.platform || 'Twitter'}
+3. スタイル: ${config?.style || '解説 × エンタメ'}
 
 現在時刻: ${currentDateJST}
 
@@ -363,11 +363,11 @@ web_searchツールを使用して、複数のソースを調査してくださ�
 - タイミングの敏感さ（関連性のウィンドウが狭い）
 - プラットフォームの調整（プラットフォーム文化に適合）
 
-【${config.expertise}の視点から】48時間以内にバズる可能性が高い機会を特定してください。
+【${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点から】48時間以内にバズる可能性が高い機会を特定してください。
 
 以下の形式で回答してください：
 
-以下の社会動向が、${config.expertise}の交差点で「即反応可能なバズ波」として浮上しています。
+以下の社会動向が、${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の交差点で「即反応可能なバズ波」として浮上しています。
 
 A. [具体的なバズ機会1のタイトル]
     • [具体的なデータや現象]

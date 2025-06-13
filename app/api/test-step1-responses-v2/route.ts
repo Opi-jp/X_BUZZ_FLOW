@@ -25,9 +25,9 @@ export async function POST(request: Request) {
     const startTime = Date.now()
     
     // プロンプトを構築
-    const expertise = config.config?.expertise || config.expertise || 'AIと働き方'
-    const platform = config.config?.platform || config.platform || 'Twitter'
-    const style = config.config?.style || config.style || '洞察的'
+    const expertise = config.expertise || 'AIと働き方'
+    const platform = config.platform || 'Twitter'
+    const style = config.style || '洞察的'
     
     const prompt = `You are a viral content strategist specializing in ${expertise}.
 

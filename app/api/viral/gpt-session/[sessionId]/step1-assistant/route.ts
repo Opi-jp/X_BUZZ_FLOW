@@ -166,9 +166,9 @@ export async function POST(
 function buildPrompt(config: any) {
   return `
 現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
+専門分野: ${config?.expertise || 'AI × 働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '解説 × エンタメ'}
 
 ## タスク: 最新ニュースを検索してバイラルコンテンツの機会を分析
 

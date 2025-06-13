@@ -72,9 +72,9 @@ export async function POST(
           content: `あなたはバイラルコンテンツ戦略家です。Chain of Thoughtプロセスの第4段階を実行してください。
 
 これまでの3段階で開発したコンセプトを基に、すぐに投稿できる完全なコンテンツを作成します。
-専門分野: ${config.config?.expertise || config.expertise || 'AIと働き方'}
-プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-スタイル: ${config.config?.style || config.style || '洞察的'}
+専門分野: ${config?.expertise || 'AIと働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '洞察的'}
 
 重要: コピー&ペーストでそのまま投稿できる形式で作成してください。`
         },
@@ -171,7 +171,7 @@ Step 3で開発した3つのコンセプトについて、以下の要件でコ�
 
 **作成要件**
 
-1. **${config.config?.platform || config.platform || 'Twitter'}最適化**
+1. **${config?.platform || 'Twitter'}最適化**
    - 文字数制限内（Twitter: 280文字/投稿）
    - プラットフォーム慣習に準拠
    - エンゲージメント最大化設計
@@ -182,7 +182,7 @@ Step 3で開発した3つのコンセプトについて、以下の要件でコ�
    - 改行・スペーシング最適化
    - 読みやすさ・視認性確保
 
-3. **${config.config?.style || config.style || '洞察的'}トーン統一**
+3. **${config?.style || '洞察的'}トーン統一**
    - 一貫したブランドボイス
    - ターゲット層に響く表現
    - 専門性と親しみやすさのバランス
@@ -218,7 +218,7 @@ Step 3で開発した3つのコンセプトについて、以下の要件でコ�
 - フォローアップ戦略
 
 重要: 
-- ${config.config?.expertise || config.expertise || 'AIと働き方'}の専門性を活かした内容
+- ${config?.expertise || 'AIと働き方'}の専門性を活かした内容
 - 50代クリエイティブディレクターのペルソナ反映
 - 実際のトレンド・ニュースに基づいた内容
 - バズる要素（論争性・感情喚起・共感性・共有性）の組み込み

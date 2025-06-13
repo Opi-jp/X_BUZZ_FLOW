@@ -72,9 +72,9 @@ export async function POST(
           content: `あなたはバイラルコンテンツ戦略家です。Chain of Thoughtプロセスの第2段階を実行してください。
 
 前段階（Step 1）の結果を基に、各バズ機会の詳細評価を行います。
-専門分野: ${config.config?.expertise || config.expertise || 'AIと働き方'}
-プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-スタイル: ${config.config?.style || config.style || '洞察的'}`
+専門分野: ${config?.expertise || 'AIと働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '洞察的'}`
         },
         {
           role: 'user', 

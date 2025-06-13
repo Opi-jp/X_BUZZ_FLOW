@@ -695,3 +695,87 @@ Step 5: 実行戦略
 - 自動投稿スケジューラー
 - パフォーマンストラッキング
 - トレンド分析ダッシュボード
+
+## 2025/06/12-13 Chain of Thought実装とデプロイ
+
+### 実装内容
+1. **Chain of Thought Hybrid** (`/api/viral/gpt-session/[sessionId]/chain-hybrid`)
+   - GPT-4o Responses API + Function Callingのハイブリッドアプローチ
+   - Phase 1: Web検索で実記事URL取得（最低5個）
+   - Phase 2-4: 構造化分析（トレンド分析→コンセプト生成→コンテンツ生成）
+   - 実行時間: 約50-60秒
+
+2. **高速生成モード** (`/api/viral/gpt-session/[sessionId]/chain-fast`)
+   - 単一プロンプトで5秒以内に生成
+   - Vercel Hobbyプランでも動作可能
+
+3. **UI/UX改善**
+   - 3つの実行モード選択UI
+   - Chain of Thought結果の専用表示
+   - Phase別実行結果サマリー
+
+### 技術的な解決事項
+1. **Responses API制限への対応**
+   - Function Callingが使えない問題をハイブリッドアプローチで解決
+
+2. **大量のTypeScriptエラー修正**
+   - error型の安全な処理（30ファイル以上）
+   - OpenAI API型エラー（tool_callsプロパティ）
+   - Prismaスキーマエラー（存在しないstatusフィールド）
+   - config構造エラー（ネストされた構造への対応）
+
+### 環境設定
+```bash
+# Vercel環境変数（pooler URL必須）
+DATABASE_URL=postgresql://postgres.atyvtqorzthnszyulquu:Yusuke0508@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=10
+OPENAI_API_KEY=sk-proj-...
+```
+
+### 重要な学習事項
+1. **config構造の二重化問題**
+   ```typescript
+   // 安全なアクセス方法
+   config.config?.expertise || config.expertise || 'デフォルト値'
+   ```
+
+2. **エラーハンドリングの統一**
+   ```typescript
+   error instanceof Error ? error.message : 'Unknown error'
+   ```
+
+3. **型安全性の重要性**
+   - any型は最小限に
+   - 必ず型ガードを使用
+
+### デプロイ状況
+- GitHub: https://github.com/Opi-jp/X_BUZZ_FLOW
+- 最新コミット: 05bf56a (2025/06/13)
+- Vercelビルド: TypeScriptエラーをすべて修正済み
+
+## 2025/06/13 Vercelデプロイガイドの追加
+
+### Vercelデプロイ時の注意事項
+
+ローカル開発とVercel環境の違いによるエラーを防ぐため、以下の点に注意：
+
+1. **Node.jsバージョンの指定**
+   - package.jsonに`"engines": { "node": "18.x" }`を明記
+   - または`.nvmrc`ファイルで指定
+
+2. **依存関係の管理**
+   - ビルドに必要なパッケージは`dependencies`に配置
+   - `devDependencies`は本番ビルドでインストールされない
+
+3. **ファイル名の大文字小文字**
+   - Macは大文字小文字を区別しないが、Vercel（Linux）は区別する
+   - import文とファイル名を厳密に一致させる
+
+4. **環境変数の設定**
+   - Vercelダッシュボードで全ての必要な環境変数を設定
+   - `NEXT_PUBLIC_*`プレフィックスに注意
+
+5. **TypeScript設定**
+   - strictモードでの型エラーに注意
+   - config構造の違い（ローカルとデータベース）に対応
+
+詳細は `/docs/vercel-deployment-guide.md` を参照。

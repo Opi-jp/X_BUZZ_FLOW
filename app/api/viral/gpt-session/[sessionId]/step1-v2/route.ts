@@ -226,9 +226,9 @@ function buildAnalysisPrompt(config: any, newsArticles: any[]) {
 
   return `
 現在時刻: ${new Date().toLocaleString('ja-JP')}
-専門分野: ${config.expertise}
-プラットフォーム: ${config.platform}
-スタイル: ${config.style}
+専門分野: ${config?.expertise || 'AI × 働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '解説 × エンタメ'}
 
 ## 取得した最新ニュース（${newsArticles.length}件）
 ${newsSection}

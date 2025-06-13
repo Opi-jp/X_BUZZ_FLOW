@@ -69,9 +69,9 @@ export async function POST(
 現在の日時: ${new Date().toLocaleDateString('ja-JP')}
 
 web_searchツールを使用して、以下の検索を実行してください：
-1. "${config.config?.expertise || config.expertise || 'AI × 働き方'} 最新ニュース ${new Date().toLocaleDateString('ja-JP')}"
-2. "${config.config?.expertise || config.expertise || 'AI × 働き方'} トレンド 話題"
-3. "${config.config?.expertise || config.expertise || 'AI × 働き方'} 論争 議論"
+1. "${config.config?.expertise || 'AI × 働き方'} 最新ニュース ${new Date().toLocaleDateString('ja-JP')}"
+2. "${config.config?.expertise || 'AI × 働き方'} トレンド 話題"
+3. "${config.config?.expertise || 'AI × 働き方'} 論争 議論"
 4. "AI 働き方 変革 最新"
 
 各検索結果から、48時間以内にバズる可能性が高い機会を特定し、以下の形式で整理してください：
@@ -180,7 +180,7 @@ ${opportunities.map((opp: any, i: number) => `${i + 1}. ${opp.topic}\n   - ${opp
 - 共感性要因（多くの人に影響を与えるか）
 - 共有可能性（人々が広めたいと思うか）
 - タイミング敏感性（関連性のウィンドウの狭さ）
-- プラットフォーム適合性（${config.config?.platform || config.platform || 'Twitter'}文化への適合度）`
+- プラットフォーム適合性（${config.config?.platform || 'Twitter'}文化への適合度）`
         }
       ],
       functions: [trendAnalysisFunction],
@@ -256,12 +256,12 @@ ${opportunities.map((opp: any, i: number) => `${i + 1}. ${opp.topic}\n   - ${opp
         },
         {
           role: 'user',
-          content: `最高のバズ機会「${bestOpportunity}」について、${config.config?.platform || config.platform || 'Twitter'}で${config.config?.style || config.style || '解説 × エンタメ'}スタイルの投稿コンセプトを3つ作成してください。
+          content: `最高のバズ機会「${bestOpportunity}」について、${config.config?.platform || 'Twitter'}で${config.config?.style || '解説 × エンタメ'}スタイルの投稿コンセプトを3つ作成してください。
 
-専門分野「${config.config?.expertise || config.expertise || 'AI × 働き方'}」の視点を活かし、create_content_concepts関数を呼び出してください。
+専門分野「${config.config?.expertise || 'AI × 働き方'}」の視点を活かし、create_content_concepts関数を呼び出してください。
 
 要件：
-- ${config.config?.platform || config.platform || 'Twitter'}に最適化された形式
+- ${config.config?.platform || 'Twitter'}に最適化された形式
 - 48時間以内にバズる可能性が高いコンテンツ
 - エンゲージメントを最大化するフック`
         }
@@ -302,16 +302,16 @@ ${opportunities.map((opp: any, i: number) => `${i + 1}. ${opp.topic}\n   - ${opp
         },
         {
           role: 'user',
-          content: `コンセプト「${bestConcept.title}」から、${config.config.platform}用の完全な投稿コンテンツを作成してください。
+          content: `コンセプト「${bestConcept.title}」から、${config.config?.platform || 'Twitter'}用の完全な投稿コンテンツを作成してください。
 
 フック: ${bestConcept.hook}
-角度: ${bestConcept.angle || config.config.expertise + 'の視点'}
+角度: ${bestConcept.angle || (config.config?.expertise || 'AI × 働き方') + 'の視点'}
 
 JSON形式で以下を含めて回答：
 {
   "complete_posts": [
     {
-      "platform": "${config.config.platform}",
+      "platform": "${config.config?.platform || 'Twitter'}",
       "format": "${bestConcept.format || 'single'}",
       "content": "コピー&ペースト可能な完全な投稿テキスト（改行・絵文字含む）",
       "visual_description": "推奨ビジュアル説明",
@@ -459,7 +459,7 @@ JSON形式で以下を含めて回答：
       readyToPost: {
         status: !!phase4Content.complete_posts?.[0]?.content,
         content: phase4Content.complete_posts?.[0]?.content || '',
-        platform: config.config?.platform || config.platform || 'Twitter',
+        platform: config.config?.platform || 'Twitter',
         timing: phase4Content.complete_posts?.[0]?.optimal_timing || '2-4時間以内',
         hashtags: phase4Content.complete_posts?.[0]?.hashtags || []
       },
@@ -490,11 +490,11 @@ function buildWebSearchPrompt(config: any) {
   return `**バイラルコンテンツ戦略家としての調査**
 
 現在時刻: ${currentDateJST}
-専門分野: ${config.config?.expertise || config.expertise || 'AI × 働き方'}
-プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-スタイル: ${config.config?.style || config.style || '解説 × エンタメ'}
+専門分野: ${config?.expertise || 'AI × 働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '解説 × エンタメ'}
 
-48時間以内にバズる可能性が高い「${config.config?.expertise || config.expertise || 'AI × 働き方'}」関連のトレンドを調査してください。
+48時間以内にバズる可能性が高い「${config?.expertise || 'AI × 働き方'}」関連のトレンドを調査してください。
 
 特に以下の観点で注目：
 - 論争を呼ぶ可能性がある話題

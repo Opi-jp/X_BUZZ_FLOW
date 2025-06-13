@@ -78,8 +78,8 @@ export function extractJsonFromText(text: string): any {
   // 方法1: Markdownコードブロック（末尾にスペースがある場合も対応）
   const markdownJsonMatch = text.match(/```json\s*\n?([\s\S]*?)\n?\s*```/)
   if (markdownJsonMatch) {
+    const jsonStr = markdownJsonMatch[1].trim()
     try {
-      const jsonStr = markdownJsonMatch[1].trim()
       return JSON.parse(jsonStr)
     } catch (e) {
       console.warn('Markdown JSON parse failed:', e)
@@ -182,7 +182,7 @@ export function parseGptResponse(response: any): ParsedResponse {
   } catch (error) {
     return {
       success: false,
-      error: error.message,
+      error: error instanceof Error ? error.message : 'Unknown error',
       rawText: JSON.stringify(response)
     }
   }

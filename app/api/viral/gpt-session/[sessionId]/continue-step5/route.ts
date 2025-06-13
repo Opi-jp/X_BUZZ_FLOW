@@ -75,9 +75,9 @@ export async function POST(
           content: `あなたはバイラルコンテンツ戦略家です。Chain of Thoughtプロセスの最終段階（第5段階）を実行してください。
 
 これまでの4段階で作成した完全なコンテンツの実行戦略を策定します。
-専門分野: ${config.config?.expertise || config.expertise || 'AIと働き方'}
-プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-スタイル: ${config.config?.style || config.style || '洞察的'}
+専門分野: ${config?.expertise || 'AIと働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '洞察的'}
 
 重要: 実践的で具体的なアクションプランを提供してください。`
         },
@@ -201,7 +201,7 @@ Step 4で作成した完全なコンテンツの効果的な実行戦略を策�
   - 議論の方向性誘導
 
 - **複数プラットフォーム展開**
-  - ${config.config?.platform || config.platform || 'Twitter'}での主要投稿
+  - ${config?.platform || 'Twitter'}での主要投稿
   - 他プラットフォームでの関連投稿
   - クロスプロモーション戦略
 
@@ -237,7 +237,7 @@ Step 4で作成した完全なコンテンツの効果的な実行戦略を策�
   - 表現の適切性確認
   - ブランドイメージ一貫性
 
-**5. ${config.config?.expertise || config.expertise || 'AIと働き方'}ブランディング強化**
+**5. ${config?.expertise || 'AIと働き方'}ブランディング強化**
 - **専門性アピール**
   - 実績・経験の効果的言及
   - 独自視点の価値提供

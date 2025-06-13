@@ -231,20 +231,26 @@ export async function POST(request: NextRequest) {
         for (const concept of results.step4.data.response.concepts) {
           await prisma.contentDraft.create({
             data: {
-              sessionId: sessionId,
-              conceptNumber: concept.conceptNumber || draftsCreated + 1,
-              topic: concept.topic || `コンセプト ${draftsCreated + 1}`,
-              platform: concept.platform || 'Twitter',
-              content: concept.fullContent || concept.content,
+              analysisId: sessionId,
+              conceptType: 'insight', // デフォルトタイプ
+              category: concept.category || 'AI依存',
+              title: concept.topic || `コンセプト ${draftsCreated + 1}`,
+              content: concept.fullContent || concept.content || '',
+              explanation: concept.explanation || 'バズる理由の説明',
+              buzzFactors: concept.buzzFactors || ['トレンド性', '共感性'],
+              targetAudience: concept.targetAudience || '一般層',
+              estimatedEngagement: {
+                likes: concept.estimatedLikes || 100,
+                retweets: concept.estimatedRetweets || 50,
+                comments: concept.estimatedComments || 20
+              },
               hashtags: concept.hashtags || [],
               metadata: {
                 viralScore: concept.viralScore,
                 timing: concept.timing,
                 visualDescription: concept.visualDescription,
                 executionStrategy: results.step5?.data?.response
-              },
-              createdAt: new Date(),
-              updatedAt: new Date()
+              }
             }
           })
           draftsCreated++

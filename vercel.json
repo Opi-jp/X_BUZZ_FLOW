@@ -1,4 +1,8 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "framework": "nextjs",
+  "installCommand": "npm install",
   "crons": [
     {
       "path": "/api/cron/collect-rss",
@@ -20,6 +24,24 @@
       "maxDuration": 30
     },
     "app/api/batch-collect/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/chain-hybrid/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/step1-responses/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/step2/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/step3/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/step4/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/viral/gpt-session/[sessionId]/step5/route.ts": {
       "maxDuration": 60
     }
   },

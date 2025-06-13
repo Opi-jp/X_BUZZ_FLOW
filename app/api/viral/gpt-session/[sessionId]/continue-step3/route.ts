@@ -69,9 +69,9 @@ export async function POST(
           content: `あなたはバイラルコンテンツ戦略家です。Chain of Thoughtプロセスの第3段階を実行してください。
 
 これまでの段階で特定・評価したバズ機会を基に、具体的なコンテンツコンセプトを作成します。
-専門分野: ${config.config?.expertise || config.expertise || 'AIと働き方'}
-プラットフォーム: ${config.config?.platform || config.platform || 'Twitter'}
-スタイル: ${config.config?.style || config.style || '洞察的'}`
+専門分野: ${config?.expertise || 'AIと働き方'}
+プラットフォーム: ${config?.platform || 'Twitter'}
+スタイル: ${config?.style || '洞察的'}`
         },
         {
           role: 'user', 
@@ -165,7 +165,7 @@ Step 2で特定した上位3つの機会について、以下のコンセプト�
 
 **コンセプトフレームワーク**
 
-1. **プラットフォーム最適化**: ${config.config?.platform || config.platform || 'Twitter'}
+1. **プラットフォーム最適化**: ${config?.platform || 'Twitter'}
    - 文字数制限・形式最適化
    - エンゲージメント要素組み込み
    - プラットフォーム固有の慣習活用
@@ -180,7 +180,7 @@ Step 2で特定した上位3つの機会について、以下のコンセプト�
    - 感情的インパクト
    - 好奇心喚起要素
 
-4. **独自角度（${config.config?.expertise || config.expertise || 'AIと働き方'}視点）**
+4. **独自角度（${config?.expertise || 'AIと働き方'}視点）**
    - 専門性を活かした切り口
    - 他との差別化ポイント
    - 権威性・信頼性要素
@@ -200,7 +200,7 @@ Step 2で特定した上位3つの機会について、以下のコンセプト�
    - コメント誘発要素
    - バイラル拡散メカニズム
 
-**${config.config?.style || config.style || '洞察的'}スタイルでの表現**
+**${config?.style || '洞察的'}スタイルでの表現**
 - トーン・語調の統一
 - ターゲット層に響く表現
 - ブランド・ペルソナ一貫性

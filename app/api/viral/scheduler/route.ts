@@ -38,15 +38,17 @@ export async function POST(request: NextRequest) {
     // スケジュール投稿を作成
     const scheduledPost = await prisma.scheduledPost.create({
       data: {
-        userId: user.id,
-        draftId: draftId,
-        content: draft.content,
-        platform: draft.platform,
-        scheduledAt: postTime,
-        status: 'scheduled',
-        metadata: {
+        content: draft.editedContent || draft.content,
+        scheduledTime: postTime,
+        status: 'DRAFT',
+        postType: 'NEW',
+        aiGenerated: true,
+        aiPrompt: draft.explanation,
+        editedContent: draft.editedContent,
+        postResult: {
+          draftId: draftId,
           hashtags: draft.hashtags,
-          topic: draft.topic,
+          title: draft.title,
           viralScore: (draft.metadata as any)?.viralScore,
           autoPost
         }
@@ -62,7 +64,7 @@ export async function POST(request: NextRequest) {
       success: true,
       scheduledPost: {
         id: scheduledPost.id,
-        scheduledAt: scheduledPost.scheduledAt,
+        scheduledAt: scheduledPost.scheduledTime,
         status: scheduledPost.status
       },
       message: `投稿を${postTime.toLocaleString('ja-JP')}にスケジュールしました`
@@ -91,22 +93,12 @@ export async function GET(request: NextRequest) {
 
     const posts = await prisma.scheduledPost.findMany({
       where: {
-        userId: user.id,
         status: status as any
       },
       orderBy: {
-        scheduledAt: 'asc'
+        scheduledTime: 'asc'
       },
-      take: limit,
-      include: {
-        user: {
-          select: {
-            name: true,
-            username: true,
-            image: true
-          }
-        }
-      }
+      take: limit
     })
 
     return NextResponse.json({
@@ -148,32 +140,38 @@ function calculateOptimalPostTime(): Date {
 
 // 投稿を実行
 async function executePost(scheduledPostId: string) {
+  let post
+  
   try {
-    const post = await prisma.scheduledPost.findUnique({
-      where: { id: scheduledPostId },
-      include: { user: true }
+    post = await prisma.scheduledPost.findUnique({
+      where: { id: scheduledPostId }
     })
 
     if (!post) {
       throw new Error('投稿が見つかりません')
     }
 
+    // ユーザー情報を取得
+    const user = await getCurrentUser()
+    if (!user || !user.accessToken) {
+      throw new Error('ユーザー情報が見つかりません')
+    }
+
     // Twitter APIで投稿
     const result = await postToTwitter({
       content: post.content,
-      userId: post.userId,
-      accessToken: post.user.accessToken
+      userId: user.id,
+      accessToken: user.accessToken
     })
 
     // ステータスを更新
     await prisma.scheduledPost.update({
       where: { id: scheduledPostId },
       data: {
-        status: 'posted',
+        status: 'POSTED',
         postedAt: new Date(),
-        tweetId: result.data.id,
-        metadata: {
-          ...(post.metadata as any || {}),
+        postResult: {
+          tweetId: result.data.id,
           twitterResponse: result.data
         }
       }
@@ -183,7 +181,7 @@ async function executePost(scheduledPostId: string) {
       success: true,
       message: '投稿が完了しました',
       tweetId: result.data.id,
-      tweetUrl: `https://twitter.com/${post.user.username}/status/${result.data.id}`
+      tweetUrl: `https://twitter.com/${user.username}/status/${result.data.id}`
     })
 
   } catch (error) {
@@ -193,9 +191,10 @@ async function executePost(scheduledPostId: string) {
     await prisma.scheduledPost.update({
       where: { id: scheduledPostId },
       data: {
-        status: 'failed',
-        metadata: {
-          error: error.message,
+        status: 'FAILED',
+        postResult: {
+          ...(post?.postResult as any || {}),
+          error: error instanceof Error ? error.message : 'Unknown error',
           failedAt: new Date().toISOString()
         }
       }

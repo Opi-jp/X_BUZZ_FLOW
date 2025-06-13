@@ -226,11 +226,11 @@ function buildPrompt(config: any) {
 - 共感性要因（多くの人に影響を与える）
 - 共有可能性（人々が広めたいと思うこと）
 - タイミングの敏感さ（関連性のウィンドウが狭い）
-- プラットフォームの調整（${config.platform}文化に適合）
+- プラットフォームの調整（${config?.platform || 'Twitter'}文化に適合）
 
 以下のJSON形式で回答してください。
 **重要: すべての内容を日本語で記述してください。**
-**重要: 「${config.expertise}」の専門家として、各記事にあなたの独自の視点や解釈を加えてください。**
+**重要: 「${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}」の専門家として、各記事にあなたの独自の視点や解釈を加えてください。**
 **重要: 検索した実際の記事に基づいて、10-15件程度の具体的な記事分析をarticleAnalysis配列に含めてください。**
 **重要: 各記事のURLフィールドは必須です。Web検索で見つけた実際のURLを含めてください。**
 
@@ -249,8 +249,8 @@ function buildPrompt(config: any) {
         "重要ポイント2",
         "重要ポイント3"
       ],
-      "expertPerspective": "${config.expertise}の専門家としての独自の解釈や関連付け",
-      "viralPotential": "${config.expertise}の視点から見たバズる可能性とその理由"
+      "expertPerspective": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の専門家としての独自の解釈や関連付け",
+      "viralPotential": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点から見たバズる可能性とその理由"
     }
   ],
   "currentEvents": {
@@ -276,7 +276,7 @@ function buildPrompt(config: any) {
     "topOpportunities": [
       {
         "topic": "具体的なトピック名（日本語）",
-        "expertAngle": "${config.expertise}の視点からの独自アングル",
+        "expertAngle": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の視点からの独自アングル",
         "scores": {
           "controversy": 0.0-1.0,
           "emotion": 0.0-1.0,
@@ -286,19 +286,19 @@ function buildPrompt(config: any) {
           "platformFit": 0.0-1.0
         },
         "overallScore": 0.0-1.0,
-        "reasoning": "${config.expertise}の専門家として、なぜこれがバズるのかの説明"
+        "reasoning": "${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}の専門家として、なぜこれがバズるのかの説明"
       }
       // 必ず5件以上のバズる機会を特定してください
     ]
   },
   "opportunityCount": 数値（5以上）,
-  "summary": "「${config.expertise}」の専門家としての全体的な分析サマリー（200文字程度）",
+  "summary": "「${config.config?.expertise || 'AI × 働き方、25年のクリエイティブ経験'}」の専門家としての全体的な分析サマリー（200文字程度）",
   "keyPoints": [
-    "${config.expertise}の視点から見た重要ポイント1",
-    "${config.expertise}の視点から見た重要ポイント2",
-    "${config.expertise}の視点から見た重要ポイント3",
-    "${config.expertise}の視点から見た重要ポイント4",
-    "${config.expertise}の視点から見た重要ポイント5"
+    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント1",
+    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント2",
+    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント3",
+    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント4",
+    "${config?.expertise || 'AI × 働き方'}の視点から見た重要ポイント5"
   ],
   "nextStepMessage": "トレンド分析に基づき、今後48時間以内に[X]件のバズるチャンスが出現すると特定しました。コンテンツのコンセプトについては「続行」と入力してください。"
 }

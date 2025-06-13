@@ -256,5 +256,5 @@ ${index + 1}. ${opp.topic}
 
 この分析を基に、analyze_viral_trends関数を呼び出して構造化された結果を提供してください。
 
-特に${config.expertise}の視点から、48時間以内に実行可能な最高のバズ機会を特定し、${config.platform}での成功確率が最も高いアプローチを推奨してください。`
+特に${config?.expertise || 'AI × 働き方'}の視点から、48時間以内に実行可能な最高のバズ機会を特定し、${config?.platform || 'Twitter'}での成功確率が最も高いアプローチを推奨してください。`
 }

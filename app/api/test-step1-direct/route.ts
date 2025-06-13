@@ -94,7 +94,7 @@ export async function GET() {
 
 function buildTestPrompt(config: any) {
   const now = new Date()
-  const expertise = config.config?.expertise || config.expertise || 'AIとクリエイティブディレクション'
+  const expertise = config.expertise || 'AIとクリエイティブディレクション'
   return `You are a viral content strategist specializing in ${expertise}.
 
 Current date: ${now.toISOString()}

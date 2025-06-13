@@ -254,18 +254,18 @@ ${articles.map((article: any) => `  • ${article.url || 'URLなし'}`).join('\n
     }
   },
   "principles": {
-    "speedOverPerfection": "${config.expertise}の視点で、完璧さよりもスピードを重視する理由",
-    "authenticityOverOpportunism": "${config.expertise}の専門家として真実性を保つ方法",
-    "timingOverBrilliance": "${config.expertise}分野でのタイミングの重要性",
-    "engagementOverReach": "${config.expertise}コミュニティでのエンゲージメント重視戦略"
+    "speedOverPerfection": "${config?.expertise || 'AI × 働き方'}の視点で、完璧さよりもスピードを重視する理由",
+    "authenticityOverOpportunism": "${config?.expertise || 'AI × 働き方'}の専門家として真実性を保つ方法",
+    "timingOverBrilliance": "${config?.expertise || 'AI × 働き方'}分野でのタイミングの重要性",
+    "engagementOverReach": "${config?.expertise || 'AI × 働き方'}コミュニティでのエンゲージメント重視戦略"
   },
-  "conclusion": "品質を維持しながら迅速に実行します。バズるウィンドウはすぐに閉じますが、${config.expertise}の専門家として適切なコンテンツを適切なタイミングで提供することで、リーチを飛躍的に拡大できます。"
+  "conclusion": "品質を維持しながら迅速に実行します。バズるウィンドウはすぐに閉じますが、${config?.expertise || 'AI × 働き方'}の専門家として適切なコンテンツを適切なタイミングで提供することで、リーチを飛躍的に拡大できます。"
 }
 
 ウイルス予測の原則:
-- 完璧さよりもスピード - ${config.expertise}分野でもウイルスの窓は狭い
-- 機会主義よりも真実性 - ${config.expertise}の専門性を活かした本物のコンテンツ
-- 才能よりもタイミング - ${config.expertise}の視点でトレンドに乗る
-- リーチよりもエンゲージメント - ${config.expertise}コミュニティでのシェアとコメントに重点
+- 完璧さよりもスピード - ${config?.expertise || 'AI × 働き方'}分野でもウイルスの窓は狭い
+- 機会主義よりも真実性 - ${config?.expertise || 'AI × 働き方'}の専門性を活かした本物のコンテンツ
+- 才能よりもタイミング - ${config?.expertise || 'AI × 働き方'}の視点でトレンドに乗る
+- リーチよりもエンゲージメント - ${config?.expertise || 'AI × 働き方'}コミュニティでのシェアとコメントに重点
 `
 }
