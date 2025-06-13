@@ -221,7 +221,7 @@ export async function POST(
     console.log('Chain of Thought API call duration:', duration, 'ms')
 
     // レスポンスの解析
-    let chainResult = {
+    let chainResult: any = {
       phase1_trends: null,
       phase2_analysis: null,
       phase3_concepts: null,
