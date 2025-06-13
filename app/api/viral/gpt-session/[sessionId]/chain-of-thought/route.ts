@@ -231,9 +231,9 @@ export async function POST(
     }
 
     // Tool callsの処理（Web検索とFunction calls）
-    if (response.tool_calls) {
-      chainResult.tool_calls = response.tool_calls
-      console.log('Tool calls executed:', response.tool_calls.length)
+    if ((response as any).tool_calls) {
+      chainResult.tool_calls = (response as any).tool_calls
+      console.log('Tool calls executed:', (response as any).tool_calls.length)
     }
 
     // 結果をデータベースに保存（エラー時はスキップ）
