@@ -141,7 +141,7 @@ CRITICAL INSTRUCTIONS:
           importance: 0.8,
           summary: opp.insight,
           keyPoints: [opp.insight],
-          expertPerspective: `${config.config?.expertise || config.expertise}の視点から重要な機会`,
+          expertPerspective: `${config.config?.expertise || 'AIと働き方'}の視点から重要な機会`,
           viralPotential: 'エンゲージメントと議論を促進する可能性が高い'
         }))
         
