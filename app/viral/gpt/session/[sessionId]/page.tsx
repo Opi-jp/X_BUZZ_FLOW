@@ -557,7 +557,6 @@ export default function GptSessionDetail() {
           )}
 
           {/* Step 2 結果 */}
-          {stepData.step2 && console.log('Step 2 data:', stepData.step2) || null}
           {stepData.step2 && (
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">

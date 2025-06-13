@@ -19,16 +19,16 @@ export async function GET(request: NextRequest) {
     const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000)
     
     // 今から5分以内に投稿予定の下書きを取得
-    const scheduledDrafts = await prisma.contentDraft.findMany({
+    const scheduledDrafts = await prisma.cotDraft.findMany({
       where: {
-        status: 'scheduled',
+        status: 'SCHEDULED',
         scheduledAt: {
           gte: now,
           lte: fiveMinutesFromNow
         }
       },
       include: {
-        analysis: true
+        session: true
       }
     })
     
@@ -47,8 +47,8 @@ export async function GET(request: NextRequest) {
         })
         
         // 投稿内容の最終チェック
-        const content = draft.editedContent || draft.content
-        const hashtags = (draft.hashtags || []).join(' ')
+        const content = draft.hook
+        const hashtags = (draft.hashtags || []).map(tag => `#${tag}`).join(' ')
         const fullContent = `${content}\n\n${hashtags}`
         
         // 文字数チェック（URLは23文字として計算）
@@ -59,36 +59,13 @@ export async function GET(request: NextRequest) {
         // Twitter投稿
         const tweet = await twitterClient.v2.tweet(fullContent)
         
-        // 投稿記録を作成
-        const viralPost = await prisma.viralPost.create({
-          data: {
-            platform: 'twitter',
-            content: fullContent,
-            hashtags: draft.hashtags || [],
-            postUrl: `https://twitter.com/user/status/${tweet.data.id}`,
-            platformPostId: tweet.data.id,
-            scheduledAt: draft.scheduledAt!,
-            postedAt: new Date(),
-            status: 'posted',
-            metadata: {
-              draftId: draft.id,
-              analysisId: draft.analysisId,
-              ...(draft.metadata as any || {})
-            }
-          }
-        })
-        
         // 下書きのステータスを更新
-        await prisma.contentDraft.update({
+        await prisma.cotDraft.update({
           where: { id: draft.id },
           data: {
-            status: 'posted',
-            metadata: {
-              ...(draft.metadata as any || {}),
-              postedAt: new Date().toISOString(),
-              viralPostId: viralPost.id,
-              tweetId: tweet.data.id
-            }
+            status: 'POSTED',
+            postedAt: new Date(),
+            postId: tweet.data.id
           }
         })
         
@@ -99,22 +76,15 @@ export async function GET(request: NextRequest) {
           postedAt: new Date().toISOString()
         })
         
-        // 30分後のパフォーマンス追跡をスケジュール
-        await schedulePerformanceTracking(viralPost.id, 30)
-        
       } catch (error) {
         console.error(`Failed to post draft ${draft.id}:`, error)
         
         // エラーを記録
-        await prisma.contentDraft.update({
+        await prisma.cotDraft.update({
           where: { id: draft.id },
           data: {
-            status: 'failed',
-            metadata: {
-              ...(draft.metadata as any || {}),
-              postError: error instanceof Error ? error.message : 'Unknown error',
-              failedAt: new Date().toISOString()
-            }
+            status: 'CANCELLED'
+            // エラー情報はログに記録
           }
         })
         
@@ -143,18 +113,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-}
-
-async function schedulePerformanceTracking(postId: string, delayMinutes: number) {
-  // パフォーマンス追跡タスクをキューに追加
-  // 実際の実装では、Vercel Queues、Upstash、または他のジョブキューサービスを使用
-  
-  await prisma.viralPostPerformance.create({
-    data: {
-      postId,
-      checkScheduledAt: new Date(Date.now() + delayMinutes * 60 * 1000),
-      checkType: `${delayMinutes}min`,
-      status: 'pending'
-    }
-  })
 }

@@ -1,53 +1,29 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build",
-  "framework": "nextjs",
-  "installCommand": "npm install",
+  "functions": {
+    "app/api/viral/cot-session/[sessionId]/process/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/viral/gpt-session/[sessionId]/step1-orchestrated/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/viral/gpt-session/[sessionId]/step1-orchestrated-v2/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/cron/process-cot-sessions/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/cron/scheduled-posts/route.ts": {
+      "maxDuration": 60
+    }
+  },
   "crons": [
     {
-      "path": "/api/cron/collect-rss",
-      "schedule": "0 21 * * *"
-    },
-    {
-      "path": "/api/viral/cron",
-      "schedule": "*/30 * * * *"
+      "path": "/api/cron/process-cot-sessions",
+      "schedule": "*/2 * * * *"
     },
     {
       "path": "/api/cron/scheduled-posts",
-      "schedule": "*/5 * * * *"
+      "schedule": "*/15 * * * *"
     }
-  ],
-  "functions": {
-    "app/api/collect/route.ts": {
-      "maxDuration": 30
-    },
-    "app/api/news/analyze/route.ts": {
-      "maxDuration": 30
-    },
-    "app/api/perplexity/trends/route.ts": {
-      "maxDuration": 30
-    },
-    "app/api/batch-collect/route.ts": {
-      "maxDuration": 60
-    },
-    "app/api/viral/gpt-session/[sessionId]/chain-hybrid/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/viral/gpt-session/[sessionId]/step1-responses/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/viral/gpt-session/[sessionId]/step2/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/viral/gpt-session/[sessionId]/step3/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/viral/gpt-session/[sessionId]/step4/route.ts": {
-      "maxDuration": 300
-    },
-    "app/api/viral/gpt-session/[sessionId]/step5/route.ts": {
-      "maxDuration": 300
-    }
-  },
-  "regions": ["iad1"]
+  ]
 }

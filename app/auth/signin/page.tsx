@@ -9,7 +9,7 @@ export default function SignInPage() {
   const handleSignIn = async () => {
     setLoading(true)
     try {
-      await signIn('twitter', { callbackUrl: '/dashboard' })
+      await signIn('twitter', { callbackUrl: '/viral/gpt' })
     } catch (error) {
       console.error('Sign in error:', error)
       setLoading(false)

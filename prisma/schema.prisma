@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
 model BuzzPost {
@@ -427,7 +427,7 @@ model ViralConfig {
   @@map("viral_config")
 }
 
-// GPTベース分析システム用モデル
+// GPTベース分析システム用モデル（旧構造）
 model GptAnalysis {
   id              String   @id @default(uuid())
   analysisType    String   @map("analysis_type") // comprehensive, trends, concepts
@@ -443,6 +443,112 @@ model GptAnalysis {
   
   @@index([analysisType])
   @@map("gpt_analyses")
+}
+
+// Chain of Thought用の新しいセッションモデル
+model CotSession {
+  id              String              @id @default(uuid())
+  sessionType     String              @map("session_type")
+  config          Json                @db.Json // expertise, style, platform
+  status          SessionStatus       @default(PENDING)
+  currentPhase    Int                 @default(1) @map("current_phase")
+  currentStep     PhaseStep           @default(THINK) @map("current_step")
+  
+  // 各フェーズの状態と結果
+  phases          Json?               @db.Json
+  
+  // 実行管理
+  retryCount      Int                 @default(0) @map("retry_count")
+  lastError       String?             @map("last_error")
+  nextRetryAt     DateTime?           @map("next_retry_at")
+  shouldCompleteBy DateTime?          @map("should_complete_by")
+  isTimedOut      Boolean             @default(false) @map("is_timed_out")
+  
+  // メトリクス
+  totalTokens     Int                 @default(0) @map("total_tokens")
+  totalDuration   Int                 @default(0) @map("total_duration") // ミリ秒
+  
+  createdAt       DateTime            @default(now()) @map("created_at")
+  updatedAt       DateTime            @updatedAt @map("updated_at")
+  completedAt     DateTime?           @map("completed_at")
+  
+  // リレーション
+  drafts          CotDraft[]
+  
+  @@index([status, nextRetryAt])
+  @@index([createdAt])
+  @@map("cot_sessions")
+}
+
+// CoTセッションから生成された下書き
+model CotDraft {
+  id                String      @id @default(uuid())
+  sessionId         String      @map("session_id")
+  conceptNumber     Int         @map("concept_number")
+  
+  // コンセプト詳細
+  title             String
+  hook              String      @db.Text
+  angle             String
+  structure         Json        // 投稿構造の配列
+  visual            String?
+  timing            String
+  hashtags          String[]
+  
+  // メタデータ
+  opportunity       String      // 元となった機会
+  platform          String
+  format            String      // スレッド/単発/動画など
+  expectedReaction  String      @map("expected_reaction")
+  
+  // ステータス
+  status            DraftStatus @default(DRAFT)
+  editedContent     String?     @db.Text @map("edited_content")
+  
+  // 投稿管理
+  scheduledAt       DateTime?   @map("scheduled_at")
+  postedAt          DateTime?   @map("posted_at")
+  postId            String?     @map("post_id")
+  
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  
+  // リレーション
+  session           CotSession  @relation(fields: [sessionId], references: [id])
+  
+  @@index([sessionId])
+  @@index([status])
+  @@map("cot_drafts")
+}
+
+enum SessionStatus {
+  PENDING
+  THINKING
+  EXECUTING  
+  INTEGRATING
+  COMPLETED
+  FAILED
+  PAUSED
+  
+  @@map("session_status")
+}
+
+enum PhaseStep {
+  THINK
+  EXECUTE
+  INTEGRATE
+  
+  @@map("phase_step")
+}
+
+enum DraftStatus {
+  DRAFT
+  EDITED
+  SCHEDULED
+  POSTED
+  CANCELLED
+  
+  @@map("draft_status")
 }
 
 model ContentDraft {

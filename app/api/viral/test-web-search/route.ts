@@ -38,7 +38,7 @@ web_searchツールを使用して、「AI 働き方 最新ニュース 2025年6
       outputText: outputText,
       extractedUrls: urlMatches,
       urlCount: urlMatches.length,
-      hasRealUrls: urlMatches.some(url => !url.includes('example.com')),
+      hasRealUrls: urlMatches.some((url: string) => !url.includes('example.com')),
       toolCalls: (response as any).tool_calls?.length || 0
     })
 

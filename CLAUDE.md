@@ -58,25 +58,77 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
 
 ## Vercelデプロイ時の注意事項
 
+### よくあるVercelデプロイエラーと解決策
+
+1. **Node.jsバージョンの不一致**
+   - **問題**: ローカルは18.x、Vercelが20.xで爆死
+   - **解決策**:
+   ```json
+   // package.json
+   "engines": {
+     "node": "18.x"
+   }
+   ```
+   または `.nvmrc` ファイルを作成:
+   ```
+   18.20.0
+   ```
+
+2. **開発用モジュールが本番で消える**
+   - **問題**: `devDependencies`のモジュールが本番ビルドで除外
+   - **例**: ts-node, @types/*, eslint-plugin-*
+   - **解決策**: 
+     - ビルドに必要なものは`dependencies`に移動
+     - または`vercel.json`で設定:
+     ```json
+     {
+       "installCommand": "npm install --production=false"
+     }
+     ```
+
+3. **ファイル名の大文字小文字問題**
+   - **問題**: Mac（大文字小文字区別なし） vs Vercel/Linux（区別あり）
+   - **例**: `./components/Button.tsx` vs `./components/button.tsx`
+   - **解決策**:
+   ```bash
+   # Gitで正しいファイル名に修正
+   git mv components/button.tsx components/Button.tsx
+   # importも修正
+   import Button from './components/Button' // 大文字小文字を厳密に
+   ```
+
+4. **環境変数の未設定**
+   - **問題**: `.env.local`はあるがVercelに環境変数なし
+   - **解決策**:
+   ```bash
+   # Vercel CLIで設定
+   vercel env add
+   # または管理画面で設定後、ローカルに同期
+   vercel env pull .env.local
+   ```
+
+5. **ビルドコマンドの相違**
+   - **問題**: ローカルとVercelでビルドステップが異なる
+   - **解決策**: `vercel.json`で明示的に指定
+   ```json
+   {
+     "buildCommand": "npm run build",
+     "outputDirectory": ".next"
+   }
+   ```
+
 ### 環境差異によるエラー防止策
 
-1. **Node.jsバージョンの指定**
-   - package.jsonに`"engines": { "node": "18.x" }`を明記
-
-2. **TypeScript設定**
+1. **TypeScript設定**
    - config構造の違いに注意：
    ```typescript
    // 安全なアクセス方法
    config.config?.expertise || config.expertise || 'デフォルト値'
    ```
 
-3. **データベース接続**
+2. **データベース接続**
    - Pooler URL（アプリケーション用）: Vercel環境で使用
    - Direct URL（マイグレーション用）: ローカル開発で使用
-
-4. **ファイル名の大文字小文字**
-   - Macは区別しないが、Vercel（Linux）は区別する
-   - import文とファイル名を厳密に一致させる
 
 ### Vercelとローカル環境の同期
 
@@ -103,6 +155,31 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
 4. **依存関係の管理**
    - package-lock.jsonを必ずコミット
    - 新しいパッケージ追加後は必ずビルドテスト
+
+### デバッグチェックリスト（エラー時の確認順序）
+
+1. **まずVercelのFunction Logsを確認**
+   ```bash
+   vercel logs --follow
+   ```
+
+2. **よくあるエラーと対処法**
+   - `Module not found`: ファイル名の大文字小文字をチェック
+   - `Cannot find module '@/...'`: tsconfig.jsonのpathsとVercelの整合性確認
+   - `Environment variable not found`: Vercel管理画面で環境変数確認
+   - `Prisma Client error`: `postinstall`スクリプトに`prisma generate`があるか確認
+
+3. **ローカルでVercel環境を再現**
+   ```bash
+   # Vercelと同じNode.jsバージョンを使用
+   nvm use 18
+   
+   # production buildを実行
+   NODE_ENV=production npm run build
+   
+   # Vercelと同じ環境変数で起動
+   vercel dev
+   ```
 
 ## GPTバイラルシステム完成版（2025年6月13日）
 
@@ -263,9 +340,108 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
 - オリジナルプロンプトの構造を忠実に再現
 - この設計思想はClaude Codeのセッションが切れても保持すること
 
+## 2025年6月13日の追加実装（午後）
+
+### 新しいChain of Thoughtアーキテクチャ
+
+#### DB構造の刷新
+1. **CotSessionモデル**
+   - 状態管理（PENDING, THINKING, EXECUTING, INTEGRATING, COMPLETED）
+   - フェーズ・ステップ管理
+   - リトライ・タイムアウト機能
+   
+2. **CotDraftモデル**
+   - 詳細なコンセプト情報
+   - 編集・投稿管理
+   - パフォーマンス追跡対応
+
+#### 新APIエンドポイント
+- `/api/viral/cot-session/create` - セッション作成
+- `/api/viral/cot-session/[sessionId]/process` - 処理実行
+- `/api/cron/process-cot-sessions` - 2分ごとの自動処理
+
+#### Orchestratedアプローチ
+- Think → Execute → Integrate の3段階構造
+- 動的検索クエリ生成（ハードコード問題解決）
+- Google Custom Search API統合
+- ワークフローに基づく精密なプロンプト設計
+
+#### 検索戦略の改善
+1. **ステップ0**: テーマと役割の把握
+2. **ステップ1**: 検索クエリの設計（テーマ解体→語彙設計→クエリ構成）
+3. **ステップ2**: 検索実行と結果整理
+4. **ステップ3**: GPTによる分析と機会特定
+
+#### 非同期処理対応
+- Cronジョブによる自動実行（2分間隔）
+- 状態管理によるレジューム機能
+- タイムアウト・リトライ機能
+
+#### Google Custom Search API実装
+- `/lib/google-search.ts` - APIクライアント実装
+- 検索クエリの実行（Phase1のExecuteステップ）
+- ニュース・日本語・SNS特化検索対応
+- `/docs/google-custom-search-setup.md` - セットアップガイド
+
+## 2025年6月13日の追加実装（午前）
+
+### Orchestrated Chain of Thought実装
+- **新ファイル**: `/lib/orchestrated-cot-strategy.ts`
+  - Think → Execute → Integrate の3段階アプローチ
+  - 動的な検索クエリ生成を実現
+  - ハードコード問題の解決策として実装
+
+- **Step1-Orchestrated**: `/app/api/viral/gpt-session/[sessionId]/step1-orchestrated/`
+  - Phase 1: GPT-4oで検索クエリ生成
+  - Phase 2: Google Custom Search API実行（スケルトン）
+  - Phase 3: 結果の統合・分析
+
+### 2段階Step1実装（JSON切れ対策）
+- **Step1-Collect**: `/app/api/viral/gpt-session/[sessionId]/step1-collect/`
+  - Responses APIで記事URL収集
+- **Step1-Analyze**: `/app/api/viral/gpt-session/[sessionId]/step1-analyze/`
+  - Chat Completions APIで詳細分析（max_tokens: 4000）
+
+### 新機能実装
+1. **A/Bテスト機能**
+   - `/app/api/viral/ab-test/generate/`
+   - コンテンツバリエーション生成
+
+2. **スケジュール投稿Cron**
+   - `/app/api/cron/scheduled-posts/`
+   - Vercel Cron対応（maxDuration: 60秒）
+   - CRON_SECRET認証
+
+3. **パフォーマンストラッキング強化**
+   - 30分、1時間、24時間後の自動計測
+
+### テストエンドポイント追加
+- 各種Web検索テスト用API
+- JSON形式検証用エンドポイント
+- ライブサーチテスト
+
+### ドキュメント追加
+- `/docs/step1-two-phase-implementation.md`
+- `/docs/deployment-session-20250613.md`
+- `/docs/deployment-session-20250613-v2.md`
+
+## 環境変数設定メモ
+
+### Google Custom Search API（設定済み）
+```bash
+# .env.localに追加
+GOOGLE_API_KEY=AIzaSy... # 実際のキーは.env.localで管理
+GOOGLE_SEARCH_ENGINE_ID= # 要設定：https://programmablesearchengine.google.com/で作成
+```
+
+**重要**: 
+- APIキーは絶対にコミットしない
+- `.env.local`で管理（.gitignoreに含まれている）
+- 検索エンジンIDはまだ未設定なので、Google Programmable Search Engineで作成が必要
+
 ## 連絡先・リポジトリ
 - GitHub: https://github.com/Opi-jp/X_BUZZ_FLOW
 - Vercel: https://x-buzz-flow.vercel.app
 
 ---
-*最終更新: 2025/06/13*
+*最終更新: 2025/06/13 22:00*

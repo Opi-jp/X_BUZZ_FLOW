@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect, useRef } from 'react'
 import { formatInTimeZone } from 'date-fns-tz'
 import { ja } from 'date-fns/locale'
