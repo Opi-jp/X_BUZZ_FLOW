@@ -13,11 +13,10 @@ export async function POST(
   try {
     const { sessionId } = await params
     
-    // キャッシュを無効化
+    // Vercelタイムアウト対策: レスポンスヘッダー設定
     const headers = {
-      'Cache-Control': 'no-store, no-cache, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
     }
 
     // セッション情報を取得

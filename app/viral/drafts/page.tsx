@@ -209,12 +209,49 @@ function DraftsContent() {
                   <h2 className="text-xl font-semibold">コンテンツ詳細</h2>
                   <div className="flex gap-2">
                     {!editMode ? (
-                      <button
-                        onClick={() => setEditMode(true)}
-                        className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                      >
-                        編集
-                      </button>
+                      <>
+                        <button
+                          onClick={() => setEditMode(true)}
+                          className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        >
+                          編集
+                        </button>
+                        {selectedDraft.status !== 'posted' && (
+                          <>
+                            <button
+                              onClick={async () => {
+                                if (confirm('このコンテンツを今すぐ投稿しますか？')) {
+                                  try {
+                                    const response = await fetch('/api/viral/post-draft', {
+                                      method: 'POST',
+                                      headers: { 'Content-Type': 'application/json' },
+                                      body: JSON.stringify({ draftId: selectedDraft.id })
+                                    })
+                                    const data = await response.json()
+                                    if (response.ok) {
+                                      alert(`投稿しました！\n${data.url}`)
+                                      fetchDrafts()
+                                    } else {
+                                      alert(`エラー: ${data.error}`)
+                                    }
+                                  } catch (error) {
+                                    alert('投稿中にエラーが発生しました')
+                                  }
+                                }
+                              }}
+                              className="px-4 py-2 text-sm bg-green-500 text-white rounded-lg hover:bg-green-600"
+                            >
+                              今すぐ投稿
+                            </button>
+                            <a
+                              href={`/viral/drafts/${selectedDraft.id}`}
+                              className="px-4 py-2 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                            >
+                              詳細編集
+                            </a>
+                          </>
+                        )}
+                      </>
                     ) : (
                       <>
                         <button
