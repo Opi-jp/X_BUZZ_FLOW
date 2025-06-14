@@ -34,6 +34,14 @@ export const config = {
      * - /patterns
      * - /settings
      * - /news
+     * - /viral (バイラル機能も保護)
+     * - /buzz (バズ収集も保護)
+     * 
+     * 除外するパス:
+     * - /auth/* (認証関連)
+     * - /api/* (API)
+     * - /test-ui (テストページ)
+     * - / (ホームページ)
      */
     '/dashboard/:path*',
     '/analytics/:path*',
@@ -44,5 +52,7 @@ export const config = {
     '/patterns/:path*',
     '/settings/:path*',
     '/news/:path*',
+    '/viral/:path*',
+    '/buzz/:path*',
   ],
 }

@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)
     
-    // 高パフォーマンス投稿を取得
-    const topPosts = await prisma.viralPost.findMany({
+    // 高パフォーマンス投稿を取得（新しいCotDraftモデル使用）
+    const topPosts = await prisma.cotDraft.findMany({
       where: {
         postedAt: {
           gte: startDate
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         performance: true,
-        opportunity: true
+        session: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     })
     
     // 低パフォーマンス投稿も取得（比較のため）
-    const lowPosts = await prisma.viralPost.findMany({
+    const lowPosts = await prisma.cotDraft.findMany({
       where: {
         postedAt: {
           gte: startDate
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         performance: true,
-        opportunity: true
+        session: true
       },
       take: 10
     })
@@ -65,14 +65,14 @@ ${topPosts.map(post => ({
   engagementRate: post.performance?.engagementRate,
   impressions: post.performance?.impressions24h,
   hashtags: post.hashtags,
-  conceptType: post.conceptType
+  title: post.title
 })).map(p => JSON.stringify(p)).join('\n')}
 
 ## 低パフォーマンス投稿（エンゲージメント率1%未満）
 ${lowPosts.map(post => ({
   content: post.content?.substring(0, 100),
   engagementRate: post.performance?.engagementRate,
-  conceptType: post.conceptType
+  title: post.title
 })).map(p => JSON.stringify(p)).join('\n')}
 
 以下の観点で分析してください：
@@ -103,23 +103,22 @@ JSON形式で出力してください。
     
     const insights = JSON.parse(completion.choices[0].message.content || '{}')
     
-    // 時間帯別パフォーマンス
+    // 時間帯別パフォーマンス（新しいCotDraftテーブル使用）
     const hourlyPerformance = await prisma.$queryRaw`
       SELECT 
         EXTRACT(HOUR FROM posted_at) as hour,
-        AVG(vpp.engagement_rate) as avg_engagement,
-        COUNT(DISTINCT vp.id) as post_count
-      FROM viral_posts vp
-      JOIN viral_post_performance vpp ON vp.id = vpp.post_id
-      WHERE vp.posted_at >= ${startDate}
-        AND vpp.timeframe = '24h'
+        AVG(cdp.engagement_rate) as avg_engagement,
+        COUNT(DISTINCT cd.id) as post_count
+      FROM cot_drafts cd
+      JOIN cot_draft_performance cdp ON cd.id = cdp.draft_id
+      WHERE cd.posted_at >= ${startDate}
       GROUP BY EXTRACT(HOUR FROM posted_at)
       ORDER BY avg_engagement DESC
     ` as Array<{hour: number, avg_engagement: number, post_count: number}>
     
     // カテゴリ別パフォーマンス
     const categoryPerformance = topPosts.reduce((acc, post) => {
-      const category = post.conceptType || 'その他'
+      const category = post.title || 'その他'
       if (!acc[category]) {
         acc[category] = {
           count: 0,
@@ -150,7 +149,7 @@ JSON形式で出力してください。
         engagementRate: post.performance?.engagementRate,
         impressions: post.performance?.impressions24h,
         postedAt: post.postedAt,
-        conceptType: post.conceptType
+        title: post.title
       }))
     })
     

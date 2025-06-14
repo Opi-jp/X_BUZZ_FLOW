@@ -23,8 +23,8 @@ export async function GET() {
       performanceData,
       weeklyStats
     ] = await Promise.all([
-      // 今日の投稿数
-      prisma.viralPost.count({
+      // 今日の投稿数（一時的にCotDraftを使用）
+      prisma.cotDraft.count({
         where: {
           createdAt: {
             gte: today,
@@ -34,7 +34,7 @@ export async function GET() {
       }),
 
       // 総投稿数
-      prisma.viralPost.count(),
+      prisma.cotDraft.count(),
 
       // アクティブセッション数（処理中）
       prisma.cotSession.count({
@@ -49,38 +49,35 @@ export async function GET() {
       prisma.cotSession.count(),
 
       // 最近の投稿（パフォーマンスデータ付き）
-      prisma.viralPost.findMany({
+      prisma.cotDraft.findMany({
         take: 5,
         orderBy: { createdAt: 'desc' },
         include: {
-          performance: true
+          performance: true,
+          session: true
         }
       }),
 
       // パフォーマンスデータ（過去7日間）
-      prisma.viralPostPerformance.findMany({
+      prisma.cotDraftPerformance.findMany({
         where: {
-          createdAt: {
+          collectedAt: {
             gte: sevenDaysAgo
           }
         },
         include: {
-          post: true
+          draft: true
         }
       }),
 
-      // 週間統計
+      // 週間統計（新しいスキーマ対応）
       prisma.$queryRaw`
         SELECT 
           DATE(created_at) as date,
           COUNT(*) as posts_count,
           AVG(CASE WHEN performance.engagement_rate IS NOT NULL THEN performance.engagement_rate ELSE 0 END) as avg_engagement
-        FROM viral_posts
-        LEFT JOIN (
-          SELECT DISTINCT ON (post_id) *
-          FROM viral_post_performance
-          ORDER BY post_id, measured_at DESC
-        ) performance ON viral_posts.id = performance.post_id
+        FROM cot_drafts
+        LEFT JOIN cot_draft_performance performance ON cot_drafts.id = performance.draft_id
         WHERE created_at >= ${sevenDaysAgo}
         GROUP BY DATE(created_at)
         ORDER BY date DESC
@@ -92,7 +89,7 @@ export async function GET() {
       // Use the most recent data available (24h > 1h > 30m)
       const likes = perf.likes24h || perf.likes1h || perf.likes30m || 0
       const retweets = perf.retweets24h || perf.retweets1h || perf.retweets30m || 0
-      const comments = perf.comments24h || perf.comments1h || perf.comments30m || 0
+      const comments = perf.replies24h || perf.replies1h || perf.replies30m || 0
       return sum + likes + retweets + comments
     }, 0)
     const totalImpressions = performanceData.reduce((sum, perf) => {
@@ -105,7 +102,7 @@ export async function GET() {
     const lastWeekStart = new Date(sevenDaysAgo)
     lastWeekStart.setDate(lastWeekStart.getDate() - 7)
     
-    const lastWeekPostsCount = await prisma.viralPost.count({
+    const lastWeekPostsCount = await prisma.cotDraft.count({
       where: {
         createdAt: {
           gte: lastWeekStart,
@@ -114,7 +111,7 @@ export async function GET() {
       }
     })
 
-    const thisWeekPostsCount = await prisma.viralPost.count({
+    const thisWeekPostsCount = await prisma.cotDraft.count({
       where: {
         createdAt: {
           gte: sevenDaysAgo
@@ -139,12 +136,12 @@ export async function GET() {
         id: post.id,
         content: post.content?.substring(0, 100) + '...',
         createdAt: post.createdAt,
-        platform: post.platform,
+        platform: post.session?.platform || 'Twitter',
         status: post.postedAt ? 'posted' : (post.scheduledAt ? 'scheduled' : 'draft'),
         performance: post.performance ? {
           likes: post.performance.likes24h || post.performance.likes1h || post.performance.likes30m || 0,
           retweets: post.performance.retweets24h || post.performance.retweets1h || post.performance.retweets30m || 0,
-          comments: post.performance.comments24h || post.performance.comments1h || post.performance.comments30m || 0,
+          comments: post.performance.replies24h || post.performance.replies1h || post.performance.replies30m || 0,
           impressions: post.performance.impressions24h || post.performance.impressions1h || post.performance.impressions30m || 0,
           engagementRate: post.performance.engagementRate || 0
         } : null

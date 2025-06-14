@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AppLayout from '@/app/components/layout/AppLayout'
-import { Sparkles, Loader2, CheckCircle, Clock, AlertCircle } from 'lucide-react'
+import { Sparkles, Loader2, CheckCircle, Clock, AlertCircle, Eye } from 'lucide-react'
 
 interface CotPhase {
   id: string
@@ -51,24 +51,71 @@ export default function CotGeneratePage() {
       const { sessionId: newSessionId } = await createResponse.json()
       setSessionId(newSessionId)
 
-      // フェーズを順次実行
-      for (let i = 0; i < phases.length; i++) {
-        setPhases(prev => prev.map((p, idx) => ({
-          ...p,
-          status: idx === i ? 'running' : idx < i ? 'completed' : 'pending'
-        })))
-
-        // 各フェーズの実行をシミュレート（実際はAPIを呼ぶ）
-        await new Promise(resolve => setTimeout(resolve, 3000))
+      // 処理状況をポーリングしながら、各ステップを実行
+      let completed = false
+      while (!completed) {
+        // 現在のセッション状態を取得
+        const statusResponse = await fetch(`/api/viral/cot-session/${newSessionId}`)
+        const session = await statusResponse.json()
         
-        setPhases(prev => prev.map((p, idx) => ({
-          ...p,
-          status: idx <= i ? 'completed' : 'pending'
-        })))
-      }
+        // エラーチェック
+        if (session.status === 'ERROR' || session.status === 'FAILED') {
+          throw new Error('Processing error: ' + (session.lastError || 'Unknown error'))
+        }
+        
+        // 処理中でない場合は、次のステップを実行
+        if (session.status !== 'COMPLETED' && session.status !== 'THINKING' && session.status !== 'EXECUTING' && session.status !== 'INTEGRATING') {
+          const processResponse = await fetch(`/api/viral/cot-session/${newSessionId}/process`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          })
+          
+          if (!processResponse.ok) {
+            const errorData = await processResponse.json()
+            throw new Error('Processing failed: ' + (errorData.error || 'Unknown error'))
+          }
+          
+          const processResult = await processResponse.json()
+          
+          // ユーザー確認が必要な場合は、結果ページへ遷移
+          if (processResult.waitForUser || processResult.nextAction?.waitForUser) {
+            router.push(`/viral/cot/result-v2/${newSessionId}`)
+            return
+          }
+        }
 
-      // 完了後、結果ページへ遷移
-      router.push(`/viral/cot/result/${newSessionId}`)
+        // フェーズの状態を更新
+        // currentPhase: 現在のフェーズ番号（1-5）
+        // currentStep: 現在のステップ（THINK/EXECUTE/INTEGRATE）
+        const phaseStatuses = {
+          'PHASE1': session.currentPhase > 1 ? 'completed' : session.currentPhase === 1 ? 'running' : 'pending',
+          'PHASE2': session.currentPhase > 2 ? 'completed' : session.currentPhase === 2 ? 'running' : 'pending',
+          'PHASE3': session.currentPhase > 3 ? 'completed' : session.currentPhase === 3 ? 'running' : 'pending',
+          'PHASE4': session.currentPhase > 4 ? 'completed' : session.currentPhase === 4 ? 'running' : 'pending',
+          'PHASE5': session.currentPhase > 5 ? 'completed' : session.currentPhase === 5 ? 'running' : 'pending'
+        }
+
+        setPhases([
+          { id: 'think', name: 'Phase 1: 情報収集', description: 'トレンドと関連情報を収集中...', status: phaseStatuses['PHASE1'] as 'pending' | 'running' | 'completed' | 'error' },
+          { id: 'execute', name: 'Phase 2: 分析', description: '収集した情報を分析中...', status: phaseStatuses['PHASE2'] as 'pending' | 'running' | 'completed' | 'error' },
+          { id: 'integrate', name: 'Phase 3: コンセプト生成', description: 'バイラルコンセプトを生成中...', status: phaseStatuses['PHASE3'] as 'pending' | 'running' | 'completed' | 'error' },
+          { id: 'content', name: 'Phase 4: コンテンツ作成', description: '実際の投稿を作成中...', status: phaseStatuses['PHASE4'] as 'pending' | 'running' | 'completed' | 'error' },
+          { id: 'strategy', name: 'Phase 5: 戦略策定', description: '投稿戦略を策定中...', status: phaseStatuses['PHASE5'] as 'pending' | 'running' | 'completed' | 'error' }
+        ])
+
+        if (session.status === 'COMPLETED') {
+          completed = true
+          // 完了後、詳細な結果ページへ遷移
+          router.push(`/viral/cot/result-v2/${newSessionId}`)
+        } else if (session.status === 'ERROR') {
+          throw new Error('Processing error')
+        }
+
+        // 2秒待機してから再度チェック
+        if (!completed) {
+          await new Promise(resolve => setTimeout(resolve, 2000))
+        }
+      }
       
     } catch (error) {
       console.error('Generation failed:', error)
@@ -203,11 +250,22 @@ export default function CotGeneratePage() {
                         <p className="text-sm text-gray-600">{phase.description}</p>
                       </div>
                     </div>
-                    {phase.status === 'running' && (
-                      <div className="text-sm text-blue-600 font-medium">
-                        処理中...
-                      </div>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {phase.status === 'running' && (
+                        <div className="text-sm text-blue-600 font-medium">
+                          処理中...
+                        </div>
+                      )}
+                      {phase.status === 'completed' && sessionId && (
+                        <button
+                          onClick={() => router.push(`/viral/cot/result-v2/${sessionId}#phase${index + 1}`)}
+                          className="text-blue-500 hover:text-blue-700 flex items-center text-sm"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          詳細
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

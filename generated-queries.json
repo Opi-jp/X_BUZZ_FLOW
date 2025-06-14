@@ -1,0 +1,32 @@
+{
+  "queries": [
+    {
+      "category": "A",
+      "topic": "AIによる働き方改革",
+      "query": "latest news on AI in the workplace",
+      "queryJa": "AIと職場の最新ニュース",
+      "intent": "AIが働き方にどのように影響を与えているかについての最新ニュースを探す"
+    },
+    {
+      "category": "B",
+      "topic": "AI企業の最近の発表と論争",
+      "query": "AI company announcements and controversies",
+      "queryJa": "AI企業の発表と論争",
+      "intent": "AI関連企業の最新の発表やそれに伴う論争を探す"
+    },
+    {
+      "category": "C",
+      "topic": "TwitterでのAIと働き方に関するトレンドトピック",
+      "query": "Twitter trends AI and future of work",
+      "queryJa": "Twitterトレンド AIと働き方の未来",
+      "intent": "AIと働き方についてTwitterで話題になっているトピックを特定する"
+    },
+    {
+      "category": "D",
+      "topic": "バイラルになりそうなAIと働き方のトピック",
+      "query": "viral AI work trends 2023",
+      "queryJa": "バイラル AI 働き方 トレンド 2023",
+      "intent": "AIが働き方に与える影響でバイラルになりそうなトピックを見つける"
+    }
+  ]
+}

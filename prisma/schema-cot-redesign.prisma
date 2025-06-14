@@ -1,0 +1,214 @@
+# Chain of Thought 仕様書に基づいた新しいデータベース構造設計
+# 2025年6月14日
+
+# ===========================================
+# Chain of Thought セッション管理
+# ===========================================
+
+# CoTセッションのメインテーブル
+model CotSession {
+  id              String              @id @default(uuid())
+  
+  # ユーザー設定（仕様書 Phase 1）
+  expertise       String              # 発信したい分野
+  style          String              # コンテンツのスタイル
+  platform       String              # プラットフォーム
+  
+  # セッション状態
+  status         CotSessionStatus    @default(PENDING)
+  currentPhase   Int                 @default(1) @map("current_phase")
+  currentStep    CotPhaseStep        @default(THINK) @map("current_step")
+  
+  # エラー・リトライ管理
+  lastError      String?             @map("last_error")
+  retryCount     Int                 @default(0) @map("retry_count")
+  nextRetryAt    DateTime?           @map("next_retry_at")
+  
+  # メトリクス
+  totalTokens    Int                 @default(0) @map("total_tokens")
+  totalDuration  Int                 @default(0) @map("total_duration") # ミリ秒
+  
+  # タイムスタンプ
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+  completedAt    DateTime?           @map("completed_at")
+  
+  # リレーション
+  phases         CotPhase[]          # 各フェーズの詳細
+  drafts         CotDraft[]          # 生成されたコンテンツ下書き
+  
+  @@index([status, createdAt])
+  @@index([currentPhase, currentStep])
+  @@map("cot_sessions")
+}
+
+# 各フェーズの詳細結果
+model CotPhase {
+  id           String         @id @default(uuid())
+  sessionId    String         @map("session_id")
+  phaseNumber  Int           @map("phase_number") # 1-5
+  
+  # Think結果
+  thinkPrompt  String?       @db.Text @map("think_prompt")
+  thinkResult  Json?         @db.Json @map("think_result")
+  thinkTokens  Int?          @default(0) @map("think_tokens")
+  thinkAt      DateTime?     @map("think_at")
+  
+  # Execute結果
+  executeResult Json?        @db.Json @map("execute_result")
+  executeDuration Int?       @default(0) @map("execute_duration") # ミリ秒
+  executeAt     DateTime?    @map("execute_at")
+  
+  # Integrate結果
+  integratePrompt String?    @db.Text @map("integrate_prompt")
+  integrateResult Json?      @db.Json @map("integrate_result")
+  integrateTokens Int?       @default(0) @map("integrate_tokens")
+  integrateAt     DateTime?  @map("integrate_at")
+  
+  # フェーズ状態
+  status       CotPhaseStatus @default(PENDING)
+  
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  
+  # リレーション
+  session      CotSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  @@unique([sessionId, phaseNumber])
+  @@index([sessionId, phaseNumber])
+  @@map("cot_phases")
+}
+
+# Phase 4で生成されるコンテンツ下書き
+model CotDraft {
+  id             String        @id @default(uuid())
+  sessionId      String        @map("session_id")
+  conceptNumber  Int          @map("concept_number") # 1-3（Phase 3で3つのコンセプト）
+  
+  # Phase 3 コンセプト情報
+  title          String
+  hook           String        @db.Text
+  angle          String        @db.Text
+  format         String        # スレッド/ビデオ/投稿タイプ
+  
+  # Phase 4 完全なコンテンツ
+  content        String        @db.Text # コピペ即投稿可能なコンテンツ
+  threadContent  Json?         @db.Json # スレッドの場合の追加投稿
+  visualGuide    String?       @db.Text @map("visual_guide") # 画像/動画の説明
+  
+  # メタデータ
+  timing         String        # 最適投稿タイミング
+  hashtags       String[]      
+  newsSource     String?       @map("news_source") # 元ニュースソース
+  sourceUrl      String?       @map("source_url")
+  
+  # Phase 5 実行戦略
+  kpis           Json?         @db.Json # 成功指標
+  riskAssessment Json?         @db.Json @map("risk_assessment")
+  optimizationTips Json?       @db.Json @map("optimization_tips")
+  
+  # 投稿管理
+  status         CotDraftStatus @default(DRAFT)
+  editedContent  String?       @db.Text @map("edited_content")
+  scheduledAt    DateTime?     @map("scheduled_at")
+  postedAt       DateTime?     @map("posted_at")
+  postId         String?       @map("post_id") # 投稿後のID
+  
+  # パフォーマンス
+  viralScore     Float?        @map("viral_score") # 予測バイラルスコア
+  
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  
+  # リレーション
+  session        CotSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  performance    CotDraftPerformance?
+  
+  @@unique([sessionId, conceptNumber])
+  @@index([sessionId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("cot_drafts")
+}
+
+# 投稿パフォーマンストラッキング
+model CotDraftPerformance {
+  id           String     @id @default(uuid())
+  draftId      String     @unique @map("draft_id")
+  
+  # 30分後
+  likes30m     Int?       @map("likes_30m")
+  retweets30m  Int?       @map("retweets_30m")
+  replies30m   Int?       @map("replies_30m")
+  impressions30m Int?     @map("impressions_30m")
+  
+  # 1時間後
+  likes1h      Int?       @map("likes_1h")
+  retweets1h   Int?       @map("retweets_1h")
+  replies1h    Int?       @map("replies_1h")
+  impressions1h Int?      @map("impressions_1h")
+  
+  # 24時間後
+  likes24h     Int?       @map("likes_24h")
+  retweets24h  Int?       @map("retweets_24h")
+  replies24h   Int?       @map("replies_24h")
+  impressions24h Int?     @map("impressions_24h")
+  
+  # 計算フィールド
+  engagementRate Float?   @map("engagement_rate")
+  viralCoefficient Float? @map("viral_coefficient")
+  
+  # メタデータ
+  collectedAt  DateTime   @default(now()) @map("collected_at")
+  lastUpdateAt DateTime   @updatedAt @map("last_update_at")
+  
+  # リレーション
+  draft        CotDraft   @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  
+  @@map("cot_draft_performance")
+}
+
+# ===========================================
+# Enums
+# ===========================================
+
+enum CotSessionStatus {
+  PENDING      # 開始待ち
+  THINKING     # Think実行中
+  EXECUTING    # Execute実行中
+  INTEGRATING  # Integrate実行中
+  COMPLETED    # 完了
+  FAILED       # 失敗
+  PAUSED       # 一時停止
+  
+  @@map("cot_session_status")
+}
+
+enum CotPhaseStep {
+  THINK        # GPTで分析・計画
+  EXECUTE      # 実際の処理実行
+  INTEGRATE    # 結果統合
+  
+  @@map("cot_phase_step")
+}
+
+enum CotPhaseStatus {
+  PENDING      # 未開始
+  THINKING     # Think実行中
+  EXECUTING    # Execute実行中
+  INTEGRATING  # Integrate実行中
+  COMPLETED    # 完了
+  FAILED       # 失敗
+  
+  @@map("cot_phase_status")
+}
+
+enum CotDraftStatus {
+  DRAFT        # 下書き
+  EDITED       # 編集済み
+  SCHEDULED    # 投稿予約済み
+  POSTED       # 投稿済み
+  ARCHIVED     # アーカイブ
+  
+  @@map("cot_draft_status")
+}

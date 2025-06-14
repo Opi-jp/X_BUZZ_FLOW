@@ -5,6 +5,8 @@ import {
   Phase1Strategy, 
   Phase2Strategy, 
   Phase3Strategy,
+  Phase4Strategy,
+  Phase5Strategy,
   ChainOfThoughtOrchestrator 
 } from '@/lib/orchestrated-cot-strategy'
 
@@ -17,8 +19,8 @@ const phaseStrategies = {
   1: Phase1Strategy,
   2: Phase2Strategy,
   3: Phase3Strategy,
-  // 4: Phase4Strategy, // TODO: 実装
-  // 5: Phase5Strategy  // TODO: 実装
+  4: Phase4Strategy,
+  5: Phase5Strategy
 }
 
 export async function POST(
@@ -68,6 +70,29 @@ export async function POST(
     const currentStep = session.currentStep
     
     console.log(`[SESSION PROCESS] Starting - Session: ${sessionId}, Phase: ${currentPhase}, Step: ${currentStep}, Status: ${session.status}`)
+    
+    // 処理中の場合はスキップ
+    if (['THINKING', 'EXECUTING', 'INTEGRATING'].includes(session.status)) {
+      console.log(`[SESSION PROCESS] Already processing, skipping...`)
+      return NextResponse.json({
+        success: true,
+        message: '処理中です',
+        sessionId,
+        phase: currentPhase,
+        step: currentStep,
+        status: session.status
+      })
+    }
+    
+    // 処理開始前にステータスを更新
+    await prisma.cotSession.update({
+      where: { id: sessionId },
+      data: {
+        status: currentStep === 'THINK' ? 'THINKING' : 
+                currentStep === 'EXECUTE' ? 'EXECUTING' : 'INTEGRATING',
+        updatedAt: new Date()
+      }
+    })
     
     // Orchestratorの作成
     const orchestrator = new ChainOfThoughtOrchestrator(openai)
@@ -146,7 +171,7 @@ export async function POST(
       console.log(`[EXECUTE] Think result keys: ${Object.keys(thinkResult).join(', ')}`)
       
       try {
-        result = await strategy.execute.handler(thinkResult)
+        result = await strategy.execute.handler(thinkResult, context)
         console.log(`[EXECUTE] Execution completed successfully`)
         if (result.searchResults) {
           console.log(`[EXECUTE] Search results count: ${result.searchResults.length}`)
@@ -163,6 +188,32 @@ export async function POST(
           result,
           completedAt: new Date().toISOString()
         }
+      }
+      
+      // Phase 1の検索結果をDBに保存（マイグレーション後に有効化）
+      if (currentPhase === 1 && result.searchResultsForDB) {
+        console.log(`[EXECUTE] Saving ${result.searchResultsForDB.length} search results to DB`)
+        
+        // TODO: マイグレーション後に以下のコメントを解除
+        /*
+        try {
+          await prisma.searchResult.createMany({
+            data: result.searchResultsForDB.map((sr: any) => ({
+              sessionId,
+              query: sr.query,
+              title: sr.title,
+              url: sr.url,
+              snippet: sr.snippet,
+              source: sr.source,
+              position: sr.position
+            }))
+          })
+          console.log(`[EXECUTE] Search results saved to DB`)
+        } catch (dbError) {
+          console.error(`[EXECUTE] Failed to save search results to DB:`, dbError)
+          // DBエラーは無視して続行
+        }
+        */
       }
       
       nextStep = 'INTEGRATE'
@@ -222,9 +273,42 @@ export async function POST(
       }
       
       // 次のフェーズへ
-      if (currentPhase < 3) { // TODO: 5に変更
+      if (currentPhase < 5) {
         nextPhase = currentPhase + 1
         nextStep = 'THINK'
+        
+        // フェーズ完了時点で一旦停止（ユーザー確認待ち）
+        await prisma.cotSession.update({
+          where: { id: sessionId },
+          data: {
+            phases,
+            currentPhase: nextPhase,
+            currentStep: nextStep,
+            status: 'PENDING', // 次のフェーズ開始前は PENDING に戻す
+            totalDuration: session.totalDuration + (Date.now() - startTime),
+            totalTokens: session.totalTokens + (result.tokens || 0),
+            updatedAt: new Date()
+          }
+        })
+        
+        return NextResponse.json({
+          success: true,
+          sessionId,
+          phase: currentPhase,
+          step: currentStep,
+          phaseCompleted: true,
+          nextPhase,
+          nextStep,
+          message: result.nextStepMessage?.replace('「続行」と入力してください', '「次へ進む」ボタンをクリックしてください') || `Phase ${currentPhase} が完了しました。次のフェーズに進むには「次へ進む」ボタンをクリックしてください。`,
+          result,
+          duration: Date.now() - startTime,
+          shouldContinue: false,
+          nextAction: {
+            message: `Phase ${currentPhase} が完了しました`,
+            continueUrl: `/api/viral/cot-session/${sessionId}/process`,
+            waitForUser: true
+          }
+        })
       } else {
         // 全フェーズ完了
         nextStep = 'INTEGRATE' // 変更なし
@@ -234,7 +318,19 @@ export async function POST(
     const duration = Date.now() - startTime
     
     // セッション状態を更新
-    const isCompleted = currentPhase === 3 && currentStep === 'INTEGRATE' // TODO: 5に変更
+    const isCompleted = currentPhase === 5 && currentStep === 'INTEGRATE'
+    
+    // 次のステータスを決定
+    let nextStatus = session.status
+    if (isCompleted) {
+      nextStatus = 'COMPLETED' as any
+    } else if (nextStep === 'THINK') {
+      nextStatus = 'THINKING' as any
+    } else if (nextStep === 'EXECUTE') {
+      nextStatus = 'EXECUTING' as any
+    } else if (nextStep === 'INTEGRATE') {
+      nextStatus = 'INTEGRATING' as any
+    }
     
     await prisma.cotSession.update({
       where: { id: sessionId },
@@ -242,7 +338,7 @@ export async function POST(
         phases,
         currentPhase: nextPhase,
         currentStep: nextStep,
-        status: isCompleted ? 'COMPLETED' : session.status,
+        status: nextStatus,
         totalDuration: session.totalDuration + duration,
         totalTokens: session.totalTokens + (result.tokens || 0),
         updatedAt: new Date(),
@@ -250,9 +346,9 @@ export async function POST(
       }
     })
     
-    // Phase 3が完了したら下書きを作成
-    if (currentPhase === 3 && currentStep === 'INTEGRATE' && result.concepts) {
-      await createDrafts(sessionId, result.concepts, config)
+    // Phase 5が完了したら下書きを作成
+    if (isCompleted) {
+      await createCompleteDrafts(sessionId, phases, config)
     }
     
     return NextResponse.json({
@@ -260,15 +356,21 @@ export async function POST(
       sessionId,
       phase: currentPhase,
       step: currentStep,
+      nextPhase,
+      nextStep,
+      currentStatus: session.status,
+      nextStatus,
       result,
       duration,
       isCompleted,
+      shouldContinue: !isCompleted,
       nextAction: isCompleted ? {
         message: 'セッションが完了しました',
         draftsUrl: `/api/viral/cot-session/${sessionId}/drafts`
       } : {
         message: `Phase ${nextPhase} - ${nextStep} に進みます`,
-        continueUrl: `/api/viral/cot-session/${sessionId}/process`
+        continueUrl: `/api/viral/cot-session/${sessionId}/process`,
+        waitTime: 2000 // 2秒待機を推奨
       }
     })
     
@@ -305,14 +407,8 @@ export async function POST(
 
 // ヘルパー関数
 function getSystemPrompt(phase: number): string {
-  if (phase === 1) {
-    return 'あなたは、優秀なリサーチアシスタントです。'
-  } else if (phase === 2) {
-    return 'あなたは、トレンド分析の専門家です。'
-  } else if (phase === 3) {
-    return 'あなたは、バズるコンテンツ戦略家です。'
-  }
-  return 'あなたは、コンテンツマーケティングの専門家です。'
+  // 全フェーズで統一：オリジナルプロンプトのPhase 0に準拠
+  return 'あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。'
 }
 
 function interpolatePrompt(template: string, context: any): string {
@@ -326,12 +422,9 @@ function interpolatePrompt(template: string, context: any): string {
 
 function formatSearchResults(searchResults: any): string {
   if (Array.isArray(searchResults)) {
-    return searchResults.map(sr => 
-      `検索クエリ: "${sr.query}"\nカテゴリ: ${sr.category}\n結果:\n` +
-      sr.results.map((r: any, i: number) => 
-        `${i + 1}. ${r.title}\n   ${r.snippet}\n   URL: ${r.url}`
-      ).join('\n')
-    ).join('\n\n---\n\n')
+    return searchResults.map((r: any, i: number) => 
+      `${i + 1}. ${r.title}\n   ${r.snippet}\n   URL: ${r.url}\n   ソース: ${r.source}`
+    ).join('\n\n')
   }
   return JSON.stringify(searchResults, null, 2)
 }
@@ -340,9 +433,14 @@ function getPreviousPhaseResults(phases: any, currentPhase: number): any {
   const results: any = {}
   
   // Phase 1の結果を含める
-  if (currentPhase > 1 && phases.phase1?.integrate?.result) {
-    results.phase1Result = phases.phase1.integrate.result
-    results.opportunities = phases.phase1.integrate.result.viralPatterns?.topOpportunities || []
+  if (currentPhase > 1 && phases.phase1) {
+    results.phase1Result = phases.phase1.integrate?.result
+    // Phase 2用に、trendedTopicsを渡す
+    results.trendedTopics = phases.phase1.integrate?.result?.trendedTopics || []
+    // カテゴリ別の洞察も含める
+    results.categoryInsights = phases.phase1.integrate?.result?.categoryInsights || {}
+    // Perplexityで収集した詳細な分析データも含める
+    results.searchResults = phases.phase1.execute?.result?.searchResults || []
   }
   
   // Phase 2の結果を含める
@@ -351,29 +449,80 @@ function getPreviousPhaseResults(phases: any, currentPhase: number): any {
     results.selectedOpportunities = phases.phase2.integrate.result.selectedOpportunities || []
   }
   
+  // Phase 3の結果を含める
+  if (currentPhase > 3 && phases.phase3?.integrate?.result) {
+    results.phase3Result = phases.phase3.integrate.result
+    results.concepts = phases.phase3.integrate.result.concepts || []
+  }
+  
+  // Phase 4の結果を含める
+  if (currentPhase > 4 && phases.phase4?.integrate?.result) {
+    results.phase4Result = phases.phase4.integrate.result
+    results.mainPost = phases.phase4.integrate.result.mainPost || ''
+  }
+  
   return results
 }
 
-async function createDrafts(sessionId: string, concepts: any[], config: any) {
-  for (let i = 0; i < concepts.length; i++) {
-    const concept = concepts[i]
+async function createCompleteDrafts(sessionId: string, phases: any, config: any) {
+  // Phase 3からコンセプト情報を取得
+  const concepts = phases.phase3?.integrate?.result?.concepts || []
+  // Phase 4から選択されたコンセプトとコンテンツを取得
+  const selectedIndex = phases.phase4?.think?.result?.selectedConceptIndex || 0
+  const finalContent = phases.phase4?.integrate?.result || {}
+  // Phase 5から戦略情報を取得
+  const strategy = phases.phase5?.integrate?.result || {}
+  
+  // 選択されたコンセプトの下書きを作成
+  const selectedConcept = concepts[selectedIndex]
+  if (selectedConcept) {
     await prisma.cotDraft.create({
       data: {
         sessionId,
-        conceptNumber: i + 1,
-        title: concept.title,
-        hook: concept.hook,
-        angle: concept.angle,
-        structure: concept.structure,
-        visual: concept.visual,
-        timing: concept.timing,
-        hashtags: concept.hashtags,
-        opportunity: concept.opportunity,
-        platform: concept.platform || config.platform,
-        format: concept.format,
-        expectedReaction: concept.expectedReaction,
+        conceptNumber: selectedIndex + 1,
+        title: selectedConcept.title,
+        hook: selectedConcept.hook,
+        angle: selectedConcept.angle,
+        structure: selectedConcept.structure,
+        visual: selectedConcept.visual || finalContent.visualDescription,
+        timing: selectedConcept.timing || strategy.bestTimeToPost?.[0],
+        hashtags: finalContent.hashtags || selectedConcept.hashtags || [],
+        opportunity: selectedConcept.opportunity,
+        platform: selectedConcept.platform || config.platform,
+        format: selectedConcept.format,
+        expectedReaction: selectedConcept.expectedReaction,
+        content: finalContent.mainPost,
+        threadContent: finalContent.threadPosts || [],
+        kpis: strategy.kpis || {},
+        bestTimeToPost: strategy.bestTimeToPost || [],
+        followUpStrategy: strategy.followUpStrategy || '',
         status: 'DRAFT'
       }
     })
+  }
+  
+  // 他の未選択コンセプトも下書きとして保存（オプション）
+  for (let i = 0; i < concepts.length; i++) {
+    if (i !== selectedIndex) {
+      const concept = concepts[i]
+      await prisma.cotDraft.create({
+        data: {
+          sessionId,
+          conceptNumber: i + 1,
+          title: concept.title,
+          hook: concept.hook,
+          angle: concept.angle,
+          structure: concept.structure,
+          visual: concept.visual,
+          timing: concept.timing,
+          hashtags: concept.hashtags,
+          opportunity: concept.opportunity,
+          platform: concept.platform || config.platform,
+          format: concept.format,
+          expectedReaction: concept.expectedReaction,
+          status: 'ALTERNATIVE' // 代替案として保存
+        }
+      })
+    }
   }
 }
