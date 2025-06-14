@@ -183,20 +183,16 @@ URL: ${article.url}
         where: { articleId: article.id },
         create: {
           articleId: article.id,
-          category: analysis.category,
           summary: analysis.summary,
-          japaneseSummary: analysis.japaneseSummary || analysis.summary, // フォールバック
-          keyPoints: analysis.keyPoints || [],
-          impact: analysis.impact,
-          analyzedBy: 'claude',
+          sentiment: analysis.sentiment || 'neutral',
+          keywords: analysis.keyPoints || [],
+          topics: analysis.category ? [analysis.category] : [],
         },
         update: {
-          category: analysis.category,
           summary: analysis.summary,
-          japaneseSummary: analysis.japaneseSummary || analysis.summary, // フォールバック
-          keyPoints: analysis.keyPoints || [],
-          impact: analysis.impact,
-          analyzedBy: 'claude',
+          sentiment: analysis.sentiment || 'neutral',
+          keywords: analysis.keyPoints || [],
+          topics: analysis.category ? [analysis.category] : [],
         },
       }),
     ])

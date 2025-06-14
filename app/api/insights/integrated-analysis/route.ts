@@ -59,7 +59,7 @@ ${recentBuzzPosts.map((post, i) =>
 【重要ニュース TOP ${recentNews.length}】
 ${recentNews.map((news, i) => 
   `${i + 1}. ${news.title}（ソース: ${news.source.name}）
-   要約: ${news.summary || 'なし'}
+   要約: ${news.description || 'なし'}
    ポイント: ${(news.metadata as any)?.keyPoints?.join(', ') || 'なし'}`
 ).join('\n\n')}
 
