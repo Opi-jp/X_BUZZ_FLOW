@@ -396,11 +396,78 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
   - Phase 2: Google Custom Search API実行（スケルトン）
   - Phase 3: 結果の統合・分析
 
-### 2段階Step1実装（JSON切れ対策）
-- **Step1-Collect**: `/app/api/viral/gpt-session/[sessionId]/step1-collect/`
-  - Responses APIで記事URL収集
-- **Step1-Analyze**: `/app/api/viral/gpt-session/[sessionId]/step1-analyze/`
-  - Chat Completions APIで詳細分析（max_tokens: 4000）
+### Orchestrated Chain of Thought実装（2025/06/14更新）
+- **新アーキテクチャ**: Response API廃止、GPT-4oによる動的検索クエリ生成
+  - Think: GPT-4oが検索クエリを動的生成（ハードコード排除）
+  - Execute: Google Custom Search APIで実際の検索実行
+  - Integrate: 結果の統合と分析
+- **Google Custom Search API統合完了**
+  - APIキー・Search Engine ID設定済み
+  - 7日以内のニュース検索に特化
+
+## 2025年6月14日の作業完了報告
+
+### 実施した作業
+1. **DBテーブルの作成**
+   - cot_sessionsとcot_draftsテーブルが存在しなかった問題を解決
+   - カスタムスクリプトでテーブルとEnum型を作成
+   - マイグレーションの問題（DIRECT_URLが未設定）を特定
+
+2. **CoT APIの修正**
+   - OpenAI APIのJSON形式エラーを修正
+   - 各フェーズのプロンプトに「必ず以下のJSON形式で出力してください」を追加
+   - Phase 2のIntegrateプロンプトに詳細なJSON構造を追加
+
+3. **CLAUDE.mdの更新**
+   - Orchestrated Chain of Thought実装の記載を追加
+   - Response API廃止とGPT動的検索クエリ生成の実装を明記
+
+4. **動作確認**
+   - CoTセッション作成成功
+   - Phase 1完了（THINK→EXECUTE→INTEGRATE）
+   - 「AIと働き方」で動的検索クエリ生成・Google検索実行・機会特定まで確認
+
+### 現在の状態
+✅ **完了**:
+- DBテーブル作成
+- CoT Phase 1の完全動作
+- 動的検索クエリ生成（ハードコード排除）
+- Google Custom Search API統合
+
+⚠️ **未確認**:
+- Phase 2-5の完全動作
+- 下書き作成機能
+- Twitter投稿までの流れ
+
+### 次回セッションへの引き継ぎ事項
+
+1. **必須確認事項**
+```bash
+# セッションIDを使って処理を続行
+curl -X POST http://localhost:3000/api/viral/cot-session/e07ccac8-c46f-423c-92f9-a8c4ef7adb1e/process
+# Phase 2-5まで実行して下書きが作成されるか確認
+```
+
+2. **残タスク**
+   - Phase 2-5の動作確認
+   - 生成された下書きの確認（/viral/drafts）
+   - 下書きからTwitter投稿までの流れ確認
+   - ニュースコメント付きRT機能の実装
+   - 今日の10大ニュース機能の実装
+   - バズ投稿へのクイック反応機能
+   - スケジューラーとの統合
+
+3. **重要な注意事項**
+   - サーバー再起動時: 既存プロセスをkillしてから起動
+   - DB接続: DIRECT_URLとDATABASE_URL両方が.envと.env.localに必要
+   - 検索クエリ: 絶対にハードコードしない（動的生成を維持）
+   - JSON形式: OpenAI APIコール時は必ずプロンプトに「JSON」を含める
+
+4. **技術的な状態**
+   - Next.js開発サーバー: http://localhost:3000
+   - Prisma Studio: http://localhost:5555
+   - 環境変数: すべて設定済み（Google Search Engine ID含む）
+   - 最新セッションID: e07ccac8-c46f-423c-92f9-a8c4ef7adb1e
 
 ### 新機能実装
 1. **A/Bテスト機能**

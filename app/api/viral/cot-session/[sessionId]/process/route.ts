@@ -67,7 +67,7 @@ export async function POST(
     const currentPhase = session.currentPhase
     const currentStep = session.currentStep
     
-    console.log(`Processing session ${sessionId}: Phase ${currentPhase}, Step ${currentStep}`)
+    console.log(`[SESSION PROCESS] Starting - Session: ${sessionId}, Phase: ${currentPhase}, Step: ${currentStep}, Status: ${session.status}`)
     
     // Orchestratorの作成
     const orchestrator = new ChainOfThoughtOrchestrator(openai)
@@ -95,6 +95,9 @@ export async function POST(
       // Think フェーズ
       const prompt = interpolatePrompt(strategy.think.prompt, context)
       
+      console.log(`[THINK] Sending request to OpenAI - Phase: ${currentPhase}`)
+      console.log(`[THINK] Prompt length: ${prompt.length} characters`)
+      
       const completion = await openai.chat.completions.create({
         model: config.model || 'gpt-4o',
         messages: [
@@ -106,7 +109,19 @@ export async function POST(
         response_format: { type: 'json_object' }
       })
       
-      result = JSON.parse(completion.choices[0].message.content || '{}')
+      console.log(`[THINK] Response received - Tokens used: ${completion.usage?.total_tokens}`)
+      
+      const rawContent = completion.choices[0].message.content || '{}'
+      console.log(`[THINK] Raw response length: ${rawContent.length} characters`)
+      
+      try {
+        result = JSON.parse(rawContent)
+        console.log(`[THINK] JSON parsed successfully - Keys: ${Object.keys(result).join(', ')}`)
+      } catch (parseError) {
+        console.error(`[THINK] JSON parse error:`, parseError)
+        console.error(`[THINK] Raw content sample:`, rawContent.substring(0, 500))
+        throw new Error(`Failed to parse THINK response: ${parseError}`)
+      }
       
       // 結果を保存
       phases[`phase${currentPhase}`] = {
@@ -127,7 +142,19 @@ export async function POST(
         throw new Error('Think result not found')
       }
       
-      result = await strategy.execute.handler(thinkResult)
+      console.log(`[EXECUTE] Starting execution - Phase: ${currentPhase}`)
+      console.log(`[EXECUTE] Think result keys: ${Object.keys(thinkResult).join(', ')}`)
+      
+      try {
+        result = await strategy.execute.handler(thinkResult)
+        console.log(`[EXECUTE] Execution completed successfully`)
+        if (result.searchResults) {
+          console.log(`[EXECUTE] Search results count: ${result.searchResults.length}`)
+        }
+      } catch (execError) {
+        console.error(`[EXECUTE] Execution failed:`, execError)
+        throw new Error(`Execute phase failed: ${execError}`)
+      }
       
       // 結果を保存
       phases[`phase${currentPhase}`] = {
@@ -155,6 +182,10 @@ export async function POST(
       
       const prompt = interpolatePrompt(strategy.integrate.prompt, integrateContext)
       
+      console.log(`[INTEGRATE] Sending request to OpenAI - Phase: ${currentPhase}`)
+      console.log(`[INTEGRATE] Context keys: ${Object.keys(integrateContext).join(', ')}`)
+      console.log(`[INTEGRATE] Prompt length: ${prompt.length} characters`)
+      
       const completion = await openai.chat.completions.create({
         model: config.model || 'gpt-4o',
         messages: [
@@ -166,7 +197,19 @@ export async function POST(
         response_format: { type: 'json_object' }
       })
       
-      result = JSON.parse(completion.choices[0].message.content || '{}')
+      console.log(`[INTEGRATE] Response received - Tokens used: ${completion.usage?.total_tokens}`)
+      
+      const rawContent2 = completion.choices[0].message.content || '{}'
+      console.log(`[INTEGRATE] Raw response length: ${rawContent2.length} characters`)
+      
+      try {
+        result = JSON.parse(rawContent2)
+        console.log(`[INTEGRATE] JSON parsed successfully - Keys: ${Object.keys(result).join(', ')}`)
+      } catch (parseError) {
+        console.error(`[INTEGRATE] JSON parse error:`, parseError)
+        console.error(`[INTEGRATE] Raw content sample:`, rawContent2.substring(0, 500))
+        throw new Error(`Failed to parse INTEGRATE response: ${parseError}`)
+      }
       
       // 結果を保存
       phases[`phase${currentPhase}`] = {
@@ -230,7 +273,11 @@ export async function POST(
     })
     
   } catch (error) {
-    console.error('Session processing error:', error)
+    console.error('[ERROR] Session processing failed:', error)
+    if (error instanceof Error) {
+      console.error('[ERROR] Error message:', error.message)
+      console.error('[ERROR] Error stack:', error.stack)
+    }
     
     // エラー時はリトライカウントを増やす
     if (params) {

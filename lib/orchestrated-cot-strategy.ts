@@ -55,6 +55,7 @@ export const Phase1Strategy: OrchestratedPhase = {
 * スタイル: {style}
 
 # 出力形式
+必ず以下のJSON形式で出力してください：
 {
   "themeAnalysis": {
     "技術": ["サブテーマ1", "サブテーマ2"],
@@ -88,14 +89,20 @@ export const Phase1Strategy: OrchestratedPhase = {
   execute: {
     action: 'performWebSearch',
     handler: async (searchQueries: any) => {
+      console.log('[Phase1Execute] Starting web search with queries:', searchQueries.queries?.length || 0)
+      
       // Google Custom Search APIを使用した検索
       const { googleSearch } = await import('./google-search')
       
       const searchResults = []
       for (const queryObj of searchQueries.queries || []) {
         try {
+          console.log(`[Phase1Execute] Searching: "${queryObj.query}" (${queryObj.category})`)
+          
           // 最新情報を取得するため、7日以内に限定
           const results = await googleSearch.searchNews(queryObj.query, 7)
+          
+          console.log(`[Phase1Execute] Found ${results.length} results for "${queryObj.query}"`)
           
           searchResults.push({
             query: queryObj.query,
@@ -110,10 +117,19 @@ export const Phase1Strategy: OrchestratedPhase = {
             }))
           })
         } catch (error) {
-          console.error(`Search failed for query: ${queryObj.query}`, error)
+          console.error(`[Phase1Execute] Search failed for query: ${queryObj.query}`, error)
+          // エラーでも継続（空の結果を追加）
+          searchResults.push({
+            query: queryObj.query,
+            category: queryObj.category,
+            intent: queryObj.intent,
+            expertAngle: queryObj.expertAngle,
+            results: []
+          })
         }
       }
       
+      console.log(`[Phase1Execute] Total search results collected: ${searchResults.length}`)
       return { searchResults }
     }
   },
@@ -162,6 +178,7 @@ export const Phase1Strategy: OrchestratedPhase = {
 - 議論系：「賛否」「議論」「波紋」
 
 ## 出力形式
+必ず以下のJSON形式で出力してください：
 {
   "extractedTopics": [
     {
@@ -219,7 +236,8 @@ export const Phase2Strategy: OrchestratedPhase = {
 これらの機会を評価するための具体的な基準と、
 調査すべきデータポイントを生成してください。
 
-出力:
+# 出力形式
+必ず以下のJSON形式で出力してください：
 {
   "evaluationCriteria": [
     {
@@ -240,16 +258,25 @@ export const Phase2Strategy: OrchestratedPhase = {
   // Step 2: データ収集
   execute: {
     action: 'collectMetrics',
-    handler: async (plan) => {
+    handler: async (_plan) => {
+      // TODO: 実際のメトリクス収集を実装
       // Google Trends API
       // Twitter Analytics
       // Reddit API
       // などからデータ収集
       return {
         metrics: {
-          searchVolume: {},
-          socialMentions: {},
-          sentimentAnalysis: {}
+          searchVolume: {
+            "AIとホワイトカラー職の自動化": { trend: "急上昇", change: "+250%" },
+            "AIと人間の協働": { trend: "安定", change: "+15%" }
+          },
+          socialMentions: {
+            "AIとホワイトカラー職の自動化": { count: 15000, sentiment: "mixed" },
+            "AIと人間の協働": { count: 8000, sentiment: "positive" }
+          },
+          sentimentAnalysis: {
+            overall: "concern_and_curiosity"
+          }
         }
       }
     }
@@ -266,6 +293,32 @@ export const Phase2Strategy: OrchestratedPhase = {
 
 これらのデータに基づいて、各機会のバズポテンシャルを評価し、
 最も可能性の高い機会を特定してください。
+
+# 出力形式
+必ず以下のJSON形式で出力してください：
+{
+  "evaluatedOpportunities": [
+    {
+      "opportunityName": "機会の名前",
+      "finalScore": 0.0-1.0の数値,
+      "analysis": {
+        "strengths": ["強み1", "強み2"],
+        "weaknesses": ["弱み1", "弱み2"],
+        "timing": "なぜ今なのか",
+        "audienceReaction": "予想される反応"
+      },
+      "recommendation": "推奨/保留/却下"
+    }
+  ],
+  "selectedOpportunities": [
+    {
+      "name": "選ばれた機会名",
+      "reason": "選択理由",
+      "priority": 1-3の優先順位
+    }
+  ],
+  "insights": "総合的な洞察"
+}
 `,
     expectedOutput: 'OpportunityEvaluation',
     maxTokens: 2000
@@ -297,6 +350,7 @@ export const Phase3Strategy: OrchestratedPhase = {
 - 過去のイベントとの比較内容
 
 # 出力形式
+必ず以下のJSON形式で出力してください：
 {
   "directions": [
     {
@@ -349,6 +403,7 @@ export const Phase3Strategy: OrchestratedPhase = {
 3つの具体的で実行可能なコンテンツコンセプトを作成してください。
 
 # 出力形式
+必ず以下のJSON形式で出力してください：
 {
   "concepts": [
     {

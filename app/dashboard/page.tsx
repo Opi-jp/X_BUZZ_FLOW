@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import AppLayout from '@/app/components/layout/AppLayout'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import { 
   TrendingUp, 
   FileText, 
@@ -15,9 +19,14 @@ import {
   Activity,
   Eye,
   Heart,
-  MessageCircle
+  MessageCircle,
+  Users,
+  BarChart3,
+  Brain,
+  Sparkles
 } from 'lucide-react'
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 
 interface DashboardStats {
   todayPosts: number
@@ -81,11 +90,11 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-4xl font-bold tracking-tight">
             ダッシュボード
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="text-lg text-muted-foreground">
             {session?.user?.username && `@${session.user.username} さん、`}
             今日も素晴らしいコンテンツを作りましょう！
           </p>
@@ -93,152 +102,215 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            href="/viral/cot"
-            className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg p-6 flex items-center justify-between transition-colors"
-          >
-            <div>
-              <h3 className="font-semibold">新規CoT生成</h3>
-              <p className="text-sm opacity-90 mt-1">AIでバイラルコンテンツを作成</p>
-            </div>
-            <TrendingUp className="w-8 h-8 opacity-80" />
-          </Link>
+          <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/50">
+            <Link href="/viral/cot" className="block">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-lg font-semibold">新規CoT生成</CardTitle>
+                <div className="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                  <Brain className="w-6 h-6 text-primary" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  AIでバイラルコンテンツを作成
+                </p>
+                <div className="flex items-center mt-4 text-primary">
+                  <span className="text-sm font-medium">開始する</span>
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
 
-          <Link
-            href="/news"
-            className="bg-purple-500 hover:bg-purple-600 text-white rounded-lg p-6 flex items-center justify-between transition-colors"
-          >
-            <div>
-              <h3 className="font-semibold">ニュース収集</h3>
-              <p className="text-sm opacity-90 mt-1">最新ニュースをチェック</p>
-            </div>
-            <FileText className="w-8 h-8 opacity-80" />
-          </Link>
+          <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-purple-500/50">
+            <Link href="/news" className="block">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-lg font-semibold">ニュース収集</CardTitle>
+                <div className="p-3 bg-purple-500/10 rounded-lg group-hover:bg-purple-500/20 transition-colors">
+                  <FileText className="w-6 h-6 text-purple-500" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  最新ニュースをチェック
+                </p>
+                <div className="flex items-center mt-4 text-purple-500">
+                  <span className="text-sm font-medium">開始する</span>
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
 
-          <Link
-            href="/buzz/posts"
-            className="bg-green-500 hover:bg-green-600 text-white rounded-lg p-6 flex items-center justify-between transition-colors"
-          >
-            <div>
-              <h3 className="font-semibold">バズ分析</h3>
-              <p className="text-sm opacity-90 mt-1">トレンド投稿を確認</p>
-            </div>
-            <Zap className="w-8 h-8 opacity-80" />
-          </Link>
+          <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-green-500/50">
+            <Link href="/buzz/posts" className="block">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-lg font-semibold">バズ分析</CardTitle>
+                <div className="p-3 bg-green-500/10 rounded-lg group-hover:bg-green-500/20 transition-colors">
+                  <Zap className="w-6 h-6 text-green-500" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  トレンド投稿を確認
+                </p>
+                <div className="flex items-center mt-4 text-green-500">
+                  <span className="text-sm font-medium">開始する</span>
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </CardContent>
+            </Link>
+          </Card>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">本日の投稿</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats?.todayPosts || 0}
-                </p>
-              </div>
-              <Activity className="w-8 h-8 text-blue-500" />
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                本日の投稿
+              </CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats?.todayPosts || 0}</div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% from last week
+              </p>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">インプレッション</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats?.totalImpressions?.toLocaleString() || 0}
-                </p>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                インプレッション
+              </CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {stats?.totalImpressions?.toLocaleString() || '0'}
               </div>
-              <Eye className="w-8 h-8 text-purple-500" />
-            </div>
-          </div>
+              <p className="text-xs text-muted-foreground">
+                +180.1% from last month
+              </p>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">いいね</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats?.totalLikes?.toLocaleString() || 0}
-                </p>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                いいね
+              </CardTitle>
+              <Heart className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {stats?.totalLikes?.toLocaleString() || '0'}
               </div>
-              <Heart className="w-8 h-8 text-red-500" />
-            </div>
-          </div>
+              <p className="text-xs text-muted-foreground">
+                +19% from last month
+              </p>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">コメント</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {stats?.totalComments || 0}
-                </p>
-              </div>
-              <MessageCircle className="w-8 h-8 text-green-500" />
-            </div>
-          </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                コメント
+              </CardTitle>
+              <MessageCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats?.totalComments || 0}</div>
+              <p className="text-xs text-muted-foreground">
+                +201 since last hour
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Active Sessions */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                <Clock className="w-5 h-5 mr-2 text-gray-500" />
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
                 進行中のセッション
-              </h2>
-            </div>
-            <div className="p-6">
+              </CardTitle>
+              <CardDescription>
+                現在アクティブなAI生成セッション
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               {stats?.activeSessions > 0 ? (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
+                  <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent transition-colors">
+                    <div className="space-y-1">
                       <p className="font-medium">AI × 働き方</p>
-                      <p className="text-sm text-gray-600">Phase 3/5 実行中</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="text-xs">
+                          Phase 3/5
+                        </Badge>
+                        <span className="text-sm text-muted-foreground">実行中</span>
+                      </div>
                     </div>
-                    <Link
-                      href="/viral/cot"
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      <ArrowRight className="w-5 h-5" />
-                    </Link>
+                    <Button size="sm" variant="ghost" asChild>
+                      <Link href="/viral/cot">
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center py-8">
-                  アクティブなセッションはありません
-                </p>
+                <div className="text-center py-8">
+                  <Sparkles className="w-12 h-12 mx-auto text-muted-foreground/30" />
+                  <p className="text-muted-foreground mt-2">
+                    アクティブなセッションはありません
+                  </p>
+                  <Button className="mt-4" asChild>
+                    <Link href="/viral/cot">
+                      新しいセッションを開始
+                    </Link>
+                  </Button>
+                </div>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Draft Status */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                <FileText className="w-5 h-5 mr-2 text-gray-500" />
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5" />
                 下書き状況
-              </h2>
-            </div>
-            <div className="p-6">
+              </CardTitle>
+              <CardDescription>
+                作成したコンテンツの管理
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">未投稿の下書き</span>
-                  <span className="font-semibold">{stats?.totalDrafts || 0}件</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-sm font-medium">未投稿の下書き</span>
+                    <Badge variant="outline">{stats?.totalDrafts || 0}件</Badge>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-sm font-medium">本日作成</span>
+                    <Badge variant="outline">5件</Badge>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">本日作成</span>
-                  <span className="font-semibold">5件</span>
-                </div>
-                <Link
-                  href="/viral/drafts"
-                  className="block w-full text-center py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
-                >
-                  下書きを管理
-                </Link>
+                <Button className="w-full" variant="outline" asChild>
+                  <Link href="/viral/drafts">
+                    下書きを管理
+                  </Link>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </AppLayout>
