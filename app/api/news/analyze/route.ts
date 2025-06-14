@@ -14,6 +14,7 @@ interface AnalysisResult {
   japaneseSummary: string // 必須に変更
   keyPoints: string[]
   impact: 'low' | 'medium' | 'high'
+  sentiment?: string // 新スキーマ対応で追加
 }
 
 // POST: Claude APIを使ってニュース記事を分析

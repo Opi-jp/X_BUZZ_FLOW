@@ -105,8 +105,8 @@ export async function POST(request: NextRequest) {
     const articlesData = topArticles.map((article, index) => ({
       rank: index + 1,
       title: article.title,
-      japaneseSummary: article.analysis?.japaneseSummary || (article.metadata as any)?.analysis?.japaneseSummary || article.summary,
-      keyPoints: article.analysis?.keyPoints || (article.metadata as any)?.analysis?.keyPoints || [],
+      japaneseSummary: article.analysis?.summary || article.description,
+      keyPoints: article.analysis?.keywords || [],
       sourceName: article.source.name,
       url: article.url,
       importance: article.importance,

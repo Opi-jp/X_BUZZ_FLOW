@@ -70,8 +70,7 @@ export async function POST(request: NextRequest) {
     // アクティブなRSSソースを取得
     const rssSources = await prisma.newsSource.findMany({
       where: {
-        type: 'RSS',
-        active: true,
+        isActive: true,
       },
       orderBy: {
         name: 'asc',
@@ -187,8 +186,7 @@ export async function POST(request: NextRequest) {
                   data: {
                     sourceId: source.id,
                     title: item.title.substring(0, 500),
-                    summary: cleanDescription.substring(0, 1000),
-                    content: cleanDescription,
+                    description: cleanDescription.substring(0, 1000),
                     url: item.link,
                     publishedAt,
                     category: source.category,

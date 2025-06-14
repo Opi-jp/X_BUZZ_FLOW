@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         data: {
           status: 'failed',
           error: error instanceof Error ? error.message : 'Unknown error',
-          endedAt: new Date()
+          completedAt: new Date()
         }
       })
     })
@@ -50,8 +50,7 @@ async function startCollection(jobId: string, type: string, sinceDate?: string) 
   await prisma.jobQueue.update({
     where: { id: jobId },
     data: {
-      status: 'processing',
-      startedAt: new Date()
+      status: 'processing'
     }
   })
 
@@ -77,13 +76,12 @@ async function startCollection(jobId: string, type: string, sinceDate?: string) 
       where: { id: jobId },
       data: {
         status: 'completed',
-        result: {
+        payload: {
           totalSaved,
           totalSkipped,
           results
         },
-        progress: 100,
-        endedAt: new Date()
+        completedAt: new Date()
       }
     })
   } catch (error) {
@@ -95,8 +93,7 @@ async function startCollection(jobId: string, type: string, sinceDate?: string) 
 async function collectRSS(jobId: string, sinceDate?: string) {
   const rssSources = await prisma.newsSource.findMany({
     where: {
-      type: 'RSS',
-      active: true
+      isActive: true
     }
   })
 
@@ -111,8 +108,7 @@ async function collectRSS(jobId: string, sinceDate?: string) {
     await prisma.jobQueue.update({
       where: { id: jobId },
       data: {
-        progress: Math.floor((i / total) * 100),
-        total
+        priority: Math.floor((i / total) * 100)
       }
     })
 
@@ -167,8 +163,7 @@ async function collectRSS(jobId: string, sinceDate?: string) {
               data: {
                 sourceId: source.id,
                 title: title.substring(0, 500),
-                summary: cleanDescription.substring(0, 1000),
-                content: cleanDescription,
+                description: cleanDescription.substring(0, 1000),
                 url: link,
                 publishedAt,
                 category: source.category,

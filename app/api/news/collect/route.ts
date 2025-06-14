@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
 
     // デフォルトのNewsAPIソースを作成（なければ）
     let newsApiSource = await prisma.newsSource.findFirst({
-      where: { type: 'API', name: 'NewsAPI' }
+      where: { name: 'NewsAPI' }
     })
 
     if (!newsApiSource) {
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         data: {
           name: 'NewsAPI',
           url: 'https://newsapi.org',
-          type: 'API',
+          rssUrl: 'https://newsapi.org/v2/everything',
           category: 'AI',
         }
       })
@@ -109,8 +109,7 @@ export async function POST(request: NextRequest) {
             data: {
               sourceId: newsApiSource.id,
               title: article.title,
-              summary: article.description || '',
-              content: article.content || article.description || '',
+              description: article.description || '',
               url: article.url,
               publishedAt: new Date(article.publishedAt),
               category: 'AI',
