@@ -34,7 +34,6 @@ export async function GET(request: NextRequest) {
         status: { 
           in: ['PENDING', 'THINKING', 'EXECUTING', 'INTEGRATING'] 
         },
-        isTimedOut: false,
         OR: [
           { nextRetryAt: { lte: new Date() } },
           { nextRetryAt: null }
@@ -46,10 +45,8 @@ export async function GET(request: NextRequest) {
 
     console.log(`Found ${pendingSessions.length} sessions to process`)
 
-    // タイムアウトチェック
-    const timedOutSessions = pendingSessions.filter(
-      session => session.shouldCompleteBy && session.shouldCompleteBy < new Date()
-    )
+    // タイムアウトチェック（新しいスキーマではタイムアウト機能は簡略化）
+    const timedOutSessions: any[] = [] // 一時的に無効化
     
     if (timedOutSessions.length > 0) {
       await prisma.cotSession.updateMany({
@@ -58,7 +55,6 @@ export async function GET(request: NextRequest) {
         },
         data: {
           status: 'FAILED',
-          isTimedOut: true,
           lastError: 'Session timed out'
         }
       })
@@ -294,14 +290,14 @@ async function createDrafts(sessionId: string, concepts: any[], config: any) {
         title: concept.title,
         hook: concept.hook,
         angle: concept.angle,
-        structure: concept.structure,
-        visual: concept.visual,
+        format: concept.format || 'single',
+        visualGuide: concept.visual,
         timing: concept.timing,
         hashtags: concept.hashtags,
-        opportunity: concept.opportunity,
-        platform: concept.platform || config.platform,
-        format: concept.format,
-        expectedReaction: concept.expectedReaction,
+        // opportunity: concept.opportunity, // 新スキーマでは不要
+        // platform: concept.platform || config.platform, // セッションレベルで管理
+        // format: concept.format, // 重複削除
+        // expectedReaction: concept.expectedReaction // 新スキーマでは不要,
         status: 'DRAFT'
       }
     })

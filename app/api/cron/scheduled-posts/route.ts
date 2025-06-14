@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         await prisma.cotDraft.update({
           where: { id: draft.id },
           data: {
-            status: 'CANCELLED'
+            status: 'ARCHIVED'
             // エラー情報はログに記録
           }
         })

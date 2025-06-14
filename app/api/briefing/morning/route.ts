@@ -75,17 +75,16 @@ export async function POST(request: NextRequest) {
         publishedAt: article.publishedAt,
         category: article.category || 'other',
         processed: article.processed,
-        // NewsAnalysisのデータを含める
+        // NewsAnalysisのデータを含める（新しいスキーマ対応）
         analysis: article.analysis ? {
-          category: article.analysis.category,
           summary: article.analysis.summary,
-          japaneseSummary: article.analysis.japaneseSummary,
-          keyPoints: article.analysis.keyPoints,
-          impact: article.analysis.impact
+          sentiment: article.analysis.sentiment,
+          keywords: article.analysis.keywords,
+          topics: article.analysis.topics
         } : null,
-        // 互換性のため keyPoints も直接設定
-        keyPoints: article.analysis?.keyPoints || [],
-        japaneseSummary: article.analysis?.japaneseSummary || article.summary
+        // 互換性のため keywords も直接設定
+        keywords: article.analysis?.keywords || [],
+        topics: article.analysis?.topics || []
       }))
     }
 
@@ -109,10 +108,10 @@ export async function POST(request: NextRequest) {
               trends: recentReport.trends as string[],
               insights: recentReport.insights as string[]
             },
-            personalAngles: recentReport.personalAngles,
-            buzzPrediction: recentReport.buzzPrediction,
-            recommendations: recentReport.recommendations,
-            metadata: recentReport.metadata,
+            contentAngles: recentReport.contentAngles,
+            marketContext: recentReport.marketContext,
+            competitorActivity: recentReport.competitorActivity,
+            riskFactors: recentReport.riskFactors,
             newsIntegrated: true,
             newsUsedCount: Math.min(briefing.newsHighlights.length, 5),
             fromCache: true

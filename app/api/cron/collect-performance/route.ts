@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
     
-    // パフォーマンス収集が必要な投稿を取得
-    const postsToCheck = await prisma.viralPost.findMany({
+    // パフォーマンス収集が必要な投稿を取得（新スキーマ対応）
+    const postsToCheck = await prisma.cotDraft.findMany({
       where: {
         postedAt: { not: null }, // 投稿済みのもののみ
         OR: [
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     
     for (const post of postsToCheck) {
       try {
-        if (!post.postUrl) continue
+        if (!post.postId) continue
         
         // 投稿の経過時間を計算
         const elapsedMinutes = Math.floor((now.getTime() - post.postedAt!.getTime()) / (60 * 1000))
@@ -89,9 +89,9 @@ export async function GET(request: NextRequest) {
         }
         
         // すでにこのタイムフレームのデータがあるかチェック
-        const existingPerformance = await prisma.viralPostPerformance.findFirst({
+        const existingPerformance = await prisma.cotDraftPerformance.findFirst({
           where: {
-            postId: post.id
+            draftId: post.id
           }
         })
         
@@ -102,10 +102,8 @@ export async function GET(request: NextRequest) {
           continue // すでに収集済み
         }
         
-        // URLからツイートIDを抽出
-        const tweetIdMatch = post.postUrl.match(/status\/(\d+)/)
-        if (!tweetIdMatch) continue
-        const tweetId = tweetIdMatch[1]
+        // postIdを直接使用（新しいスキーマではTwitterの投稿IDが直接保存される）
+        const tweetId = post.postId
         
         // Twitter APIでメトリクスを取得
         // 注意: v2 APIではメトリクスの取得に制限があります
@@ -129,7 +127,7 @@ export async function GET(request: NextRequest) {
           
           // パフォーマンスデータを保存または更新
           const performanceData: any = {
-            postId: post.id,
+            draftId: post.id,
             engagementRate: Number(engagementRate.toFixed(2))
           }
           
@@ -138,27 +136,27 @@ export async function GET(request: NextRequest) {
             performanceData.impressions30m = metrics.impression_count || 0
             performanceData.likes30m = metrics.like_count || 0
             performanceData.retweets30m = metrics.retweet_count || 0
-            performanceData.comments30m = metrics.reply_count || 0
+            performanceData.replies30m = metrics.reply_count || 0
           } else if (timeframe === '1h') {
             performanceData.impressions1h = metrics.impression_count || 0
             performanceData.likes1h = metrics.like_count || 0
             performanceData.retweets1h = metrics.retweet_count || 0
-            performanceData.comments1h = metrics.reply_count || 0
+            performanceData.replies1h = metrics.reply_count || 0
           } else if (timeframe === '24h') {
             performanceData.impressions24h = metrics.impression_count || 0
             performanceData.likes24h = metrics.like_count || 0
             performanceData.retweets24h = metrics.retweet_count || 0
-            performanceData.comments24h = metrics.reply_count || 0
+            performanceData.replies24h = metrics.reply_count || 0
           }
           
           // 既存のレコードがあれば更新、なければ作成
           if (existingPerformance) {
-            await prisma.viralPostPerformance.update({
+            await prisma.cotDraftPerformance.update({
               where: { id: existingPerformance.id },
               data: performanceData
             })
           } else {
-            await prisma.viralPostPerformance.create({
+            await prisma.cotDraftPerformance.create({
               data: performanceData
             })
           }
@@ -185,7 +183,7 @@ export async function GET(request: NextRequest) {
     }
     
     // 分析インサイトの生成（24時間後のデータがある投稿）
-    const postsWithFullData = await prisma.viralPost.findMany({
+    const postsWithFullData = await prisma.cotDraft.findMany({
       where: {
         performance: {
           impressions24h: { not: null }
@@ -193,7 +191,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         performance: true,
-        opportunity: true
+        session: true
       },
       take: 5,
       orderBy: {
@@ -211,7 +209,7 @@ export async function GET(request: NextRequest) {
           content: post.content?.substring(0, 100),
           engagementRate: perf.engagementRate,
           impressions: perf.impressions24h,
-          conceptType: post.conceptType,
+          title: post.title,
           hashtags: post.hashtags
         })
       }

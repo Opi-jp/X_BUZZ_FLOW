@@ -36,12 +36,14 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         description,
-        query: query || keywords.join(' '),
-        keywords,
-        minLikes: minLikes || 100,
-        minRetweets: minRetweets || 50,
-        category: category || 'general',
-        language: 'ja',
+        settings: {
+          query: query || keywords.join(' '),
+          keywords,
+          minLikes: minLikes || 100,
+          minRetweets: minRetweets || 50,
+          category: category || 'general',
+          language: 'ja'
+        }
       },
     })
     
