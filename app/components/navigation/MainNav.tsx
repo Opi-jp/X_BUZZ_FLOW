@@ -16,7 +16,7 @@ import {
 import { useState } from 'react'
 
 const navigation = [
-  { name: 'ダッシュボード', href: '/', icon: Home },
+  { name: 'ダッシュボード', href: '/dashboard', icon: Home },
   { 
     name: 'AIバイラル', 
     href: '/viral',
@@ -56,7 +56,7 @@ export default function MainNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
+    if (href === '/dashboard') return pathname === '/dashboard'
     return pathname.startsWith(href)
   }
 
