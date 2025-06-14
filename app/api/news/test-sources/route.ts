@@ -14,9 +14,9 @@ export async function GET(request: NextRequest) {
         data: {
           name: 'Test Source',
           url: 'https://test.example.com',
-          type: 'TEST',
+          rssUrl: 'https://test.example.com/rss',
           category: 'AI',
-          active: true,
+          isActive: true,
         }
       })
     }
@@ -63,8 +63,7 @@ export async function GET(request: NextRequest) {
           data: {
             sourceId: testSource.id,
             title: article.title,
-            summary: article.summary,
-            content: article.content,
+            description: article.summary,
             url,
             publishedAt: new Date(),
             category: 'AI',

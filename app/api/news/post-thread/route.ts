@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       where: { id: threadId },
       include: {
         items: {
-          orderBy: { position: 'asc' },
+          orderBy: { order: 'asc' },
         },
       },
     })

@@ -34,7 +34,10 @@ export async function POST(
     
     // セッション取得
     const session = await prisma.cotSession.findUnique({
-      where: { id: sessionId }
+      where: { id: sessionId },
+      include: {
+        phases: true
+      }
     })
     
     if (!session) {
@@ -64,8 +67,6 @@ export async function POST(
       )
     }
     
-    const config = session.config as any
-    const phases = session.phases as any || {}
     const currentPhase = session.currentPhase
     const currentStep = session.currentStep
     
@@ -105,15 +106,16 @@ export async function POST(
     
     // コンテキストの準備
     const context = {
-      expertise: config.expertise,
-      style: config.style,
-      platform: config.platform,
-      ...getPreviousPhaseResults(phases, currentPhase)
+      expertise: session.expertise,
+      style: session.style,
+      platform: session.platform,
+      ...(await getPreviousPhaseResults(session.phases || [], currentPhase))
     }
     
     let result
     let nextStep = currentStep
     let nextPhase = currentPhase
+    let tokensUsed = 0
     
     // 現在のステップを実行
     if (currentStep === 'THINK') {
@@ -124,7 +126,7 @@ export async function POST(
       console.log(`[THINK] Prompt length: ${prompt.length} characters`)
       
       const completion = await openai.chat.completions.create({
-        model: config.model || 'gpt-4o',
+        model: 'gpt-4o',
         messages: [
           { role: 'system', content: getSystemPrompt(currentPhase) },
           { role: 'user', content: prompt }
@@ -135,6 +137,7 @@ export async function POST(
       })
       
       console.log(`[THINK] Response received - Tokens used: ${completion.usage?.total_tokens}`)
+      tokensUsed = completion.usage?.total_tokens || 0
       
       const rawContent = completion.choices[0].message.content || '{}'
       console.log(`[THINK] Raw response length: ${rawContent.length} characters`)
@@ -148,24 +151,50 @@ export async function POST(
         throw new Error(`Failed to parse THINK response: ${parseError}`)
       }
       
-      // 結果を保存
-      phases[`phase${currentPhase}`] = {
-        ...phases[`phase${currentPhase}`],
-        think: {
-          result,
-          completedAt: new Date().toISOString(),
-          tokens: completion.usage?.total_tokens || 0
+      // 結果をDBに保存
+      const phase = await prisma.cotPhase.upsert({
+        where: {
+          sessionId_phaseNumber: {
+            sessionId,
+            phaseNumber: currentPhase
+          }
+        },
+        update: {
+          thinkPrompt: prompt,
+          thinkResult: result as any,
+          thinkTokens: completion.usage?.total_tokens || 0,
+          thinkAt: new Date(),
+          status: 'THINKING'
+        },
+        create: {
+          sessionId,
+          phaseNumber: currentPhase,
+          thinkPrompt: prompt,
+          thinkResult: result as any,
+          thinkTokens: completion.usage?.total_tokens || 0,
+          thinkAt: new Date(),
+          status: 'THINKING'
         }
-      }
+      })
       
       nextStep = 'EXECUTE'
       
     } else if (currentStep === 'EXECUTE') {
       // Execute フェーズ
-      const thinkResult = phases[`phase${currentPhase}`]?.think?.result
-      if (!thinkResult) {
+      // Think結果を取得
+      const phase = await prisma.cotPhase.findUnique({
+        where: {
+          sessionId_phaseNumber: {
+            sessionId,
+            phaseNumber: currentPhase
+          }
+        }
+      })
+      
+      if (!phase?.thinkResult) {
         throw new Error('Think result not found')
       }
+      const thinkResult = phase.thinkResult as any
       
       console.log(`[EXECUTE] Starting execution - Phase: ${currentPhase}`)
       console.log(`[EXECUTE] Think result keys: ${Object.keys(thinkResult).join(', ')}`)
@@ -181,14 +210,21 @@ export async function POST(
         throw new Error(`Execute phase failed: ${execError}`)
       }
       
-      // 結果を保存
-      phases[`phase${currentPhase}`] = {
-        ...phases[`phase${currentPhase}`],
-        execute: {
-          result,
-          completedAt: new Date().toISOString()
+      // 結果をDBに保存
+      await prisma.cotPhase.update({
+        where: {
+          sessionId_phaseNumber: {
+            sessionId,
+            phaseNumber: currentPhase
+          }
+        },
+        data: {
+          executeResult: result as any,
+          executeDuration: Date.now() - startTime,
+          executeAt: new Date(),
+          status: 'EXECUTING'
         }
-      }
+      })
       
       // Phase 1の検索結果をDBに保存（マイグレーション後に有効化）
       if (currentPhase === 1 && result.searchResultsForDB) {
@@ -220,14 +256,24 @@ export async function POST(
       
     } else if (currentStep === 'INTEGRATE') {
       // Integrate フェーズ
-      const executeResult = phases[`phase${currentPhase}`]?.execute?.result
-      if (!executeResult) {
+      // Execute結果を取得
+      const phase = await prisma.cotPhase.findUnique({
+        where: {
+          sessionId_phaseNumber: {
+            sessionId,
+            phaseNumber: currentPhase
+          }
+        }
+      })
+      
+      if (!phase?.executeResult) {
         throw new Error('Execute result not found')
       }
+      const executeResult = phase.executeResult as any
       
       const integrateContext = {
         ...context,
-        ...phases[`phase${currentPhase}`]?.think?.result,
+        ...(phase.thinkResult as any),
         ...executeResult
       }
       
@@ -238,7 +284,7 @@ export async function POST(
       console.log(`[INTEGRATE] Prompt length: ${prompt.length} characters`)
       
       const completion = await openai.chat.completions.create({
-        model: config.model || 'gpt-4o',
+        model: 'gpt-4o',
         messages: [
           { role: 'system', content: getSystemPrompt(currentPhase) },
           { role: 'user', content: prompt }
@@ -249,6 +295,7 @@ export async function POST(
       })
       
       console.log(`[INTEGRATE] Response received - Tokens used: ${completion.usage?.total_tokens}`)
+      tokensUsed = completion.usage?.total_tokens || 0
       
       const rawContent2 = completion.choices[0].message.content || '{}'
       console.log(`[INTEGRATE] Raw response length: ${rawContent2.length} characters`)
@@ -262,15 +309,22 @@ export async function POST(
         throw new Error(`Failed to parse INTEGRATE response: ${parseError}`)
       }
       
-      // 結果を保存
-      phases[`phase${currentPhase}`] = {
-        ...phases[`phase${currentPhase}`],
-        integrate: {
-          result,
-          completedAt: new Date().toISOString(),
-          tokens: completion.usage?.total_tokens || 0
+      // 結果をDBに保存
+      await prisma.cotPhase.update({
+        where: {
+          sessionId_phaseNumber: {
+            sessionId,
+            phaseNumber: currentPhase
+          }
+        },
+        data: {
+          integratePrompt: prompt,
+          integrateResult: result as any,
+          integrateTokens: completion.usage?.total_tokens || 0,
+          integrateAt: new Date(),
+          status: 'COMPLETED'
         }
-      }
+      })
       
       // 次のフェーズへ
       if (currentPhase < 5) {
@@ -281,12 +335,11 @@ export async function POST(
         await prisma.cotSession.update({
           where: { id: sessionId },
           data: {
-            phases,
             currentPhase: nextPhase,
             currentStep: nextStep,
             status: 'PENDING', // 次のフェーズ開始前は PENDING に戻す
             totalDuration: session.totalDuration + (Date.now() - startTime),
-            totalTokens: session.totalTokens + (result.tokens || 0),
+            totalTokens: session.totalTokens + tokensUsed,
             updatedAt: new Date()
           }
         })
@@ -335,12 +388,11 @@ export async function POST(
     await prisma.cotSession.update({
       where: { id: sessionId },
       data: {
-        phases,
         currentPhase: nextPhase,
         currentStep: nextStep,
         status: nextStatus,
         totalDuration: session.totalDuration + duration,
-        totalTokens: session.totalTokens + (result.tokens || 0),
+        totalTokens: session.totalTokens + tokensUsed,
         updatedAt: new Date(),
         ...(isCompleted && { completedAt: new Date() })
       }
@@ -348,7 +400,11 @@ export async function POST(
     
     // Phase 5が完了したら下書きを作成
     if (isCompleted) {
-      await createCompleteDrafts(sessionId, phases, config)
+      const allPhases = await prisma.cotPhase.findMany({
+        where: { sessionId },
+        orderBy: { phaseNumber: 'asc' }
+      })
+      await createCompleteDrafts(sessionId, allPhases, session)
     }
     
     return NextResponse.json({
@@ -429,49 +485,61 @@ function formatSearchResults(searchResults: any): string {
   return JSON.stringify(searchResults, null, 2)
 }
 
-function getPreviousPhaseResults(phases: any, currentPhase: number): any {
+async function getPreviousPhaseResults(phases: any[], currentPhase: number): Promise<any> {
   const results: any = {}
   
   // Phase 1の結果を含める
-  if (currentPhase > 1 && phases.phase1) {
-    results.phase1Result = phases.phase1.integrate?.result
-    // Phase 2用に、trendedTopicsを渡す
-    results.trendedTopics = phases.phase1.integrate?.result?.trendedTopics || []
-    // カテゴリ別の洞察も含める
-    results.categoryInsights = phases.phase1.integrate?.result?.categoryInsights || {}
-    // Perplexityで収集した詳細な分析データも含める
-    results.searchResults = phases.phase1.execute?.result?.searchResults || []
+  if (currentPhase > 1) {
+    const phase1 = phases.find(p => p.phaseNumber === 1)
+    if (phase1?.integrateResult) {
+      results.phase1Result = phase1.integrateResult
+      results.trendedTopics = phase1.integrateResult.trendedTopics || []
+      results.categoryInsights = phase1.integrateResult.categoryInsights || {}
+      results.searchResults = phase1.executeResult?.searchResults || []
+    }
   }
   
   // Phase 2の結果を含める
-  if (currentPhase > 2 && phases.phase2?.integrate?.result) {
-    results.phase2Result = phases.phase2.integrate.result
-    results.selectedOpportunities = phases.phase2.integrate.result.selectedOpportunities || []
+  if (currentPhase > 2) {
+    const phase2 = phases.find(p => p.phaseNumber === 2)
+    if (phase2?.integrateResult) {
+      results.phase2Result = phase2.integrateResult
+      results.selectedOpportunities = phase2.integrateResult.selectedOpportunities || []
+    }
   }
   
   // Phase 3の結果を含める
-  if (currentPhase > 3 && phases.phase3?.integrate?.result) {
-    results.phase3Result = phases.phase3.integrate.result
-    results.concepts = phases.phase3.integrate.result.concepts || []
+  if (currentPhase > 3) {
+    const phase3 = phases.find(p => p.phaseNumber === 3)
+    if (phase3?.integrateResult) {
+      results.phase3Result = phase3.integrateResult
+      results.concepts = phase3.integrateResult.concepts || []
+    }
   }
   
   // Phase 4の結果を含める
-  if (currentPhase > 4 && phases.phase4?.integrate?.result) {
-    results.phase4Result = phases.phase4.integrate.result
-    results.mainPost = phases.phase4.integrate.result.mainPost || ''
+  if (currentPhase > 4) {
+    const phase4 = phases.find(p => p.phaseNumber === 4)
+    if (phase4?.integrateResult) {
+      results.phase4Result = phase4.integrateResult
+      results.mainPost = phase4.integrateResult.mainPost || ''
+    }
   }
   
   return results
 }
 
-async function createCompleteDrafts(sessionId: string, phases: any, config: any) {
+async function createCompleteDrafts(sessionId: string, phases: any[], session: any) {
   // Phase 3からコンセプト情報を取得
-  const concepts = phases.phase3?.integrate?.result?.concepts || []
+  const phase3 = phases.find(p => p.phaseNumber === 3)
+  const concepts = phase3?.integrateResult?.concepts || []
   // Phase 4から選択されたコンセプトとコンテンツを取得
-  const selectedIndex = phases.phase4?.think?.result?.selectedConceptIndex || 0
-  const finalContent = phases.phase4?.integrate?.result || {}
+  const phase4 = phases.find(p => p.phaseNumber === 4)
+  const selectedIndex = phase4?.thinkResult?.selectedConceptIndex || 0
+  const finalContent = phase4?.integrateResult || {}
   // Phase 5から戦略情報を取得
-  const strategy = phases.phase5?.integrate?.result || {}
+  const phase5 = phases.find(p => p.phaseNumber === 5)
+  const strategy = phase5?.integrateResult || {}
   
   // 選択されたコンセプトの下書きを作成
   const selectedConcept = concepts[selectedIndex]
@@ -483,20 +551,19 @@ async function createCompleteDrafts(sessionId: string, phases: any, config: any)
         title: selectedConcept.title,
         hook: selectedConcept.hook,
         angle: selectedConcept.angle,
-        structure: selectedConcept.structure,
-        visual: selectedConcept.visual || finalContent.visualDescription,
-        timing: selectedConcept.timing || strategy.bestTimeToPost?.[0],
-        hashtags: finalContent.hashtags || selectedConcept.hashtags || [],
-        opportunity: selectedConcept.opportunity,
-        platform: selectedConcept.platform || config.platform,
         format: selectedConcept.format,
-        expectedReaction: selectedConcept.expectedReaction,
         content: finalContent.mainPost,
-        threadContent: finalContent.threadPosts || [],
-        kpis: strategy.kpis || {},
-        bestTimeToPost: strategy.bestTimeToPost || [],
-        followUpStrategy: strategy.followUpStrategy || '',
-        status: 'DRAFT'
+        threadContent: finalContent.threadPosts || null,
+        visualGuide: selectedConcept.visual || finalContent.visualDescription,
+        timing: selectedConcept.timing || strategy.bestTimeToPost?.[0] || '',
+        hashtags: finalContent.hashtags || selectedConcept.hashtags || [],
+        newsSource: selectedConcept.opportunity,
+        sourceUrl: null,
+        kpis: strategy.kpis || null,
+        riskAssessment: null,
+        optimizationTips: null,
+        status: 'DRAFT',
+        viralScore: null
       }
     })
   }
@@ -512,15 +579,19 @@ async function createCompleteDrafts(sessionId: string, phases: any, config: any)
           title: concept.title,
           hook: concept.hook,
           angle: concept.angle,
-          structure: concept.structure,
-          visual: concept.visual,
-          timing: concept.timing,
-          hashtags: concept.hashtags,
-          opportunity: concept.opportunity,
-          platform: concept.platform || config.platform,
           format: concept.format,
-          expectedReaction: concept.expectedReaction,
-          status: 'ALTERNATIVE' // 代替案として保存
+          content: null,
+          threadContent: null,
+          visualGuide: concept.visual,
+          timing: concept.timing || '',
+          hashtags: concept.hashtags || [],
+          newsSource: concept.opportunity,
+          sourceUrl: null,
+          kpis: null,
+          riskAssessment: null,
+          optimizationTips: null,
+          status: 'DRAFT',
+          viralScore: null
         }
       })
     }

@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
       data: {
         type: `collect_${type}`,
         status: 'pending',
-        payload: body,
+        payload: body as any,
+        priority: 0,
       }
     })
 
@@ -80,7 +81,7 @@ async function startCollection(jobId: string, type: string, sinceDate?: string) 
           totalSaved,
           totalSkipped,
           results
-        },
+        } as any,
         completedAt: new Date()
       }
     })
@@ -105,12 +106,8 @@ async function collectRSS(jobId: string, sinceDate?: string) {
     const source = rssSources[i]
     
     // 進捗を更新
-    await prisma.jobQueue.update({
-      where: { id: jobId },
-      data: {
-        priority: Math.floor((i / total) * 100)
-      }
-    })
+    // 進捗を更新（priorityフィールドの使い方を変更）
+    // priorityは優先度なので、進捗表示には使わない
 
     try {
       const response = await fetch(source.url, {

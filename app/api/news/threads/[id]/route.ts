@@ -20,7 +20,7 @@ export async function GET(
               }
             },
           },
-          orderBy: { position: 'asc' },
+          orderBy: { order: 'asc' },
         },
       },
     })
@@ -84,7 +84,7 @@ export async function PATCH(
                 }
               },
             },
-            orderBy: { position: 'asc' },
+            orderBy: { order: 'asc' },
           },
         },
       })

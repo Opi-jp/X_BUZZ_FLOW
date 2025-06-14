@@ -20,25 +20,22 @@ export async function GET(
       )
     }
 
-    // 実行時間を計算
+    // 実行時間を計算（新スキーマでは簡略化）
     let duration = null
-    if (job.startedAt) {
-      const endTime = job.endedAt || new Date()
-      duration = Math.floor((endTime.getTime() - job.startedAt.getTime()) / 1000)
+    if (job.completedAt) {
+      duration = Math.floor((job.completedAt.getTime() - job.createdAt.getTime()) / 1000)
     }
 
     return NextResponse.json({
       id: job.id,
       type: job.type,
       status: job.status,
-      progress: job.progress,
-      total: job.total,
-      result: job.result,
+      priority: job.priority,
+      payload: job.payload,
       error: job.error,
       duration,
       createdAt: job.createdAt,
-      startedAt: job.startedAt,
-      endedAt: job.endedAt
+      completedAt: job.completedAt
     })
   } catch (error) {
     console.error('Error fetching job:', error)

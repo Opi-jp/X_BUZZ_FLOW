@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const { draftId, focusArea = 'hook' } = await request.json()
     
     // 元の下書きを取得
-    const draft = await prisma.contentDraft.findUnique({
+    const draft = await prisma.cotDraft.findUnique({
       where: { id: draftId }
     })
     
@@ -48,27 +48,31 @@ export async function POST(request: NextRequest) {
     // バリエーションをDBに保存
     const savedVariations = await Promise.all(
       variations.variants.map(async (variant: any, index: number) => {
-        return await prisma.contentDraft.create({
+        return await prisma.cotDraft.create({
           data: {
-            analysisId: draft.analysisId,
-            conceptType: draft.conceptType,
-            category: draft.category,
+            sessionId: draft.sessionId,
+            conceptNumber: draft.conceptNumber + index + 1,
             title: `${draft.title} - バリエーション${String.fromCharCode(65 + index)}`,
+            hook: variant.content.substring(0, 50),
+            angle: draft.angle,
+            format: draft.format,
             content: variant.content,
             editedContent: variant.content,
-            explanation: variant.reasoning,
-            buzzFactors: draft.buzzFactors,
-            targetAudience: draft.targetAudience,
-            estimatedEngagement: draft.estimatedEngagement,
+            timing: draft.timing,
             hashtags: draft.hashtags,
-            metadata: {
-              ...(draft.metadata as any || {}),
-              isABTestVariant: true,
-              originalDraftId: draftId,
-              variantType: focusArea,
-              variantApproach: variant.approach,
-              expectedDifference: variant.expectedDifference
-            }
+            newsSource: draft.newsSource,
+            sourceUrl: draft.sourceUrl,
+            kpis: {
+              ...(draft.kpis as any || {}),
+              abTestInfo: {
+                isABTestVariant: true,
+                originalDraftId: draftId,
+                variantType: focusArea,
+                variantApproach: variant.approach,
+                expectedDifference: variant.expectedDifference
+              }
+            } as any,
+            status: 'DRAFT'
           }
         })
       })
@@ -80,8 +84,8 @@ export async function POST(request: NextRequest) {
       variants: savedVariations.map(v => ({
         id: v.id,
         content: v.content,
-        approach: (v.metadata as any).variantApproach,
-        expectedDifference: (v.metadata as any).expectedDifference
+        approach: (v.kpis as any)?.abTestInfo?.variantApproach,
+        expectedDifference: (v.kpis as any)?.abTestInfo?.expectedDifference
       })),
       focusArea,
       totalVariants: savedVariations.length

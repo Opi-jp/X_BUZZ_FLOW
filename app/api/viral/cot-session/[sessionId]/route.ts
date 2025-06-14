@@ -14,7 +14,8 @@ export async function GET(
       include: {
         drafts: {
           orderBy: { conceptNumber: 'asc' }
-        }
+        },
+        phases: true
       }
     })
     
@@ -25,14 +26,37 @@ export async function GET(
       )
     }
     
-    // phasesフィールドの各フェーズ結果を整形
-    const phases = session.phases as any || {}
+    // phasesデータを整形
+    const phaseMap: any = {}
+    session.phases.forEach(phase => {
+      phaseMap[`phase${phase.phaseNumber}`] = {
+        think: phase.thinkResult ? {
+          result: phase.thinkResult,
+          completedAt: phase.thinkAt?.toISOString(),
+          tokens: phase.thinkTokens
+        } : null,
+        execute: phase.executeResult ? {
+          result: phase.executeResult,
+          completedAt: phase.executeAt?.toISOString()
+        } : null,
+        integrate: phase.integrateResult ? {
+          result: phase.integrateResult,
+          completedAt: phase.integrateAt?.toISOString(),
+          tokens: phase.integrateTokens
+        } : null
+      }
+    })
+    const phases = phaseMap
     
     // 結果を整形して返す
     const response = {
       id: session.id,
       status: session.status,
-      config: session.config,
+      config: {
+        expertise: session.expertise,
+        style: session.style,
+        platform: session.platform
+      },
       currentPhase: session.currentPhase,
       currentStep: session.currentStep,
       phaseProgress: session.currentPhase - 1, // 完了したフェーズ数

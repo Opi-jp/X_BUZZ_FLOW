@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
       rank: index + 1,
       title: article.title,
       japaneseSummary: article.analysis?.summary || article.description,
-      keyPoints: article.analysis?.keywords || [],
+      keywords: article.analysis?.keywords || [],
       sourceName: article.source.name,
       url: article.url,
       importance: article.importance,
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 ニュース一覧:
 ${articlesData.map(a => `${a.rank}. ${a.title}
    日本語要約: ${a.japaneseSummary}
-   キーポイント: ${a.keyPoints.length > 0 ? a.keyPoints.join(', ') : 'なし'}
+   キーポイント: ${a.keywords.length > 0 ? a.keywords.join(', ') : 'なし'}
    ソース: ${a.sourceName}
    URL: ${a.url}
    重要度: ${a.importance}`).join('\n\n')}
@@ -261,15 +261,15 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           const article = topArticles[item.rank - 1]
           let tweetContent = item.tweetContent
           
-          // キーポイントがある場合、箇条書きが含まれているか確認
-          const keyPoints = article.analysis?.keyPoints || (article.metadata as any)?.analysis?.keyPoints || []
+          // キーワードがある場合、箇条書きが含まれているか確認
+          const keywords = article.analysis?.keywords || []
           
-          if (keyPoints.length > 0 && !tweetContent.includes('・')) {
-            // キーポイントを箇条書きで追加（既に日本語のはず）
-            const bulletPoints = keyPoints.slice(0, 2).map((point: string) => `・${point}`).join('\n')
+          if (keywords.length > 0 && !tweetContent.includes('・')) {
+            // キーワードを箇条書きで追加
+            const bulletPoints = keywords.slice(0, 2).map((point: string) => `・${point}`).join('\n')
             const titleMatch = tweetContent.match(/【[^】]+】(.+?)(?:\n|$)/)
             if (titleMatch) {
-              // タイトルの後にキーポイントを挿入
+              // タイトルの後にキーワードを挿入
               const titlePart = titleMatch[0]
               const restPart = tweetContent.substring(titlePart.length)
               tweetContent = titlePart + '\n' + bulletPoints + restPart
@@ -317,22 +317,18 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
           articleCount: articles.length,
           requiredArticleIds: requiredArticleIds,
           totalArticles: topArticles.length,
-        },
+        } as any,
         items: {
           create: [
             {
               content: generation.mainTweet,
-              position: 0,
-              metadata: { type: 'main' },
+              order: 0,
+              articleId: topArticles[0].id, // メインツイート用に最初の記事IDを使用
             },
             ...generation.newsItems.map((item) => ({
               content: item.tweetContent,
-              position: item.rank,
+              order: item.rank,
               articleId: item.articleId,
-              metadata: { 
-                type: 'news',
-                originalUrl: item.originalUrl,
-              },
             })),
           ],
         },
@@ -343,7 +339,7 @@ ${articlesData.map(a => `${a.rank}. ${a.title}
             article: true,
           },
           orderBy: {
-            position: 'asc',
+            order: 'asc',
           },
         },
       },
@@ -390,7 +386,7 @@ export async function GET(request: NextRequest) {
             article: true,
           },
           orderBy: {
-            position: 'asc',
+            order: 'asc',
           },
         },
         _count: {

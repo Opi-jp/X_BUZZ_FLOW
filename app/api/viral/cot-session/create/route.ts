@@ -17,24 +17,12 @@ export async function POST(request: NextRequest) {
     // 新しいChain of Thoughtセッションを作成
     const session = await prisma.cotSession.create({
       data: {
-        sessionType: 'viral-content-creation',
-        config: {
-          expertise,
-          style,
-          platform,
-          model: 'gpt-4o'
-        },
+        expertise,
+        style,
+        platform,
         status: 'PENDING',
         currentPhase: 1,
-        currentStep: 'THINK',
-        phases: {
-          phase1: { think: null, execute: null, integrate: null },
-          phase2: { think: null, execute: null, integrate: null },
-          phase3: { think: null, execute: null, integrate: null },
-          phase4: { think: null, execute: null, integrate: null },
-          phase5: { think: null, execute: null, integrate: null }
-        },
-        shouldCompleteBy: new Date(Date.now() + 10 * 60 * 1000) // 10分後
+        currentStep: 'THINK'
       }
     })
 

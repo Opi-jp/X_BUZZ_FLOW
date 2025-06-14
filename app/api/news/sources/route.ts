@@ -62,13 +62,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, url, type, category } = body
+    const { name, url, rssUrl, category } = body
 
     const source = await prisma.newsSource.create({
       data: {
         name,
         url,
-        type: type || 'RSS',
+        rssUrl: rssUrl || url,
         category: category || 'AI',
       }
     })

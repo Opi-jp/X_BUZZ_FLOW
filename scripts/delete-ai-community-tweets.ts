@@ -45,7 +45,7 @@ async function deleteAICommunityTweets() {
     console.log('✅ 削除完了:', result.count, '件の記事を削除しました')
     
     // ソースのアクティブ状態を確認
-    console.log('ソースのアクティブ状態:', source.active ? '有効' : '無効')
+    console.log('ソースのアクティブ状態:', source.isActive ? '有効' : '無効')
     console.log('ソース自体は履歴として保持します')
     
   } catch (error) {

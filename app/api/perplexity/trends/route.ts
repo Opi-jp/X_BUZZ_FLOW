@@ -88,19 +88,23 @@ export async function POST(request: NextRequest) {
           rawAnalysis: analysis,
           trends: insights.trends || [],
           insights: insights.insights || [],
-          personalAngles: personalInsights,
-          buzzPrediction,
-          recommendations: {
-            immediateAction: generateImmediateActions(insights),
-            rpTargets: generateRPTargets(insights),
-            postIdeas: generatePostIdeas(personalInsights)
-          },
-          metadata: {
-            timestamp: new Date().toISOString(),
-            freshness: 'real-time',
-            newsContext: newsContext.slice(0, 5),
-            newsAnalysisIntegrated: newsContext.length > 0
-          }
+          contentAngles: personalInsights as any,
+          marketContext: {
+            buzzPrediction,
+            recommendations: {
+              immediateAction: generateImmediateActions(insights),
+              rpTargets: generateRPTargets(insights),
+              postIdeas: generatePostIdeas(personalInsights)
+            },
+            metadata: {
+              timestamp: new Date().toISOString(),
+              freshness: 'real-time',
+              newsContext: newsContext.slice(0, 5),
+              newsAnalysisIntegrated: newsContext.length > 0
+            }
+          } as any,
+          competitorActivity: {} as any,
+          riskFactors: {} as any
         }
       })
     } else {
@@ -112,19 +116,23 @@ export async function POST(request: NextRequest) {
           rawAnalysis: analysis,
           trends: insights.trends || [],
           insights: insights.insights || [],
-          personalAngles: personalInsights,
-          buzzPrediction,
-          recommendations: {
-            immediateAction: generateImmediateActions(insights),
-            rpTargets: generateRPTargets(insights),
-            postIdeas: generatePostIdeas(personalInsights)
-          },
-          metadata: {
-            timestamp: new Date().toISOString(),
-            freshness: 'real-time',
-            newsContext: newsContext.slice(0, 5),
-            newsAnalysisIntegrated: newsContext.length > 0
-          }
+          contentAngles: personalInsights as any,
+          marketContext: {
+            buzzPrediction,
+            recommendations: {
+              immediateAction: generateImmediateActions(insights),
+              rpTargets: generateRPTargets(insights),
+              postIdeas: generatePostIdeas(personalInsights)
+            },
+            metadata: {
+              timestamp: new Date().toISOString(),
+              freshness: 'real-time',
+              newsContext: newsContext.slice(0, 5),
+              newsAnalysisIntegrated: newsContext.length > 0
+            }
+          } as any,
+          competitorActivity: {} as any,
+          riskFactors: {} as any
         }
       })
     }
