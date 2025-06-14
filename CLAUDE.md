@@ -405,6 +405,71 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
   - APIキー・Search Engine ID設定済み
   - 7日以内のニュース検索に特化
 
+## 2025年6月14日の実装（Vercelデプロイ準備）
+
+### 重要な修正事項
+
+#### 1. 404エラーの解消
+- `/app/buzz/posts/page.tsx` - 投稿管理ページ作成
+- `/app/settings/page.tsx` - 設定ページ作成
+- `/app/analytics/page.tsx` - 分析ダッシュボード作成
+
+#### 2. UIコンポーネントの実装
+- **shadcn/ui統合**: 全コンポーネントを作成
+  - button, card, dialog, dropdown-menu, input, label
+  - navigation-menu, scroll-area, select, separator
+  - switch, tabs, textarea, badge
+- **必要な依存関係インストール**:
+  - class-variance-authority
+  - @radix-ui/react-label
+  - @radix-ui/react-icons
+
+#### 3. データベーススキーマ対応
+- **ViralPostPerformance**: one-to-one relationへの対応
+  - `performance[0]` → `performance`への修正
+  - `timeframe`フィールドの削除（30m, 1h, 24h固定フィールド使用）
+- **クエリの修正**:
+  - `performance: { some: {...} }` → `performance: { field: value }`
+  - `draft` → `opportunity`への参照変更
+
+#### 4. APIエンドポイントの追加
+- `/api/dashboard/stats` - ダッシュボード統計API
+- `/api/analytics/insights` - 分析インサイトAPI  
+- `/api/cron/collect-performance` - パフォーマンス収集Cron
+- `/api/viral/cot-session/[sessionId]/drafts` - 下書き管理API
+
+#### 5. テスト結果
+- **CoT生成テスト**: 成功（3つの下書き生成確認）
+- **ビルドテスト**: 成功（全TypeScriptエラー解消）
+- **デプロイ**: GitHub pushまで完了（commit: 98af2f1）
+
+### 残課題と注意事項
+
+#### Twitter API制限への対応
+- **ユーザーフィードバック**: 「metricsの制限がある場合は、KaitoAPI使うといいですよ。もう実装されてるので。Apify。」
+- Kaito API (Apify)は既に実装済み
+- `/api/cron/collect-performance`で必要に応じて切り替え可能
+
+#### 次セッションへの引き継ぎ事項
+1. **Vercelデプロイ確認**
+   - デプロイ状況の確認（https://x-buzz-flow.vercel.app）
+   - 環境変数の動作確認
+   - エラーログの確認
+
+2. **機能テスト優先順位**
+   - CoT生成フロー（「AIと働き方」でテスト）
+   - 下書き編集・投稿機能
+   - パフォーマンストラッキング
+   - スケジュール投稿（Vercel Cron）
+
+3. **パフォーマンス収集の改善**
+   - Twitter API制限時のKaito API自動切り替え
+   - エラーハンドリングの強化
+
+4. **A/Bテスト機能**（低優先度）
+   - UI実装は保留中
+   - APIは実装済み（`/api/viral/ab-test/generate`）
+
 ## 2025年6月14日の作業完了報告
 
 ### 実施した作業
@@ -510,5 +575,52 @@ GOOGLE_SEARCH_ENGINE_ID= # 要設定：https://programmablesearchengine.google.c
 - GitHub: https://github.com/Opi-jp/X_BUZZ_FLOW
 - Vercel: https://x-buzz-flow.vercel.app
 
+## 次セッションへの重要な引き継ぎ指示
+
+### 1. 作業開始時の確認事項
+```bash
+# 作業ログの開始（最初に必ず実行）
+cd /Users/yukio/X_BUZZ_FLOW
+./scripts/auto_log_updater.sh
+
+# Vercelデプロイ状況の確認
+vercel logs --follow
+
+# 開発サーバーの起動
+npm run dev
+
+# Prisma Studioの起動（別ターミナル）
+npx prisma studio
+```
+
+### 2. 優先実施事項
+1. **Vercelデプロイの動作確認**
+   - https://x-buzz-flow.vercel.app へアクセス
+   - Function Logsでエラーチェック
+   - 環境変数の動作確認（特にGoogle Search API）
+
+2. **CoT生成フローの本番テスト**
+   - `/viral/cot`から新規セッション作成
+   - 「AIと働き方」でテスト実行
+   - Phase 1-5の完了と下書き生成を確認
+
+3. **Twitter投稿機能の確認**
+   - 下書きから「今すぐ投稿」をテスト
+   - スケジュール投稿の設定確認
+   - Kaito APIでのメトリクス取得確認
+
+### 3. 技術的注意事項
+- **データベース**: ViralPostPerformanceはone-to-one relation
+- **API制限**: Twitter APIメトリクス制限時はKaito APIを使用
+- **JSON形式**: OpenAI APIコール時は必ずプロンプトに「JSON」を含める
+- **検索クエリ**: 動的生成を維持（ハードコード厳禁）
+
+### 4. 未完了タスク
+- A/Bテスト機能のUI実装
+- パフォーマンストラッキングの自動切り替え機能
+- ニュースコメント付きRT機能
+- 今日の10大ニュース機能
+- バズ投稿へのクイック反応機能
+
 ---
-*最終更新: 2025/06/13 22:00*
+*最終更新: 2025/06/14 18:00*
