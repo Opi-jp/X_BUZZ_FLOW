@@ -81,20 +81,30 @@ export const authOptions: NextAuthOptions = {
       const twitterId = (token.twitterId as string) || token.sub
       
       if (twitterId) {
-        const user = await prisma.user.findFirst({
-          where: { 
-            OR: [
-              { twitterId: twitterId },
-              { id: token.userId as string }
-            ].filter(Boolean)
-          },
-        })
-        console.log('Session callback - user found:', user ? `Yes (${user.username})` : 'No')
-        if (user) {
+        try {
+          const user = await prisma.user.findFirst({
+            where: { 
+              OR: [
+                { twitterId: twitterId },
+                { id: token.userId as string }
+              ].filter(Boolean)
+            },
+          })
+          console.log('Session callback - user found:', user ? `Yes (${user.username})` : 'No')
+          if (user) {
+            session.user = {
+              ...session.user,
+              id: user.id,
+              username: user.username,
+            }
+          }
+        } catch (error) {
+          console.error('Session callback - DB error:', error)
+          // DBエラーの場合でも基本的なセッション情報は返す
           session.user = {
             ...session.user,
-            id: user.id,
-            username: user.username,
+            id: token.sub || '',
+            username: token.name as string || 'unknown',
           }
         }
       }

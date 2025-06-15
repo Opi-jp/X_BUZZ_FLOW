@@ -1015,10 +1015,11 @@ TWITTER_CLIENT_SECRET=ADVu9Ngy6vTOiTj_EFLz-G9kQISEge2JJ8kcJX0c_lbwVcJFP3
    - Twitter Developer Portal側の問題の可能性が高い
 
 3. **試すべき対策**
-   - Twitter Appの「User authentication settings」で「Save」を再度クリック（設定の再適用）
+   - Twitter Developer PortalでEnvironmentを**Production**に戻す（重要）
+   - User authentication settingsで「Save」を再度クリック
    - 5-10分待ってから再試行（Twitter側の反映待ち）
+   - シークレットモードまたは別ブラウザで試す（拡張機能の干渉を避ける）
    - それでも解決しない場合は新しいTwitter Appの作成
-   - OAuth 1.0aへの切り替え（最終手段）
 
 #### ✅ 正常動作している機能
 - CoT生成システム（Phase 1-5完全動作）
