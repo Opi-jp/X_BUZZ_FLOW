@@ -737,10 +737,16 @@ async function handleSessionRecovery(session: any): Promise<{
 // 安全なコンテキスト構築
 async function buildSafeContext(session: any, currentPhase: number): Promise<any> {
   try {
+    // セッションが未定義の場合のログ
+    if (!session) {
+      console.error('[CONTEXT] Session is undefined!')
+      throw new Error('Session is undefined in buildSafeContext')
+    }
+    
     const baseContext = {
-      expertise: session?.expertise || 'AIと働き方',
-      style: session?.style || '洞察的',
-      platform: session?.platform || 'Twitter',
+      expertise: session.expertise || 'AIと働き方',
+      style: session.style || '洞察的',
+      platform: session.platform || 'Twitter',
     }
     
     const userConfig = {
@@ -749,27 +755,39 @@ async function buildSafeContext(session: any, currentPhase: number): Promise<any
       platform: baseContext.platform
     }
     
-    console.log('[CONTEXT] Building context with:', baseContext)
+    console.log('[CONTEXT] Building context with:', {
+      sessionId: session.id,
+      expertise: baseContext.expertise,
+      style: baseContext.style,
+      platform: baseContext.platform,
+      currentPhase,
+      hasPhases: !!(session.phases && session.phases.length > 0)
+    })
     
     const previousResults = await getPreviousPhaseResults(session.phases || [], currentPhase)
     
-    return {
+    const finalContext = {
       ...baseContext,
       userConfig,
       ...previousResults
     }
+    
+    console.log('[CONTEXT] Final context keys:', Object.keys(finalContext))
+    
+    return finalContext
   } catch (error) {
     console.error('[CONTEXT] Error building context:', error)
+    console.error('[CONTEXT] Session data:', JSON.stringify(session, null, 2))
     
     // フォールバック：最小限のコンテキスト
     return {
-      expertise: 'AIと働き方',
-      style: '洞察的',
-      platform: 'Twitter',
+      expertise: session?.expertise || 'AIと働き方',
+      style: session?.style || '洞察的',
+      platform: session?.platform || 'Twitter',
       userConfig: {
-        expertise: 'AIと働き方',
-        style: '洞察的',
-        platform: 'Twitter'
+        expertise: session?.expertise || 'AIと働き方',
+        style: session?.style || '洞察的',
+        platform: session?.platform || 'Twitter'
       }
     }
   }
