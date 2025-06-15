@@ -956,19 +956,27 @@ git push origin main
    - 仕様書を厳密に守る（プロンプトの削減・改変は厳禁）
    - GPTに考えさせる設計を維持（ハードコード禁止）
 
-## 2025年6月15日の作業記録（セッション3 - Twitter OAuth認証問題）
+## 2025年6月15日の作業記録（セッション4 - Twitter OAuth認証問題解決）
 
-### 🚨 未解決の重要問題：Twitter OAuth認証
+### ✅ Twitter OAuth認証問題：解決済み
 
-#### 現在の状況
-- **症状**: Twitterサインインボタンクリック時に「Access Denied」エラー
-- **エラー**: `error=AccessDenied` がURLパラメータに表示
-- **試行した対策**:
-  1. OAuth 1.0a → OAuth 2.0 への再切り替え
-  2. Client ID/Secret確認（正しく設定済み）
-  3. User authentication settings確認（元々設定済み）
-  4. NextAuthにscope明示的指定追加
-  5. PKCE実装のテスト
+#### 問題の原因
+1. **データベーススキーマの不一致**（主原因）
+   - `users`テーブルに`createdAt`カラムが存在しなかった
+   - PrismaスキーマとDBの実際の構造が不一致
+   - エラー: `The column users.createdAt does not exist in the current database`
+
+#### 解決方法
+1. **SQLでカラムを追加**（Supabase SQL Editorで実行）
+   ```sql
+   ALTER TABLE users 
+   ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+   ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;
+   ```
+   
+2. **エラーハンドリングの改善**
+   - セッションコールバックでDBエラーをキャッチ
+   - DBエラー時でも基本的なセッション情報を返すように修正
 
 #### 確認済み事項
 - ✅ Twitter投稿API（v1.1）は正常動作（コマンドライン経由で成功）
