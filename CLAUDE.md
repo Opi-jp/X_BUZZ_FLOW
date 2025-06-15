@@ -961,13 +961,14 @@ git push origin main
 ### 🚨 未解決の重要問題：Twitter OAuth認証
 
 #### 現在の状況
-- **症状**: Twitterサインインボタンクリック時に遷移しない
-- **エラー**: `error=OAuthSignin` がURLパラメータに表示
+- **症状**: Twitterサインインボタンクリック時に「Access Denied」エラー
+- **エラー**: `error=AccessDenied` がURLパラメータに表示
 - **試行した対策**:
-  1. OAuth 2.0 → OAuth 1.0a への切り替え
-  2. Client Secret再生成（`ADVu9Ngy6vTOiTj_EFLz-G9kQISEge2JJ8kcJX0c_lbwVcJFP3`）
-  3. User authentication settings設定完了
-  4. Environment: Development → Production変更
+  1. OAuth 1.0a → OAuth 2.0 への再切り替え
+  2. Client ID/Secret確認（正しく設定済み）
+  3. User authentication settings確認（元々設定済み）
+  4. NextAuthにscope明示的指定追加
+  5. PKCE実装のテスト
 
 #### 確認済み事項
 - ✅ Twitter投稿API（v1.1）は正常動作（コマンドライン経由で成功）
@@ -1004,21 +1005,20 @@ TWITTER_CLIENT_SECRET=ADVu9Ngy6vTOiTj_EFLz-G9kQISEge2JJ8kcJX0c_lbwVcJFP3
 #### 🚨 最優先：Twitter OAuth認証問題の解決
 
 1. **根本原因の特定**
-   - Vercel Function Logsの詳細確認
-   - NextAuthデバッグログの確認
-   - 環境変数の実際の値確認（Vercel管理画面）
+   - **Access Denied**エラーはTwitter側で認証を拒否している
+   - Developer Portalの設定は元々正しく設定済みとのこと
+   - 環境変数も正しく読み込まれている（確認済み）
 
-2. **考えられる原因**
-   - Vercel環境変数の設定ミス（名前または値）
-   - Twitter API認証情報の無効化
-   - NextAuthとNext.js 15の互換性問題
-   - Callback URLの不一致
+2. **新たに判明した事実**
+   - OAuth 2.0の設定は正しく動作している
+   - manualAuthUrlの生成も成功
+   - Twitter Developer Portal側の問題の可能性が高い
 
 3. **試すべき対策**
-   - ローカル環境での詳細デバッグ
-   - 新しいTwitter Appの作成
-   - NextAuth以外の認証方法検討
-   - Twitter API認証情報の完全再生成
+   - Twitter Appの「User authentication settings」で「Save」を再度クリック（設定の再適用）
+   - 5-10分待ってから再試行（Twitter側の反映待ち）
+   - それでも解決しない場合は新しいTwitter Appの作成
+   - OAuth 1.0aへの切り替え（最終手段）
 
 #### ✅ 正常動作している機能
 - CoT生成システム（Phase 1-5完全動作）

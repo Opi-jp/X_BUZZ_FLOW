@@ -6,9 +6,15 @@ export const authOptions: NextAuthOptions = {
   debug: true, // 強制的にデバッグ有効
   providers: [
     TwitterProvider({
-      clientId: process.env.TWITTER_API_KEY || '',
-      clientSecret: process.env.TWITTER_API_SECRET || '',
-      version: '1.0',
+      clientId: process.env.TWITTER_CLIENT_ID || '',
+      clientSecret: process.env.TWITTER_CLIENT_SECRET || '',
+      version: '2.0',
+      authorization: {
+        url: 'https://twitter.com/i/oauth2/authorize',
+        params: {
+          scope: 'users.read tweet.read tweet.write offline.access',
+        },
+      },
     }),
   ],
   session: {
@@ -30,7 +36,15 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log('SignIn callback:', { user: user?.id, account: account?.provider })
+      console.log('SignIn callback - Full details:', {
+        user,
+        account,
+        profile,
+        provider: account?.provider,
+        providerAccountId: account?.providerAccountId,
+        access_token: account?.access_token ? 'EXISTS' : 'MISSING',
+        token_type: account?.token_type,
+      })
       if (account?.provider === 'twitter') {
         try {
           // 簡略化されたユーザー保存（デバッグ用）
