@@ -956,6 +956,84 @@ git push origin main
    - 仕様書を厳密に守る（プロンプトの削減・改変は厳禁）
    - GPTに考えさせる設計を維持（ハードコード禁止）
 
+## 2025年6月15日の作業記録（セッション3 - Twitter OAuth認証問題）
+
+### 🚨 未解決の重要問題：Twitter OAuth認証
+
+#### 現在の状況
+- **症状**: Twitterサインインボタンクリック時に遷移しない
+- **エラー**: `error=OAuthSignin` がURLパラメータに表示
+- **試行した対策**:
+  1. OAuth 2.0 → OAuth 1.0a への切り替え
+  2. Client Secret再生成（`ADVu9Ngy6vTOiTj_EFLz-G9kQISEge2JJ8kcJX0c_lbwVcJFP3`）
+  3. User authentication settings設定完了
+  4. Environment: Development → Production変更
+
+#### 確認済み事項
+- ✅ Twitter投稿API（v1.1）は正常動作（コマンドライン経由で成功）
+- ✅ Twitter Developer Portal設定
+  - App ID: 30985804
+  - Client ID: `d09yVlhvZFVHYUlEVEtjVUo0eC06MTpjaQ`（固定値）
+  - V1.1 Access + V2 Access両方有効
+  - User authentication settings設定済み
+- ✅ Vercel環境変数（ユーザー確認：正しく設定済み）
+- ✅ NextAuth providers設定（`/api/auth/providers`で確認）
+
+#### 問題の詳細
+1. **OAuth 2.0エラー**
+   - HTTP 400 + "Bad Authentication data (code: 215)"
+   - 原因不明（V2 Access有効、設定完了済み）
+
+2. **NextAuth OAuthSignin エラー**
+   - OAuth 1.0aでも同じエラー
+   - 環境変数は正しく設定されているとのこと
+
+#### 現在使用中の認証情報
+```env
+# Twitter API v1.1
+TWITTER_API_KEY=vlattMlII8Lz87FllcHH07R8M
+TWITTER_API_SECRET=yq4di737XrSBKxaTqlBcDjEbT2uHhsXRO4PPsuddNDRDq4EnjO
+
+# Twitter OAuth 2.0 (使用できず)
+TWITTER_CLIENT_ID=d09yVlhvZFVHYUlEVEtjVUo0eC06MTpjaQ
+TWITTER_CLIENT_SECRET=ADVu9Ngy6vTOiTj_EFLz-G9kQISEge2JJ8kcJX0c_lbwVcJFP3
+```
+
+### 次セッションへの引き継ぎ事項
+
+#### 🚨 最優先：Twitter OAuth認証問題の解決
+
+1. **根本原因の特定**
+   - Vercel Function Logsの詳細確認
+   - NextAuthデバッグログの確認
+   - 環境変数の実際の値確認（Vercel管理画面）
+
+2. **考えられる原因**
+   - Vercel環境変数の設定ミス（名前または値）
+   - Twitter API認証情報の無効化
+   - NextAuthとNext.js 15の互換性問題
+   - Callback URLの不一致
+
+3. **試すべき対策**
+   - ローカル環境での詳細デバッグ
+   - 新しいTwitter Appの作成
+   - NextAuth以外の認証方法検討
+   - Twitter API認証情報の完全再生成
+
+#### ✅ 正常動作している機能
+- CoT生成システム（Phase 1-5完全動作）
+- 3つのコンセプトから3つの下書き生成
+- Twitter投稿API（v1.1経由）
+- Vercelデプロイ環境
+
+#### 📝 重要な注意事項
+- Twitter Developer Portalの設定は完了済み
+- ユーザーはVercel環境変数を正しく設定したと明言
+- OAuth 2.0、OAuth 1.0a両方でエラー発生
+- 昨日まで同じ設定で動作していたとのこと
+
+---
+
 ## 2025年6月15日の作業記録（セッション2）
 
 ### 主要な問題解決完了
