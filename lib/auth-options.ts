@@ -119,11 +119,20 @@ export const authOptions: NextAuthOptions = {
     },
     async redirect({ url, baseUrl }) {
       console.log('Redirect callback:', { url, baseUrl })
+      
+      // 認証成功後は必ずダッシュボードにリダイレクト
+      if (url.includes('/api/auth/callback') || url === baseUrl + '/') {
+        console.log('Auth success, redirecting to dashboard')
+        return `${baseUrl}/dashboard`
+      }
+      
       // Allows relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      
+      // デフォルトはダッシュボード
+      return `${baseUrl}/dashboard`
     },
   },
   pages: {
