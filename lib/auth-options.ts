@@ -3,11 +3,11 @@ import { prisma } from '@/lib/prisma'
 import type { NextAuthOptions } from 'next-auth'
 
 export const authOptions: NextAuthOptions = {
-  debug: process.env.NODE_ENV === 'development', // 本番では無効
+  debug: true, // 強制的にデバッグ有効
   providers: [
     TwitterProvider({
-      clientId: process.env.TWITTER_API_KEY!,
-      clientSecret: process.env.TWITTER_API_SECRET!,
+      clientId: process.env.TWITTER_API_KEY || '',
+      clientSecret: process.env.TWITTER_API_SECRET || '',
       version: '1.0',
     }),
   ],
