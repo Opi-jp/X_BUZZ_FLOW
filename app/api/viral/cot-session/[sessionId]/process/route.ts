@@ -6,7 +6,6 @@ import {
   Phase2Strategy, 
   Phase3Strategy,
   Phase4Strategy,
-  Phase5Strategy,
   ChainOfThoughtOrchestrator 
 } from '@/lib/orchestrated-cot-strategy'
 
@@ -19,8 +18,7 @@ const phaseStrategies = {
   1: Phase1Strategy,
   2: Phase2Strategy,
   3: Phase3Strategy,
-  4: Phase4Strategy,
-  5: Phase5Strategy
+  4: Phase4Strategy
 }
 
 export async function POST(
@@ -59,12 +57,34 @@ export async function POST(
       })
     }
     
-    // エラー状態チェック
-    if (session.status === 'FAILED' && session.retryCount >= 3) {
-      return NextResponse.json(
-        { error: 'セッションは失敗しました。新しいセッションを作成してください。' },
-        { status: 400 }
-      )
+    // エラー状態と再試行制限チェック
+    if (session.status === 'FAILED') {
+      // 再試行回数制限チェック
+      if (session.retryCount >= 5) {
+        return NextResponse.json(
+          { 
+            error: 'セッションは最大再試行回数に達しました。新しいセッションを作成してください。',
+            retryCount: session.retryCount,
+            lastError: session.lastError
+          },
+          { status: 400 }
+        )
+      }
+      
+      // 再試行可能時間チェック
+      if (session.nextRetryAt && new Date() < session.nextRetryAt) {
+        const waitTime = Math.ceil((session.nextRetryAt.getTime() - Date.now()) / 1000)
+        return NextResponse.json(
+          { 
+            error: `再試行まで ${waitTime} 秒お待ちください`,
+            waitTime,
+            nextRetryAt: session.nextRetryAt
+          },
+          { status: 429 }
+        )
+      }
+      
+      console.log(`[SESSION RECOVERY] Retrying failed session (attempt ${session.retryCount + 1}/5)`)
     }
     
     const currentPhase = session.currentPhase
@@ -72,25 +92,31 @@ export async function POST(
     
     console.log(`[SESSION PROCESS] Starting - Session: ${sessionId}, Phase: ${currentPhase}, Step: ${currentStep}, Status: ${session.status}`)
     
-    // 処理中の場合はスキップ
-    if (['THINKING', 'EXECUTING', 'INTEGRATING'].includes(session.status)) {
-      console.log(`[SESSION PROCESS] Already processing, skipping...`)
-      return NextResponse.json({
-        success: true,
-        message: '処理中です',
-        sessionId,
-        phase: currentPhase,
-        step: currentStep,
-        status: session.status
+    // セッション状態の自動復旧処理
+    const sessionRecovery = await handleSessionRecovery(session)
+    if (sessionRecovery.shouldSkip) {
+      return NextResponse.json(sessionRecovery.response)
+    }
+    
+    // 復旧処理によってセッションが更新された場合、最新状態を取得
+    if (sessionRecovery.updated) {
+      const updatedSession = await prisma.cotSession.findUnique({
+        where: { id: sessionId },
+        include: { phases: true }
       })
+      if (updatedSession) {
+        Object.assign(session, updatedSession)
+      }
     }
     
     // 処理開始前にステータスを更新
+    const processingStatus = currentStep === 'THINK' ? 'THINKING' : 
+                           currentStep === 'EXECUTE' ? 'EXECUTING' : 'INTEGRATING'
+    
     await prisma.cotSession.update({
       where: { id: sessionId },
       data: {
-        status: currentStep === 'THINK' ? 'THINKING' : 
-                currentStep === 'EXECUTE' ? 'EXECUTING' : 'INTEGRATING',
+        status: processingStatus,
         updatedAt: new Date()
       }
     })
@@ -104,13 +130,8 @@ export async function POST(
       throw new Error(`Phase ${currentPhase} strategy not implemented`)
     }
     
-    // コンテキストの準備
-    const context = {
-      expertise: session.expertise,
-      style: session.style,
-      platform: session.platform,
-      ...(await getPreviousPhaseResults(session.phases || [], currentPhase))
-    }
+    // コンテキストの安全な構築
+    const context = await buildSafeContext(session, currentPhase)
     
     let result
     let nextStep = currentStep
@@ -125,16 +146,19 @@ export async function POST(
       console.log(`[THINK] Sending request to OpenAI - Phase: ${currentPhase}`)
       console.log(`[THINK] Prompt length: ${prompt.length} characters`)
       
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: getSystemPrompt(currentPhase) },
-          { role: 'user', content: prompt }
-        ],
-        temperature: strategy.think.temperature || 0.7,
-        max_tokens: strategy.think.maxTokens,
-        response_format: { type: 'json_object' }
-      })
+      // GPT API呼び出しにレート制限対策を追加
+      const completion = await retryWithBackoff(async () => {
+        return await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: getSystemPrompt(currentPhase) },
+            { role: 'user', content: prompt }
+          ],
+          temperature: strategy.think.temperature || 0.7,
+          max_tokens: strategy.think.maxTokens,
+          response_format: { type: 'json_object' }
+        })
+      }, 'THINK')
       
       console.log(`[THINK] Response received - Tokens used: ${completion.usage?.total_tokens}`)
       tokensUsed = completion.usage?.total_tokens || 0
@@ -207,10 +231,32 @@ export async function POST(
         }
       } catch (execError) {
         console.error(`[EXECUTE] Execution failed:`, execError)
-        throw new Error(`Execute phase failed: ${execError}`)
+        console.error(`[EXECUTE] Error type:`, typeof execError)
+        console.error(`[EXECUTE] Error details:`, JSON.stringify(execError, null, 2))
+        
+        // エラーでもresultに何か設定してDBに保存を試みる
+        result = {
+          error: true,
+          message: execError instanceof Error ? execError.message : 'Unknown error',
+          searchResults: []
+        }
       }
       
       // 結果をDBに保存
+      // Phase 1の場合、Perplexityの生応答をexecuteResultに含める
+      if (currentPhase === 1 && result.perplexityResponses) {
+        // perplexityResponsesカラムが利用できない場合の回避策
+        result.savedPerplexityResponses = result.perplexityResponses
+        console.log(`[EXECUTE] Including ${result.perplexityResponses.length} Perplexity responses in executeResult`)
+      }
+      
+      const updateData: any = {
+        executeResult: result as any,
+        executeDuration: Date.now() - startTime,
+        executeAt: new Date(),
+        status: 'EXECUTING'
+      }
+      
       await prisma.cotPhase.update({
         where: {
           sessionId_phaseNumber: {
@@ -218,12 +264,7 @@ export async function POST(
             phaseNumber: currentPhase
           }
         },
-        data: {
-          executeResult: result as any,
-          executeDuration: Date.now() - startTime,
-          executeAt: new Date(),
-          status: 'EXECUTING'
-        }
+        data: updateData
       })
       
       // Phase 1の検索結果をDBに保存（マイグレーション後に有効化）
@@ -271,7 +312,29 @@ export async function POST(
       }
       const executeResult = phase.executeResult as any
       
+      // セッションを再取得（INTEGRATEステップではsessionが未定義の可能性）
+      const currentSession = await prisma.cotSession.findUnique({
+        where: { id: sessionId }
+      })
+      
+      if (!currentSession) {
+        throw new Error('Session not found for INTEGRATE step')
+      }
+      
+      // 元のコンテキストを再構築（expertise, style, platformを含む）
+      const baseContext = {
+        expertise: currentSession.expertise,
+        style: currentSession.style,
+        platform: currentSession.platform,
+        userConfig: {
+          expertise: currentSession.expertise,
+          style: currentSession.style,
+          platform: currentSession.platform
+        }
+      }
+      
       const integrateContext = {
+        ...baseContext,
         ...context,
         ...(phase.thinkResult as any),
         ...executeResult
@@ -283,16 +346,24 @@ export async function POST(
       console.log(`[INTEGRATE] Context keys: ${Object.keys(integrateContext).join(', ')}`)
       console.log(`[INTEGRATE] Prompt length: ${prompt.length} characters`)
       
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: getSystemPrompt(currentPhase) },
-          { role: 'user', content: prompt }
-        ],
-        temperature: strategy.integrate.temperature || 0.5,
-        max_tokens: strategy.integrate.maxTokens,
-        response_format: { type: 'json_object' }
-      })
+      // トークン制限チェック
+      if (prompt.length > 100000) { // 概算でトークン制限に近い場合
+        console.warn(`[INTEGRATE] Prompt is very long (${prompt.length} chars), may hit token limit`)
+      }
+      
+      // GPT API呼び出しにレート制限対策を追加
+      const completion = await retryWithBackoff(async () => {
+        return await openai.chat.completions.create({
+          model: 'gpt-4o',
+          messages: [
+            { role: 'system', content: getSystemPrompt(currentPhase) },
+            { role: 'user', content: prompt }
+          ],
+          temperature: strategy.integrate.temperature || 0.5,
+          max_tokens: strategy.integrate.maxTokens,
+          response_format: { type: 'json_object' }
+        })
+      }, 'INTEGRATE')
       
       console.log(`[INTEGRATE] Response received - Tokens used: ${completion.usage?.total_tokens}`)
       tokensUsed = completion.usage?.total_tokens || 0
@@ -327,7 +398,7 @@ export async function POST(
       })
       
       // 次のフェーズへ
-      if (currentPhase < 5) {
+      if (currentPhase < 4) {
         nextPhase = currentPhase + 1
         nextStep = 'THINK'
         
@@ -371,7 +442,7 @@ export async function POST(
     const duration = Date.now() - startTime
     
     // セッション状態を更新
-    const isCompleted = currentPhase === 5 && currentStep === 'INTEGRATE'
+    const isCompleted = currentPhase === 4 && currentStep === 'INTEGRATE'
     
     // 次のステータスを決定
     let nextStatus = session.status
@@ -398,7 +469,7 @@ export async function POST(
       }
     })
     
-    // Phase 5が完了したら下書きを作成
+    // Phase 4が完了したら下書きを作成
     if (isCompleted) {
       const allPhases = await prisma.cotPhase.findMany({
         where: { sessionId },
@@ -432,38 +503,26 @@ export async function POST(
     
   } catch (error) {
     console.error('[ERROR] Session processing failed:', error)
-    if (error instanceof Error) {
-      console.error('[ERROR] Error message:', error.message)
-      console.error('[ERROR] Error stack:', error.stack)
-    }
     
-    // エラー時はリトライカウントを増やす
-    if (params) {
-      const { sessionId } = await params
-      await prisma.cotSession.update({
-        where: { id: sessionId },
-        data: {
-          status: 'FAILED',
-          lastError: error instanceof Error ? error.message : 'Unknown error',
-          retryCount: { increment: 1 },
-          nextRetryAt: new Date(Date.now() + 5 * 60 * 1000) // 5分後
-        }
-      })
-    }
+    // エラー分類と処理
+    const errorInfo = await classifyAndHandleError(error, await params)
     
     return NextResponse.json(
-      { 
-        error: 'セッション処理でエラーが発生しました',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      {
+        error: errorInfo.userMessage,
+        details: errorInfo.details,
+        errorType: errorInfo.type,
+        retryable: errorInfo.retryable,
+        retryAfter: errorInfo.retryAfter
       },
-      { status: 500 }
+      { status: errorInfo.statusCode }
     )
   }
 }
 
 // ヘルパー関数
 function getSystemPrompt(phase: number): string {
-  // 全フェーズで統一：オリジナルプロンプトのPhase 0に準拠
+  // 全フェーズで統一：仕様書のロール設定
   return 'あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。'
 }
 
@@ -472,17 +531,59 @@ function interpolatePrompt(template: string, context: any): string {
     if (key === 'searchResults' && context.searchResults) {
       return formatSearchResults(context.searchResults)
     }
-    return context[key] || match
+    if (key === 'trendedTopics' && context.trendedTopics) {
+      return formatTrendedTopics(context.trendedTopics)
+    }
+    if (key === 'opportunities' && context.opportunities) {
+      return formatOpportunities(context.opportunities)
+    }
+    // オブジェクトの場合はJSON形式で出力
+    const value = context[key]
+    if (value && typeof value === 'object') {
+      return JSON.stringify(value, null, 2)
+    }
+    return value || match
   })
 }
 
 function formatSearchResults(searchResults: any): string {
   if (Array.isArray(searchResults)) {
     return searchResults.map((r: any, i: number) => 
-      `${i + 1}. ${r.title}\n   ${r.snippet}\n   URL: ${r.url}\n   ソース: ${r.source}`
+      `${i + 1}. ${r.topic || r.title || '不明'}\n   ${r.summary || r.snippet || r.analysis?.substring(0, 200) || '詳細なし'}\n   URL: ${r.url || 'N/A'}\n   ソース: ${r.source || 'N/A'}`
     ).join('\n\n')
   }
   return JSON.stringify(searchResults, null, 2)
+}
+
+function formatTrendedTopics(trendedTopics: any): string {
+  if (Array.isArray(trendedTopics)) {
+    return trendedTopics.map((topic: any, i: number) => 
+      `${i + 1}. ${topic.topicName}
+   カテゴリ: ${topic.category}
+   概要: ${topic.summary}
+   現状: ${topic.currentStatus}
+   バイラル要素:
+   - 論争性: ${topic.viralElements?.controversy || 'N/A'}
+   - 感情: ${topic.viralElements?.emotion || 'N/A'}
+   - 関連性: ${topic.viralElements?.relatability || 'N/A'}
+   - 共有性: ${topic.viralElements?.shareability || 'N/A'}
+   - 時間的感度: ${topic.viralElements?.timeSensitivity || 'N/A'}
+   - プラットフォーム適合性: ${topic.viralElements?.platformFit || 'N/A'}
+   専門性との関連: ${topic.expertiseRelevance || 'N/A'}`
+    ).join('\n\n')
+  }
+  return JSON.stringify(trendedTopics, null, 2)
+}
+
+function formatOpportunities(opportunities: any): string {
+  if (Array.isArray(opportunities)) {
+    return opportunities.map((opp: any, i: number) => 
+      `${i + 1}. ${opp.topic || opp.topicName}
+   スコア: ${opp.viralScore || opp.overallScore || 'N/A'}
+   理由: ${opp.reasoning || 'N/A'}`
+    ).join('\n\n')
+  }
+  return JSON.stringify(opportunities, null, 2)
 }
 
 async function getPreviousPhaseResults(phases: any[], currentPhase: number): Promise<any> {
@@ -493,107 +594,308 @@ async function getPreviousPhaseResults(phases: any[], currentPhase: number): Pro
     const phase1 = phases.find(p => p.phaseNumber === 1)
     if (phase1?.integrateResult) {
       results.phase1Result = phase1.integrateResult
+      // Phase 1のINTEGRATEは新形式でtrendedTopicsを返す
       results.trendedTopics = phase1.integrateResult.trendedTopics || []
+      // Phase 2のプロンプトは{opportunities}を期待しているので、trendedTopicsをopportunitiesとしても渡す
+      results.opportunities = phase1.integrateResult.trendedTopics || []
       results.categoryInsights = phase1.integrateResult.categoryInsights || {}
       results.searchResults = phase1.executeResult?.searchResults || []
     }
   }
   
-  // Phase 2の結果を含める
+  // Phase 2の結果を含める（コンセプトも含まれる）
   if (currentPhase > 2) {
     const phase2 = phases.find(p => p.phaseNumber === 2)
     if (phase2?.integrateResult) {
       results.phase2Result = phase2.integrateResult
-      results.selectedOpportunities = phase2.integrateResult.selectedOpportunities || []
+      results.concepts = phase2.integrateResult.concepts || []
+      results.opportunityCount = phase2.integrateResult.opportunityCount || 0
+      results.analysisInsights = phase2.integrateResult.analysisInsights || ''
     }
   }
   
-  // Phase 3の結果を含める
+  // Phase 3の結果を含める（コンテンツ）
   if (currentPhase > 3) {
     const phase3 = phases.find(p => p.phaseNumber === 3)
     if (phase3?.integrateResult) {
       results.phase3Result = phase3.integrateResult
-      results.concepts = phase3.integrateResult.concepts || []
+      results.contents = phase3.integrateResult.contents || []
     }
   }
   
-  // Phase 4の結果を含める
+  // Phase 4の結果を含める（戦略）
   if (currentPhase > 4) {
     const phase4 = phases.find(p => p.phaseNumber === 4)
     if (phase4?.integrateResult) {
       results.phase4Result = phase4.integrateResult
-      results.mainPost = phase4.integrateResult.mainPost || ''
+      results.strategy = phase4.integrateResult || {}
     }
   }
   
   return results
 }
 
-async function createCompleteDrafts(sessionId: string, phases: any[], session: any) {
-  // Phase 3からコンセプト情報を取得
-  const phase3 = phases.find(p => p.phaseNumber === 3)
-  const concepts = phase3?.integrateResult?.concepts || []
-  // Phase 4から選択されたコンセプトとコンテンツを取得
-  const phase4 = phases.find(p => p.phaseNumber === 4)
-  const selectedIndex = phase4?.thinkResult?.selectedConceptIndex || 0
-  const finalContent = phase4?.integrateResult || {}
-  // Phase 5から戦略情報を取得
-  const phase5 = phases.find(p => p.phaseNumber === 5)
-  const strategy = phase5?.integrateResult || {}
+// GPT APIレート制限対策のリトライ機能
+async function retryWithBackoff<T>(
+  apiCall: () => Promise<T>,
+  operation: string,
+  maxRetries: number = 3
+): Promise<T> {
+  let lastError: Error | null = null
   
-  // 選択されたコンセプトの下書きを作成
-  const selectedConcept = concepts[selectedIndex]
-  if (selectedConcept) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[RETRY] ${operation} attempt ${attempt}/${maxRetries}`)
+      const result = await apiCall()
+      if (attempt > 1) {
+        console.log(`[RETRY] ${operation} succeeded on attempt ${attempt}`)
+      }
+      return result
+    } catch (error) {
+      lastError = error as Error
+      const errorMessage = lastError.message
+      
+      // レート制限エラーの場合
+      if (errorMessage.includes('rate limit') || errorMessage.includes('429')) {
+        const waitTime = Math.min(2 ** attempt * 1000, 30000) // 最大30秒
+        console.log(`[RETRY] ${operation} rate limited, waiting ${waitTime}ms before retry ${attempt}/${maxRetries}`)
+        
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, waitTime))
+          continue
+        }
+      }
+      
+      // トークン制限エラーの場合は即座に失敗
+      if (errorMessage.includes('context length') || errorMessage.includes('token')) {
+        console.error(`[RETRY] ${operation} token limit exceeded, not retrying`)
+        throw lastError
+      }
+      
+      // その他のエラーの場合は短い待機後にリトライ
+      if (attempt < maxRetries) {
+        const waitTime = 1000 * attempt // 1秒、2秒、3秒
+        console.log(`[RETRY] ${operation} failed with: ${errorMessage}, retrying in ${waitTime}ms`)
+        await new Promise(resolve => setTimeout(resolve, waitTime))
+        continue
+      }
+    }
+  }
+  
+  console.error(`[RETRY] ${operation} failed after ${maxRetries} attempts`)
+  throw lastError
+}
+
+// セッション復旧処理
+async function handleSessionRecovery(session: any): Promise<{
+  shouldSkip: boolean
+  response?: any
+  updated: boolean
+}> {
+  const currentTime = Date.now()
+  const lastUpdateTime = new Date(session.updatedAt).getTime()
+  const timeSinceUpdate = currentTime - lastUpdateTime
+  
+  // 処理中ステータスの場合
+  if (['THINKING', 'EXECUTING', 'INTEGRATING'].includes(session.status)) {
+    // 2分以内の場合はスキップ
+    if (timeSinceUpdate < 2 * 60 * 1000) {
+      console.log(`[SESSION RECOVERY] Processing in progress, skipping... (${Math.round(timeSinceUpdate / 1000)}s since last update)`)
+      return {
+        shouldSkip: true,
+        response: {
+          success: true,
+          message: '処理中です',
+          sessionId: session.id,
+          phase: session.currentPhase,
+          step: session.currentStep,
+          status: session.status,
+          timeSinceUpdate: Math.round(timeSinceUpdate / 1000)
+        },
+        updated: false
+      }
+    }
+    
+    // 2分以上経過している場合は復旧処理
+    console.log(`[SESSION RECOVERY] Session stuck in ${session.status}, recovering... (${Math.round(timeSinceUpdate / 1000)}s since last update)`)
+    
+    await prisma.cotSession.update({
+      where: { id: session.id },
+      data: {
+        status: 'PENDING',
+        lastError: `Recovered from stuck ${session.status} state after ${Math.round(timeSinceUpdate / 1000)}s`,
+        retryCount: { increment: 1 }
+      }
+    })
+    
+    return { shouldSkip: false, updated: true }
+  }
+  
+  return { shouldSkip: false, updated: false }
+}
+
+// 安全なコンテキスト構築
+async function buildSafeContext(session: any, currentPhase: number): Promise<any> {
+  try {
+    const baseContext = {
+      expertise: session?.expertise || 'AIと働き方',
+      style: session?.style || '洞察的',
+      platform: session?.platform || 'Twitter',
+    }
+    
+    const userConfig = {
+      expertise: baseContext.expertise,
+      style: baseContext.style,
+      platform: baseContext.platform
+    }
+    
+    console.log('[CONTEXT] Building context with:', baseContext)
+    
+    const previousResults = await getPreviousPhaseResults(session.phases || [], currentPhase)
+    
+    return {
+      ...baseContext,
+      userConfig,
+      ...previousResults
+    }
+  } catch (error) {
+    console.error('[CONTEXT] Error building context:', error)
+    
+    // フォールバック：最小限のコンテキスト
+    return {
+      expertise: 'AIと働き方',
+      style: '洞察的',
+      platform: 'Twitter',
+      userConfig: {
+        expertise: 'AIと働き方',
+        style: '洞察的',
+        platform: 'Twitter'
+      }
+    }
+  }
+}
+
+// エラー分類と処理
+async function classifyAndHandleError(error: any, params: any): Promise<{
+  type: string
+  userMessage: string
+  details: string
+  statusCode: number
+  retryable: boolean
+  retryAfter?: number
+}> {
+  console.error('[ERROR CLASSIFIER] Processing error:', error)
+  
+  let errorType = 'UNKNOWN'
+  let userMessage = 'セッション処理でエラーが発生しました'
+  let statusCode = 500
+  let retryable = true
+  let retryAfter: number | undefined
+  
+  const errorMessage = error instanceof Error ? error.message : String(error)
+  
+  // エラータイプの分類
+  if (errorMessage.includes('timeout') || errorMessage.includes('TIMEOUT')) {
+    errorType = 'TIMEOUT'
+    userMessage = '処理がタイムアウトしました。少し時間をおいて再試行してください。'
+    retryAfter = 60
+  } else if (errorMessage.includes('rate limit') || errorMessage.includes('Too Many Requests')) {
+    errorType = 'RATE_LIMIT'
+    userMessage = 'APIの利用制限に達しました。しばらくお待ちください。'
+    statusCode = 429
+    retryAfter = 300
+  } else if (errorMessage.includes('context length') || errorMessage.includes('token')) {
+    errorType = 'TOKEN_LIMIT'
+    userMessage = '処理するデータが大きすぎます。コンテンツを短縮して再試行してください。'
+    retryable = false
+  } else if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
+    errorType = 'PARSE_ERROR'
+    userMessage = 'レスポンスの解析に失敗しました。再試行してください。'
+  } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+    errorType = 'NETWORK_ERROR'
+    userMessage = 'ネットワークエラーが発生しました。接続を確認して再試行してください。'
+    retryAfter = 30
+  }
+  
+  // セッション状態の更新
+  try {
+    if (params) {
+      const { sessionId } = await params
+      
+      const retryCount = await prisma.cotSession.findUnique({
+        where: { id: sessionId },
+        select: { retryCount: true }
+      })
+      
+      const nextRetryAt = retryAfter ? new Date(Date.now() + retryAfter * 1000) : undefined
+      
+      await prisma.cotSession.update({
+        where: { id: sessionId },
+        data: {
+          status: 'FAILED',
+          lastError: `[${errorType}] ${errorMessage}`,
+          retryCount: { increment: 1 },
+          ...(nextRetryAt && { nextRetryAt })
+        }
+      })
+    }
+  } catch (dbError) {
+    console.error('[ERROR CLASSIFIER] Failed to update session:', dbError)
+  }
+  
+  return {
+    type: errorType,
+    userMessage,
+    details: errorMessage,
+    statusCode,
+    retryable,
+    retryAfter
+  }
+}
+
+async function createCompleteDrafts(sessionId: string, phases: any[], session: any) {
+  // Phase 2からコンセプト情報を取得（Phase 2とPhase 3がマージされたため）
+  const phase2 = phases.find(p => p.phaseNumber === 2)
+  const concepts = phase2?.integrateResult?.concepts || []
+  
+  // Phase 3から3つのコンテンツを取得
+  const phase3 = phases.find(p => p.phaseNumber === 3)
+  const contents = phase3?.integrateResult?.contents || []
+  
+  // Phase 4から戦略情報を取得
+  const phase4 = phases.find(p => p.phaseNumber === 4)
+  const strategy = phase4?.integrateResult || {}
+  
+  // 3つ全てのコンセプトで下書きを作成
+  for (let i = 0; i < concepts.length; i++) {
+    const concept = concepts[i]
+    const content = contents[i] || {}
+    
     await prisma.cotDraft.create({
       data: {
         sessionId,
-        conceptNumber: selectedIndex + 1,
-        title: selectedConcept.title,
-        hook: selectedConcept.hook,
-        angle: selectedConcept.angle,
-        format: selectedConcept.format,
-        content: finalContent.mainPost,
-        threadContent: finalContent.threadPosts || null,
-        visualGuide: selectedConcept.visual || finalContent.visualDescription,
-        timing: selectedConcept.timing || strategy.bestTimeToPost?.[0] || '',
-        hashtags: finalContent.hashtags || selectedConcept.hashtags || [],
-        newsSource: selectedConcept.opportunity,
-        sourceUrl: null,
-        kpis: strategy.kpis || null,
-        riskAssessment: null,
-        optimizationTips: null,
+        conceptNumber: i + 1,
+        title: concept.title || content.title,
+        hook: concept.hook || concept.B,
+        angle: concept.angle || concept.C,
+        format: concept.format || concept.A,
+        content: content.mainPost || null,
+        // threadContent: content.threadPosts || null, // 一時的にコメントアウト
+        visualGuide: content.visualDescription || concept.visual,
+        timing: content.postingNotes || concept.timing || strategy.finalExecutionPlan?.bestTimeToPost?.[0] || '',
+        hashtags: content.hashtags || concept.hashtags || [],
+        newsSource: concept.newsSource || concept.opportunity,
+        sourceUrl: concept.sourceUrl || null,
+        kpis: strategy.successMetrics || strategy.kpis || null,
+        riskAssessment: strategy.riskAssessment || strategy.riskMitigation || null,
+        optimizationTips: strategy.optimizationTechniques || strategy.finalExecutionPlan?.followUpStrategy || null,
         status: 'DRAFT',
-        viralScore: null
+        viralScore: concept.viralPotential === '高' ? 90 : 
+                   concept.viralPotential === '中' ? 70 : 
+                   concept.viralPotential === '低' ? 50 : null
       }
     })
   }
   
-  // 他の未選択コンセプトも下書きとして保存（オプション）
-  for (let i = 0; i < concepts.length; i++) {
-    if (i !== selectedIndex) {
-      const concept = concepts[i]
-      await prisma.cotDraft.create({
-        data: {
-          sessionId,
-          conceptNumber: i + 1,
-          title: concept.title,
-          hook: concept.hook,
-          angle: concept.angle,
-          format: concept.format,
-          content: null,
-          threadContent: null,
-          visualGuide: concept.visual,
-          timing: concept.timing || '',
-          hashtags: concept.hashtags || [],
-          newsSource: concept.opportunity,
-          sourceUrl: null,
-          kpis: null,
-          riskAssessment: null,
-          optimizationTips: null,
-          status: 'DRAFT',
-          viralScore: null
-        }
-      })
-    }
-  }
+  console.log(`[DRAFTS] Created ${concepts.length} drafts for session ${sessionId}`)
 }

@@ -46,8 +46,8 @@ function extractSection(content: string, sectionName: string): string {
 }
 
 // ヘルパー関数：ソース抽出
-function extractSources(content: string): Array<{title: string, url: string}> {
-  const sources: Array<{title: string, url: string}> = []
+function extractSources(content: string): Array<{title: string, url: string, date?: string}> {
+  const sources: Array<{title: string, url: string, date?: string}> = []
   
   // URL形式のパターン
   const urlRegex = /https?:\/\/[^\s]+/g
@@ -67,34 +67,69 @@ function extractSources(content: string): Array<{title: string, url: string}> {
     }
   })
   
-  return sources.slice(0, 5) // 最大5個まで
+  return sources
+}
+
+// ヘルパー関数：日付抽出
+function extractDates(content: string): Array<{date: string, context: string}> {
+  const dates: Array<{date: string, context: string}> = []
+  
+  // 様々な日付形式に対応
+  const datePatterns = [
+    // 2025年6月14日、 2025/6/14、 2025-06-14
+    /(\d{4})年?(\d{1,2})月(\d{1,2})日/g,
+    /(\d{4})\/(\d{1,2})\/(\d{1,2})/g,
+    /(\d{4})-(\d{2})-(\d{2})/g,
+    // 6月14日、 6/14
+    /(\d{1,2})月(\d{1,2})日/g,
+    /(\d{1,2})\/(\d{1,2})/g,
+    // 今日、昨日、明日、今週、先週
+    /(今日|昨日|明日|今週|先週|今月|先月)/g,
+    // June 14, 2025
+    /(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(\d{4})/gi
+  ]
+  
+  datePatterns.forEach(pattern => {
+    let match
+    while ((match = pattern.exec(content)) !== null) {
+      const startIndex = Math.max(0, match.index - 50)
+      const endIndex = Math.min(content.length, match.index + match[0].length + 50)
+      const context = content.substring(startIndex, endIndex)
+      
+      dates.push({
+        date: match[0],
+        context: context.replace(/\n/g, ' ').trim()
+      })
+    }
+  })
+  
+  return dates
 }
 
 // フェーズ1: トレンド情報の収集（動的検索クエリ生成）
 export const Phase1Strategy: OrchestratedPhase = {
-  // Step 1: 検索クエリ生成
+  // Step 1: Think（検索クエリ生成）
   think: {
     prompt: `
-# ユーザー設定
-* 発信したい分野: {expertise}
-* コンテンツのスタイル: {style}
-* プラットフォーム: {platform}
+# タスク  
+ユーザーの入力した情報をもとに、下記の視点に基づいてPerplexityに投げる自然言語の質問を作成してください。
 
-# タスク
-ユーザーの入力した情報をもとに、下記の視点に基づいてWEB検索のためのクエリを生成してください。
+発信したい分野: {expertise}
+コンテンツのスタイル: {style}
+プラットフォーム: {platform}
 
-## A：現在の出来事の分析
+A：現在の出来事の分析
 - 最新ニュース
 - 有名人の事件と世間の反応
 - 議論が巻きおこるような政治的展開
 
-## B：テクノロジーの発表とテクノロジードラマ
+B：テクノロジーの発表とテクノロジードラマ
 - ビジネスニュースと企業論争
 - 文化的瞬間と社会運動
 - スポーツイベントと予想外の結果
 - インターネットドラマとプラットフォーム論争
 
-## C：ソーシャルリスニング研究
+C：ソーシャルリスニング研究
 - Twitterのトレンドトピックとハッシュタグの速度
 - TikTokサウンドとチャレンジの出現
 - Redditのホットな投稿とコメントの感情
@@ -103,7 +138,7 @@ export const Phase1Strategy: OrchestratedPhase = {
 - ニュース記事のコメント欄
 - ソーシャルメディアのエンゲージメントパターン
 
-## D：バイラルパターン認識
+D：バイラルパターン認識
 バイラルが起きる可能性があるトピックを特定する:
 - 論争レベル（強い意見を生み出す）
 - 感情の強さ（怒り、喜び、驚き、憤慨）
@@ -112,124 +147,235 @@ export const Phase1Strategy: OrchestratedPhase = {
 - タイミングの敏感さ（関連性のウィンドウが狭い）
 - プラットフォーム調整（{platform}文化に適合）
 
+上記の内容をもとに、Perplexityに投げる質問を考えてください。
+
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "analysisApproach": {
-    "A_currentEvents": ["検索する現在の出来事のトピック"],
-    "B_technology": ["テクノロジー関連のトピック"],
-    "C_socialListening": ["ソーシャルリスニングのターゲット"],
-    "D_viralPatterns": ["バイラルパターンの特徴"]
+  "searchStrategy": {
+    "approach": "どのようなアプローチで情報を収集するか",
+    "timeframeRationale": "なぜその時間範囲を選んだか（最新情報、過去との比較、周年など）",
+    "expectedInsights": "どのような洞察を期待しているか"
   },
-  "queries": [
+  "perplexityQuestions": [
     {
+      "question": "Perplexityにそのまま送信する完全な質問文",
       "category": "A/B/C/D",
-      "topic": "{expertise}に関連する具体的なトピック",
-      "query": "検索クエリ（英語）",
-      "queryJa": "検索クエリ（日本語）",
-      "intent": "何を探しているか",
-      "viralPotential": {
-        "controversy": "高/中/低",
-        "emotion": "高/中/低",
-        "relatability": "高/中/低",
-        "shareability": "高/中/低",
-        "timeSensitivity": "高/中/低",
-        "platformFit": "高/中/低"
-      }
+      "strategicIntent": "この質問で何を達成しようとしているか",
+      "viralAngle": "どのようなバイラル要素を探しているか"
     }
   ]
 }
-
-重要：
-- {expertise}に関連する最新の出来事やトレンドを捉える
-- 各カテゴリ（A〜D）の視点を活用してクエリを生成
-- 検索結果から**最低3つ以上、最大5つまでのトレンドトピック**を抽出できるようなクエリを設計`,
-    expectedOutput: 'SearchQueries',
+`,
+    expectedOutput: 'SearchStrategy',
     maxTokens: 2000,
     temperature: 0.7
   },
 
-  // Step 2: Perplexity直接検索（Google検索を完全に削除）
+  // Step 2: 検索実行（Perplexity直接）
   execute: {
     action: 'performPerplexitySearch',
-    handler: async (searchQueries: any, context?: any) => {
-      console.log('[Phase1Execute] PERPLEXITY HANDLER CALLED - Starting Perplexity search with queries:', searchQueries.queries?.length || 0)
-      console.log('[Phase1Execute] Handler type: PERPLEXITY_DIRECT')
+    handler: async (thinkResults: any, context?: any) => {
+      // 新しい形式に対応
+      const isNaturalLanguageFormat = thinkResults.perplexityQuestions !== undefined
       
+      if (isNaturalLanguageFormat) {
+        console.log('[Phase1Execute] Using natural language format')
+        console.log('[Phase1Execute] Search strategy:', thinkResults.searchStrategy)
+        console.log('[Phase1Execute] Questions:', thinkResults.perplexityQuestions.length)
+      } else {
+        console.log('[Phase1Execute] Using legacy format')
+        console.log('[Phase1Execute] PERPLEXITY HANDLER CALLED - Starting Perplexity search with queries:', thinkResults.queries?.length || 0)
+      }
+      console.log('[Phase1Execute] Handler type: PERPLEXITY_DIRECT')
+      console.log('[Phase1Execute] Context keys:', context ? Object.keys(context) : 'undefined')
+      console.log('[Phase1Execute] UserConfig:', context?.userConfig)
+      
+      let perplexity
       try {
-        const perplexity = new PerplexityClient()
+        perplexity = new PerplexityClient()
         console.log('[Phase1Execute] PerplexityClient created successfully')
       } catch (clientError) {
         console.error('[Phase1Execute] PerplexityClient creation failed:', clientError.message)
         throw new Error(`Perplexity client creation failed: ${clientError.message}`)
       }
-      
-      const perplexity = new PerplexityClient()
       const searchResults = []
-      const expertise = context?.userConfig?.expertise || '指定なし'
-      const platform = context?.userConfig?.platform || 'Twitter'
+      const perplexityResponses = []
+      // 必須パラメータの取得
+      const expertise = context?.userConfig?.expertise || context?.expertise
+      const platform = context?.userConfig?.platform || context?.platform
       
-      // 各クエリに対してPerplexityで詳細な調査を実行
-      for (const queryObj of searchQueries.queries || []) {
-        try {
-          console.log(`[Phase1Execute] Perplexity searching: "${queryObj.topic}" (${queryObj.category})`)
-          
-          // GPTが生成した検索意図を自然言語の質問に展開
-          const perplexityPrompt = `
-「${expertise}」の分野でバイラルコンテンツを作成するために調査しています。
-
-${queryObj.topic}について、以下の観点で最新の情報（過去7日以内）を詳しく教えてください：
-
-検索の背景：
-- カテゴリ: ${queryObj.category}（${getCategoryDescription(queryObj.category)}）
-- 意図: ${queryObj.intent}
-- バイラルポテンシャル: ${JSON.stringify(queryObj.viralPotential)}
-
-特に以下の点に注目して、具体的な事例や数値を含めて教えてください：
-1. なぜこれが今話題になっているのか（背景と文脈）
-2. どのような感情的反応を引き起こしているか（SNSでの反応、議論の内容）
-3. 議論や論争の具体的な内容（賛否両論の詳細）
-4. ${expertise}の専門家として言及すべきポイント（独自の視点）
-5. 関連するニュースソースのタイトルとURL（最低3つ）
-
-プラットフォーム「${platform}」でバズる可能性が高い要素を特に詳しく分析してください。`
-
-          const response = await perplexity.searchWithContext({
-            query: queryObj.query,
-            systemPrompt: perplexityPrompt,
-            searchRecency: 'week'
-          })
-          
-          const content = response.choices?.[0]?.message?.content || ''
-          
-          // Perplexityの応答を構造化
-          const structuredResult = {
-            category: queryObj.category,
-            topic: queryObj.topic,
-            query: queryObj.query,
-            queryJa: queryObj.queryJa,
-            intent: queryObj.intent,
-            viralPotential: queryObj.viralPotential,
-            analysis: content,
-            // 以下は簡易的な抽出（実際にはより高度な解析が必要）
-            summary: extractSection(content, '話題になっている理由') || 
-                    extractSection(content, '背景') || 
-                    content.substring(0, 300),
-            emotionalReaction: extractSection(content, '感情的反応') || 
-                              extractSection(content, 'SNSでの反応') || '',
-            controversy: extractSection(content, '議論') || 
-                        extractSection(content, '論争') || '',
-            expertAngle: extractSection(content, '専門家として') || 
-                        extractSection(content, '独自の視点') || '',
-            sources: extractSources(content)
+      if (!expertise || !platform) {
+        throw new Error('expertise and platform are required')
+      }
+      
+      // デバッグ用ログ
+      console.log('[Phase1Execute] Using values:', { expertise, platform })
+      
+      console.log(`[Phase1Execute] Using expertise: ${expertise}, platform: ${platform}`)
+      
+      // 自然言語形式の場合
+      if (isNaturalLanguageFormat) {
+        console.log(`[Phase1Execute] Processing ${thinkResults.perplexityQuestions.length} questions`)
+        
+        for (const questionObj of thinkResults.perplexityQuestions) {
+          try {
+            console.log(`[Phase1Execute] Question: "${questionObj.question}"`)
+            console.log(`[Phase1Execute] Strategic intent: ${questionObj.strategicIntent}`)
+            
+            // GPTが生成した完全な質問文をそのまま使用（タイムアウト対策付き）
+            const response = await Promise.race([
+              perplexity.searchWithContext({
+                query: questionObj.question,
+                systemPrompt: `質問の意図を理解し、適切な情報を提供してください。必ずURLと日付を含めてください。`
+              }),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Perplexity search timeout')), context?.perplexityTimeout || 120000)
+              )
+            ])
+            
+            const content = response.choices?.[0]?.message?.content || response
+            const citations = response.citations || []
+            const searchResultsFromAPI = response.search_results || []
+            
+            // 応答を保存
+            perplexityResponses.push({
+              question: questionObj.question,
+              response: content,
+              timestamp: new Date().toISOString(),
+              citations: citations,
+              searchResults: searchResultsFromAPI
+            })
+            
+            // citationsとsearch_resultsを統合してソースを作成
+            const combinedSources = searchResultsFromAPI.map(sr => ({
+              title: sr.title,
+              url: sr.url,
+              date: sr.date
+            }))
+            
+            searchResults.push({
+              question: questionObj.question,
+              category: questionObj.category,
+              strategicIntent: questionObj.strategicIntent,
+              viralAngle: questionObj.viralAngle,
+              analysis: content,
+              sources: combinedSources.length > 0 ? combinedSources : extractSources(content), // API結果優先、なければテキストから抽出
+              citations: citations,
+              rawResponse: content // 元の全文も保持
+            })
+            
+            console.log(`[Phase1Execute] Analysis completed for category ${questionObj.category}`)
+            
+          } catch (error) {
+            console.error(`[Phase1Execute] Error with question "${questionObj.question}":`, error)
+            
+            // タイムアウトエラーの場合はより簡潔な質問で再試行
+            if (error.message?.includes('timeout')) {
+              console.log(`[Phase1Execute] Retrying with shorter question...`)
+              try {
+                const shortQuery = `${questionObj.question.substring(0, 100)}...に関する最新情報とバイラル要素を教えてください`
+                const retryResponse = await Promise.race([
+                  perplexity.searchWithContext({
+                    query: shortQuery,
+                    systemPrompt: `質問の意図を理解し、適切な情報を提供してください。`
+                  }),
+                  new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Retry timeout')), context?.perplexityRetryTimeout || 60000)
+                  )
+                ])
+                
+                const retryContent = retryResponse.choices?.[0]?.message?.content || ''
+                
+                searchResults.push({
+                  question: questionObj.question,
+                  category: questionObj.category,
+                  strategicIntent: questionObj.strategicIntent,
+                  viralAngle: questionObj.viralAngle,
+                  analysis: retryContent + ' (短縮版で取得)',
+                  sources: extractSources(retryContent),
+                  rawResponse: retryContent,
+                  retried: true
+                })
+                
+                perplexityResponses.push({
+                  question: shortQuery,
+                  response: retryContent,
+                  timestamp: new Date().toISOString(),
+                  originalQuestion: questionObj.question,
+                  retried: true
+                })
+                
+                console.log(`[Phase1Execute] Retry successful for category ${questionObj.category}`)
+              } catch (retryError) {
+                console.error(`[Phase1Execute] Retry failed:`, retryError)
+                // 失敗してもプロセスは継続
+              }
+            }
           }
-          
-          searchResults.push(structuredResult)
-          console.log(`[Phase1Execute] Analysis completed for "${queryObj.topic}"`)
-          
-        } catch (error) {
-          console.error(`[Phase1Execute] Perplexity search failed for: ${queryObj.topic}`, error)
-          // エラーでも継続
+        }
+      } else {
+        // レガシー形式
+        console.log(`[Phase1Execute] Processing ${thinkResults.queries?.length || 0} queries`)
+        
+        for (const queryObj of thinkResults.queries || []) {
+          try {
+            console.log(`[Phase1Execute] Processing query:`, JSON.stringify(queryObj, null, 2))
+            console.log(`[Phase1Execute] Perplexity searching: "${queryObj.topic}" (${queryObj.category})`)
+            
+            // GPTが生成した質問をそのまま使用
+            console.log(`[Phase1Execute] Calling Perplexity API...`)
+            const response = await perplexity.searchWithContext({
+              query: queryObj.query || queryObj.topic,
+              systemPrompt: `質問の意図を理解し、適切な情報を提供してください。必ずURLと日付を含めてください。`
+            })
+            console.log(`[Phase1Execute] Perplexity API response received`)
+            
+            const content = response.choices?.[0]?.message?.content || ''
+            
+            // Perplexityの応答を構造化
+            const structuredResult = {
+              category: queryObj.category,
+              topic: queryObj.topic,
+              query: queryObj.query,
+              queryJa: queryObj.queryJa,
+              intent: queryObj.intent,
+              viralPotential: queryObj.viralPotential,
+              analysis: content,
+              // 以下は簡易的な抽出（実際にはより高度な解析が必要）
+              summary: extractSection(content, '話題になっている理由') || 
+                      extractSection(content, '背景') || 
+                      content.substring(0, 300),
+              emotionalReaction: extractSection(content, '感情的反応') || 
+                                extractSection(content, 'SNSでの反応') || '',
+              controversy: extractSection(content, '議論') || 
+                          extractSection(content, '論争') || '',
+              expertAngle: extractSection(content, '専門家として') || 
+                          extractSection(content, '独自の視点') || '',
+              sources: extractSources(content),
+              dates: extractDates(content), // 日付情報も抽出
+              rawResponse: content // 元の全文も保持
+            }
+            
+            searchResults.push(structuredResult)
+            
+            // Perplexityの生応答も保存
+            perplexityResponses.push({
+              query: queryObj.query,
+              response: content,
+              timestamp: new Date().toISOString()
+            })
+            console.log(`[Phase1Execute] Analysis completed for "${queryObj.topic}"`)
+            
+          } catch (error) {
+            console.error(`[Phase1Execute] Perplexity search failed for: ${queryObj.topic}`)
+            console.error(`[Phase1Execute] Error details:`, error)
+            if (error instanceof Error) {
+              console.error(`[Phase1Execute] Error message:`, error.message)
+              console.error(`[Phase1Execute] Error stack:`, error.stack)
+            }
+            // エラーでも継続
+          }
         }
       }
       
@@ -237,47 +383,26 @@ ${queryObj.topic}について、以下の観点で最新の情報（過去7日�
       
       return { 
         searchResults,
+        perplexityResponses, // DB保存用
         totalResults: searchResults.length,
-        searchMethod: 'perplexity_direct'
+        searchMethod: isNaturalLanguageFormat ? 'natural_language' : 'perplexity_direct',
+        searchDate: new Date().toISOString()
       }
     }
   },
 
-  // Step 3: 統合・分析
+  // Step 3: Integrate（結果分析）
   integrate: {
     prompt: `
-# ユーザー設定
-* 発信したい分野: {expertise}
-* コンテンツのスタイル: {style}
-* プラットフォーム: {platform}
-
 # 収集した検索結果
 {searchResults}
 
-# 収集した情報の分類視点
+# タスク
+上記の調査結果をもとに、バイラルパターン認識を行い、バズる可能性のあるトピックを特定してください。
+各トピックには、そのトピックを裏付ける具体的な情報源（ニュースソース名とURL）を含めてください。
 
-### A：現在の出来事の分析
-- 最新ニュース
-- 有名人の事件と世間の反応
-- 議論が巻きおこるような政治的展開
-
-### B：テクノロジーの発表とテクノロジードラマ
-- ビジネスニュースと企業論争
-- 文化的瞬間と社会運動
-- スポーツイベントと予想外の結果
-- インターネットドラマとプラットフォーム論争
-
-### C：ソーシャルリスニング研究
-- Twitterのトレンドトピックとハッシュタグの速度
-- TikTokサウンドとチャレンジの出現
-- Redditのホットな投稿とコメントの感情
-- Googleトレンドの急上昇パターン
-- YouTubeトレンド動画分析
-- ニュース記事のコメント欄
-- ソーシャルメディアのエンゲージメントパターン
-
-### D：バイラルパターン認識の視点
-各トピックについて、以下の要素を識別：
+## D：バイラルパターン認識
+バイラルが起きる可能性があるトピックを以下の観点で評価：
 - 論争レベル（強い意見を生み出す）
 - 感情の強さ（怒り、喜び、驚き、憤慨）
 - 共感性要因（多くの人に影響を与える）
@@ -285,79 +410,80 @@ ${queryObj.topic}について、以下の観点で最新の情報（過去7日�
 - タイミングの敏感さ（関連性のウィンドウが狭い）
 - プラットフォーム調整（{platform}文化に適合）
 
-## 出力形式
+# 出力形式
 必ず以下のJSON形式で出力してください：
 {
   "trendedTopics": [
     {
-      "topicName": "【具体的なトピック名】",
-      "category": "A/B/C（どのカテゴリから発見されたか）",
-      "summary": "トピックの概要（何が起きているか）",
-      "sources": [
-        {"title": "記事タイトル1", "url": "URL1"},
-        {"title": "記事タイトル2", "url": "URL2"}
-      ],
-      "currentStatus": "現在の状況（速報/進行中/議論継続中など）",
+      "topicName": "バズる可能性のあるトピック",
+      "category": "A/B/C/D",
+      "summary": "トピックの概要",
+      "currentStatus": "現在の状況（なぜ今話題なのか）",
       "viralElements": {
-        "controversy": "高/中/低 - 理由",
-        "emotion": "高/中/低 - 主な感情",
-        "relatability": "高/中/低 - 対象層",
-        "shareability": "高/中/低 - 共有動機",
-        "timeSensitivity": "高/中/低 - 期限",
-        "platformFit": "高/中/低 - {platform}での適合性"
+        "controversy": "高/中/低",
+        "emotion": "高/中/低",
+        "relatability": "高/中/低",
+        "shareability": "高/中/低",
+        "timeSensitivity": "高/中/低",
+        "platformFit": "高/中/低"
       },
-      "expertiseRelevance": "{expertise}との関連性の説明"
+      "expertiseRelevance": "トピックと発信分野の関連性",
+      "emotionalDrivers": ["感情的な反応を引き起こす要素"],
+      "evidenceSources": [
+        {
+          "title": "ニュースソース名または記事タイトル",
+          "url": "情報源のURL"
+        }
+      ],
+      "nextSteps": "このトピックをどう活用するか"
     }
   ],
   "categoryInsights": {
-    "A_currentEvents": "現在の出来事から見えるトレンド",
-    "B_technology": "テクノロジー・ビジネス関連のトレンド",
-    "C_socialListening": "ソーシャルメディアから見えるトレンド",
-    "D_viralPatterns": "バイラルパターンの全体的な傾向"
+    "A": "現在の出来事に関する洞察",
+    "B": "テクノロジー・ビジネスに関する洞察",
+    "C": "ソーシャルリスニングからの洞察",
+    "D": "バイラルパターンの総合的な洞察"
   },
-  "topicCount": 数値,
-  "collectionSummary": "収集した情報の全体的な要約",
-  "nextStepMessage": "情報収集が完了しました。{topicCount}件のトレンドトピックを特定しました。これらの評価と優先順位付けを行うには「次へ進む」ボタンをクリックしてください。"
+  "overallAnalysis": "全体的な分析とトレンドの方向性",
+  "warnings": "注意すべき点やリスク",
+  "topicCount": "特定したバズる機会の数（数値）"
 }
 
 重要：
-- {expertise}に関連するトピックのみを抽出
 - バイラルの可能性を冷静に評価（誇張しない）
 - 具体的な証拠（記事からの引用）に基づく
 - {platform}のユーザー文化を考慮した評価
-- opportunityCountは実際に特定したバズるチャンスの数を入れる`,
+- topicCountは実際に特定したバズるチャンスの数を入れる`,
     expectedOutput: 'TrendAnalysis',
     maxTokens: 4000,
     temperature: 0.5
-  }
-}
+  }  // integrateの終わり
+}  // Phase1Strategyの終わり
 
-// フェーズ2：バズる機会評価
+// フェーズ2: 機会評価とコンセプト作成（旧Phase2とPhase3をマージ）
 export const Phase2Strategy: OrchestratedPhase = {
-  // Step 1: ウイルス速度指標とコンテンツアングル識別
+  // Step 1: 機会分析とコンセプト作成
   think: {
     prompt: `
-# ユーザー設定
-* 発信したい分野: {expertise}
-* コンテンツのスタイル: {style}
-* プラットフォーム: {platform}
+前フェーズで特定された機会：
+{opportunities}
 
-# Phase 1で特定されたトレンドトピック
-{trendedTopics}
-
-# Phase 1で収集した詳細な分析データ
+# 収集した情報源（Phase 1より）
 {searchResults}
 
-# 評価の観点
+注意：各機会には具体的なevidenceSourcesが含まれています。コンセプト作成時には、これらの情報源から適切なものを選んでnewsSourceとsourceUrlに含めてください。
 
-## A：ウイルス速度指標
+以下の観点で各機会を分析してください：
+
+分析1：ウイルス速度指標
 - 検索ボリュームの急増と成長率
 - ソーシャルメンションの加速
 - 複数プラットフォームの存在
 - インフルエンサーの採用
 - メディア報道の勢い
 
-## B：コンテンツアングル
+分析2：コンテンツアングル識別
+実行可能なトレンドごとに、独自の角度を特定します：
 - 反対派は世論に異議を唱える
 - 専門家による内部視点の分析
 - 個人的なつながりの物語
@@ -366,636 +492,449 @@ export const Phase2Strategy: OrchestratedPhase = {
 - 舞台裏の洞察
 - 過去のイベントとの比較内容
 
-# 出力形式
-必ず以下のJSON形式で出力してください：
-{
-  "evaluatedOpportunities": [
-    {
-      "topicName": "トピック名",
-      "viralVelocityScore": 0.0-1.0,
-      "velocityMetrics": {
-        "searchGrowth": "急増/増加中/安定/減少",
-        "socialAcceleration": "高速/中速/低速",
-        "platformPresence": "複数/限定的/単一",
-        "influencerAdoption": "多数/一部/なし",
-        "mediamomentum": "強い/中程度/弱い"
-      },
-      "contentAngles": [
-        {
-          "angle": "反対派の視点/専門家分析/個人的物語など",
-          "description": "このアングルの具体的な内容",
-          "targetAudience": "想定読者層",
-          "expectedReaction": "期待される反応"
-        }
-      ],
-      "overallScore": 0.0-1.0,
-      "reasoning": "総合的な評価理由"
-    }
-  ],
-  "topOpportunities": [
-    {
-      "topicName": "トピック名",
-      "score": 0.0-1.0,
-      "bestAngle": "最も効果的なアングル",
-      "keyReason": "選ばれた理由"
-    }
-  ],
-  "analysisInsights": "全体的な分析から見えた洞察"
-}
-`,
-    expectedOutput: 'OpportunityEvaluation',
-    maxTokens: 3000,
-    temperature: 0.6
-  },
+## フェーズ3: バズるコンテンツのコンセプト作成
 
-  // Step 2: メトリクス分析（Phase 1の結果を活用）
-  execute: {
-    action: 'analyzeMetrics',
-    handler: async (evaluationPlan: any, context?: any) => {
-      // Phase 1で収集した情報を基に、メトリクスを分析
-      const phase1Result = context?.phase1Result || context?.trendedTopics || []
-      
-      console.log(`[Phase2Execute] Analyzing metrics for ${phase1Result.length} topics`)
-      
-      // 各トピックのviralElementsから速度指標を推定
-      const metricsAnalysis = phase1Result.map((topic: any) => {
-        const elements = topic.viralElements || {}
-        
-        return {
-          topicName: topic.topicName,
-          velocityIndicators: {
-            // Phase 1の情報から推定
-            searchGrowth: elements.timeSensitivity === '高' ? '急増' : 
-                         elements.timeSensitivity === '中' ? '増加中' : '安定',
-            socialAcceleration: elements.shareability === '高' ? '高速' :
-                               elements.shareability === '中' ? '中速' : '低速',
-            platformPresence: elements.platformFit === '高' ? '複数' : '限定的',
-            // これらは実際のAPIがあれば詳細に取得可能
-            influencerAdoption: '評価中',
-            mediaMomentum: '評価中'
-          },
-          rawElements: elements,
-          sources: topic.sources || []
-        }
-      })
-      
-      return {
-        metricsAnalysis,
-        analysisMethod: 'phase1_derived',
-        note: '実際のAPI統合時により詳細なメトリクスを取得可能'
-      }
-    }
-  },
+具体的で実行可能なコンテンツ コンセプトを作成します。
 
-  // Step 3: 総合評価とアングル統合
-  integrate: {
-    prompt: `
-# ユーザー設定
-* 発信したい分野: {expertise}
-* コンテンツのスタイル: {style}
-* プラットフォーム: {platform}
-
-# Phase 2 Thinkで評価した機会
-{evaluatedOpportunities}
-
-# Phase 2 Executeで分析したメトリクス
-{metricsAnalysis}
-
-# 統合評価の観点
-1. ウイルス速度指標の総合評価
-2. 最も効果的なコンテンツアングルの選定
-3. {expertise}と{platform}に最適な機会の特定
-
-# 出力形式
-必ず以下のJSON形式で出力してください：
-{
-  "finalEvaluation": [
-    {
-      "topicName": "トピック名",
-      "finalScore": 0.0-1.0,
-      "viralVelocity": {
-        "score": 0.0-1.0,
-        "summary": "速度指標の総合評価"
-      },
-      "bestAngle": {
-        "type": "選ばれたアングル",
-        "description": "具体的な内容",
-        "whyEffective": "なぜこのアングルが効果的か"
-      },
-      "timing": {
-        "urgency": "高/中/低",
-        "optimalWindow": "今後48時間以内/1週間以内など",
-        "reason": "タイミングの根拠"
-      },
-      "recommendation": "強く推奨/推奨/保留"
-    }
-  ],
-  "selectedOpportunities": [
-    {
-      "topicName": "選ばれたトピック名",
-      "score": 0.0-1.0,
-      "angle": "採用するアングル",
-      "priority": 1-3
-    }
-  ],
-  "evaluationSummary": "全体的な評価サマリー",
-  "nextStepMessage": "機会評価が完了しました。上位{X}件の機会を特定しました。これらのコンセプト作成に進むには「次へ進む」ボタンをクリックしてください。"
-}
-`,
-    expectedOutput: 'OpportunityEvaluation',
-    maxTokens: 2000
-  }
-}
-
-// フェーズ3: バズるコンテンツのコンセプト作成
-export const Phase3Strategy: OrchestratedPhase = {
-  // Step 1: コンセプトの方向性決定
-  think: {
-    prompt: `
-# 選ばれた機会
-{selectedOpportunities}
-
-# ユーザー設定
-* 専門分野: {expertise}
-* スタイル: {style}
-* プラットフォーム: {platform}
-
-# コンテンツアングルの種類
-- 反対派は世論に異議を唱える
-- 専門家による内部視点の分析
-- 個人的なつながりの物語
-- 教育の内訳
-- 次に何が起こるかを予測するコンテンツ
-- 舞台裏の洞察
-- 過去のイベントとの比較内容
-
-# 出力形式
-必ず以下のJSON形式で出力してください：
-{
-  "directions": [
-    {
-      "opportunity": "機会の名前",
-      "angles": [
-        {
-          "type": "エンタメ風実況/専門家解説/個人体験談など",
-          "description": "なぜこの角度が効果的か",
-          "targetEmotion": "狙う感情（共感/驚き/学び/議論など）"
-        }
-      ]
-    }
-  ]
-}`,
-    expectedOutput: 'ConceptDirections',
-    maxTokens: 2000,
-    temperature: 0.8
-  },
-
-  // Step 2: 参考事例の収集（現状はスキップ）
-  execute: {
-    action: 'findReferences',
-    handler: async (directions) => {
-      // 将来的に実装：類似の成功事例を検索
-      return {
-        platformTrends: {
-          Twitter: ["スレッド形式", "エモい実録系", "専門知識×日常"],
-          TikTok: ["30秒解説", "ビフォーアフター", "検証系"],
-          Instagram: ["カルーセル", "インフォグラフィック", "ストーリーズ連載"]
-        }
-      }
-    }
-  },
-
-  // Step 3: 具体的なコンセプト生成
-  integrate: {
-    prompt: `
-# アプローチ
-{directions}
-
-# プラットフォーム特性
-{platformTrends}
-
-# Phase 1で収集した記事情報
-{phase1Result}
-
-# ユーザー設定
-* 専門分野: {expertise}
-* スタイル: {style}
-* プラットフォーム: {platform}
-
-# コンテンツコンセプトフレームワーク
+●コンテンツコンセプトフレームワーク
 それぞれの機会について、以下を開発します
 A：形式: [スレッド/ビデオ/投稿タイプ]
 B：フック: 「[注目を集める具体的なオープナー]」
 C：角度: [独自の視点や見方]
 
-# コンテンツ概要:
+●コンテンツ概要:
 トレンドにつながるオープニングフック
 [物語を構築する3～5つのキーポイント]
--予期せぬ洞察や啓示
--エンゲージメントを促進するCTA
--タイミング: 最大の効果を得るには [X] 時間以内に投稿してください
--ビジュアル: [具体的な画像/動画の説明]
--ハッシュタグ: [最適化されたタグ]
+
+以下の要素を使って、物語を構築するD（キーポイント）となる3～5つのキーポイントを開発してください：
+- 予期せぬ洞察や啓示
+- エンゲージメントを促進するCTA
+- タイミング: 最大の効果を得るには [X] 時間以内に投稿してください
+- ビジュアル: [具体的な画像/動画の説明]
+- ハッシュタグ: [プラットフォームに最適化されたタグ]
+
+この構造に従って 3 つのコンセプトを提供します。この際には、コンセプト作成のもととなったニュースソースとURLも必ず提示します。
+
+重要：各コンセプトでは、A（形式）、B（フック）、C（角度）、D（物語を構築する3〜5つのキーポイント）を必ず含めてください。
 
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
+  "opportunityCount": "特定した機会の数",
+  "analysisInsights": "機会分析から得られた主要な洞察",
   "concepts": [
     {
-      "number": 1,
-      "title": "コンセプトタイトル（例：Claudeとの会話が、後輩より役に立った瞬間）",
-      "opportunity": "元となった機会",
-      "platform": "{platform}",
-      "format": "スレッド/単発投稿/動画など",
-      "hook": "注目を集める具体的なオープナー（例：後輩よりClaudeのほうが"気が利く"と感じた瞬間があった）",
-      "angle": "独自の視点（例：AIとの協業現場をエンタメ風に実況）",
-      "structure": {
-        "keyPoints": [
-          "物語を構築するキーポイント1",
-          "物語を構築するキーポイント2", 
-          "物語を構築するキーポイント3"
-        ],
-        "unexpectedInsight": "予期せぬ洞察や啓示",
-        "engagementCTA": "エンゲージメントを促進するCTA"
-      },
-      "visual": "ビジュアル案（例：Claudeとの実際のやりとり画面・黒背景Terminal風）",
-      "timing": "投稿タイミングと理由（例：夜 - エモいエンタメ＋実録系が伸びやすい）",
-      "hashtags": ["#関連タグ1", "#関連タグ2", "#関連タグ3"],
-      "expectedReaction": "期待される反応（共感/議論/シェアなど）",
-      "newsSource": "コンセプト作成のもととなったニュースソース",
-      "sourceUrl": "ソースのURL"
+      "title": "コンセプトタイトル",
+      "A": "形式（single/thread/video/carousel）",
+      "B": "注目を集める具体的なオープナー",
+      "C": "独自の視点や見方",
+      "D": [
+        "物語を構築するキーポイント1（予期せぬ洞察など）",
+        "物語を構築するキーポイント2（エンゲージメント要素など）",
+        "物語を構築するキーポイント3（CTA要素など）",
+        "（必要に応じて4つ目）",
+        "（必要に応じて5つ目）"
+      ],
+      "newsSource": "ニュースソース名",
+      "sourceUrl": "ソースURL",
+      "opportunity": "このコンセプトの基となった機会"
     }
   ],
-  "summary": "3つのコンセプトの簡潔な説明",
-  "nextMessage": "バズるコンテンツのコンセプトの概要は次のとおりです。「次へ進む」ボタンをクリックすると、各コンセプトに基づいたコンテンツ作成を開始します"
+  "nextStepMessage": "バズるコンテンツのコンセプトの概要は次のとおりです。「続行」と入力すると、各コンセプトに基づいたコンテンツ作成を開始します"
 }
-
-重要：
-- 各コンセプトは具体的で、すぐに実行可能なレベルまで詳細化する
-- {expertise}の専門性を活かしつつ、一般の人にも伝わる内容にする
-- {platform}の文化や形式に最適化する
-- フックは必ず「続きを読みたくなる」ものにする`,
-    expectedOutput: 'ContentConcepts',
-    maxTokens: 4000,
+`,
+    expectedOutput: 'OpportunityAnalysisAndConcepts',
+    maxTokens: 4500,
     temperature: 0.7
-  }
-}
+  },
 
-// フェーズ4: 実際のコンテンツ作成
-export const Phase4Strategy: OrchestratedPhase = {
-  // Step 1: コンテンツの詳細設計
-  think: {
+  // Step 2: 実行（パススルー）
+  execute: {
+    action: 'passThrough',
+    handler: async (thinkResults: any) => {
+      console.log('[Phase2Execute] Passing through analysis and concepts')
+      return thinkResults
+    }
+  },
+
+  // Step 3: 統合（結果をそのまま次のフェーズに渡す）
+  integrate: {
     prompt: `
-# 選ばれたコンセプト
+# 分析とコンセプト
+{opportunityCount}
+{analysisInsights}
 {concepts}
 
-# ユーザー設定
-* 専門分野: {expertise}
-* スタイル: {style}
-* プラットフォーム: {platform}
-
+# タスク
+Phase 2の結果を確認し、次のフェーズに渡すための形式で出力してください。
 
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "selectedConceptIndex": 0-2の数値（最も効果的なコンセプトのインデックス）,
-  "reasoning": "このコンセプトを選んだ理由",
-  "contentStructure": {
-    "openingHook": "最初の1文（絶対に続きを読みたくなる文）",
-    "mainMessage": "核となるメッセージ",
-    "supportingPoints": ["ポイント1", "ポイント2", "ポイント3"],
-    "emotionalTriggers": ["感情トリガー1", "感情トリガー2"],
-    "callToAction": "読者に促したい行動"
-  },
-  "visualElements": {
-    "primaryVisual": "メインビジュアルの説明",
-    "supportingVisuals": ["サポートビジュアル1", "サポートビジュアル2"]
+  "opportunityCount": "{opportunityCount}",
+  "analysisInsights": "{analysisInsights}",
+  "concepts": {concepts},
+  "message": "【{opportunityCount}】件の機会を発見しました。コンテンツのコンセプトは以下です。"
+}
+`,
+    expectedOutput: 'ConceptsReady',
+    maxTokens: 1000,
+    temperature: 0.3
   }
-}`,
-    expectedOutput: 'ContentDesign',
-    maxTokens: 2000,
-    temperature: 0.6
+}
+
+// フェーズ3: 実際のコンテンツ作成（旧Phase4）
+export const Phase3Strategy: OrchestratedPhase = {
+  // Step 1: パススルー（INTEGRATEでコンテンツ生成）
+  think: {
+    prompt: `
+# タスク
+このステップはパススルーです。次のINTEGRATEステップでコンテンツを生成します。
+
+# 出力形式
+必ず以下のJSON形式で出力してください：
+{
+  "ready": true
+}
+`,
+    expectedOutput: 'Ready',
+    maxTokens: 100,
+    temperature: 0.3
   },
 
-  // Step 2: プラットフォーム最適化
+  // Step 2: 実行（パススルー）
   execute: {
-    action: 'optimizeForPlatform',
-    handler: async (design, context?: any) => {
-      // Phase 3の結果から選択されたコンセプトを取得
-      const selectedIndex = design.selectedConceptIndex || 0
-      
-      // contextから platform を取得（designに含まれていない場合）
-      const platform = context?.platform || 'Twitter'
-      
-      // プラットフォーム特有の制限やベストプラクティスを適用
-      const platformConstraints = {
-        Twitter: {
-          maxLength: 280,
-          threadSupport: true,
-          mediaTypes: ['画像', 'GIF', '動画（2分20秒まで）'],
-          bestPractices: ['スレッド形式', '視覚的要素', 'リプライ誘導']
-        },
-        Instagram: {
-          formats: ['フィード投稿', 'リール', 'ストーリーズ'],
-          captionLength: 2200,
-          hashtagLimit: 30,
-          bestPractices: ['カルーセル活用', 'ビジュアル重視']
-        },
-        TikTok: {
-          videoLength: { min: 15, max: 180 },
-          captionLength: 2200,
-          bestPractices: ['フック重視', '最初の3秒が勝負']
-        },
-        LinkedIn: {
-          maxLength: 3000,
-          mediaTypes: ['画像', '動画', 'ドキュメント'],
-          bestPractices: ['専門性重視', 'インサイト共有', 'ビジネス価値']
-        }
-      }
-      
-      return {
-        selectedConceptIndex: selectedIndex,
-        platform: platform,
-        constraints: platformConstraints[platform] || platformConstraints.Twitter,
-        optimizationTips: ['文字数調整', 'ビジュアル追加', 'エンゲージメント要素']
-      }
+    action: 'passThrough',
+    handler: async (thinkResults: any) => {
+      console.log('[Phase4Execute] Passing through content strategy')
+      return thinkResults
     }
   },
 
-  // Step 3: 最終コンテンツ生成
+  // Step 3: 完全なコンテンツ生成
   integrate: {
     prompt: `
-# コンテンツ設計
-{contentStructure}
+# あなたの役割
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
+{platform}で多くのエンゲージメントを獲得できる魅力的なコンテンツを作成することが得意です。
 
-# プラットフォーム制約
-{constraints}
+# 前フェーズで作成された3つのコンセプト
 
-# 最適化ヒント
-{optimizationTips}
-
-# Phase 3で生成されたコンセプト一覧
+【コンセプト】
 {concepts}
 
-# 選ばれたコンセプト（インデックス: {selectedConceptIndex}）
-※上記のコンセプト一覧から選ばれたものを使用してください
+# タスク
+上記の3つのコンセプト全てに基づいて、{platform}にすぐにコピー＆ペースト可能な完全なコンテンツを作成してください。
+各コンセプトのA、B、C、Dを効果的に使って、魅力的な投稿を作成してください。
 
-# コンテンツ作成指示
-コンセプト{selectedConceptIndex + 1}: [トレンドトピック] - 完全なコンテンツ
-[{platform}にすぐにコピー＆ペースト可能な完全なコンテンツを作成してください]
+## 各コンセプトの要素（A、B、C、D）を効果的に使う方法
+- **A（形式）**: 指定された形式（thread/video/carousel）に適した構成にする
+- **B（フック）**: これを冒頭に使用して注目を集める（多少アレンジしても良いが、本質は維持）
+- **C（角度/独自の視点）**: この視点を明確に本文全体に反映させ、その角度から一貫して語る
+- **D（キーポイント）**: 5つ全てのポイントを効果的に活用し、以下のように展開する：
+  - 具体例や洞察は詳しく説明
+  - CTAは必ず含める
+  - ビジュアル説明を視覚的説明として含める
+  - ハッシュタグを投稿に含める
+- **newsSource**と**sourceUrl**: 信頼性のある情報源として必ず含める
+
+## 重要な要件
+- **必ずA、B、C、Dの全要素を効果的に使用すること**
+- C（独自の視点）は単に言及するのではなく、その視点から語るスタンスで全体を構成すること
+- D（キーポイント）の5つの要素は全て何らかの形で投稿に反映させること
+- すべてのテキスト、書式、改行、絵文字、ハッシュタグを含める
+- 完成させてすぐに投稿できるように準備する
+- 人間による文体・トーンの微調整は前提とする
+
+# 出力形式
+必ず以下の形式で、3つ全てのコンセプトのコンテンツを出力してください：
+
+コンセプト1: [トレンドトピック] - 完全なコンテンツ
+[Xにすぐにコピー＆ペースト可能な完全なコンテンツを作成してください]
 [すべてのテキスト、書式、改行、絵文字、ハッシュタグを含める]
 [完成させてすぐに投稿できるように準備する]
 視覚的説明: [必要な画像/ビデオの詳細な説明]
 投稿に関する注意事項: [具体的なタイミングと最適化のヒント]
 
-# 出力形式
-必ず以下のJSON形式で出力してください：
-{
-  "mainPost": "メイン投稿の完全なテキスト",
-  "threadPosts": ["スレッド2", "スレッド3", "スレッド4"],  // Twitterの場合
-  "hashtags": ["ハッシュタグ1", "ハッシュタグ2", "ハッシュタグ3"],
-  "alternativeVersions": [
-    {
-      "version": "A",
-      "hook": "別バージョンのフック",
-      "reasoning": "このバージョンの狙い"
-    }
-  ],
-  "visualDescription": "推奨される画像・動画の詳細な説明",
-  "postingNote": "投稿時の注意点（絵文字の使用、改行位置など）",
-  "expectedEngagement": {
-    "likes": "予想いいね数の範囲",
-    "shares": "予想シェア数の範囲",
-    "comments": "予想コメントタイプ"
-  }
-}
+コンセプト2: [トレンドトピック] - 完全なコンテンツ
+[Xにすぐにコピー＆ペースト可能な完全なコンテンツを作成してください]
+[すべてのテキスト、書式、改行、絵文字、ハッシュタグを含める]
+[完成させてすぐに投稿できるように準備する]
+視覚的説明: [必要な画像/ビデオの詳細な説明]
+投稿に関する注意事項: [具体的なタイミングと最適化のヒント]
+
+コンセプト3: [トレンドトピック] - 完全なコンテンツ
+[Xにすぐにコピー＆ペースト可能な完全なコンテンツを作成してください]
+[すべてのテキスト、書式、改行、絵文字、ハッシュタグを含める]
+[完成させてすぐに投稿できるように準備する]
+視覚的説明: [必要な画像/ビデオの詳細な説明]
+投稿に関する注意事項: [具体的なタイミングと最適化のヒント]
 
 重要：
-- {platform}の文字数制限を厳守
-- フックは必ず「スクロールを止めさせる」強さにする
-- {expertise}の専門性と{style}のトーンを保つ
-- 感情に訴える要素を必ず含める`,
-    expectedOutput: 'FinalContent',
+- 人間による文体・トーンの微調整は前提とする
+- コピペ即投稿可能な完成度で出力する
+- 各コンセプトのA（形式）、B（フック）、C（角度）、D（キーポイント）を活用する
+
+# JSON出力形式
+必ず以下のJSON形式でも出力してください：
+{
+  "contents": [
+    {
+      "conceptNumber": 1,
+      "title": "コンセプト1のタイトル",
+      "mainPost": "完全な投稿文（改行、絵文字、ハッシュタグ含む）",
+      "hashtags": ["ハッシュタグ1", "ハッシュタグ2"],
+      "visualDescription": "必要な画像/動画の詳細な説明",
+      "postingNotes": "具体的なタイミングと最適化のヒント",
+      "newsSource": "ニュースソース名",
+      "sourceUrl": "ソースURL"
+    },
+    {
+      "conceptNumber": 2,
+      "title": "コンセプト2のタイトル",
+      "mainPost": "完全な投稿文（改行、絵文字、ハッシュタグ含む）",
+      "hashtags": ["ハッシュタグ1", "ハッシュタグ2"],
+      "visualDescription": "必要な画像/動画の詳細な説明",
+      "postingNotes": "具体的なタイミングと最適化のヒント",
+      "newsSource": "ニュースソース名",
+      "sourceUrl": "ソースURL"
+    },
+    {
+      "conceptNumber": 3,
+      "title": "コンセプト3のタイトル",
+      "mainPost": "完全な投稿文（改行、絵文字、ハッシュタグ含む）",
+      "hashtags": ["ハッシュタグ1", "ハッシュタグ2"],
+      "visualDescription": "必要な画像/動画の詳細な説明",
+      "postingNotes": "具体的なタイミングと最適化のヒント",
+      "newsSource": "ニュースソース名",
+      "sourceUrl": "ソースURL"
+    }
+  ]
+}
+`,
+    expectedOutput: 'CompleteContent',
     maxTokens: 4000,
-    temperature: 0.7
+    temperature: 0.8
   }
 }
 
-// フェーズ5: 投稿戦略と実行計画
-export const Phase5Strategy: OrchestratedPhase = {
-  // Step 1: タイミング分析
+// フェーズ4: 実行戦略（旧Phase5）
+export const Phase4Strategy: OrchestratedPhase = {
+  // Step 1: 戦略立案
   think: {
     prompt: `
-# 作成されたコンテンツ
-{mainPost}
+# ユーザー設定
+* コンテンツのスタイル: {style}
+* プラットフォーム: {platform}
 
-# トピック分析
-{phase1Result}
+# 作成された3つのコンテンツ
+{contents}
 
-# プラットフォーム
-{platform}
+## フェーズ5: 実行戦略
+実装ガイダンスを提供します。
 
+実行タイムライン
+- 即時（2～4時間）：コンテンツ作成、ビジュアル準備、プラットフォームのセットアップ
+- 投稿期間（4～24時間）: 最適なタイミング、リアルタイム監視、対応戦略
+- フォローアップ（24～48時間）：増幅戦術、フォローアップコンテンツ、パフォーマンス分析
+
+●最適化技術
+- リアルタイム調整のためのエンゲージメントの監視
+- 関連するバズるコンテンツに関する戦略的なコメント
+- 複数プラットフォーム共有で最大限のリーチを実現
+- 知名度を高めるためのインフルエンサーとのエンゲージメント
+
+●リスクアセスメント
+- 論争リスクとブランドの整合性
+- 競争飽和分析
+- プラットフォームアルゴリズムの互換性
+
+●成功指標
+- エンゲージメント率とベースライン
+- シェア速度とバイラル係数
+- クロスプラットフォームパフォーマンス
+- フォロワーの増加と視聴者の質
+
+# タスク
+3つの生成されたコンテンツを参照しながら、上記の観点で実行戦略を考えてください。
 
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "timingAnalysis": {
-    "bestDays": ["曜日1", "曜日2"],
-    "bestHours": ["時間帯1", "時間帯2", "時間帯3"],
-    "reasoning": "このタイミングが最適な理由",
-    "avoidTimes": ["避けるべき時間帯"]
+  "executionTimeline": {
+    "immediate": {
+      "timeframe": "2-4時間",
+      "tasks": ["コンテンツ作成", "ビジュアル準備", "プラットフォームのセットアップ"]
+    },
+    "posting": {
+      "timeframe": "4-24時間",
+      "optimalTime": "最適な投稿時刻",
+      "monitoringPlan": "リアルタイム監視計画"
+    },
+    "followUp": {
+      "timeframe": "24-48時間",
+      "amplificationTactics": ["増幅戦術"],
+      "followUpContent": ["フォローアップコンテンツ案"]
+    }
   },
-  "competitionAnalysis": {
-    "expectedCompetitors": ["競合トピック1", "競合トピック2"],
-    "differentiationStrategy": "差別化のポイント"
+  "optimizationTechniques": [
+    "リアルタイム調整のためのエンゲージメントの監視",
+    "関連するバズるコンテンツに関する戦略的なコメント",
+    "複数プラットフォーム共有で最大限のリーチを実現",
+    "知名度を高めるためのインフルエンサーとのエンゲージメント"
+  ],
+  "riskAssessment": {
+    "controversyRisk": "論争リスクとブランドの整合性",
+    "competitionSaturation": "競争飽和分析",
+    "platformCompatibility": "プラットフォームアルゴリズムの互換性"
   },
-  "engagementStrategy": {
-    "firstHourActions": ["最初の1時間でやること"],
-    "followUpPosts": ["フォローアップ投稿案"],
-    "communityEngagement": "コミュニティとの関わり方"
+  "successMetrics": {
+    "engagementRate": "エンゲージメント率とベースライン",
+    "shareVelocity": "シェア速度とバイラル係数",
+    "crossPlatformPerformance": "クロスプラットフォームパフォーマンス",
+    "followerGrowth": "フォロワーの増加と視聴者の質"
   }
-}`,
-    expectedOutput: 'TimingStrategy',
-    maxTokens: 2000,
+}
+`,
+    expectedOutput: 'ExecutionStrategy',
+    maxTokens: 2500,
     temperature: 0.6
   },
 
-  // Step 2: KPI設定
+  // Step 2: 実行（パススルー）
   execute: {
-    action: 'setKPIs',
-    handler: async (strategy) => {
-      // 過去のパフォーマンスデータに基づくKPI設定
-      // 実際にはDBから類似投稿のパフォーマンスを取得
-      return {
-        benchmarks: {
-          averageLikes: 500,
-          averageShares: 50,
-          averageComments: 30,
-          viralThreshold: { likes: 5000, shares: 500 }
-        },
-        historicalData: {
-          similarTopics: [
-            { topic: "AI活用", avgEngagement: 1200 },
-            { topic: "働き方改革", avgEngagement: 800 }
-          ]
-        }
-      }
+    action: 'passThrough',
+    handler: async (thinkResults: any) => {
+      console.log('[Phase5Execute] Passing through execution strategy')
+      return thinkResults
     }
   },
 
-  // Step 3: 実行計画策定
+  // Step 3: 最終統合とKPI設定
   integrate: {
     prompt: `
-# タイミング戦略
-{timingAnalysis}
+# 実行戦略
+{executionTimeline}
 
-# ベンチマーク
-{benchmarks}
-
-# 過去データ
-{historicalData}
-
-# コンテンツ
-{mainPost}
-
+# タスク
+実行戦略を最終化し、リスクアセスメントと成功指標を設定してください。
 
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "executionPlan": {
-    "immediateActions": [
-      {
-        "time": "投稿時",
-        "action": "具体的なアクション",
-        "purpose": "目的"
-      },
-      {
-        "time": "投稿後30分",
-        "action": "具体的なアクション",
-        "purpose": "目的"
-      }
-    ],
-    "scheduleFollowUps": [
-      {
-        "timing": "投稿後2時間",
-        "content": "フォローアップ投稿案",
-        "trigger": "実行条件（エンゲージメント数など）"
-      }
-    ]
+  "finalExecutionPlan": {
+    "summary": "実行計画の要約",
+    "criticalSuccessFactors": ["成功の鍵となる要素"],
+    "bestTimeToPost": ["最適な投稿時刻候補"],
+    "followUpStrategy": "フォローアップ戦略"
+  },
+  "riskAssessment": {
+    "controversyRisk": "論争リスクとブランドの整合性",
+    "competitionSaturation": "競争飽和分析",
+    "platformCompatibility": "プラットフォームアルゴリズムの互換性"
   },
   "kpis": {
-    "targets": {
-      "1hour": { "impressions": "目標数", "engagement": "目標数" },
-      "6hours": { "impressions": "目標数", "engagement": "目標数" },
-      "24hours": { "impressions": "目標数", "engagement": "目標数" }
+    "engagementRate": {
+      "baseline": "ベースライン",
+      "target": "目標",
+      "stretch": "ストレッチ目標"
     },
-    "successCriteria": "成功と判断する基準",
-    "pivotStrategy": "目標未達時の対応策"
+    "viralCoefficient": {
+      "shareVelocity": "シェア速度目標",
+      "crossPlatform": "クロスプラットフォーム目標"
+    },
+    "measurementPlan": "測定計画"
   },
-  "monitoringPlan": {
-    "checkpoints": ["30分後", "2時間後", "6時間後", "24時間後"],
-    "metricsToTrack": ["インプレッション", "エンゲージメント率", "シェア率"],
-    "alertThresholds": {
-      "lowEngagement": "アラートを出す基準",
-      "viralPotential": "バズ認定基準"
-    }
-  },
-  "bestTimeToPost": ["具体的な投稿推奨時刻1", "具体的な投稿推奨時刻2"],
-  "expectedEngagement": "このコンテンツの予想パフォーマンス",
-  "followUpStrategy": "投稿後のフォローアップ戦略の要約"
-}`,
-    expectedOutput: 'ExecutionPlan',
-    maxTokens: 3000,
+  "completionMessage": "Chain of Thought分析が完了しました。すべてのフェーズが正常に実行され、投稿準備が整いました。"
+}
+`,
+    expectedOutput: 'FinalExecutionPlan',
+    maxTokens: 2000,
     temperature: 0.5
   }
 }
 
-// Orchestratorクラス
+// Chain of Thoughtオーケストレーター
 export class ChainOfThoughtOrchestrator {
-  private llm: any
-  private appHandlers: Map<string, Function>
+  private openai: any
 
-  constructor(llm: any) {
-    this.llm = llm
-    this.appHandlers = new Map()
+  constructor(openaiClient: any) {
+    this.openai = openaiClient
   }
 
-  async executePhase(
-    phase: OrchestratedPhase, 
-    context: any
-  ): Promise<any> {
-    // Step 1: Think
-    const thinkResult = await this.llm.complete({
-      prompt: this.interpolate(phase.think.prompt, context),
-      maxTokens: phase.think.maxTokens
-    })
-
-    // Step 2: Execute (contextを渡す)
-    const executeResult = await phase.execute.handler(thinkResult, context)
-
-    // Step 3: Integrate
-    const integrateResult = await this.llm.complete({
-      prompt: this.interpolate(phase.integrate.prompt, {
+  async executePhase(strategy: OrchestratedPhase, context: any) {
+    const results: any = {}
+    
+    // Think
+    if (strategy.think) {
+      console.log('[Orchestrator] Starting THINK phase')
+      const thinkPrompt = this.interpolatePrompt(strategy.think.prompt, context)
+      
+      const thinkResponse = await this.openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。'
+          },
+          { role: 'user', content: thinkPrompt }
+        ],
+        max_tokens: strategy.think.maxTokens,
+        temperature: strategy.think.temperature || 0.7,
+        response_format: { type: 'json_object' }
+      })
+      
+      results.think = JSON.parse(thinkResponse.choices[0].message.content || '{}')
+      console.log('[Orchestrator] THINK phase completed')
+    }
+    
+    // Execute
+    if (strategy.execute) {
+      console.log('[Orchestrator] Starting EXECUTE phase')
+      results.execute = await strategy.execute.handler(results.think, context)
+      console.log('[Orchestrator] EXECUTE phase completed')
+    }
+    
+    // Integrate
+    if (strategy.integrate) {
+      console.log('[Orchestrator] Starting INTEGRATE phase')
+      const integrateContext = {
         ...context,
-        ...thinkResult,
-        ...executeResult
-      }),
-      maxTokens: phase.integrate.maxTokens
-    })
-
-    return {
-      thinking: thinkResult,
-      execution: executeResult,
-      integration: integrateResult,
-      summary: this.extractSummary(integrateResult)
+        searchResults: results.execute
+      }
+      const integratePrompt = this.interpolatePrompt(strategy.integrate.prompt, integrateContext)
+      
+      const integrateResponse = await this.openai.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。'
+          },
+          { role: 'user', content: integratePrompt }
+        ],
+        max_tokens: strategy.integrate.maxTokens,
+        temperature: strategy.integrate.temperature || 0.5,
+        response_format: { type: 'json_object' }
+      })
+      
+      results.integrate = JSON.parse(integrateResponse.choices[0].message.content || '{}')
+      console.log('[Orchestrator] INTEGRATE phase completed')
     }
+    
+    return results
   }
-
-  private interpolate(template: string, data: any): string {
+  
+  private interpolatePrompt(template: string, context: any): string {
     return template.replace(/{(\w+)}/g, (match, key) => {
-      return data[key] || match
+      const value = context[key]
+      if (value === undefined) {
+        return match
+      }
+      if (typeof value === 'object') {
+        return JSON.stringify(value, null, 2)
+      }
+      return value.toString()
     })
-  }
-
-  private extractSummary(result: any): string {
-    // 結果から次のフェーズに必要な要約を抽出
-    return ''
-  }
-}
-
-// 使用例
-export async function runOrchestratedCoT(sessionId: string, llmClient: any, userConfig?: any) {
-  const orchestrator = new ChainOfThoughtOrchestrator(llmClient)
-  
-  // 初期コンテキスト
-  const context = {
-    userConfig: userConfig || { 
-      expertise: 'AI × 働き方', 
-      style: '解説',
-      platform: 'Twitter'
-    }
-  }
-
-  // Phase 1実行
-  const phase1Result = await orchestrator.executePhase(
-    Phase1Strategy, 
-    context
-  )
-  
-  // Phase 2実行（Phase1の結果を引き継ぐ）
-  const phase2Context = {
-    ...context,
-    opportunities: phase1Result.integration.viralPatterns?.topOpportunities || []
-  }
-  
-  const phase2Result = await orchestrator.executePhase(
-    Phase2Strategy,
-    phase2Context
-  )
-
-  // 全体の結果を返す
-  return {
-    phase1: phase1Result,
-    phase2: phase2Result
   }
 }

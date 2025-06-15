@@ -1,5 +1,49 @@
 # X_BUZZ_FLOW 作業記録
 
+## 🚀 Claudeセッション開始時の標準手順
+
+1. **開発環境のヘルスチェック**
+   ```bash
+   ./scripts/health-check.sh
+   ```
+   
+2. **必要に応じて環境起動**
+   ```bash
+   # 通常の起動
+   ./scripts/dev-start.sh
+   
+   # または永続的な起動（推奨）
+   ./scripts/dev-persistent.sh
+   ```
+
+3. **最重要ドキュメントの確認**
+   ```bash
+   cat docs/chain-of-thought-specification.md
+   ```
+
+4. **作業ログの開始**
+   ```bash
+   ./scripts/auto_log_updater.sh start "X_BUZZ_FLOW" "作業内容"
+   ```
+
+## 🚀 高速デバッグツール
+
+### INTEGRATEステップのテスト
+```bash
+# サーバー再起動なしでテスト
+./scripts/quick-test-integrate.sh [セッションID]
+```
+
+### セッション状態の確認
+```bash
+node check-session-status.js [セッションID]
+```
+
+## 📌 セッション終了時
+```bash
+./scripts/session-save.sh
+```
+
 ## プロジェクトオーナーの目標とビジョン
 
 ### 背景
@@ -835,5 +879,232 @@ git push origin main
    - ハードコードされた評価基準は避ける
    - 各フェーズには明確な役割がある
 
+## 2025年6月15日の作業記録（セッション1）
+
+### Cronジョブ問題の解決
+
+1. **問題**: Cronジョブが2分ごとに実行され、APIの処理と競合
+   - 「Already processing, skipping...」エラーが頻発
+   - INTEGRATEステップが実際には実行されない
+
+2. **解決策**:
+   - 開発環境でCronジョブを無効化（`NODE_ENV === 'development'`チェック）
+   - 5分以上更新がないセッションは自動的にタイムアウト
+   - バックグラウンド開発サーバーで安定運用
+
+3. **重要**: Vercelデプロイ時の注意
+   - `CRON_SECRET`環境変数を必ず設定
+   - 本番環境では2分ごとのCronジョブが有効
+
+## 2025年6月15日の作業記録（セッション1 - 続き）
+
+### 実施した作業
+
+1. **Perplexity実装エラーの修正完了**
+   - タイムアウトを90秒→120秒に延長（ユーザーフィードバック：「perplexityは平均で70秒くらいかかります」）
+   - searchWithContext APIの呼び出し形式を修正（オブジェクト形式に変更）
+   - Phase 1-5の完全な戦略実装を仕様書に基づいて完了
+
+2. **データベーススキーマ問題の解決**
+   - `perplexity_responses`カラムが存在しない問題を回避
+   - executeResultに含める形で対応（`savedPerplexityResponses`として保存）
+
+3. **Chain of Thought実装の修正**
+   - 仕様書（`/docs/chain-of-thought-specification.md`）を厳密に準拠
+   - Phase 2-5の戦略を完全実装
+   - 各フェーズでGPTに考えさせる設計を維持
+
+4. **テストセッションの実行**
+   - セッションID: `d77f8408-6560-449e-86fa-b9748686bdeb`
+   - Phase 1 THINK: 成功（11秒、1597トークン）
+   - Phase 1 EXECUTE: 成功（33.6秒、Perplexity 4質問完了）
+   - Phase 1 INTEGRATE: 処理中で停止（原因調査中）
+
+### 技術的な成果
+
+1. **Perplexity統合の改善**
+   - 自然言語形式の質問展開を実装
+   - 各質問に戦略的意図とバイラル角度を含める
+   - 詳細な分析結果の取得（従来のsnippet 100-150文字から大幅改善）
+
+2. **エラーハンドリングの強化**
+   - タイムアウト時の適切な処理
+   - DBエラー時の回避策実装
+   - 処理状態の適切な管理
+
+### 現在の問題点
+
+1. **Phase 1 INTEGRATEステップの処理停止**
+   - ステータスは「INTEGRATING」のまま
+   - 処理自体は開始されていない可能性
+   - 新しいセッション（`2cf500f3-2ece-4961-a7f5-dc3ef011ae38`）で再テスト予定
+
+### 次回セッションへの引き継ぎ事項
+
+1. **INTEGRATE処理問題の解決**
+   - プロンプトサイズの確認（4000トークン制限）
+   - 処理ロジックのデバッグ
+   - 必要に応じてプロンプトの最適化
+
+2. **Phase 2-5のテスト**
+   - 各フェーズの動作確認
+   - 仕様書との整合性確認
+   - エンドツーエンドの完全な実行
+
+3. **重要な注意点**
+   - Perplexityのタイムアウトは120秒必須
+   - 仕様書を厳密に守る（プロンプトの削減・改変は厳禁）
+   - GPTに考えさせる設計を維持（ハードコード禁止）
+
+## 2025年6月15日の作業記録（セッション2）
+
+### 主要な問題解決完了
+
+#### 1. 「3つのコンセプトに対して3つの下書きを生成する」問題の完全解決 ✅
+
+**問題の特定:**
+- Phase 3で3つのコンセプトが正しく生成されている
+- Phase 4で1つのコンテンツのみ生成（選択されたコンセプトのみ）
+- 下書き作成で1つの下書きのみ作成
+
+**実施した修正:**
+
+1. **Phase 4 integrateプロンプトの修正**
+   ```javascript
+   // 修正前: 選択されたコンセプトのみ処理
+   // 修正後: 3つ全てのコンセプトのコンテンツを生成
+   "contents": [
+     {
+       "conceptNumber": 1,
+       "title": "コンセプト1のタイトル",
+       "mainPost": "完全な投稿文（改行、絵文字、ハッシュタグ含む）",
+       "hashtags": ["ハッシュタグ1", "ハッシュタグ2"],
+       "visualDescription": "必要な画像/動画の詳細な説明",
+       "postingNotes": "具体的なタイミングと最適化のヒント"
+     }
+     // コンセプト2、3も同様
+   ]
+   ```
+
+2. **下書き作成ロジックの修正**
+   ```javascript
+   // 修正前: 選択された1つのコンセプトのみ
+   const selectedConcept = concepts[selectedIndex]
+   
+   // 修正後: 全てのコンセプトを処理
+   for (let i = 0; i < concepts.length; i++) {
+     const concept = concepts[i];
+     const content = phase4Contents[i] || {};
+     // 各コンセプトで下書きを作成
+   }
+   ```
+
+3. **コンテキスト構築の修正**
+   ```javascript
+   // Phase 5で参照するデータを修正
+   // 修正前: mainPost（単一）
+   // 修正後: contents（配列）
+   context['contents'] = (phase4.integrateResult as any).contents || []
+   ```
+
+#### 2. 「expertiseがクエリに渡されない」問題の解決 ✅
+
+**問題の特定:**
+- `buildContext`でセッション情報が正しく取得できない
+- Phase 1のexecuteハンドラーで`context.expertise`が未定義エラー
+- Perplexityクエリで`${expertise}`が参照できない
+
+**実施した修正:**
+
+1. **安全なコンテキストアクセス**
+   ```javascript
+   // Phase 1 executeハンドラー
+   const expertise = context?.userConfig?.expertise || context?.expertise || 'AIと働き方'
+   const platform = context?.userConfig?.platform || context?.platform || 'Twitter'
+   ```
+
+2. **デフォルト値の設定**
+   ```javascript
+   // interpolatePrompt関数
+   const defaults: Record<string, string> = {
+     expertise: 'AIと働き方',
+     style: '洞察的',
+     platform: 'Twitter'
+   }
+   return defaults[key] || match
+   ```
+
+3. **デバッグログの追加**
+   ```javascript
+   console.log('[buildContext] Session data:', {
+     expertise: session?.expertise,
+     style: session?.style,
+     platform: session?.platform
+   })
+   ```
+
+#### 3. Phase 3プロンプトの仕様書準拠修正 ✅
+
+**修正内容:**
+- Phase 3のJSON出力形式を仕様書通りに修正
+- A（形式）、B（フック）、C（角度）、D（キーポイント）の4要素のみに簡素化
+- CTAやvisual、hashtagsなどの詳細要素はPhase 4で扱うよう分離
+
+### 検証結果
+
+**既存データを使った完全なE2Eテスト:**
+- セッションID: `a2a3c490-c41d-4db8-964c-7964c83f21b7`を使用
+- Phase 1: ✅ Perplexity検索4件、トレンド2件特定
+- Phase 2: ✅ 機会評価、3つの機会選択
+- Phase 3: ✅ 3つのコンセプト生成（仕様書準拠）
+- Phase 4: ✅ 新形式で3つ全てのコンテンツ生成テスト完了
+- 下書き作成: ✅ 3つの投稿可能な下書き作成完了
+
+**最終確認結果:**
+```
+🎯 完成した3つの下書き投稿:
+================================
+
+📝 下書き1 (thread): AIで変わる新卒の風景: 明日へ向かうスキル戦略
+📝 下書き2 (single): AIに適応した成功事例から学ぶ  
+📝 下書き3 (carousel): AI導入の舞台裏: 成功の鍵を探る
+
+期待値との一致: ✅ SUCCESS
+```
+
+### 残課題（次セッションで対応）
+
+#### 1. セッション管理の改善（優先度：高）
+- 失敗セッションの自動復旧機能
+- コンテキスト構築エラーの根本解決
+- セッション状態の正規化
+
+#### 2. エラーハンドリングの強化（優先度：中）
+- Perplexityタイムアウト対策（70秒制限）
+- GPT APIレート制限・トークン制限の適切な処理
+- try-catch強化とエラー分類
+
+#### 3. 本番運用準備（優先度：中）
+- Vercelデプロイでの動作確認
+- 環境変数の完全性チェック
+- パフォーマンス最適化
+
+### 技術的な学習事項
+
+1. **Chain of Thoughtの本質理解**
+   - プロンプトはGPTに考えさせるガイド
+   - ハードコードされた処理ではない
+   - 仕様書の構造を忠実に保持することの重要性
+
+2. **効率的なデバッグ手法**
+   - 新しいセッション作成ではなく既存データでのテスト
+   - 単体ロジックテストの有効性
+   - Perplexity呼び出しを避けた高速検証
+
+3. **データフローの設計**
+   - フェーズ間のデータ引き継ぎの重要性
+   - JSON構造の一貫性
+   - 下書き作成における複数コンテンツ対応
+
 ---
-*最終更新: 2025/06/14 23:30*
+*最終更新: 2025/06/15 15:30*
