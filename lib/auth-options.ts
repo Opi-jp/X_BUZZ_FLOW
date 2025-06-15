@@ -6,14 +6,9 @@ export const authOptions: NextAuthOptions = {
   debug: process.env.NODE_ENV === 'development', // 本番では無効
   providers: [
     TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: '2.0',
-      authorization: {
-        params: {
-          scope: 'tweet.read tweet.write users.read offline.access',
-        },
-      },
+      clientId: process.env.TWITTER_API_KEY!,
+      clientSecret: process.env.TWITTER_API_SECRET!,
+      version: '1.0',
     }),
   ],
   session: {
