@@ -107,14 +107,30 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async jwt({ token, account, user }) {
-      console.log('JWT callback:', { token, account, user })
-      if (account && user) {
-        token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
-        token.userId = user.id
-        token.twitterId = account.providerAccountId
+      console.log('JWT callback - START:', {
+        hasToken: !!token,
+        hasAccount: !!account,
+        hasUser: !!user,
+        accountProvider: account?.provider,
+      })
+      
+      try {
+        if (account && user) {
+          console.log('JWT callback - Setting token data')
+          token.accessToken = account.access_token
+          token.refreshToken = account.refresh_token
+          token.userId = user.id
+          token.twitterId = account.providerAccountId
+          console.log('JWT callback - Token updated:', {
+            hasAccessToken: !!token.accessToken,
+            twitterId: token.twitterId,
+          })
+        }
+        return token
+      } catch (error) {
+        console.error('JWT callback error:', error)
+        return token
       }
-      return token
     },
     async redirect({ url, baseUrl }) {
       console.log('Redirect callback:', { url, baseUrl })
