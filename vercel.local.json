@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "app/api/viral/cot-session/[sessionId]/process/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/viral/gpt-session/[sessionId]/step1-orchestrated/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/viral/gpt-session/[sessionId]/step1-orchestrated-v2/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "crons": []
+}

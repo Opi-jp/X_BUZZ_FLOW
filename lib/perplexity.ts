@@ -86,14 +86,22 @@ export class PerplexityClient {
     }
     
     try {
+      // Create AbortController for timeout (more compatible than AbortSignal.timeout)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 120000) // 120秒のタイムアウト（Perplexityは時間がかかるため）
+      
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify(requestBody),
+        signal: controller.signal
       })
+      
+      // Clear timeout if request completes
+      clearTimeout(timeoutId)
       
       if (!response.ok) {
         const error = await response.text()

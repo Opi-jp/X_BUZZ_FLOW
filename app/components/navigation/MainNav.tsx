@@ -23,7 +23,7 @@ const navigation = [
     icon: TrendingUp,
     children: [
       { name: 'CoT生成', href: '/viral/cot' },
-      { name: '下書き管理', href: '/viral/drafts' },
+      { name: '下書き管理', href: '/viral/cot/drafts' },
       { name: 'パフォーマンス', href: '/viral/performance' },
     ]
   },

@@ -323,6 +323,9 @@ model CotPhase {
   executeDuration Int?       @default(0) @map("execute_duration") // ミリ秒
   executeAt     DateTime?    @map("execute_at")
   
+  // Perplexity生応答（テスト用） - executeResultに含める形で対応
+  // perplexityResponses Json?  @db.Json @map("perplexity_responses")
+  
   // Integrate結果
   integratePrompt String?    @db.Text @map("integrate_prompt")
   integrateResult Json?      @db.Json @map("integrate_result")
@@ -356,7 +359,7 @@ model CotDraft {
   
   // Phase 4 完全なコンテンツ
   content        String?       @db.Text // コピペ即投稿可能なコンテンツ
-  threadContent  Json?         @db.Json // スレッドの場合の追加投稿
+  // threadContent  Json?         @db.Json // スレッドの場合の追加投稿 // 一時的にコメントアウト
   visualGuide    String?       @db.Text @map("visual_guide") // 画像/動画の説明
   
   // メタデータ

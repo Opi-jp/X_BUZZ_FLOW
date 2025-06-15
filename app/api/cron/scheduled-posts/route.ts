@@ -2,115 +2,144 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { TwitterApi } from 'twitter-api-v2'
 
-// Vercel Cronの認証
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+// Twitter APIクライアントの取得
+async function getTwitterClient() {
+  // アプリケーション認証（投稿用）
+  return new TwitterApi({
+    appKey: process.env.TWITTER_API_KEY!,
+    appSecret: process.env.TWITTER_API_SECRET!,
+    accessToken: process.env.TWITTER_ACCESS_TOKEN!,
+    accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+  })
+}
 
 export async function GET(request: NextRequest) {
-  try {
-    // Vercel Cronの認証チェック
+  // 開発環境では認証をスキップ
+  if (process.env.NODE_ENV !== 'development') {
+    // Cron認証（本番環境のみ）
     const authHeader = request.headers.get('authorization')
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    
+  }
+  
+  try {
+    // 投稿予定の下書きを取得
     const now = new Date()
-    const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000)
-    
-    // 今から5分以内に投稿予定の下書きを取得
-    const scheduledDrafts = await prisma.cotDraft.findMany({
+    const drafts = await prisma.cotDraft.findMany({
       where: {
         status: 'SCHEDULED',
         scheduledAt: {
-          gte: now,
-          lte: fiveMinutesFromNow
+          lte: now
         }
       },
       include: {
         session: true
-      }
+      },
+      take: 10 // 一度に処理する最大数
     })
     
-    console.log(`Found ${scheduledDrafts.length} scheduled posts`)
+    console.log(`[CRON] Found ${drafts.length} scheduled drafts to post`)
     
     const results = []
     
-    for (const draft of scheduledDrafts) {
+    for (const draft of drafts) {
       try {
-        // Twitter認証情報を取得（実際の実装では、ユーザーごとの認証情報を管理）
-        const twitterClient = new TwitterApi({
-          appKey: process.env.TWITTER_API_KEY!,
-          appSecret: process.env.TWITTER_API_SECRET!,
-          accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-          accessSecret: process.env.TWITTER_ACCESS_SECRET!,
-        })
+        // Twitter API v2を使用した実際の投稿
+        const content = draft.editedContent || draft.content || ''
         
-        // 投稿内容の最終チェック
-        const content = draft.hook
-        const hashtags = (draft.hashtags || []).map(tag => `#${tag}`).join(' ')
-        const fullContent = `${content}\n\n${hashtags}`
+        // Twitter APIクライアントの初期化
+        const twitterClient = await getTwitterClient()
         
-        // 文字数チェック（URLは23文字として計算）
-        if (fullContent.length > 280) {
-          throw new Error('投稿内容が文字数制限を超えています')
-        }
+        try {
+          let postId: string
+          
+          if (process.env.NODE_ENV === 'development') {
+            // 開発環境：モック投稿
+            postId = `mock_cron_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            console.log(`[CRON MOCK] Simulated posting to Twitter:`, {
+              draftId: draft.id,
+              postId,
+              content: content.substring(0, 100) + '...'
+            })
+            // 投稿の待機をシミュレート
+            await new Promise(resolve => setTimeout(resolve, 500))
+          } else {
+            // 本番環境：実際のTwitter投稿
+            const twitterClient = await getTwitterClient()
+            const tweet = await twitterClient.v2.tweet(content)
+            postId = tweet.data.id
+            
+            console.log(`[CRON] Successfully posted to Twitter:`, {
+              draftId: draft.id,
+              postId,
+              content: content.substring(0, 100) + '...'
+            })
+          }
         
-        // Twitter投稿
-        const tweet = await twitterClient.v2.tweet(fullContent)
-        
-        // 下書きのステータスを更新
+        // 成功したらDBを更新
         await prisma.cotDraft.update({
           where: { id: draft.id },
           data: {
             status: 'POSTED',
             postedAt: new Date(),
-            postId: tweet.data.id
+            postId
+          }
+        })
+        
+        // パフォーマンス追跡の初期化（仮実装）
+        await prisma.cotDraftPerformance.create({
+          data: {
+            draftId: draft.id,
+            // 初期値は0
+            likes30m: 0,
+            retweets30m: 0,
+            replies30m: 0,
+            impressions30m: 0
           }
         })
         
         results.push({
           draftId: draft.id,
-          tweetId: tweet.data.id,
           status: 'success',
-          postedAt: new Date().toISOString()
+          postId
         })
+        
+        } catch (twitterError) {
+          // Twitter API エラーの詳細ログ
+          console.error(`[CRON] Twitter API error:`, twitterError)
+          throw twitterError
+        }
         
       } catch (error) {
-        console.error(`Failed to post draft ${draft.id}:`, error)
-        
-        // エラーを記録
-        await prisma.cotDraft.update({
-          where: { id: draft.id },
-          data: {
-            status: 'ARCHIVED'
-            // エラー情報はログに記録
-          }
-        })
+        console.error(`[CRON] Failed to post draft ${draft.id}:`, error)
         
         results.push({
           draftId: draft.id,
-          status: 'error',
+          status: 'failed',
           error: error instanceof Error ? error.message : 'Unknown error'
         })
       }
     }
     
-    return NextResponse.json({
-      success: true,
-      processed: results.length,
-      results,
-      nextRun: new Date(now.getTime() + 5 * 60 * 1000).toISOString()
+    return NextResponse.json({ 
+      success: true, 
+      processed: drafts.length,
+      results
     })
     
   } catch (error) {
-    console.error('Cron job error:', error)
+    console.error('[CRON] Scheduled posts error:', error)
     return NextResponse.json(
       { 
-        error: 'Cron job failed',
+        error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )
   }
 }
+
+// Vercel Cronの設定
+export const runtime = 'nodejs'
+export const maxDuration = 60 // 1分

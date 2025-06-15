@@ -110,13 +110,20 @@ async function collectRSS(jobId: string, sinceDate?: string) {
     // priorityは優先度なので、進捗表示には使わない
 
     try {
+      // Create AbortController for timeout (more compatible than AbortSignal.timeout)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10秒タイムアウト
+      
       const response = await fetch(source.url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (compatible; BuzzFlow/1.0)',
           'Accept': 'application/rss+xml, application/xml, text/xml, */*',
         },
-        signal: AbortSignal.timeout(10000), // 10秒タイムアウト
+        signal: controller.signal
       })
+      
+      // Clear timeout if request completes
+      clearTimeout(timeoutId)
 
       if (!response.ok) continue
 

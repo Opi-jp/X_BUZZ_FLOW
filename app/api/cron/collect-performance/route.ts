@@ -2,235 +2,218 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { TwitterApi } from 'twitter-api-v2'
 
-// Vercel Cronの設定
-export const runtime = 'nodejs'
-export const dynamic = 'force-dynamic'
-export const maxDuration = 60
+// Twitter APIクライアントの取得
+async function getTwitterClient() {
+  return new TwitterApi({
+    appKey: process.env.TWITTER_API_KEY!,
+    appSecret: process.env.TWITTER_API_SECRET!,
+    accessToken: process.env.TWITTER_ACCESS_TOKEN!,
+    accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+  })
+}
+
+// Kaito APIでのメトリクス取得（フォールバック）
+async function getKaitoMetrics(postId: string) {
+  try {
+    const response = await fetch(`https://kaitoeasyapi.com/api/tweet-metrics`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.KAITO_API_KEY}`
+      },
+      body: JSON.stringify({ tweetId: postId })
+    })
+    
+    if (response.ok) {
+      return await response.json()
+    }
+    return null
+  } catch (error) {
+    console.log('[KAITO] API error:', error)
+    return null
+  }
+}
 
 export async function GET(request: NextRequest) {
-  try {
-    // Vercel Cronの認証チェック
+  // 開発環境では認証をスキップ
+  if (process.env.NODE_ENV !== 'development') {
+    // Cron認証（本番環境のみ）
     const authHeader = request.headers.get('authorization')
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+  }
+  
+  try {
+    console.log('[PERFORMANCE CRON] Starting performance collection...')
     
+    // パフォーマンス追跡が必要な投稿を取得
     const now = new Date()
     const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000)
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
-    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
     
-    // パフォーマンス収集が必要な投稿を取得（新スキーマ対応）
-    const postsToCheck = await prisma.cotDraft.findMany({
+    // 投稿済みで、パフォーマンス追跡が未完了の下書きを取得
+    const drafts = await prisma.cotDraft.findMany({
       where: {
-        postedAt: { not: null }, // 投稿済みのもののみ
-        OR: [
-          // 30分後のメトリクス未収集
-          {
-            postedAt: {
-              lte: thirtyMinutesAgo,
-              gte: new Date(thirtyMinutesAgo.getTime() - 10 * 60 * 1000) // 30-40分前
-            },
-            performance: null
-          },
-          // 1時間後のメトリクス未収集
-          {
-            postedAt: {
-              lte: oneHourAgo,
-              gte: new Date(oneHourAgo.getTime() - 30 * 60 * 1000) // 1-1.5時間前
-            },
-            performance: {
-              impressions1h: null
-            }
-          },
-          // 24時間後のメトリクス未収集
-          {
-            postedAt: {
-              lte: oneDayAgo,
-              gte: new Date(oneDayAgo.getTime() - 60 * 60 * 1000) // 24-25時間前
-            },
-            performance: {
-              impressions24h: null
-            }
-          }
-        ]
+        status: 'POSTED',
+        postedAt: {
+          not: null
+        },
+        postId: {
+          not: null
+        },
+        performance: {
+          OR: [
+            { likes30m: null },
+            { likes1h: null }, 
+            { likes24h: null }
+          ]
+        }
       },
-      take: 10 // 一度に処理する最大数
+      include: {
+        performance: true
+      },
+      take: 20 // 一度に処理する最大数
     })
     
-    console.log(`Found ${postsToCheck.length} posts to check performance`)
+    console.log(`[PERFORMANCE CRON] Found ${drafts.length} drafts to track`)
     
     const results = []
+    let twitterClient: TwitterApi | null = null
     
-    // Twitter APIクライアント初期化
-    const twitterClient = new TwitterApi({
-      appKey: process.env.TWITTER_API_KEY!,
-      appSecret: process.env.TWITTER_API_SECRET!,
-      accessToken: process.env.TWITTER_ACCESS_TOKEN!,
-      accessSecret: process.env.TWITTER_ACCESS_SECRET!,
-    })
+    try {
+      twitterClient = await getTwitterClient()
+    } catch (twitterError) {
+      console.log('[PERFORMANCE CRON] Twitter API unavailable, using Kaito API fallback')
+    }
     
-    for (const post of postsToCheck) {
+    for (const draft of drafts) {
       try {
-        if (!post.postId) continue
+        if (!draft.postId || !draft.postedAt) continue
         
-        // 投稿の経過時間を計算
-        const elapsedMinutes = Math.floor((now.getTime() - post.postedAt!.getTime()) / (60 * 1000))
-        let timeframe: string
+        const postedAt = new Date(draft.postedAt)
+        const timeSincePost = now.getTime() - postedAt.getTime()
         
-        if (elapsedMinutes >= 1440) { // 24時間以上
-          timeframe = '24h'
-        } else if (elapsedMinutes >= 60) { // 1時間以上
-          timeframe = '1h'
-        } else if (elapsedMinutes >= 30) { // 30分以上
-          timeframe = '30m'
-        } else {
-          continue // まだ早い
+        let metrics = null
+        
+        // Twitter API v2でメトリクス取得を試行
+        if (twitterClient) {
+          try {
+            const tweet = await twitterClient.v2.singleTweet(draft.postId, {
+              'tweet.fields': ['public_metrics']
+            })
+            
+            if (tweet.data.public_metrics) {
+              metrics = {
+                likes: tweet.data.public_metrics.like_count || 0,
+                retweets: tweet.data.public_metrics.retweet_count || 0,
+                replies: tweet.data.public_metrics.reply_count || 0,
+                impressions: tweet.data.public_metrics.impression_count || 0
+              }
+            }
+          } catch (twitterApiError) {
+            console.log(`[PERFORMANCE CRON] Twitter API failed for ${draft.postId}, trying Kaito...`)
+          }
         }
         
-        // すでにこのタイムフレームのデータがあるかチェック
-        const existingPerformance = await prisma.cotDraftPerformance.findFirst({
-          where: {
-            draftId: post.id
+        // Twitter APIが失敗した場合、Kaito APIを使用
+        if (!metrics) {
+          const kaitoMetrics = await getKaitoMetrics(draft.postId)
+          if (kaitoMetrics) {
+            metrics = {
+              likes: kaitoMetrics.likes || 0,
+              retweets: kaitoMetrics.retweets || 0,
+              replies: kaitoMetrics.replies || 0,
+              impressions: kaitoMetrics.impressions || 0
+            }
           }
-        })
-        
-        if (existingPerformance && 
-            ((timeframe === '30m' && existingPerformance.impressions30m !== null) ||
-             (timeframe === '1h' && existingPerformance.impressions1h !== null) ||
-             (timeframe === '24h' && existingPerformance.impressions24h !== null))) {
-          continue // すでに収集済み
         }
         
-        // postIdを直接使用（新しいスキーマではTwitterの投稿IDが直接保存される）
-        const tweetId = post.postId
+        if (!metrics) {
+          console.log(`[PERFORMANCE CRON] No metrics available for ${draft.postId}`)
+          continue
+        }
         
-        // Twitter APIでメトリクスを取得
-        // 注意: v2 APIではメトリクスの取得に制限があります
-        // 実際の実装では、適切なエンドポイントを使用してください
-        const tweet = await twitterClient.v2.singleTweet(tweetId, {
-          'tweet.fields': ['public_metrics', 'created_at']
-        })
+        // パフォーマンスレコードの更新データを準備
+        const updateData: any = {}
         
-        const metrics = tweet.data.public_metrics
+        // 30分後のメトリクス
+        if (timeSincePost >= 30 * 60 * 1000 && draft.performance?.likes30m === null) {
+          updateData.likes30m = metrics.likes
+          updateData.retweets30m = metrics.retweets
+          updateData.replies30m = metrics.replies
+          updateData.impressions30m = metrics.impressions
+        }
         
-        if (metrics) {
-          // エンゲージメント率の計算
-          const totalEngagements = 
-            (metrics.like_count || 0) + 
-            (metrics.retweet_count || 0) + 
-            (metrics.reply_count || 0)
+        // 1時間後のメトリクス
+        if (timeSincePost >= 60 * 60 * 1000 && draft.performance?.likes1h === null) {
+          updateData.likes1h = metrics.likes
+          updateData.retweets1h = metrics.retweets
+          updateData.replies1h = metrics.replies
+          updateData.impressions1h = metrics.impressions
+        }
+        
+        // 24時間後のメトリクス
+        if (timeSincePost >= 24 * 60 * 60 * 1000 && draft.performance?.likes24h === null) {
+          updateData.likes24h = metrics.likes
+          updateData.retweets24h = metrics.retweets
+          updateData.replies24h = metrics.replies
+          updateData.impressions24h = metrics.impressions
+        }
+        
+        if (Object.keys(updateData).length > 0) {
+          await prisma.cotDraftPerformance.update({
+            where: { draftId: draft.id },
+            data: updateData
+          })
           
-          const engagementRate = metrics.impression_count > 0
-            ? (totalEngagements / metrics.impression_count) * 100
-            : 0
-          
-          // パフォーマンスデータを保存または更新
-          const performanceData: any = {
-            draftId: post.id,
-            engagementRate: Number(engagementRate.toFixed(2))
-          }
-          
-          // タイムフレームに応じてフィールドを設定
-          if (timeframe === '30m') {
-            performanceData.impressions30m = metrics.impression_count || 0
-            performanceData.likes30m = metrics.like_count || 0
-            performanceData.retweets30m = metrics.retweet_count || 0
-            performanceData.replies30m = metrics.reply_count || 0
-          } else if (timeframe === '1h') {
-            performanceData.impressions1h = metrics.impression_count || 0
-            performanceData.likes1h = metrics.like_count || 0
-            performanceData.retweets1h = metrics.retweet_count || 0
-            performanceData.replies1h = metrics.reply_count || 0
-          } else if (timeframe === '24h') {
-            performanceData.impressions24h = metrics.impression_count || 0
-            performanceData.likes24h = metrics.like_count || 0
-            performanceData.retweets24h = metrics.retweet_count || 0
-            performanceData.replies24h = metrics.reply_count || 0
-          }
-          
-          // 既存のレコードがあれば更新、なければ作成
-          if (existingPerformance) {
-            await prisma.cotDraftPerformance.update({
-              where: { id: existingPerformance.id },
-              data: performanceData
-            })
-          } else {
-            await prisma.cotDraftPerformance.create({
-              data: performanceData
-            })
-          }
+          console.log(`[PERFORMANCE CRON] Updated metrics for ${draft.postId}:`, updateData)
           
           results.push({
-            postId: post.id,
-            timeframe,
-            status: 'success',
-            metrics: {
-              impressions: metrics.impression_count,
-              engagementRate: Number(engagementRate.toFixed(2))
-            }
+            draftId: draft.id,
+            postId: draft.postId,
+            status: 'updated',
+            metrics: updateData
+          })
+        } else {
+          results.push({
+            draftId: draft.id,
+            postId: draft.postId,
+            status: 'no_update_needed'
           })
         }
         
       } catch (error) {
-        console.error(`Failed to collect performance for post ${post.id}:`, error)
+        console.error(`[PERFORMANCE CRON] Failed to collect performance for draft ${draft.id}:`, error)
+        
         results.push({
-          postId: post.id,
-          status: 'error',
+          draftId: draft.id,
+          postId: draft.postId,
+          status: 'failed',
           error: error instanceof Error ? error.message : 'Unknown error'
         })
       }
     }
     
-    // 分析インサイトの生成（24時間後のデータがある投稿）
-    const postsWithFullData = await prisma.cotDraft.findMany({
-      where: {
-        performance: {
-          impressions24h: { not: null }
-        }
-      },
-      include: {
-        performance: true,
-        session: true
-      },
-      take: 5,
-      orderBy: {
-        postedAt: 'desc'
-      }
-    })
-    
-    // 高パフォーマンス投稿の傾向分析
-    const insights = []
-    for (const post of postsWithFullData) {
-      const perf = post.performance
-      if (perf && perf.engagementRate && perf.engagementRate > 5) { // エンゲージメント率5%以上
-        insights.push({
-          postId: post.id,
-          content: post.content?.substring(0, 100),
-          engagementRate: perf.engagementRate,
-          impressions: perf.impressions24h,
-          title: post.title,
-          hashtags: post.hashtags
-        })
-      }
-    }
-    
-    return NextResponse.json({
-      success: true,
-      processed: results.length,
-      results,
-      insights,
-      nextRun: new Date(now.getTime() + 30 * 60 * 1000).toISOString()
+    return NextResponse.json({ 
+      success: true, 
+      processed: drafts.length,
+      results
     })
     
   } catch (error) {
-    console.error('Performance collection cron error:', error)
+    console.error('[PERFORMANCE CRON] Error:', error)
     return NextResponse.json(
       { 
-        error: 'Performance collection failed',
+        error: 'Internal server error',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )
   }
 }
+
+// Vercel Cronの設定
+export const runtime = 'nodejs'
+export const maxDuration = 60 // 1分
