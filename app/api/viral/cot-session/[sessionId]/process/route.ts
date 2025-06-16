@@ -224,6 +224,14 @@ export async function POST(
       console.log(`[EXECUTE] Think result keys: ${Object.keys(thinkResult).join(', ')}`)
       
       try {
+        // コンテキストのデバッグログ
+        console.log(`[EXECUTE] Context before handler:`, {
+          hasContext: !!context,
+          contextKeys: context ? Object.keys(context) : 'undefined',
+          expertise: context?.expertise,
+          userConfig: context?.userConfig
+        })
+        
         result = await strategy.execute.handler(thinkResult, context)
         console.log(`[EXECUTE] Execution completed successfully`)
         if (result.searchResults) {
@@ -507,6 +515,43 @@ export async function POST(
     // エラー分類と処理
     const errorInfo = await classifyAndHandleError(error, await params)
     
+    // セッションマネージャーで復旧アクションを決定
+    try {
+      const { CotSessionManager } = await import('@/lib/cot-session-manager')
+      const sessionManager = new CotSessionManager()
+      const { sessionId } = await params
+      
+      const recoveryAction = await sessionManager.determineRecoveryAction(sessionId, error)
+      console.log('[ERROR] Recovery action:', recoveryAction)
+      
+      // 自動リカバリーの実行
+      if (recoveryAction.action === 'retry' && errorInfo.retryable) {
+        const retryResult = await sessionManager.retrySession(sessionId)
+        if (retryResult.success) {
+          return NextResponse.json({
+            error: errorInfo.userMessage,
+            recoveryAction: retryResult,
+            message: 'セッションは自動的にリトライされます。しばらくお待ちください。',
+            retryAfter: 5
+          }, { status: 503 })
+        }
+      } else if (recoveryAction.action === 'restart_phase') {
+        // フェーズ再開の提案
+        return NextResponse.json({
+          error: errorInfo.userMessage,
+          recoveryAction: {
+            action: 'restart_phase',
+            reason: recoveryAction.reason,
+            recommendedPhase: session?.currentPhase || 1
+          },
+          message: `エラーが発生しました。Phase ${session?.currentPhase || 1}から再開することをお勧めします。`,
+          recoveryUrl: `/api/viral/cot-session/${sessionId}/recover`
+        }, { status: 500 })
+      }
+    } catch (recoveryError) {
+      console.error('[ERROR] Recovery failed:', recoveryError)
+    }
+    
     return NextResponse.json(
       {
         error: errorInfo.userMessage,
@@ -698,8 +743,9 @@ async function handleSessionRecovery(session: any): Promise<{
   
   // 処理中ステータスの場合
   if (['THINKING', 'EXECUTING', 'INTEGRATING'].includes(session.status)) {
-    // 2分以内の場合はスキップ
-    if (timeSinceUpdate < 2 * 60 * 1000) {
+    // 2分以内の場合はスキップ（開発環境では30秒に短縮）
+    const skipTime = process.env.NODE_ENV === 'development' ? 30 * 1000 : 2 * 60 * 1000
+    if (timeSinceUpdate < skipTime) {
       console.log(`[SESSION RECOVERY] Processing in progress, skipping... (${Math.round(timeSinceUpdate / 1000)}s since last update)`)
       return {
         shouldSkip: true,

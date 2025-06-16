@@ -1,158 +1,112 @@
-/**
- * CoTシステムのローカルテスト
- * 
- * 使用方法:
- * node test-cot-local.js
- */
+#\!/usr/bin/env node
 
-require('dotenv').config({ path: '.env.local' })
+const dotenv = require('dotenv');
+const path = require('path');
 
-async function testCotSystem() {
-  console.log('🚀 CoTシステムのローカルテストを開始します...\n')
+// .env.localファイルを読み込む
+dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+
+async function testCoTSession() {
+  console.log('🧪 CoTセッションのローカルテスト開始\n');
   
-  const baseUrl = 'http://localhost:3000'
+  const baseUrl = 'http://localhost:3000';
   
   try {
-    // Step 1: セッション作成
-    console.log('📋 Step 1: セッション作成')
+    // 1. 新しいセッションを作成
+    console.log('1️⃣ 新しいセッションを作成...');
     const createResponse = await fetch(`${baseUrl}/api/viral/cot-session/create`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        expertise: 'AI',
-        style: '教育的',
+        expertise: 'AIと働き方',
+        style: '洞察的',
         platform: 'Twitter'
       })
-    })
+    });
     
-    if (!createResponse.ok) {
-      const errorText = await createResponse.text()
-      throw new Error(`セッション作成失敗: ${createResponse.status} - ${errorText}`)
+    if (\!createResponse.ok) {
+      throw new Error(`セッション作成失敗: ${createResponse.status} ${createResponse.statusText}`);
     }
     
-    const createResult = await createResponse.json()
-    console.log('✅ セッション作成成功:', createResult.sessionId)
-    console.log('   設定:', {
-      expertise: 'AI',
-      style: '教育的',
-      platform: 'Twitter'
-    })
+    const { sessionId } = await createResponse.json();
+    console.log(`✅ セッション作成成功: ${sessionId}\n`);
     
-    const sessionId = createResult.sessionId
-    
-    // Step 2: Phase 1実行
-    console.log('\n📋 Step 2: Phase 1実行（トレンド収集）')
-    console.log('   Phase 1-1: Think (検索クエリ生成)...')
-    
-    let processResponse = await fetch(`${baseUrl}/api/viral/cot-session/${sessionId}/process`, {
+    // 2. セッションを処理（Phase 1 - THINK）
+    console.log('2️⃣ Phase 1 - THINK を実行...');
+    const processResponse1 = await fetch(`${baseUrl}/api/viral/cot-session/${sessionId}/process`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
-    })
+    });
     
-    if (!processResponse.ok) {
-      const errorText = await processResponse.text()
-      throw new Error(`Phase 1-1処理失敗: ${processResponse.status} - ${errorText}`)
+    if (\!processResponse1.ok) {
+      const error = await processResponse1.text();
+      throw new Error(`Phase 1 THINK 失敗: ${error}`);
     }
     
-    let processResult = await processResponse.json()
-    console.log('✅ Phase 1-1完了 (Think)')
+    const result1 = await processResponse1.json();
+    console.log(`✅ Phase 1 THINK 完了: ${result1.duration}ms\n`);
     
-    // Phase 1-2: Execute
-    if (processResult.step === 'THINK' && processResult.nextStep === 'EXECUTE') {
-      console.log('   Phase 1-2: Execute (Perplexity検索)...')
-      
-      // 2秒待機
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      processResponse = await fetch(`${baseUrl}/api/viral/cot-session/${sessionId}/process`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      if (!processResponse.ok) {
-        const errorText = await processResponse.text()
-        throw new Error(`Phase 1-2処理失敗: ${processResponse.status} - ${errorText}`)
+    // 3. Phase 1 - EXECUTE を実行
+    console.log('3️⃣ Phase 1 - EXECUTE を実行...');
+    const processResponse2 = await fetch(`${baseUrl}/api/viral/cot-session/${sessionId}/process`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       }
-      
-      processResult = await processResponse.json()
-      console.log('✅ Phase 1-2完了 (Execute)')
+    });
+    
+    if (\!processResponse2.ok) {
+      const error = await processResponse2.text();
+      console.error('❌ Phase 1 EXECUTE エラーレスポンス:');
+      console.error(error);
+      throw new Error(`Phase 1 EXECUTE 失敗`);
     }
     
-    // Phase 1-3: Integrate
-    if (processResult.step === 'EXECUTE' && processResult.nextStep === 'INTEGRATE') {
-      console.log('   Phase 1-3: Integrate (結果分析)...')
-      
-      // 2秒待機
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      processResponse = await fetch(`${baseUrl}/api/viral/cot-session/${sessionId}/process`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      
-      if (!processResponse.ok) {
-        const errorText = await processResponse.text()
-        throw new Error(`Phase 1-3処理失敗: ${processResponse.status} - ${errorText}`)
-      }
-      
-      processResult = await processResponse.json()
-      console.log('✅ Phase 1-3完了 (Integrate)')
-      
-      // Phase 1の結果を表示
-      if (processResult.result?.trendedTopics) {
-        console.log(`   特定されたトピック数: ${processResult.result.trendedTopics.length}`)
-        processResult.result.trendedTopics.forEach((topic, index) => {
-          console.log(`   ${index + 1}. ${topic.topicName} (${topic.category})`)
-        })
-      }
+    const result2 = await processResponse2.json();
+    console.log(`✅ Phase 1 EXECUTE 完了: ${result2.duration}ms\n`);
+    
+    // 4. セッションの詳細を確認
+    console.log('4️⃣ セッションの詳細を確認...');
+    const detailsResponse = await fetch(`${baseUrl}/api/debug/session-details/${sessionId}`);
+    
+    if (detailsResponse.ok) {
+      const details = await detailsResponse.json();
+      console.log('セッション詳細:');
+      console.log(`  - 状態: ${details.status}`);
+      console.log(`  - 現在のフェーズ: ${details.currentPhase}`);
+      console.log(`  - 現在のステップ: ${details.currentStep}`);
+      console.log(`  - エラー: ${details.lastError || 'なし'}`);
+      console.log(`  - expertise: ${details.expertise}`);
     }
     
-    // Phase 1完了確認
-    if (processResult.phaseCompleted && processResult.nextPhase === 2) {
-      console.log('\n✅ Phase 1完了！')
-      console.log('   メッセージ:', processResult.message)
-      console.log('\n💡 次のステップ:')
-      console.log('   1. Phase 2-5を実行するには、再度 process APIを呼び出してください')
-      console.log('   2. または、Vercelにデプロイ後、UIから操作してください')
-      console.log(`   3. セッションID: ${sessionId}`)
-    }
-    
-    // セッション状態の最終確認
-    console.log('\n📊 セッション状態の確認')
-    const { PrismaClient } = require('@prisma/client')
-    const prisma = new PrismaClient()
-    
-    const session = await prisma.cotSession.findUnique({
-      where: { id: sessionId },
-      include: { phases: true }
-    })
-    
-    console.log('   現在のフェーズ:', session.currentPhase)
-    console.log('   現在のステップ:', session.currentStep)
-    console.log('   ステータス:', session.status)
-    console.log('   作成されたフェーズ数:', session.phases.length)
-    
-    await prisma.$disconnect()
-    
-    console.log('\n✅ テスト完了！')
+    console.log('\n✅ テスト完了！');
     
   } catch (error) {
-    console.error('\n❌ エラーが発生しました:', error.message)
-    console.error('詳細:', error)
+    console.error('\n❌ エラー:', error.message);
+    console.error(error);
+    process.exit(1);
   }
 }
 
-// 実行
-console.log('================================')
-console.log('CoTシステム ローカルテスト')
-console.log('================================\n')
+// メイン処理
+async function main() {
+  console.log('🚀 X_BUZZ_FLOW CoTセッション ローカルテスト\n');
+  
+  const serverRunning = await fetch('http://localhost:3000').then(() => true).catch(() => false);
+  if (\!serverRunning) {
+    console.error('❌ 開発サーバーが起動していません');
+    console.log('💡 別のターミナルで以下を実行してください:');
+    console.log('   npm run dev\n');
+    process.exit(1);
+  }
+  
+  await testCoTSession();
+}
 
-testCotSystem().catch(console.error)
+// 実行
+main().catch(console.error);
+EOF < /dev/null
