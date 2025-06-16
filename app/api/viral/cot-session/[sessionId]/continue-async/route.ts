@@ -107,9 +107,17 @@ async function handleThinkCompletion(session: any, task: any) {
   // THINKの結果を保存
   let result
   try {
-    result = JSON.parse(response.content)
+    let content = response.content
+    
+    // マークダウンコードブロックを削除
+    if (typeof content === 'string' && content.includes('```json')) {
+      content = content.replace(/^```json\n/, '').replace(/\n```$/, '')
+    }
+    
+    result = JSON.parse(content)
   } catch (e) {
     console.error('[CONTINUE ASYNC] Failed to parse THINK response:', e)
+    console.error('[CONTINUE ASYNC] Raw content:', response.content?.substring(0, 200) + '...')
     result = response.content
   }
   
@@ -150,19 +158,27 @@ async function handleThinkCompletion(session: any, task: any) {
   // 自動的にprocess-asyncを呼んで次のステップを実行
   setTimeout(async () => {
     try {
+      console.log('[CONTINUE ASYNC] Auto-continue attempting to call process-async...')
       const response = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/process-async`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
       if (!response.ok) {
-        console.error('[CONTINUE ASYNC] Failed to auto-continue:', await response.text())
+        const errorText = await response.text()
+        console.error('[CONTINUE ASYNC] Failed to auto-continue:', errorText)
+        console.error('[CONTINUE ASYNC] Response status:', response.status)
       } else {
-        console.log('[CONTINUE ASYNC] Auto-continue to EXECUTE step')
+        const result = await response.json()
+        console.log('[CONTINUE ASYNC] Auto-continue success to EXECUTE step:', result)
       }
     } catch (e) {
       console.error('[CONTINUE ASYNC] Auto-continue error:', e)
+      console.error('[CONTINUE ASYNC] Error details:', {
+        message: e.message,
+        stack: e.stack?.split('\n').slice(0, 3).join('\n')
+      })
     }
-  }, 1000)
+  }, 2000) // タイムアウトを2秒に延長
 }
 
 async function handlePerplexityCompletion(session: any, task: any) {
@@ -242,19 +258,27 @@ async function handlePerplexityCompletion(session: any, task: any) {
   // 自動的にINTEGRATEステップを実行
   setTimeout(async () => {
     try {
+      console.log('[CONTINUE ASYNC] Auto-continue attempting to call process-async for INTEGRATE...')
       const response = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/process-async`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
       if (!response.ok) {
-        console.error('[CONTINUE ASYNC] Failed to auto-continue to INTEGRATE:', await response.text())
+        const errorText = await response.text()
+        console.error('[CONTINUE ASYNC] Failed to auto-continue to INTEGRATE:', errorText)
+        console.error('[CONTINUE ASYNC] Response status:', response.status)
       } else {
-        console.log('[CONTINUE ASYNC] Auto-continue to INTEGRATE step')
+        const result = await response.json()
+        console.log('[CONTINUE ASYNC] Auto-continue success to INTEGRATE step:', result)
       }
     } catch (e) {
       console.error('[CONTINUE ASYNC] Auto-continue error:', e)
+      console.error('[CONTINUE ASYNC] Error details:', {
+        message: e.message,
+        stack: e.stack?.split('\n').slice(0, 3).join('\n')
+      })
     }
-  }, 1000)
+  }, 2000) // タイムアウトを2秒に延長
 }
 
 async function handleIntegrateCompletion(session: any, task: any) {
@@ -269,9 +293,18 @@ async function handleIntegrateCompletion(session: any, task: any) {
   // INTEGRATEの結果を保存
   let result
   try {
-    result = JSON.parse(response.content)
+    let content = response.content
+    
+    // マークダウンコードブロックを削除
+    if (typeof content === 'string' && content.includes('```json')) {
+      content = content.replace(/^```json\n/, '').replace(/\n```$/, '')
+    }
+    
+    result = JSON.parse(content)
   } catch (e) {
     console.error('[CONTINUE ASYNC] Failed to parse INTEGRATE response:', e)
+    console.error('[CONTINUE ASYNC] Raw content:', response.content?.substring(0, 200) + '...')
+    // JSONパースに失敗した場合は、エラーメッセージとして保存
     result = response.content
   }
   
@@ -308,19 +341,27 @@ async function handleIntegrateCompletion(session: any, task: any) {
     // 自動的に次のフェーズのTHINKステップを実行
     setTimeout(async () => {
       try {
+        console.log(`[CONTINUE ASYNC] Auto-continue attempting to start Phase ${session.currentPhase + 1}...`)
         const response = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/process-async`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         })
         if (!response.ok) {
-          console.error('[CONTINUE ASYNC] Failed to auto-continue to next phase:', await response.text())
+          const errorText = await response.text()
+          console.error('[CONTINUE ASYNC] Failed to auto-continue to next phase:', errorText)
+          console.error('[CONTINUE ASYNC] Response status:', response.status)
         } else {
-          console.log(`[CONTINUE ASYNC] Auto-continue to Phase ${session.currentPhase + 1} THINK`)
+          const result = await response.json()
+          console.log(`[CONTINUE ASYNC] Auto-continue success to Phase ${session.currentPhase + 1} THINK:`, result)
         }
       } catch (e) {
         console.error('[CONTINUE ASYNC] Auto-continue error:', e)
+        console.error('[CONTINUE ASYNC] Error details:', {
+          message: e.message,
+          stack: e.stack?.split('\n').slice(0, 3).join('\n')
+        })
       }
-    }, 1000)
+    }, 2000) // タイムアウトを2秒に延長
   } else {
     // 全フェーズ完了
     await prisma.cotSession.update({

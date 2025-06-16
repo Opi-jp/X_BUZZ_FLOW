@@ -175,9 +175,23 @@ export async function POST(
         }, { status: 400 })
       }
       
+      // thinkResultが文字列の場合はJSONパースを試みる
+      let thinkResult = phase?.thinkResult
+      if (typeof thinkResult === 'string') {
+        try {
+          // マークダウンコードブロックを削除
+          if (thinkResult.includes('```json')) {
+            thinkResult = thinkResult.replace(/^```json\n/, '').replace(/\n```$/, '')
+          }
+          thinkResult = JSON.parse(thinkResult)
+        } catch (e) {
+          console.error('[PROCESS ASYNC] Failed to parse thinkResult:', e)
+        }
+      }
+      
       const integrateContext = {
         ...context,
-        ...(phase?.thinkResult as any || {}),
+        ...(thinkResult as any || {}),
         ...(phase?.executeResult as any || {})
       }
       
@@ -268,6 +282,46 @@ async function buildContext(session: any, currentPhase: number): Promise<any> {
       if (phase?.integrateResult) {
         previousResults[`phase${i}Result`] = phase.integrateResult
       }
+    }
+  }
+  
+  // Phase 2用の特別な処理 - opportunitiesとsearchResultsを追加
+  if (currentPhase === 2 && previousResults.phase1Result) {
+    const phase1Result = previousResults.phase1Result
+    // trendedTopicsをopportunitiesとして渡す
+    previousResults.opportunities = phase1Result.trendedTopics || []
+    // Perplexity検索結果も渡す
+    const phase1 = session.phases.find((p: any) => p.phaseNumber === 1)
+    if (phase1?.executeResult) {
+      previousResults.searchResults = phase1.executeResult.savedPerplexityResponses || []
+    }
+  }
+  
+  // Phase 3用の特別な処理 - conceptsを追加
+  if (currentPhase === 3 && previousResults.phase2Result) {
+    previousResults.concepts = previousResults.phase2Result.concepts || []
+  }
+  
+  // Phase 4用の特別な処理 - conceptsとcontentsを追加
+  if (currentPhase === 4) {
+    if (previousResults.phase2Result) {
+      previousResults.concepts = previousResults.phase2Result.concepts || []
+    }
+    if (previousResults.phase3Result) {
+      previousResults.contents = previousResults.phase3Result.contents || []
+    }
+  }
+  
+  // Phase 5用の特別な処理
+  if (currentPhase === 5) {
+    if (previousResults.phase2Result) {
+      previousResults.concepts = previousResults.phase2Result.concepts || []
+    }
+    if (previousResults.phase3Result) {
+      previousResults.contents = previousResults.phase3Result.contents || []
+    }
+    if (previousResults.phase4Result) {
+      previousResults.strategy = previousResults.phase4Result || {}
     }
   }
   

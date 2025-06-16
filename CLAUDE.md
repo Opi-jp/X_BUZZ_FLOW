@@ -44,6 +44,66 @@ node check-session-status.js [セッションID]
 ./scripts/session-save.sh
 ```
 
+## 2025年6月16日の作業記録（非同期APIシステムの修正）
+
+### 実施した作業
+
+#### 1. continue-asyncのタイムアウト問題の解決
+- **問題**: continue-asyncがタイムアウトし、502エラーが発生
+- **解決策**: バックグラウンド処理に変更し、即座にレスポンスを返すように修正
+- **結果**: タイムアウトエラーが解消
+
+#### 2. コンテキスト受け渡しの修正
+- **問題**: Phase 2で「提供された情報が不足している」エラーが発生
+- **原因**: thinkResultが文字列として保存されており、適切に展開されていなかった
+- **修正内容**:
+  ```typescript
+  // process-async/route.ts
+  let thinkResult = phase?.thinkResult
+  if (typeof thinkResult === 'string') {
+    try {
+      if (thinkResult.includes('```json')) {
+        thinkResult = thinkResult.replace(/^```json\n/, '').replace(/\n```$/, '')
+      }
+      thinkResult = JSON.parse(thinkResult)
+    } catch (e) {
+      console.error('[PROCESS ASYNC] Failed to parse thinkResult:', e)
+    }
+  }
+  ```
+- **結果**: Phase 2が正常に動作し、AI関連のコンセプトが生成されるようになった
+
+#### 3. 非同期処理フローの検証
+- **成功事例**: セッションID `0c123ff7-f27b-4459-9305-e520e442779f`
+  - Phase 1: AIと働き方に関連する2つのトピックを発見
+  - Phase 2: 3つのAI関連コンセプトを生成
+  - Phase 3: 処理中（手動実行が必要）
+
+### 確認された問題
+
+1. **auto-continueの不具合**
+   - continue-asyncからのprocess-async自動呼び出しが一部機能していない
+   - 手動でAPIを呼び出す必要がある場合がある
+
+2. **ワーカーの処理遅延**
+   - タスクがPROCESSING状態のまま停止する場合がある
+   - ワーカーの再起動が必要な場合がある
+
+### 次回への引き継ぎ事項
+
+1. **auto-continue機能の改善**
+   - setTimeout内のfetch呼び出しのエラーハンドリング強化
+   - ワーカーからの呼び出しログの追加
+
+2. **Phase 3-5の完全な動作確認**
+   - コンテンツ生成の確認
+   - 下書き作成機能の検証
+   - 全フェーズ完了までのE2Eテスト
+
+3. **ワーカーの安定性向上**
+   - タスクの重複処理防止
+   - エラーリトライ機能の実装
+
 ## プロジェクトオーナーの目標とビジョン
 
 ### 背景
@@ -618,6 +678,60 @@ GOOGLE_SEARCH_ENGINE_ID= # 要設定：https://programmablesearchengine.google.c
 ## 連絡先・リポジトリ
 - GitHub: https://github.com/Opi-jp/X_BUZZ_FLOW
 - Vercel: https://x-buzz-flow.vercel.app
+
+## 2025年6月16日の作業記録（セッション2）
+
+### Chain of Thoughtコンテキスト引き継ぎ問題の修正
+
+#### 発見された問題
+1. **フェーズ間でコンテキストが正しく引き継がれない**
+   - Phase 1で「AIと働き方」のトピックを特定
+   - Phase 2で無関係な「Sustainable Fashion Revolution」を生成
+   - 原因: `buildContext`関数でPhase 2が期待する`{opportunities}`変数が渡されていなかった
+
+2. **JSONパースエラー**
+   - GPTがマークダウンコードブロック（```json）で返すレスポンスをパースできない
+   - continue-asyncでintegrateResultが正しく保存されない
+
+3. **下書きのcontentが空**
+   - Phase 3で「コンセプト情報が提供されていない」エラー
+   - コンテキストの引き継ぎ失敗が原因
+
+#### 実施した修正
+
+1. **buildContext関数の改善**（process-async/route.ts）
+   ```typescript
+   // Phase 2用の特別な処理
+   if (currentPhase === 2 && previousResults.phase1Result) {
+     previousResults.opportunities = phase1Result.trendedTopics || []
+     previousResults.searchResults = phase1.executeResult.savedPerplexityResponses || []
+   }
+   ```
+   - 各フェーズが期待する変数名でコンテキストを渡すように修正
+   - Phase 2: `opportunities`、Phase 3: `concepts`、Phase 4: `contents`など
+
+2. **JSONパース処理の改善**（continue-async/route.ts）
+   ```typescript
+   // マークダウンコードブロックを削除
+   if (typeof content === 'string' && content.includes('```json')) {
+     content = content.replace(/^```json\n/, '').replace(/\n```$/, '')
+   }
+   ```
+   - handleThinkCompletionとhandleIntegrateCompletionの両方に適用
+
+3. **データベースクリーンアップ**
+   - 74セッション → 1セッション（成功例のみ保持）
+   - `/scripts/cleanup-sessions.js`スクリプトを作成
+
+#### テスト結果
+- 新しいセッションでPhase 1が「AIと働き方」関連のトピックを正しく生成
+  - 「AIアートの著作権問題」
+  - 「リモートワークの新しい働き方」
+- Phase 2でコンテキストが引き継がれることを確認（実装途中）
+
+#### 作成したツール
+1. `/scripts/cleanup-sessions.js` - 不要なセッションの削除
+2. `/scripts/test-full-flow.js` - Phase 1-5の完全テスト
 
 ## 2025年6月16日の作業記録
 
