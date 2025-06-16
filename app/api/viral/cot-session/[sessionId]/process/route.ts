@@ -228,7 +228,7 @@ export async function POST(
         console.log(`[EXECUTE] Context before handler:`, {
           hasContext: !!context,
           contextKeys: context ? Object.keys(context) : 'undefined',
-          expertise: context?.expertise,
+          theme: context?.theme,
           userConfig: context?.userConfig
         })
         

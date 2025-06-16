@@ -238,7 +238,7 @@ export class CotSessionManager {
     // 新しいセッションを作成
     const newSession = await prisma.cotSession.create({
       data: {
-        expertise: oldSession.expertise,
+        theme: oldSession.theme,
         style: oldSession.style,
         platform: oldSession.platform,
         status: 'PENDING',

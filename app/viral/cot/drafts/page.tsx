@@ -40,7 +40,7 @@ interface CotDraft {
   createdAt: string
   updatedAt: string
   session: {
-    expertise: string
+    theme: string
     platform: string
     style: string
   }
@@ -158,7 +158,7 @@ export default function CotDraftsPage() {
               <div key={sessionId}>
                 <div className="mb-4">
                   <h2 className="text-lg font-semibold text-gray-900">
-                    {sessionDrafts[0]?.session.expertise} - {sessionDrafts[0]?.session.platform}
+                    {sessionDrafts[0]?.session.theme} - {sessionDrafts[0]?.session.platform}
                   </h2>
                   <p className="text-sm text-gray-500">
                     {format(new Date(sessionDrafts[0].createdAt), 'PPpp', { locale: ja })}

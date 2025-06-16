@@ -29,7 +29,7 @@ interface ArticleAnalysisResponse {
       hasTimeSensitivity: boolean
       hasRelatability: boolean
     }
-    expertiseRelevance: string // 専門分野との関連性
+    themeRelevance: string // テーマとの関連性
     quotes: string[]         // 重要な引用（あれば）
   }
   analysisQuality: {
@@ -50,7 +50,7 @@ export class PerplexityAnalyzer {
    */
   async analyzeArticles(
     articles: ArticleAnalysisRequest[],
-    expertise: string,
+    theme: string,
     batchSize: number = 5
   ): Promise<ArticleAnalysisResponse[]> {
     console.log(`[PerplexityAnalyzer] 分析開始: ${articles.length}記事`)
@@ -61,7 +61,7 @@ export class PerplexityAnalyzer {
     for (let i = 0; i < articles.length; i += batchSize) {
       const batch = articles.slice(i, i + batchSize)
       const batchPromises = batch.map(article => 
-        this.analyzeArticle(article, expertise)
+        this.analyzeArticle(article, theme)
       )
       
       try {
@@ -86,10 +86,10 @@ export class PerplexityAnalyzer {
    */
   private async analyzeArticle(
     article: ArticleAnalysisRequest,
-    expertise: string
+    theme: string
   ): Promise<ArticleAnalysisResponse> {
     const prompt = `
-以下の記事を分析し、「${expertise}」の観点からバイラルコンテンツの機会を評価してください。
+以下の記事を分析し、「${theme}」というテーマでバイラルコンテンツを作成する機会を評価してください。
 
 記事タイトル: ${article.title}
 URL: ${article.url}
@@ -119,9 +119,9 @@ URL: ${article.url}
    - 時間的な緊急性があるか
    - 多くの人が共感できる内容か
 
-6. **${expertise}との関連性**
-   - この分野の専門家として言及すべきポイント
-   - 独自の視点を加えられる部分
+6. **${theme}との関連性**
+   - このテーマに関連してバズを生み出せるポイント
+   - 独自の視点や切り口を加えられる部分
 
 7. **重要な引用**（あれば）
    - 記事内の印象的な発言や数字
@@ -164,7 +164,7 @@ URL: ${article.url}
         hasTimeSensitivity: content.includes('緊急') || content.includes('今すぐ'),
         hasRelatability: content.includes('共感') || content.includes('多くの人')
       },
-      expertiseRelevance: this.extractSection(content, '関連性') || '',
+      themeRelevance: this.extractSection(content, '関連性') || '',
       quotes: this.extractQuotes(content)
     }
 
@@ -201,7 +201,7 @@ URL: ${article.url}
           hasTimeSensitivity: false,
           hasRelatability: false
         },
-        expertiseRelevance: '',
+        themeRelevance: '',
         quotes: []
       },
       analysisQuality: {

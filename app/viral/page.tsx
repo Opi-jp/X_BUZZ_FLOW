@@ -45,7 +45,7 @@ export default function ViralOverviewPage() {
         recentSessions: [
           {
             id: '1',
-            expertise: 'AI × 働き方',
+            theme: 'AI × 働き方',
             status: 'COMPLETED',
             createdAt: new Date().toISOString()
           }

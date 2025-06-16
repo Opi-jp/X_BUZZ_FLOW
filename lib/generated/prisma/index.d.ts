@@ -18915,7 +18915,7 @@ export namespace Prisma {
 
   export type CotSessionMinAggregateOutputType = {
     id: string | null
-    expertise: string | null
+    theme: string | null
     style: string | null
     platform: string | null
     status: $Enums.CotSessionStatus | null
@@ -18933,7 +18933,7 @@ export namespace Prisma {
 
   export type CotSessionMaxAggregateOutputType = {
     id: string | null
-    expertise: string | null
+    theme: string | null
     style: string | null
     platform: string | null
     status: $Enums.CotSessionStatus | null
@@ -18951,7 +18951,7 @@ export namespace Prisma {
 
   export type CotSessionCountAggregateOutputType = {
     id: number
-    expertise: number
+    theme: number
     style: number
     platform: number
     status: number
@@ -18985,7 +18985,7 @@ export namespace Prisma {
 
   export type CotSessionMinAggregateInputType = {
     id?: true
-    expertise?: true
+    theme?: true
     style?: true
     platform?: true
     status?: true
@@ -19003,7 +19003,7 @@ export namespace Prisma {
 
   export type CotSessionMaxAggregateInputType = {
     id?: true
-    expertise?: true
+    theme?: true
     style?: true
     platform?: true
     status?: true
@@ -19021,7 +19021,7 @@ export namespace Prisma {
 
   export type CotSessionCountAggregateInputType = {
     id?: true
-    expertise?: true
+    theme?: true
     style?: true
     platform?: true
     status?: true
@@ -19126,7 +19126,7 @@ export namespace Prisma {
 
   export type CotSessionGroupByOutputType = {
     id: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status: $Enums.CotSessionStatus
@@ -19163,7 +19163,7 @@ export namespace Prisma {
 
   export type CotSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    expertise?: boolean
+    theme?: boolean
     style?: boolean
     platform?: boolean
     status?: boolean
@@ -19184,7 +19184,7 @@ export namespace Prisma {
 
   export type CotSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    expertise?: boolean
+    theme?: boolean
     style?: boolean
     platform?: boolean
     status?: boolean
@@ -19202,7 +19202,7 @@ export namespace Prisma {
 
   export type CotSessionSelectScalar = {
     id?: boolean
-    expertise?: boolean
+    theme?: boolean
     style?: boolean
     platform?: boolean
     status?: boolean
@@ -19233,7 +19233,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      expertise: string
+      theme: string
       style: string
       platform: string
       status: $Enums.CotSessionStatus
@@ -19643,7 +19643,7 @@ export namespace Prisma {
    */ 
   interface CotSessionFieldRefs {
     readonly id: FieldRef<"CotSession", 'String'>
-    readonly expertise: FieldRef<"CotSession", 'String'>
+    readonly theme: FieldRef<"CotSession", 'String'>
     readonly style: FieldRef<"CotSession", 'String'>
     readonly platform: FieldRef<"CotSession", 'String'>
     readonly status: FieldRef<"CotSession", 'CotSessionStatus'>
@@ -23782,7 +23782,7 @@ export namespace Prisma {
 
   export const CotSessionScalarFieldEnum: {
     id: 'id',
-    expertise: 'expertise',
+    theme: 'theme',
     style: 'style',
     platform: 'platform',
     status: 'status',
@@ -25379,7 +25379,7 @@ export namespace Prisma {
     OR?: CotSessionWhereInput[]
     NOT?: CotSessionWhereInput | CotSessionWhereInput[]
     id?: StringFilter<"CotSession"> | string
-    expertise?: StringFilter<"CotSession"> | string
+    theme?: StringFilter<"CotSession"> | string
     style?: StringFilter<"CotSession"> | string
     platform?: StringFilter<"CotSession"> | string
     status?: EnumCotSessionStatusFilter<"CotSession"> | $Enums.CotSessionStatus
@@ -25399,7 +25399,7 @@ export namespace Prisma {
 
   export type CotSessionOrderByWithRelationInput = {
     id?: SortOrder
-    expertise?: SortOrder
+    theme?: SortOrder
     style?: SortOrder
     platform?: SortOrder
     status?: SortOrder
@@ -25422,7 +25422,7 @@ export namespace Prisma {
     AND?: CotSessionWhereInput | CotSessionWhereInput[]
     OR?: CotSessionWhereInput[]
     NOT?: CotSessionWhereInput | CotSessionWhereInput[]
-    expertise?: StringFilter<"CotSession"> | string
+    theme?: StringFilter<"CotSession"> | string
     style?: StringFilter<"CotSession"> | string
     platform?: StringFilter<"CotSession"> | string
     status?: EnumCotSessionStatusFilter<"CotSession"> | $Enums.CotSessionStatus
@@ -25442,7 +25442,7 @@ export namespace Prisma {
 
   export type CotSessionOrderByWithAggregationInput = {
     id?: SortOrder
-    expertise?: SortOrder
+    theme?: SortOrder
     style?: SortOrder
     platform?: SortOrder
     status?: SortOrder
@@ -25468,7 +25468,7 @@ export namespace Prisma {
     OR?: CotSessionScalarWhereWithAggregatesInput[]
     NOT?: CotSessionScalarWhereWithAggregatesInput | CotSessionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CotSession"> | string
-    expertise?: StringWithAggregatesFilter<"CotSession"> | string
+    theme?: StringWithAggregatesFilter<"CotSession"> | string
     style?: StringWithAggregatesFilter<"CotSession"> | string
     platform?: StringWithAggregatesFilter<"CotSession"> | string
     status?: EnumCotSessionStatusWithAggregatesFilter<"CotSession"> | $Enums.CotSessionStatus
@@ -27344,7 +27344,7 @@ export namespace Prisma {
 
   export type CotSessionCreateInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -27364,7 +27364,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedCreateInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -27384,7 +27384,7 @@ export namespace Prisma {
 
   export type CotSessionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -27404,7 +27404,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -27424,7 +27424,7 @@ export namespace Prisma {
 
   export type CotSessionCreateManyInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -27442,7 +27442,7 @@ export namespace Prisma {
 
   export type CotSessionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -27460,7 +27460,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -29163,7 +29163,7 @@ export namespace Prisma {
 
   export type CotSessionCountOrderByAggregateInput = {
     id?: SortOrder
-    expertise?: SortOrder
+    theme?: SortOrder
     style?: SortOrder
     platform?: SortOrder
     status?: SortOrder
@@ -29188,7 +29188,7 @@ export namespace Prisma {
 
   export type CotSessionMaxOrderByAggregateInput = {
     id?: SortOrder
-    expertise?: SortOrder
+    theme?: SortOrder
     style?: SortOrder
     platform?: SortOrder
     status?: SortOrder
@@ -29206,7 +29206,7 @@ export namespace Prisma {
 
   export type CotSessionMinOrderByAggregateInput = {
     id?: SortOrder
-    expertise?: SortOrder
+    theme?: SortOrder
     style?: SortOrder
     platform?: SortOrder
     status?: SortOrder
@@ -32138,7 +32138,7 @@ export namespace Prisma {
 
   export type CotSessionCreateWithoutPhasesInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -32157,7 +32157,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedCreateWithoutPhasesInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -32192,7 +32192,7 @@ export namespace Prisma {
 
   export type CotSessionUpdateWithoutPhasesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -32211,7 +32211,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedUpdateWithoutPhasesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -32230,7 +32230,7 @@ export namespace Prisma {
 
   export type CotSessionCreateWithoutDraftsInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -32249,7 +32249,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedCreateWithoutDraftsInput = {
     id?: string
-    expertise: string
+    theme: string
     style: string
     platform: string
     status?: $Enums.CotSessionStatus
@@ -32329,7 +32329,7 @@ export namespace Prisma {
 
   export type CotSessionUpdateWithoutDraftsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus
@@ -32348,7 +32348,7 @@ export namespace Prisma {
 
   export type CotSessionUncheckedUpdateWithoutDraftsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    expertise?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
     style?: StringFieldUpdateOperationsInput | string
     platform?: StringFieldUpdateOperationsInput | string
     status?: EnumCotSessionStatusFieldUpdateOperationsInput | $Enums.CotSessionStatus

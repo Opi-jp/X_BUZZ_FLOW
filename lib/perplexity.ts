@@ -138,12 +138,12 @@ export class PerplexityClient {
    */
   async analyzeTrend(
     topic: string,
-    expertise: string,
+    theme: string,
     recency: 'day' | 'week' = 'week'
   ): Promise<PerplexityResponse> {
     const systemPrompt = `
-You are a viral content strategist specializing in ${expertise}.
-Analyze current trends and discussions about the given topic.
+You are a viral content strategist who identifies emerging trends and creates content concepts that ride the wave before it peaks.
+Analyze current trends and discussions about the given topic in the context of ${theme}.
 Focus on:
 1. What people are talking about
 2. Emotional reactions and controversies

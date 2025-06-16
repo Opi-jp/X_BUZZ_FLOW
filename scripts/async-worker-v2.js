@@ -115,7 +115,7 @@ async function processGptTask(request) {
             timeSensitivity: "高",
             platformFit: "Twitter向け"
           },
-          expertiseRelevance: "AIと働き方の専門知識が必要",
+          themeRelevance: "AIと働き方に関連したバズ要素が豊富",
           sources: [{ title: "AI Work Future", url: "https://example.com" }]
         }],
         categoryInsights: { B: "技術革新が最も注目を集めている" },
@@ -132,7 +132,7 @@ async function processGptTask(request) {
     return {
       content: JSON.stringify({
         evaluations: [
-          { opportunity: "AIツールによる働き方革命", score: 9.2, viralVelocity: "高", contentAngle: "専門家による内部視点" },
+          { opportunity: "AIツールによる働き方革命", score: 9.2, viralVelocity: "高", contentAngle: "逆張り・論争的な意見" },
           { opportunity: "企業のAI導入と新職種", score: 8.5, viralVelocity: "中", contentAngle: "成功事例の舞台裏" },
           { opportunity: "AIとの協働成功事例", score: 8.8, viralVelocity: "高", contentAngle: "個人的なつながりの物語" }
         ],

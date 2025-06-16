@@ -275,9 +275,9 @@ model CotSession {
   id String @id @default(uuid())
 
   // ユーザー設定（仕様書 Phase 1）
-  expertise String // 発信したい分野
-  style     String // コンテンツのスタイル
-  platform  String // プラットフォーム
+  theme    String // 発信したいテーマ
+  style    String // コンテンツのスタイル
+  platform String // プラットフォーム
 
   // セッション状態
   status       CotSessionStatus @default(PENDING)
