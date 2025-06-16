@@ -90,19 +90,14 @@ export async function POST(
       )
       
       // ステータスを更新（生SQLを使用）
-      const newMetadata = {
-        ...(session.metadata as any || {}),
-        currentTaskId: taskId,
-        currentTaskType: 'GPT_COMPLETION'
-      }
-      
-      await prisma.$executeRaw`
-        UPDATE cot_sessions 
-        SET status = 'EXECUTING',
-            metadata = ${JSON.stringify(newMetadata)}::jsonb,
-            updated_at = NOW()
-        WHERE id = ${sessionId}
-      `
+      // タスクIDは直接タスクレコードからsession_idで引ける
+      await prisma.cotSession.update({
+        where: { id: sessionId },
+        data: {
+          status: 'EXECUTING',
+          updatedAt: new Date()
+        }
+      })
       
     } else if (currentStep === 'EXECUTE') {
       // EXECUTEステップ: Phase 1の場合はPerplexity、それ以外はスキップ
@@ -125,19 +120,14 @@ export async function POST(
             }))
           )
           
-          const newMetadata2 = {
-            ...(session.metadata as any || {}),
-            currentTaskIds: taskIds,
-            currentTaskType: 'PERPLEXITY_SEARCH'
-          }
-          
-          await prisma.$executeRaw`
-            UPDATE cot_sessions 
-            SET status = 'EXECUTING',
-                metadata = ${JSON.stringify(newMetadata2)}::jsonb,
-                updated_at = NOW()
-            WHERE id = ${sessionId}
-          `
+          // タスクIDは直接タスクレコードから取得可能
+          await prisma.cotSession.update({
+            where: { id: sessionId },
+            data: {
+              status: 'EXECUTING',
+              updatedAt: new Date()
+            }
+          })
           
           return NextResponse.json({
             success: true,
@@ -208,19 +198,14 @@ export async function POST(
         }
       )
       
-      const newMetadata3 = {
-        ...(session.metadata as any || {}),
-        currentTaskId: taskId,
-        currentTaskType: 'GPT_COMPLETION'
-      }
-      
-      await prisma.$executeRaw`
-        UPDATE cot_sessions 
-        SET status = 'EXECUTING',
-            metadata = ${JSON.stringify(newMetadata3)}::jsonb,
-            updated_at = NOW()
-        WHERE id = ${sessionId}
-      `
+      // タスクIDは直接タスクレコードから取得可能
+      await prisma.cotSession.update({
+        where: { id: sessionId },
+        data: {
+          status: 'EXECUTING',
+          updatedAt: new Date()
+        }
+      })
     }
     
     return NextResponse.json({

@@ -193,7 +193,7 @@ export class AsyncApiProcessor {
       `
 
       // セッション処理を再開
-      await this.triggerSessionContinue(task.sessionId, task.id)
+      await this.triggerSessionContinue(task.session_id, task.id)
 
     } catch (error) {
       console.error(`[ASYNC API] Task ${task.id} failed:`, error)

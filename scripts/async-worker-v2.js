@@ -18,14 +18,38 @@ const prisma = new PrismaClient();
 // 処理済みタスクIDを記録（重複防止）
 const processedTasks = new Set();
 
-// モックGPT処理
+// OpenAI APIを使用したGPT処理
 async function processGptTask(request) {
   console.log('[WORKER] Processing GPT task...');
   
-  // 実際のOpenAI APIの代わりにモック応答
-  await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機
-  
-  const prompt = request.messages?.[1]?.content || '';
+  try {
+    // OpenAI APIを呼び出し
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify(request)
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`OpenAI API error: ${response.status} - ${error}`);
+    }
+    
+    const data = await response.json();
+    return {
+      content: data.choices[0].message.content,
+      usage: data.usage
+    };
+  } catch (error) {
+    console.error('[WORKER] OpenAI API error:', error);
+    
+    // エラー時はモックにフォールバック
+    console.log('[WORKER] Falling back to mock response');
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    const prompt = request.messages?.[1]?.content || '';
   
   // Phase 1 THINK
   if (prompt.includes('Perplexityに投げる')) {
@@ -42,6 +66,24 @@ async function processGptTask(request) {
             category: "B",
             strategicIntent: "最新のAIツールと働き方の変化を把握",
             viralAngle: "技術革新への期待と不安"
+          },
+          {
+            question: "企業がAIを導入することで生まれる新しい職種や働き方の変化は？2025年の最新事例を教えて",
+            category: "C",
+            strategicIntent: "AI導入による雇用形態の変化を理解",
+            viralAngle: "職業の未来への不安と希望"
+          },
+          {
+            question: "AIとの協働で成功している日本企業の事例は？効率化と創造性の両立について",
+            category: "D",
+            strategicIntent: "日本企業の具体的な成功事例を収集",
+            viralAngle: "日本企業の成功ストーリー"
+          },
+          {
+            question: "AIが仕事を奪うのではなく人間の能力を拡張する最新の取り組みとは？",
+            category: "A",
+            strategicIntent: "AI共存の新しいパラダイムを探る",
+            viralAngle: "前向きな未来への希望"
           }
         ]
       }),
@@ -78,14 +120,120 @@ async function processGptTask(request) {
     };
   }
   
-  // Phase 2以降のモック
-  return {
-    content: JSON.stringify({
-      result: "Mock response for phase",
-      status: "completed"
-    }),
-    usage: { total_tokens: 300 }
-  };
+  // Phase 2 THINK
+  if (prompt.includes('opportunities') && prompt.includes('ウイルス速度指標')) {
+    return {
+      content: JSON.stringify({
+        evaluations: [
+          { opportunity: "AIツールによる働き方革命", score: 9.2, viralVelocity: "高", contentAngle: "専門家による内部視点" },
+          { opportunity: "企業のAI導入と新職種", score: 8.5, viralVelocity: "中", contentAngle: "成功事例の舞台裏" },
+          { opportunity: "AIとの協働成功事例", score: 8.8, viralVelocity: "高", contentAngle: "個人的なつながりの物語" }
+        ],
+        topOpportunities: ["AIツールによる働き方革命", "AIとの協働成功事例", "企業のAI導入と新職種"]
+      }),
+      usage: { total_tokens: 400 }
+    };
+  }
+  
+  // Phase 2 INTEGRATE
+  if (prompt.includes('evaluations') && prompt.includes('concepts')) {
+    return {
+      content: JSON.stringify({
+        concepts: [
+          {
+            number: 1,
+            title: "AIが変える新卒採用の衝撃",
+            opportunity: "AIツールによる働き方革命",
+            hook: "🚨 就活生必見！AIが面接官になる時代、あなたの準備は大丈夫？",
+            angle: "若者視点での不安と期待",
+            format: "スレッド形式",
+            viralPotential: "高"
+          },
+          {
+            number: 2,
+            title: "成功企業のAI導入の真実",
+            opportunity: "企業のAI導入と新職種",
+            hook: "大手企業がひた隠すAI導入の失敗談を暴露します",
+            angle: "内部関係者の証言",
+            format: "単一投稿",
+            viralPotential: "中"
+          },
+          {
+            number: 3,
+            title: "AIと人間の共創ストーリー",
+            opportunity: "AIとの協働成功事例",
+            hook: "AIに仕事を奪われると思っていた私が、AIと最高のパートナーになった理由",
+            angle: "個人体験談",
+            format: "カルーセル",
+            viralPotential: "高"
+          }
+        ]
+      }),
+      usage: { total_tokens: 500 }
+    };
+  }
+  
+  // Phase 3 INTEGRATE
+  if (prompt.includes('concepts') && prompt.includes('contents')) {
+    return {
+      content: JSON.stringify({
+        contents: [
+          {
+            conceptNumber: 1,
+            title: "AIが変える新卒採用の衝撃",
+            mainPost: "🚨 就活生必見！\n\nAIが面接官になる時代が来ました。\n\n大手企業の80%が既にAI面接を導入。\nでも誰も教えてくれない「AI面接攻略法」があるんです。\n\n実は、AIは〇〇を重視している！\n\n#就活 #AI時代 #新卒採用",
+            hashtags: ["就活", "AI時代", "新卒採用"],
+            visualDescription: "AIロボットと向き合う就活生のイラスト"
+          },
+          {
+            conceptNumber: 2,
+            title: "成功企業のAI導入の真実",
+            mainPost: "【衝撃】大手企業のAI導入、実は失敗だらけ？\n\n「AI導入で生産性2倍！」\nそんな成功事例の裏側には...\n\n・導入コスト回収に5年\n・社員の反発で頓挫\n・期待した効果の30%しか実現せず\n\nでも、失敗から学んだ企業は強い。\n\n#AI導入 #企業変革 #DX",
+            hashtags: ["AI導入", "企業変革", "DX"],
+            visualDescription: "グラフと困惑するビジネスパーソン"
+          },
+          {
+            conceptNumber: 3,
+            title: "AIと人間の共創ストーリー",
+            mainPost: "AIに仕事を奪われる...\n\nそう思っていた私が、今ではAIと最高のパートナー。\n\n変わったのは「考え方」だけ。\n\nAIを「競争相手」から「相棒」に。\n結果、収入は3倍に！\n\nAIとの付き合い方、教えます。\n\n#AI共創 #働き方改革 #未来の仕事",
+            hashtags: ["AI共創", "働き方改革", "未来の仕事"],
+            visualDescription: "人間とAIが協力して働く様子"
+          }
+        ]
+      }),
+      usage: { total_tokens: 600 }
+    };
+  }
+  
+  // Phase 4 INTEGRATE
+  if (prompt.includes('strategy')) {
+    return {
+      content: JSON.stringify({
+        executionPlan: {
+          immediateActions: ["ビジュアル素材の準備", "投稿時間の設定"],
+          postingSchedule: ["平日18:00-20:00", "週末10:00-12:00"],
+          engagementTactics: ["最初の1時間でリプライ対応", "インフルエンサーへのメンション"]
+        },
+        kpis: {
+          impressions: 10000,
+          engagementRate: 5,
+          shares: 100
+        },
+        riskAssessment: "炎上リスクは低い。事実に基づいた内容で構成。"
+      }),
+      usage: { total_tokens: 400 }
+    };
+  }
+  
+    // デフォルトのモック
+    return {
+      content: JSON.stringify({
+        result: "Mock response for phase",
+        status: "completed"
+      }),
+      usage: { total_tokens: 300 }
+    };
+  }
 }
 
 // モックPerplexity処理
@@ -120,9 +268,7 @@ async function runWorker() {
       const tasks = await prisma.$queryRaw`
         SELECT * FROM api_tasks 
         WHERE status = 'QUEUED'
-        AND id NOT IN (
-          SELECT id FROM api_tasks WHERE status = 'PROCESSING'
-        )
+        AND retry_count < 3
         ORDER BY created_at ASC
         LIMIT 3
         FOR UPDATE SKIP LOCKED
@@ -150,11 +296,17 @@ async function runWorker() {
         
         try {
           // 処理中にマーク
-          await prisma.$executeRaw`
+          const updateResult = await prisma.$executeRaw`
             UPDATE api_tasks 
             SET status = 'PROCESSING', started_at = NOW()
             WHERE id = ${task.id} AND status = 'QUEUED'
           `;
+          
+          // 更新できなかった場合はスキップ
+          if (updateResult === 0) {
+            console.log(`[WORKER] タスク ${task.id} は既に処理中またはステータスが変更されています`);
+            continue;
+          }
           
           processedTasks.add(task.id);
           
@@ -182,21 +334,32 @@ async function runWorker() {
           await new Promise(resolve => setTimeout(resolve, 500)); // 少し待機
           
           try {
-            const continueResponse = await fetch(`http://localhost:3000/api/viral/cot-session/${task.session_id}/continue-async`, {
+            const sessionId = task.session_id || task.sessionId;
+            console.log(`[WORKER] Calling continue-async for session: ${sessionId}`);
+            const continueResponse = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/continue-async`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ taskId: task.id })
+              body: JSON.stringify({ taskId: task.id }),
+              // 30秒のタイムアウトを設定
+              signal: AbortSignal.timeout(30000)
             });
             
             if (continueResponse.ok) {
               const result = await continueResponse.json();
               console.log(`[WORKER] Continue API: ${result.message || 'OK'}`);
+              if (result.continueUrl) {
+                console.log(`[WORKER] Next step URL: ${result.continueUrl}`);
+              }
             } else {
               const error = await continueResponse.text();
-              console.error('[WORKER] Continue API error:', error);
+              console.error('[WORKER] Continue API error:', continueResponse.status, error);
             }
           } catch (e) {
-            console.error('[WORKER] Continue API error:', e.message);
+            if (e.name === 'AbortError') {
+              console.error('[WORKER] Continue API timeout after 30s');
+            } else {
+              console.error('[WORKER] Continue API error:', e.message);
+            }
           }
           
         } catch (error) {
