@@ -10,10 +10,9 @@ interface PhaseProgressProps {
 
 const phases = [
   { number: 1, name: 'トレンド収集', description: 'Web検索とトレンド分析' },
-  { number: 2, name: '機会評価', description: 'バイラル機会のスコアリング' },
-  { number: 3, name: 'コンセプト生成', description: '3つのアプローチ案作成' },
-  { number: 4, name: 'コンテンツ作成', description: '完全な投稿コンテンツ生成' },
-  { number: 5, name: '実行戦略', description: 'KPIと投稿戦略策定' }
+  { number: 2, name: '機会評価+コンセプト', description: 'バイラル機会の評価とコンセプト生成（Phase 2&3統合）' },
+  { number: 3, name: 'コンテンツ作成', description: '完全な投稿コンテンツ生成' },
+  { number: 4, name: '実行戦略', description: 'KPIと投稿戦略策定' }
 ]
 
 const stepLabels = {

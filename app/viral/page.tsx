@@ -16,17 +16,28 @@ import {
   Loader2
 } from 'lucide-react'
 
-interface ViralStats {
-  totalSessions: number
-  completedSessions: number
-  totalDrafts: number
-  publishedPosts: number
-  avgEngagementRate: number
-  recentSessions: any[]
+interface DashboardStats {
+  sessions: {
+    total: number
+    completed: number
+    failed: number
+    processing: number
+    pending: number
+  }
+  content: {
+    drafts: number
+    published: number
+    scheduled: number
+    avgEngagement: number
+  }
+  recent: {
+    sessions: any[]
+    drafts: any[]
+  }
 }
 
 export default function ViralOverviewPage() {
-  const [stats, setStats] = useState<ViralStats | null>(null)
+  const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -35,22 +46,10 @@ export default function ViralOverviewPage() {
 
   const fetchStats = async () => {
     try {
-      // TODO: 実際のAPIエンドポイントに置き換え
-      setStats({
-        totalSessions: 24,
-        completedSessions: 22,
-        totalDrafts: 45,
-        publishedPosts: 38,
-        avgEngagementRate: 5.8,
-        recentSessions: [
-          {
-            id: '1',
-            theme: 'AI × 働き方',
-            status: 'COMPLETED',
-            createdAt: new Date().toISOString()
-          }
-        ]
-      })
+      const response = await fetch('/api/viral/dashboard/stats')
+      if (!response.ok) throw new Error('Failed to fetch stats')
+      const data = await response.json()
+      setStats(data)
     } catch (error) {
       console.error('Failed to fetch stats:', error)
     } finally {
@@ -92,7 +91,7 @@ export default function ViralOverviewPage() {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-gray-900">下書き管理</h3>
-              <p className="text-sm text-gray-600 mt-1">{stats?.totalDrafts || 0}件の下書き</p>
+              <p className="text-sm text-gray-600 mt-1">{stats?.content.drafts || 0}件の下書き</p>
             </div>
             <FileText className="w-8 h-8 text-gray-400" />
           </div>
@@ -113,22 +112,26 @@ export default function ViralOverviewPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-sm text-gray-600">総セッション数</p>
-          <p className="text-2xl font-bold text-gray-900">{stats?.totalSessions || 0}</p>
+          <p className="text-2xl font-bold text-gray-900">{stats?.sessions.total || 0}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-sm text-gray-600">完了セッション</p>
-          <p className="text-2xl font-bold text-green-600">{stats?.completedSessions || 0}</p>
+          <p className="text-2xl font-bold text-green-600">{stats?.sessions.completed || 0}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-sm text-gray-600">公開済み投稿</p>
-          <p className="text-2xl font-bold text-blue-600">{stats?.publishedPosts || 0}</p>
+          <p className="text-2xl font-bold text-blue-600">{stats?.content.published || 0}</p>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
-          <p className="text-sm text-gray-600">平均エンゲージメント率</p>
-          <p className="text-2xl font-bold text-purple-600">{stats?.avgEngagementRate || 0}%</p>
+          <p className="text-sm text-gray-600">下書き数</p>
+          <p className="text-2xl font-bold text-blue-600">{stats?.content.drafts || 0}</p>
+        </div>
+        <div className="bg-white rounded-lg shadow p-4">
+          <p className="text-sm text-gray-600">処理中</p>
+          <p className="text-2xl font-bold text-orange-600">{stats?.sessions.processing || 0}</p>
         </div>
       </div>
 
@@ -145,9 +148,9 @@ export default function ViralOverviewPage() {
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
             </div>
-          ) : stats?.recentSessions.length ? (
+          ) : stats?.recent.sessions.length ? (
             <div className="space-y-3">
-              {stats.recentSessions.map((session) => (
+              {stats.recent.sessions.map((session: any) => (
                 <div
                   key={session.id}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -159,7 +162,7 @@ export default function ViralOverviewPage() {
                       <Loader2 className="w-5 h-5 text-blue-500 animate-spin mr-3" />
                     )}
                     <div>
-                      <p className="font-medium text-gray-900">{session.expertise}</p>
+                      <p className="font-medium text-gray-900">{session.theme}</p>
                       <p className="text-sm text-gray-600">
                         {new Date(session.createdAt).toLocaleString('ja-JP')}
                       </p>
