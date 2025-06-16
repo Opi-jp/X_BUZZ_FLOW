@@ -79,13 +79,14 @@ export async function POST(
         currentPhase,
         'THINK',
         {
+          model: 'gpt-4o',
           messages: [
             { role: 'system', content: getSystemPrompt(currentPhase) },
             { role: 'user', content: prompt }
           ],
           temperature: strategy.think.temperature || 0.7,
-          maxTokens: strategy.think.maxTokens,
-          responseFormat: { type: 'json_object' }
+          max_tokens: strategy.think.maxTokens,
+          response_format: { type: 'json_object' }
         }
       )
       
@@ -188,13 +189,14 @@ export async function POST(
         currentPhase,
         'INTEGRATE',
         {
+          model: 'gpt-4o',
           messages: [
             { role: 'system', content: getSystemPrompt(currentPhase) },
             { role: 'user', content: prompt }
           ],
           temperature: strategy.integrate.temperature || 0.5,
-          maxTokens: strategy.integrate.maxTokens,
-          responseFormat: { type: 'json_object' }
+          max_tokens: strategy.integrate.maxTokens,
+          response_format: { type: 'json_object' }
         }
       )
       

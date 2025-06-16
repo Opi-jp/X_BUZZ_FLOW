@@ -271,19 +271,23 @@ export class AsyncApiProcessor {
       where: { id: sessionId }
     })
 
-    if (!session) return
+    if (!session) {
+      console.error(`[ASYNC API] Session ${sessionId} not found`)
+      return
+    }
 
-    // セッションメタデータを更新
-    await prisma.cotSession.update({
-      where: { id: sessionId },
-      data: {
-        metadata: {
-          ...(session.metadata as any || {}),
-          lastCompletedTaskId: taskId,
-          lastTaskCompletedAt: new Date().toISOString()
-        } as any
-      }
-    })
+    // セッションの最終更新時刻を更新（metadataフィールドは存在しないため削除）
+    try {
+      await prisma.cotSession.update({
+        where: { id: sessionId },
+        data: {
+          updatedAt: new Date()
+        }
+      })
+    } catch (error) {
+      console.error('[ASYNC API] Failed to update session:', error)
+      // エラーが発生してもcontinue処理は続行
+    }
 
     // 開発環境では直接APIを呼び出し
     if (process.env.NODE_ENV === 'development') {
@@ -294,6 +298,11 @@ export class AsyncApiProcessor {
           body: JSON.stringify({ taskId })
         })
         console.log(`[ASYNC API] Continue triggered: ${response.status}`)
+        
+        if (!response.ok) {
+          const error = await response.text()
+          console.error(`[ASYNC API] Continue API error: ${response.status} - ${error}`)
+        }
       } catch (error) {
         console.error('[ASYNC API] Failed to trigger continue:', error)
       }

@@ -21,6 +21,12 @@ const processedTasks = new Set();
 // OpenAI APIを使用したGPT処理
 async function processGptTask(request) {
   console.log('[WORKER] Processing GPT task...');
+  console.log('[WORKER] Request params:', {
+    model: request.model,
+    temperature: request.temperature,
+    max_tokens: request.max_tokens,
+    response_format: request.response_format
+  });
   
   try {
     // OpenAI APIを呼び出し
@@ -39,6 +45,7 @@ async function processGptTask(request) {
     }
     
     const data = await response.json();
+    console.log('[WORKER] OpenAI API success, tokens used:', data.usage?.total_tokens);
     return {
       content: data.choices[0].message.content,
       usage: data.usage
