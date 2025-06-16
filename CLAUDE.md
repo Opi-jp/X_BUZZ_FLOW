@@ -17,6 +17,7 @@
    # ⚠️ 重要: テストは必ずポート3000の永続サーバーで実行すること
    # ⚠️ npm run devは使用しない（APIタイムアウトが発生する）
    # ⚠️ tmuxがインストールされていることが前提条件
+   # ⚠️ Twitter認証のWebhookがポート3000を指定しているため、他のポートでは認証が失敗する
    ```
 
 3. **最重要ドキュメントの確認**
@@ -164,6 +165,13 @@ Phase 1-B: Chat Completions APIで詳細分析（max_tokens: 4000）
 - RSS収集を中心とした情報収集システム
 
 ## Vercelデプロイ時の注意事項
+
+### ポート3000の重要性
+
+**Twitter OAuth認証の制約**:
+- Twitter Developer PortalでCallback URLが `http://localhost:3000/api/auth/callback/twitter` に設定されている
+- `NEXTAUTH_URL=http://localhost:3000` が環境変数で固定
+- **他のポートでは認証が失敗する**ため、必ずポート3000で実行すること
 
 ### よくあるVercelデプロイエラーと解決策
 
