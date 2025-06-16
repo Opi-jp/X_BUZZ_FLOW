@@ -619,6 +619,44 @@ GOOGLE_SEARCH_ENGINE_ID= # 要設定：https://programmablesearchengine.google.c
 - GitHub: https://github.com/Opi-jp/X_BUZZ_FLOW
 - Vercel: https://x-buzz-flow.vercel.app
 
+## 2025年6月16日の作業記録
+
+### 非同期処理システムの重要な修正
+
+#### 実施した作業
+1. **下書き作成機能の実装**
+   - `continue-async`にPhase 5完了時の下書き作成処理を追加
+   - `createCompleteDrafts`関数をcontinue-asyncファイルに実装
+   - Phase 2のコンセプト、Phase 3のコンテンツ、Phase 4の戦略を統合して3つの下書きを作成
+
+2. **OpenAI API統合**
+   - `async-worker-v2.js`のGPT処理を実際のOpenAI APIに切り替え
+   - エラー時はモックレスポンスにフォールバック
+   - Perplexityは引き続きモック使用（ユーザー指示による）
+
+3. **sessionId undefined問題の修正**
+   - 原因：SQLクエリで取得したデータはスネークケース（`session_id`）
+   - `async-api-processor.ts`: `task.sessionId` → `task.session_id`に修正
+   - `async-worker-v2.js`: フォールバック処理を追加
+
+4. **その他の修正**
+   - 自動的な次フェーズ実行機能を追加（後で調整可能）
+   - 永続化サーバー使用の推奨をCLAUDE.mdに追記
+
+#### 発見した問題と解決
+- **問題**: `[ASYNC API] Triggering session continue for undefined`エラー
+- **原因**: データベースのカラム名はスネークケース、JavaScriptではキャメルケースでアクセスしていた
+- **解決**: `$queryRaw`使用時はデータベースのカラム名（スネークケース）を使用
+
+#### 重要な注意事項
+- `api_tasks`テーブルのカラムはすべてスネークケース
+- Prismaの`$queryRaw`を使用する場合は、データベースのカラム名をそのまま使用
+- 永続化サーバーを使用してテストすること（開発サーバーは起動に時間がかかる）
+
+#### コミット情報
+- コミットID: `cc78cb2`
+- メッセージ: "fix: 非同期処理の重要な修正と機能追加"
+
 ## 次セッションへの重要な引き継ぎ指示
 
 ### 1. 作業開始時の確認事項
