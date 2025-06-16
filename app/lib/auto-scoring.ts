@@ -1,4 +1,4 @@
-import { BuzzPost } from '@/app/generated/prisma'
+import { BuzzPost } from '@/lib/generated/prisma'
 
 export interface ScoringResult {
   postId: string

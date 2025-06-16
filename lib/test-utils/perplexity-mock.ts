@@ -1,6 +1,6 @@
 // Perplexity応答をモック化してテストを高速化するユーティリティ
 
-import { PrismaClient } from '@/app/generated/prisma'
+import { PrismaClient } from '@/lib/generated/prisma'
 
 const prisma = new PrismaClient()
 

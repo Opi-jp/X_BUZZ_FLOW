@@ -243,24 +243,69 @@ async function processGptTask(request) {
   }
 }
 
-// モックPerplexity処理
+// 本番Perplexity処理
 async function processPerplexityTask(request) {
   console.log('[WORKER] Processing Perplexity task...');
   
-  // 実際のPerplexity APIの代わりにモック応答
-  await new Promise(resolve => setTimeout(resolve, 3000)); // 3秒待機
+  const perplexityApiKey = process.env.PERPLEXITY_API_KEY;
+  if (!perplexityApiKey) {
+    throw new Error('PERPLEXITY_API_KEY is not set');
+  }
   
-  return {
-    content: "最新のAI技術により、リモートワークやハイブリッドワークが主流となり、多くの企業が業務の自動化を進めています。特にChatGPTやClaude等の対話型AIが、日常業務の効率化に大きく貢献しています。",
-    citations: [],
-    searchResults: [
-      {
-        title: "AIが変える働き方の未来",
-        url: "https://example.com/ai-work-future",
-        date: "2025年6月15日"
-      }
-    ]
-  };
+  try {
+    const response = await fetch('https://api.perplexity.ai/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${perplexityApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-sonar-large-128k-online',
+        messages: [
+          {
+            role: 'system',
+            content: request.systemPrompt || '最新の情報を提供してください。'
+          },
+          {
+            role: 'user',
+            content: request.query
+          }
+        ],
+        temperature: 0.2,
+        top_p: 0.9,
+        search_domain_filter: ['perplexity.ai'],
+        return_citations: true,
+        search_recency_filter: 'week',
+        top_k: 0,
+        stream: false,
+        presence_penalty: 0,
+        frequency_penalty: 1
+      })
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Perplexity API error: ${response.status} - ${error}`);
+    }
+    
+    const data = await response.json();
+    const message = data.choices?.[0]?.message?.content || '';
+    
+    // 応答形式を整形
+    return {
+      content: message,
+      citations: data.citations || [],
+      searchResults: data.citations?.map(c => ({
+        title: c.title || 'No title',
+        url: c.url || '',
+        date: new Date().toISOString()
+      })) || []
+    };
+    
+  } catch (error) {
+    console.error('[WORKER] Perplexity API error:', error);
+    throw error;
+  }
 }
 
 // メインループ

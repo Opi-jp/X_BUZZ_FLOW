@@ -1,0 +1,488 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  engineType    = "library"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 既存システム（ニュース・バズ投稿）
+model BuzzPost {
+  id               String          @id @default(uuid())
+  postId           String          @unique @map("post_id")
+  content          String
+  authorUsername   String          @map("author_username")
+  authorId         String          @map("author_id")
+  likesCount       Int             @map("likes_count")
+  retweetsCount    Int             @map("retweets_count")
+  repliesCount     Int             @map("replies_count")
+  impressionsCount Int             @map("impressions_count")
+  postedAt         DateTime        @map("posted_at")
+  collectedAt      DateTime        @default(now()) @map("collected_at")
+  url              String
+  theme            String
+  language         String
+  mediaUrls        Json            @map("media_urls")
+  hashtags         Json
+  chromaId         String?         @map("chroma_id")
+  authorFollowers  Int?            @map("author_followers")
+  authorFollowing  Int?            @map("author_following")
+  authorVerified   Boolean?        @map("author_verified")
+  scheduledPosts   ScheduledPost[]
+
+  @@map("buzz_posts")
+}
+
+model ScheduledPost {
+  id            String     @id @default(uuid())
+  content       String
+  scheduledTime DateTime   @map("scheduled_time")
+  status        PostStatus @default(DRAFT)
+  postType      PostType   @map("post_type")
+  refPostId     String?    @map("ref_post_id")
+  templateType  String?    @map("template_type")
+  aiGenerated   Boolean    @default(false) @map("ai_generated")
+  aiPrompt      String?    @map("ai_prompt")
+  editedContent String?    @map("edited_content")
+  postedAt      DateTime?  @map("posted_at")
+  postResult    Json?      @map("post_result")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+  refPost       BuzzPost?  @relation(fields: [refPostId], references: [id])
+
+  @@map("scheduled_posts")
+}
+
+model PostAnalytics {
+  id             String   @id @default(uuid())
+  postId         String   @map("post_id")
+  impressions    Int
+  engagements    Int
+  likes          Int
+  retweets       Int
+  replies        Int
+  profileClicks  Int      @map("profile_clicks")
+  urlClicks      Int      @map("url_clicks")
+  detailExpands  Int      @map("detail_expands")
+  engagementRate Float    @map("engagement_rate")
+  collectedAt    DateTime @default(now()) @map("collected_at")
+
+  @@map("post_analytics")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  twitterId      String          @unique @map("twitter_id")
+  username       String
+  name           String?
+  email          String?
+  image          String?
+  accessToken    String          @map("access_token")
+  refreshToken   String?         @map("refresh_token")
+  tokenSecret    String?         @map("token_secret")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  sessions       Session[]
+  watchlistUsers WatchlistUser[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model NewsSource {
+  id          String        @id @default(uuid())
+  name        String
+  url         String
+  rssUrl      String        @map("rss_url")
+  category    String
+  language    String        @default("ja")
+  isActive    Boolean       @default(true) @map("is_active")
+  lastFetched DateTime?     @map("last_fetched")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  articles    NewsArticle[]
+
+  @@map("news_sources")
+}
+
+model NewsArticle {
+  id              String           @id @default(uuid())
+  sourceId        String           @map("source_id")
+  title           String
+  description     String?
+  url             String           @unique
+  publishedAt     DateTime         @map("published_at")
+  category        String?
+  tags            String[]
+  importance      Float?
+  processed       Boolean          @default(false)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  metadata        Json?            @db.Json
+  analysis        NewsAnalysis?
+  source          NewsSource       @relation(fields: [sourceId], references: [id])
+  newsThreadItems NewsThreadItem[]
+
+  @@map("news_articles")
+}
+
+model NewsThread {
+  id          String           @id @default(uuid())
+  status      String           @default("draft")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  metadata    Json?            @db.Json
+  scheduledAt DateTime?        @map("scheduled_at")
+  title       String
+  postedAt    DateTime?        @map("posted_at")
+  items       NewsThreadItem[]
+
+  @@map("news_threads")
+}
+
+model NewsThreadItem {
+  id        String      @id @default(uuid())
+  threadId  String      @map("thread_id")
+  articleId String      @map("article_id")
+  order     Int
+  content   String?
+  createdAt DateTime    @default(now()) @map("created_at")
+  thread    NewsThread  @relation(fields: [threadId], references: [id])
+  article   NewsArticle @relation(fields: [articleId], references: [id])
+
+  @@map("news_thread_items")
+}
+
+model NewsAnalysis {
+  id        String      @id @default(uuid())
+  articleId String      @unique @map("article_id")
+  summary   String
+  sentiment String
+  keywords  String[]
+  topics    String[]
+  createdAt DateTime    @default(now()) @map("created_at")
+  article   NewsArticle @relation(fields: [articleId], references: [id])
+
+  @@map("news_analyses")
+}
+
+model JobQueue {
+  id          String    @id @default(uuid())
+  type        String
+  payload     Json      @db.Json
+  status      String    @default("pending")
+  priority    Int       @default(0)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3) @map("max_attempts")
+  runAt       DateTime  @default(now()) @map("run_at")
+  completedAt DateTime? @map("completed_at")
+  error       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([status, runAt])
+  @@map("job_queue")
+}
+
+model CollectionPreset {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  settings    Json     @db.Json
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("collection_presets")
+}
+
+model WatchlistUser {
+  id           String               @id @default(uuid())
+  userId       String               @map("user_id")
+  twitterId    String               @map("twitter_id")
+  username     String
+  displayName  String               @map("display_name")
+  followers    Int?
+  following    Int?
+  isActive     Boolean              @default(true) @map("is_active")
+  lastChecked  DateTime?            @map("last_checked")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  user         User                 @relation(fields: [userId], references: [id])
+  tweets       WatchlistTweet[]
+  interactions InteractionHistory[]
+
+  @@unique([userId, twitterId])
+  @@map("watchlist_users")
+}
+
+model WatchlistTweet {
+  id              String        @id @default(uuid())
+  watchlistUserId String        @map("watchlist_user_id")
+  tweetId         String        @map("tweet_id")
+  content         String
+  createdAt       DateTime      @map("created_at")
+  retweetCount    Int           @map("retweet_count")
+  likeCount       Int           @map("like_count")
+  replyCount      Int           @map("reply_count")
+  collectedAt     DateTime      @default(now()) @map("collected_at")
+  watchlistUser   WatchlistUser @relation(fields: [watchlistUserId], references: [id])
+
+  @@unique([tweetId])
+  @@map("watchlist_tweets")
+}
+
+model InteractionHistory {
+  id              String        @id @default(uuid())
+  watchlistUserId String        @map("watchlist_user_id")
+  interactionType String        @map("interaction_type")
+  tweetId         String?       @map("tweet_id")
+  metadata        Json?         @db.Json
+  createdAt       DateTime      @default(now()) @map("created_at")
+  watchlistUser   WatchlistUser @relation(fields: [watchlistUserId], references: [id])
+
+  @@map("interaction_history")
+}
+
+model PerplexityReport {
+  id                 String   @id @default(uuid())
+  query              String
+  focus              String
+  rawAnalysis        String   @db.Text
+  trends             Json
+  insights           Json
+  contentAngles      Json     @map("content_angles")
+  marketContext      Json     @map("market_context")
+  competitorActivity Json     @map("competitor_activity")
+  riskFactors        Json     @map("risk_factors")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  @@map("perplexity_reports")
+}
+
+// Chain of Thought システム（新規設計）
+model CotSession {
+  id String @id @default(uuid())
+
+  // ユーザー設定（仕様書 Phase 1）
+  expertise String // 発信したい分野
+  style     String // コンテンツのスタイル
+  platform  String // プラットフォーム
+
+  // セッション状態
+  status       CotSessionStatus @default(PENDING)
+  currentPhase Int              @default(1) @map("current_phase")
+  currentStep  CotPhaseStep     @default(THINK) @map("current_step")
+
+  // エラー・リトライ管理
+  lastError   String?   @map("last_error")
+  retryCount  Int       @default(0) @map("retry_count")
+  nextRetryAt DateTime? @map("next_retry_at")
+
+  // メトリクス
+  totalTokens   Int @default(0) @map("total_tokens")
+  totalDuration Int @default(0) @map("total_duration") // ミリ秒
+
+  // タイムスタンプ
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  completedAt DateTime? @map("completed_at")
+
+  // リレーション
+  phases CotPhase[] // 各フェーズの詳細
+  drafts CotDraft[] // 生成されたコンテンツ下書き
+
+  @@index([status, createdAt])
+  @@index([currentPhase, currentStep])
+  @@map("cot_sessions")
+}
+
+model CotPhase {
+  id          String @id @default(uuid())
+  sessionId   String @map("session_id")
+  phaseNumber Int    @map("phase_number") // 1-5
+
+  // Think結果
+  thinkPrompt String?   @map("think_prompt") @db.Text
+  thinkResult Json?     @map("think_result") @db.Json
+  thinkTokens Int?      @default(0) @map("think_tokens")
+  thinkAt     DateTime? @map("think_at")
+
+  // Execute結果
+  executeResult   Json?     @map("execute_result") @db.Json
+  executeDuration Int?      @default(0) @map("execute_duration") // ミリ秒
+  executeAt       DateTime? @map("execute_at")
+
+  // Perplexity生応答（テスト用） - executeResultに含める形で対応
+  // perplexityResponses Json?  @db.Json @map("perplexity_responses")
+
+  // Integrate結果
+  integratePrompt String?   @map("integrate_prompt") @db.Text
+  integrateResult Json?     @map("integrate_result") @db.Json
+  integrateTokens Int?      @default(0) @map("integrate_tokens")
+  integrateAt     DateTime? @map("integrate_at")
+
+  // フェーズ状態
+  status CotPhaseStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  session CotSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, phaseNumber])
+  @@index([sessionId, phaseNumber])
+  @@map("cot_phases")
+}
+
+model CotDraft {
+  id            String @id @default(uuid())
+  sessionId     String @map("session_id")
+  conceptNumber Int    @map("concept_number") // 1-3（Phase 3で3つのコンセプト）
+
+  // Phase 3 コンセプト情報
+  title  String
+  hook   String @db.Text
+  angle  String @db.Text
+  format String // スレッド/ビデオ/投稿タイプ
+
+  // Phase 4 完全なコンテンツ
+  content     String? @db.Text // コピペ即投稿可能なコンテンツ
+  // threadContent  Json?         @db.Json // スレッドの場合の追加投稿 // 一時的にコメントアウト
+  visualGuide String? @map("visual_guide") @db.Text // 画像/動画の説明
+
+  // メタデータ
+  timing     String // 最適投稿タイミング
+  hashtags   String[]
+  newsSource String?  @map("news_source") // 元ニュースソース
+  sourceUrl  String?  @map("source_url")
+
+  // Phase 5 実行戦略
+  kpis             Json? @db.Json // 成功指標
+  riskAssessment   Json? @map("risk_assessment") @db.Json
+  optimizationTips Json? @map("optimization_tips") @db.Json
+
+  // 投稿管理
+  status        CotDraftStatus @default(DRAFT)
+  editedContent String?        @map("edited_content") @db.Text
+  scheduledAt   DateTime?      @map("scheduled_at")
+  postedAt      DateTime?      @map("posted_at")
+  postId        String?        @map("post_id") // 投稿後のID
+
+  // パフォーマンス
+  viralScore Float? @map("viral_score") // 予測バイラルスコア
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  session     CotSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  performance CotDraftPerformance?
+
+  @@unique([sessionId, conceptNumber])
+  @@index([sessionId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("cot_drafts")
+}
+
+model CotDraftPerformance {
+  id      String @id @default(uuid())
+  draftId String @unique @map("draft_id")
+
+  // 30分後
+  likes30m       Int? @map("likes_30m")
+  retweets30m    Int? @map("retweets_30m")
+  replies30m     Int? @map("replies_30m")
+  impressions30m Int? @map("impressions_30m")
+
+  // 1時間後
+  likes1h       Int? @map("likes_1h")
+  retweets1h    Int? @map("retweets_1h")
+  replies1h     Int? @map("replies_1h")
+  impressions1h Int? @map("impressions_1h")
+
+  // 24時間後
+  likes24h       Int? @map("likes_24h")
+  retweets24h    Int? @map("retweets_24h")
+  replies24h     Int? @map("replies_24h")
+  impressions24h Int? @map("impressions_24h")
+
+  // 計算フィールド
+  engagementRate   Float? @map("engagement_rate")
+  viralCoefficient Float? @map("viral_coefficient")
+
+  // メタデータ
+  collectedAt  DateTime @default(now()) @map("collected_at")
+  lastUpdateAt DateTime @updatedAt @map("last_update_at")
+
+  // リレーション
+  draft CotDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@map("cot_draft_performance")
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  POSTED
+  FAILED
+}
+
+enum PostType {
+  NEW
+  RETWEET
+  QUOTE
+}
+
+enum CotSessionStatus {
+  PENDING
+  THINKING
+  EXECUTING
+  INTEGRATING
+  COMPLETED
+  FAILED
+  PAUSED
+
+  @@map("cot_session_status")
+}
+
+enum CotPhaseStep {
+  THINK
+  EXECUTE
+  INTEGRATE
+
+  @@map("cot_phase_step")
+}
+
+enum CotPhaseStatus {
+  PENDING
+  THINKING
+  EXECUTING
+  INTEGRATING
+  COMPLETED
+  FAILED
+
+  @@map("cot_phase_status")
+}
+
+enum CotDraftStatus {
+  DRAFT
+  EDITED
+  SCHEDULED
+  POSTED
+  ARCHIVED
+
+  @@map("cot_draft_status")
+}
