@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import PhaseProgress from './PhaseProgress'
+import PhaseProgressV2 from './PhaseProgressV2'
 import PhaseResult from './PhaseResult'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, PlayCircle, AlertCircle } from 'lucide-react'
 
 interface SessionStatusProps {
   sessionId: string
-  onComplete?: () => void
 }
 
 interface SessionData {
@@ -19,20 +18,26 @@ interface SessionData {
   status: 'PENDING' | 'THINKING' | 'EXECUTING' | 'INTEGRATING' | 'COMPLETED' | 'ERROR'
   currentPhase: number
   currentStep: 'THINK' | 'EXECUTE' | 'INTEGRATE'
-  phase1Results?: any
-  phase2Results?: any
-  phase3Results?: any
-  phase4Results?: any
-  phase5Results?: any
+  phases?: PhaseData[]
   createdAt: string
   updatedAt: string
 }
 
-export default function SessionStatus({ sessionId, onComplete }: SessionStatusProps) {
+interface PhaseData {
+  number: number
+  status: 'pending' | 'processing' | 'completed' | 'error'
+  thinkResult?: any
+  executeResult?: any
+  integrateResult?: any
+  error?: string
+}
+
+export default function SessionStatus({ sessionId }: SessionStatusProps) {
   const [session, setSession] = useState<SessionData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isPolling, setIsPolling] = useState(false)
+  const [processingPhase, setProcessingPhase] = useState<number | null>(null)
 
   const fetchSession = async () => {
     try {
@@ -44,9 +49,9 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
       setSession(data.session || data)
       setError(null)
       
-      // 完了時のコールバック
-      if ((data.session?.status || data.status) === 'COMPLETED' && onComplete) {
-        onComplete()
+      // 完了時の処理
+      if ((data.session?.status || data.status) === 'COMPLETED') {
+        console.log('CoT processing completed')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
@@ -72,18 +77,56 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
     }
   }
 
+  const handleProceedToNextPhase = async (nextPhase: number) => {
+    if (processingPhase) return // 既に処理中の場合はブロック
+
+    const confirmed = window.confirm(`Phase ${nextPhase}に進みますか？\n\n注意: この操作は元に戻せません。`)
+    if (!confirmed) return
+
+    try {
+      setProcessingPhase(nextPhase)
+      setError(null)
+
+      const response = await fetch(`/api/viral/cot-session/${sessionId}/proceed-next-phase`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetPhase: nextPhase })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'フェーズ進行に失敗しました')
+      }
+
+      // 成功後、すぐにセッション情報を更新
+      await fetchSession()
+      setIsPolling(true) // ポーリング再開
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'フェーズ進行中にエラーが発生しました')
+    } finally {
+      setProcessingPhase(null)
+    }
+  }
+
   useEffect(() => {
     fetchSession()
   }, [sessionId])
 
-  // ポーリング制御
+  // 動的ポーリング制御
   useEffect(() => {
     if (!session) return
 
     const shouldPoll = session.status !== 'COMPLETED' && session.status !== 'ERROR'
     
     if (shouldPoll || isPolling) {
-      const interval = setInterval(fetchSession, 3000) // 3秒ごと
+      // 状態に応じたポーリング間隔
+      const getPollingInterval = () => {
+        if (session.status === 'THINKING' || session.status === 'EXECUTING') return 2000 // 2秒
+        if (session.status === 'INTEGRATING') return 3000 // 3秒
+        return 5000 // 5秒（待機状態）
+      }
+
+      const interval = setInterval(fetchSession, getPollingInterval())
       return () => clearInterval(interval)
     }
   }, [session?.status, isPolling])
@@ -121,12 +164,27 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
     )
   }
 
+  // フェーズデータの準備（PhaseProgressV2用）
+  const phases: PhaseData[] = session.phases || []
+  
+  // 初期状態（PENDING）の場合、Phase 1の初期データを作成
+  if (session.status === 'PENDING' && phases.length === 0) {
+    phases.push({
+      number: 1,
+      status: 'pending',
+      thinkResult: null,
+      executeResult: null,
+      integrateResult: null
+    })
+  }
+  
+  // 古い形式のデータがある場合は変換（後方互換性）
   const completedPhases = []
-  if (session.phase1Results) completedPhases.push({ phase: 1, data: session.phase1Results })
-  if (session.phase2Results) completedPhases.push({ phase: 2, data: session.phase2Results })
-  if (session.phase3Results) completedPhases.push({ phase: 3, data: session.phase3Results })
-  if (session.phase4Results) completedPhases.push({ phase: 4, data: session.phase4Results })
-  if (session.phase5Results) completedPhases.push({ phase: 5, data: session.phase5Results })
+  if ((session as any).phase1Results) completedPhases.push({ phase: 1, data: (session as any).phase1Results })
+  if ((session as any).phase2Results) completedPhases.push({ phase: 2, data: (session as any).phase2Results })
+  if ((session as any).phase3Results) completedPhases.push({ phase: 3, data: (session as any).phase3Results })
+  if ((session as any).phase4Results) completedPhases.push({ phase: 4, data: (session as any).phase4Results })
+  if ((session as any).phase5Results) completedPhases.push({ phase: 5, data: (session as any).phase5Results })
 
   return (
     <div className="space-y-6">
@@ -154,11 +212,28 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
       </div>
 
       {/* 進行状況 */}
-      <PhaseProgress
+      <PhaseProgressV2
         currentPhase={session.currentPhase}
         currentStep={session.currentStep}
         status={session.status}
+        phases={phases}
+        onProceedToNextPhase={handleProceedToNextPhase}
       />
+
+      {/* 手動進行の状態表示 */}
+      {processingPhase && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center space-x-2">
+            <PlayCircle className="w-5 h-5 text-blue-600 animate-pulse" />
+            <span className="text-blue-800 font-medium">
+              Phase {processingPhase}への進行中...
+            </span>
+          </div>
+          <p className="text-sm text-blue-700 mt-1">
+            しばらくお待ちください。処理には数分かかる場合があります。
+          </p>
+        </div>
+      )}
 
       {/* 処理開始ボタン */}
       {session.status === 'PENDING' && (
@@ -178,7 +253,12 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">処理結果</h3>
           {completedPhases.map(({ phase, data }) => (
-            <PhaseResult key={phase} phase={phase} data={data} />
+            <PhaseResult 
+              key={phase} 
+              phase={phase} 
+              data={data} 
+              onProceedToNextPhase={handleProceedToNextPhase}
+            />
           ))}
         </div>
       )}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import DraftScheduler from '@/app/components/scheduler/DraftScheduler'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface Draft {
   id: string
@@ -33,6 +35,7 @@ export default function EditDraftPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState('edit')
 
   useEffect(() => {
     if (draftId) {
@@ -109,6 +112,30 @@ export default function EditDraftPage() {
     }
   }
 
+  const handleSchedule = async (scheduleData: any) => {
+    setSaving(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/viral/drafts/${draftId}/schedule`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scheduleData)
+      })
+
+      if (!response.ok) {
+        throw new Error('スケジュール設定に失敗しました')
+      }
+
+      alert('スケジュールを設定しました')
+      router.push('/viral/drafts')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'スケジュール設定中にエラーが発生しました')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const addHashtag = () => {
     if (newHashtag && !hashtags.includes(`#${newHashtag.replace('#', '')}`)) {
       setHashtags([...hashtags, `#${newHashtag.replace('#', '')}`])
@@ -120,8 +147,15 @@ export default function EditDraftPage() {
     setHashtags(hashtags.filter(t => t !== tag))
   }
 
-  const charCount = editedContent.length
-  const isOverLimit = charCount > 140
+  // URL除外文字数カウント（X Premium対応）
+  const getCharacterCount = (text: string): number => {
+    const urlRegex = /https?:\/\/[^\s]+/g
+    const textWithoutUrls = text.replace(urlRegex, '')
+    return [...textWithoutUrls].length // Unicode対応
+  }
+  
+  const charCount = getCharacterCount(editedContent)
+  const isOverLimit = charCount > 4000 // X Premium制限
 
   if (loading) {
     return (
@@ -145,18 +179,39 @@ export default function EditDraftPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto p-6 max-w-6xl">
       {/* ヘッダー */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">下書き編集</h1>
+        <div>
+          <h1 className="text-2xl font-bold">下書き編集</h1>
+          <p className="text-sm text-gray-600 mt-1">
+            コンテンツ編集とスケジュール設定
+          </p>
+        </div>
         <Link href="/viral/drafts" className="text-blue-500 hover:underline">
           ← 一覧に戻る
         </Link>
       </div>
 
-      {/* メタ情報 */}
-      <div className="bg-gray-50 p-4 rounded-lg mb-6">
-        <div className="grid grid-cols-2 gap-4 text-sm">
+      {/* エラー表示 */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 p-4 rounded-lg mb-6">
+          <p className="text-red-600">{error}</p>
+        </div>
+      )}
+
+      {/* タブ形式UI */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="edit">📝 編集</TabsTrigger>
+          <TabsTrigger value="schedule">📅 スケジュール</TabsTrigger>
+        </TabsList>
+
+        {/* 編集タブ */}
+        <TabsContent value="edit" className="space-y-6">
+          {/* メタ情報 */}
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <span className="text-gray-600">カテゴリ:</span>
             <span className="ml-2 font-medium">{draft.category}</span>
@@ -216,7 +271,7 @@ export default function EditDraftPage() {
             )}
           </div>
           <div className={`text-sm ${isOverLimit ? 'text-red-500' : 'text-gray-500'}`}>
-            {charCount} / 140
+            {charCount} / 4,000 {charCount > 0 && '（URL除外）'}
           </div>
         </div>
       </div>
@@ -299,6 +354,16 @@ export default function EditDraftPage() {
           </button>
         </div>
       </div>
+
+        {/* スケジュール タブ */}
+        <TabsContent value="schedule" className="space-y-6">
+          <DraftScheduler
+            draftId={draftId}
+            contentType={draft.conceptType}
+            onSchedule={handleSchedule}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

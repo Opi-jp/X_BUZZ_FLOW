@@ -20,10 +20,6 @@ export default async function CoTSessionPage({ params }: Props) {
 
       <SessionStatus 
         sessionId={sessionId}
-        onComplete={() => {
-          // 完了時の処理（必要に応じて）
-          console.log('CoT processing completed')
-        }}
       />
     </div>
   )

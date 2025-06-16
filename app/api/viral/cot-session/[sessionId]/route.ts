@@ -26,7 +26,19 @@ export async function GET(
       )
     }
     
-    // phasesデータを整形
+    // phasesデータを整形（PhaseProgressV2用の配列形式）
+    const phasesArray = session.phases.map(phase => ({
+      number: phase.phaseNumber,
+      status: phase.integrateResult ? 'completed' : 
+              phase.executeResult ? 'processing' : 
+              phase.thinkResult ? 'processing' : 'pending',
+      thinkResult: phase.thinkResult,
+      executeResult: phase.executeResult,
+      integrateResult: phase.integrateResult,
+      error: phase.error || null
+    }))
+
+    // phasesデータを整形（後方互換性用のマップ形式）
     const phaseMap: any = {}
     session.phases.forEach(phase => {
       phaseMap[`phase${phase.phaseNumber}`] = {
@@ -52,14 +64,24 @@ export async function GET(
     const response = {
       id: session.id,
       status: session.status,
+      theme: session.theme,
+      style: session.style,
+      platform: session.platform,
       config: {
-        expertise: session.expertise,
+        theme: session.theme,
         style: session.style,
         platform: session.platform
       },
       currentPhase: session.currentPhase,
       currentStep: session.currentStep,
       phaseProgress: session.currentPhase - 1, // 完了したフェーズ数
+      
+      // PhaseProgressV2用のphasesデータ
+      phases: phasesArray,
+      
+      // メタデータ（表示用）
+      createdAt: session.createdAt,
+      updatedAt: session.updatedAt,
       
       // 各フェーズの結果を個別に格納（後方互換性のため）
       phase1Result: phases.phase1?.integrate?.result || null,

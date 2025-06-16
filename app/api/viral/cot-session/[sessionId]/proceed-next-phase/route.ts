@@ -18,8 +18,8 @@ export async function POST(
       where: { id: sessionId },
       include: {
         phases: {
-          where: { phase: { lte: 5 } },
-          orderBy: { phase: 'asc' }
+          where: { phaseNumber: { lte: 5 } },
+          orderBy: { phaseNumber: 'asc' }
         }
       }
     })
@@ -32,9 +32,14 @@ export async function POST(
     }
 
     // 現在のフェーズが完了しているか確認
-    const currentPhaseData = session.phases.find(p => p.phase === session.currentPhase)
+    const currentPhaseData = session.phases.find(p => p.phaseNumber === session.currentPhase)
     
-    if (!currentPhaseData?.integrateResult) {
+    // Phase 1は3ステップ完了が必要、Phase 2-4はthinkResultがあれば進める
+    const isPhaseReady = session.currentPhase === 1 
+      ? currentPhaseData?.integrateResult
+      : currentPhaseData?.thinkResult
+    
+    if (!isPhaseReady) {
       return NextResponse.json(
         { 
           error: 'Current phase not completed',
@@ -136,7 +141,7 @@ export async function POST(
       currentStep: 'THINK',
       completedPhases: session.phases
         .filter(p => p.integrateResult !== null)
-        .map(p => p.phase)
+        .map(p => p.phaseNumber)
     })
 
   } catch (error) {

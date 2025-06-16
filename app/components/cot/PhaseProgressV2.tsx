@@ -74,6 +74,7 @@ export default function PhaseProgressV2({
     if (phaseNumber === currentPhase) {
       if (status === 'ERROR') return 'error'
       if (status === 'COMPLETED') return 'completed'
+      if (status === 'PENDING') return 'pending'
       return 'processing'
     }
     return 'pending'
@@ -103,9 +104,9 @@ export default function PhaseProgressV2({
 
     // Phase 1は3ステップ完了、Phase 2-4はTHINK完了で次へ進める
     if (definition.number === 1) {
-      return phaseData.thinkResult && phaseData.executeResult && phaseData.integrateResult
+      return phaseData?.thinkResult && phaseData?.executeResult && phaseData?.integrateResult
     } else {
-      return phaseData.thinkResult && phaseData.status === 'completed'
+      return phaseData?.thinkResult
     }
   }
 
@@ -174,14 +175,14 @@ export default function PhaseProgressV2({
             {/* Phase Details */}
             {isExpanded && (
               <div className="border-t bg-gray-50 p-4">
-                {phaseData ? (
+                {phaseData || (isCurrentPhase && phaseStatus === 'processing') ? (
                   <div className="space-y-3">
                     {/* Phase 1の3ステップ表示 */}
                     {definition.number === 1 && (
                       <div className="grid gap-3">
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="font-medium">1. Think（検索クエリ生成）</span>
-                          {phaseData.thinkResult ? (
+                          {phaseData?.thinkResult ? (
                             <Check className="w-4 h-4 text-green-600" />
                           ) : (
                             <div className="w-4 h-4 rounded-full bg-gray-300" />
@@ -189,7 +190,7 @@ export default function PhaseProgressV2({
                         </div>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="font-medium">2. Execute（Perplexity検索）</span>
-                          {phaseData.executeResult ? (
+                          {phaseData?.executeResult ? (
                             <Check className="w-4 h-4 text-green-600" />
                           ) : (
                             <div className="w-4 h-4 rounded-full bg-gray-300" />
@@ -197,7 +198,7 @@ export default function PhaseProgressV2({
                         </div>
                         <div className="flex items-center justify-between p-3 bg-white rounded border">
                           <span className="font-medium">3. Integrate（結果統合）</span>
-                          {phaseData.integrateResult ? (
+                          {phaseData?.integrateResult ? (
                             <Check className="w-4 h-4 text-green-600" />
                           ) : (
                             <div className="w-4 h-4 rounded-full bg-gray-300" />
@@ -207,11 +208,11 @@ export default function PhaseProgressV2({
                     )}
 
                     {/* Phase 2-4の結果表示 */}
-                    {definition.number > 1 && phaseData.thinkResult && (
+                    {definition.number > 1 && phaseData?.thinkResult && (
                       <div className="bg-white p-3 rounded border">
                         <h4 className="font-medium mb-2">生成結果</h4>
                         <pre className="text-sm bg-gray-100 p-2 rounded overflow-auto max-h-40">
-                          {JSON.stringify(phaseData.thinkResult, null, 2)}
+                          {JSON.stringify(phaseData?.thinkResult, null, 2)}
                         </pre>
                       </div>
                     )}
@@ -224,21 +225,32 @@ export default function PhaseProgressV2({
                         onClick={() => onProceedToNextPhase(definition.number + 1)}
                         className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
                       >
-                        <span>Phase {definition.number + 1}へ進む</span>
+                        <span>
+                          {definition.number === 1 ? 'コンセプトを作成' :
+                           definition.number === 2 ? 'コンテンツを作成' :
+                           definition.number === 3 ? '実行戦略を策定' :
+                           `Phase ${definition.number + 1}へ進む`}
+                        </span>
                         <ArrowRight className="w-4 h-4" />
                       </button>
                     )}
 
                     {/* Error Display */}
-                    {phaseData.error && (
+                    {phaseData?.error && (
                       <div className="bg-red-50 border border-red-200 p-3 rounded">
                         <h4 className="font-medium text-red-800 mb-1">エラー</h4>
-                        <p className="text-sm text-red-700">{phaseData.error}</p>
+                        <p className="text-sm text-red-700">{phaseData?.error}</p>
                       </div>
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-600">このフェーズはまだ開始されていません</p>
+                  <div className="text-center py-4">
+                    {phaseStatus === 'pending' ? (
+                      <p className="text-gray-600">このフェーズはまだ開始されていません</p>
+                    ) : (
+                      <p className="text-blue-600">処理が開始されています...</p>
+                    )}
+                  </div>
                 )}
               </div>
             )}

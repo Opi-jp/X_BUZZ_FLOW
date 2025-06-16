@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   authors: [{ name: 'BuzzFlow Team' }],
   creator: 'BuzzFlow',
   publisher: 'BuzzFlow',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/favicon.ico',
+    apple: '/icon.svg'
+  },
   formatDetection: {
     email: false,
     address: false,

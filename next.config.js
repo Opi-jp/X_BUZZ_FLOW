@@ -1,13 +1,43 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['prisma'],
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client'],
+  },
   typescript: {
-    // 型チェックエラーでビルドを止めない（Vercelデプロイ用）
-    ignoreBuildErrors: true,
+    // Vercel デプロイ時の TypeScript エラーをバイパス
+    ignoreBuildErrors: process.env.VERCEL_ENV === 'production',
   },
   eslint: {
-    // ESLintエラーでビルドを止めない（Vercelデプロイ用）
-    ignoreDuringBuilds: true,
+    // Vercel デプロイ時の ESLint エラーをバイパス
+    ignoreDuringBuilds: process.env.VERCEL_ENV === 'production',
+  },
+  images: {
+    domains: [
+      'pbs.twimg.com',
+      'abs.twimg.com',
+      'video.twimg.com',
+    ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ]
   },
 }
 
