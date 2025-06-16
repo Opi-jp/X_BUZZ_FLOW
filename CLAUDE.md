@@ -7,13 +7,16 @@
    ./scripts/health-check.sh
    ```
    
-2. **必要に応じて環境起動**
+2. **永続サーバーの起動（必須）**
    ```bash
-   # 永続的な起動（推奨）
+   # tmuxで永続的な起動（必須）
    ./scripts/dev-persistent.sh
+   # または Prisma Studioなしバージョン
+   ./scripts/dev-persistent-no-studio.sh
    
-   # 注意: ローカルテストは必ず永続サーバーを使用すること
-   # 通常の開発サーバー（npm run dev）はAPIタイムアウトが発生しやすい
+   # ⚠️ 重要: テストは必ずポート3000の永続サーバーで実行すること
+   # ⚠️ npm run devは使用しない（APIタイムアウトが発生する）
+   # ⚠️ tmuxがインストールされていることが前提条件
    ```
 
 3. **最重要ドキュメントの確認**
