@@ -324,7 +324,9 @@ D：バイラルパターン認識
                 console.log(`[Phase1Execute] Retry successful for category ${questionObj.category}`)
               } catch (retryError) {
                 console.error(`[Phase1Execute] Retry failed:`, retryError)
-                // 失敗してもプロセスは継続
+                // エラーを上位に伝播
+                const errorMessage = `Perplexity search failed for category ${questionObj.category}: ${retryError instanceof Error ? retryError.message : 'Unknown error'}`
+                throw new Error(errorMessage)
               }
             }
           }
@@ -389,7 +391,8 @@ D：バイラルパターン認識
               console.error(`[Phase1Execute] Error message:`, error.message)
               console.error(`[Phase1Execute] Error stack:`, error.stack)
             }
-            // エラーでも継続
+            // クエリ失敗をエラーとして処理
+            throw new Error(`Failed to process query: ${error instanceof Error ? error.message : 'Unknown error'}`)
           }
         }
       }

@@ -53,11 +53,11 @@ async function processGptTask(request) {
   } catch (error) {
     console.error('[WORKER] OpenAI API error:', error);
     
-    // エラー時はモックにフォールバック
-    console.log('[WORKER] Falling back to mock response');
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const prompt = request.messages?.[1]?.content || '';
-  
+    // エラーを再スローして適切に処理
+    throw new Error(`OpenAI API failed: ${error.message || 'Unknown error'}`);
+    
+    // 以下のモックレスポンスは削除
+    /*
   // Phase 1 THINK
   if (prompt.includes('Perplexityに投げる')) {
     return {
@@ -241,6 +241,7 @@ async function processGptTask(request) {
       usage: { total_tokens: 300 }
     };
   }
+  */
 }
 
 // 本番Perplexity処理
