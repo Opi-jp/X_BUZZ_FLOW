@@ -1,81 +1,70 @@
-#!/usr/bin/env node
-
-/**
- * Google Custom Search API の単体テスト
- */
-
-require('dotenv').config({ path: '.env.local' })
+// Google検索APIの単体テスト
+import { GoogleSearchClient } from './lib/google-search.js'
 
 async function testGoogleSearch() {
-  console.log('🔍 Google Custom Search API テスト\n')
+  console.log('=== Google検索API テスト ===');
   
-  // 環境変数チェック
-  console.log('📋 環境変数チェック:')
-  console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY ? `✅ 設定済み (${process.env.GOOGLE_API_KEY.substring(0, 10)}...)` : '❌ 未設定')
-  console.log('GOOGLE_SEARCH_ENGINE_ID:', process.env.GOOGLE_SEARCH_ENGINE_ID ? `✅ 設定済み (${process.env.GOOGLE_SEARCH_ENGINE_ID})` : '❌ 未設定')
-  console.log('')
-
-  if (!process.env.GOOGLE_API_KEY || !process.env.GOOGLE_SEARCH_ENGINE_ID) {
-    console.error('❌ 必要な環境変数が設定されていません')
-    return
-  }
-
-  // 直接Google APIを呼び出す
-  const searchQueries = [
-    { query: 'AI workplace automation 2025', lang: 'en' },
-    { query: 'AI 働き方改革 最新 2025', lang: 'ja' },
-    { query: 'ChatGPT business impact latest', lang: 'en' }
-  ]
-
-  for (const { query, lang } of searchQueries) {
-    console.log(`\n🔎 検索: "${query}" (${lang})`)
+  // 環境変数の確認
+  console.log('\n環境変数チェック:');
+  console.log('GOOGLE_API_KEY:', process.env.GOOGLE_API_KEY ? '設定済み' : '未設定');
+  console.log('GOOGLE_SEARCH_ENGINE_ID:', process.env.GOOGLE_SEARCH_ENGINE_ID ? '設定済み' : '未設定');
+  
+  const client = new GoogleSearchClient();
+  
+  // テストクエリ
+  const queries = [
+    'AI workplace 2025',
+    'AIと働き方 最新ニュース',
+    'artificial intelligence job automation'
+  ];
+  
+  for (const query of queries) {
+    console.log(`\n\n=== 検索: "${query}" ===`);
     
     try {
-      const params = new URLSearchParams({
-        key: process.env.GOOGLE_API_KEY,
-        cx: process.env.GOOGLE_SEARCH_ENGINE_ID,
-        q: query,
-        num: '3',
-        dateRestrict: 'd7', // 7日以内
-        ...(lang === 'ja' && { lr: 'lang_ja' })
-      })
-
-      const url = `https://www.googleapis.com/customsearch/v1?${params}`
-      console.log(`URL: ${url.replace(process.env.GOOGLE_API_KEY, 'API_KEY_HIDDEN')}\n`)
-
-      const response = await fetch(url)
-      const data = await response.json()
-
-      if (!response.ok) {
-        console.error(`❌ エラー: ${response.status} - ${data.error?.message || 'Unknown error'}`)
-        continue
-      }
-
-      console.log(`✅ 検索成功! 結果数: ${data.items?.length || 0}`)
+      const results = await client.searchNews(query, 7);
       
-      if (data.items) {
-        data.items.forEach((item, index) => {
-          console.log(`\n${index + 1}. ${item.title}`)
-          console.log(`   URL: ${item.link}`)
-          console.log(`   ${item.snippet}`)
-        })
+      console.log(`結果数: ${results.length}`);
+      
+      if (results.length > 0) {
+        console.log('\n最初の3件:');
+        results.slice(0, 3).forEach((result, i) => {
+          console.log(`\n${i + 1}. ${result.title}`);
+          console.log(`   URL: ${result.link}`);
+          console.log(`   スニペット: ${result.snippet}`);
+          console.log(`   ソース: ${result.displayLink}`);
+        });
       } else {
-        console.log('検索結果がありません')
+        console.log('検索結果が0件です');
       }
-
-      // API使用状況
-      if (data.searchInformation) {
-        console.log(`\n📊 検索情報:`)
-        console.log(`   総結果数: ${data.searchInformation.totalResults}`)
-        console.log(`   検索時間: ${data.searchInformation.searchTime}秒`)
-      }
-
     } catch (error) {
-      console.error(`❌ エラー:`, error.message)
+      console.error('検索エラー:', error);
     }
+  }
+  
+  // 詳細なAPIテスト
+  console.log('\n\n=== 詳細なAPIテスト ===');
+  try {
+    const apiKey = process.env.GOOGLE_API_KEY || '';
+    const searchEngineId = process.env.GOOGLE_SEARCH_ENGINE_ID || '';
+    
+    const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=test&num=1`;
+    console.log('API URL (キーは部分表示):', url.replace(apiKey, 'YOUR_API_KEY'));
+    
+    const response = await fetch(url);
+    console.log('HTTPステータス:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('エラーレスポンス:', errorText);
+    } else {
+      const data = await response.json();
+      console.log('成功レスポンス:', JSON.stringify(data, null, 2));
+    }
+  } catch (error) {
+    console.error('詳細テストエラー:', error);
   }
 }
 
 // 実行
-console.log('=== Google Custom Search API 直接テスト ===')
-testGoogleSearch().catch(console.error)
+testGoogleSearch().catch(console.error);
