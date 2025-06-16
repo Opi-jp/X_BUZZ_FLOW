@@ -15,7 +15,7 @@ import { orchestratedStrategy } from './orchestrated-cot-strategy'
 
 export interface CotFlowConfig {
   sessionId: string
-  expertise: string  // 発信したいテーマ
+  theme: string  // 発信したいテーマ
   style: string
   platform: string
 }
@@ -30,7 +30,7 @@ export class ElegantCotFlow {
     console.log('[FLOW] Step 1: Generating search queries...')
     
     const prompt = orchestratedStrategy.phase1.think({
-      expertise: this.config.expertise,
+      theme: this.config.theme,
       style: this.config.style,
       platform: this.config.platform
     })
@@ -78,7 +78,7 @@ export class ElegantCotFlow {
 ${JSON.stringify(searchResults, null, 2)}
 
 # 設定
-- 発信したいテーマ: ${this.config.expertise}
+- 発信したいテーマ: ${this.config.theme}
 - プラットフォーム: ${this.config.platform}
 - スタイル: ${this.config.style}
 
@@ -334,7 +334,7 @@ export async function runElegantCotFlow(sessionId: string): Promise<void> {
   
   const flow = new ElegantCotFlow({
     sessionId,
-    expertise: session.expertise,
+    theme: session.theme,
     style: session.style,
     platform: session.platform
   })

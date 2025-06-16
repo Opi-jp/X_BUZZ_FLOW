@@ -11,7 +11,7 @@ export default function GptViralDashboard() {
   const [sessions, setSessions] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [config, setConfig] = useState({
-    expertise: '',
+    theme: '',
     platform: 'Twitter',
     style: '解説 × エンタメ',
     model: 'gpt-4o'
@@ -212,12 +212,12 @@ export default function GptViralDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                専門分野
+                発信テーマ
               </label>
               <input
                 type="text"
-                value={config.expertise}
-                onChange={(e) => setConfig({ ...config, expertise: e.target.value })}
+                value={config.theme}
+                onChange={(e) => setConfig({ ...config, theme: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>

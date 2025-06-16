@@ -7,7 +7,7 @@ import { Brain, Zap } from 'lucide-react'
 export default function CoTCreationForm() {
   const router = useRouter()
   const [config, setConfig] = useState({
-    expertise: '',
+    theme: '',
     style: '洞察的',
     platform: 'Twitter'
   })
@@ -16,8 +16,8 @@ export default function CoTCreationForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!config.expertise.trim()) {
-      alert('専門分野を入力してください')
+    if (!config.theme.trim()) {
+      alert('発信テーマを入力してください')
       return
     }
 
@@ -61,26 +61,26 @@ export default function CoTCreationForm() {
             新しいCoTセッションを開始
           </h2>
           <p className="text-gray-600">
-            あなたの専門分野に特化したバイラルコンテンツを5段階で生成します
+            あなたの発信テーマに特化したバイラルコンテンツを5段階で生成します
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="expertise" className="block text-sm font-medium text-gray-700 mb-2">
-              専門分野・発信テーマ *
+            <label htmlFor="theme" className="block text-sm font-medium text-gray-700 mb-2">
+              発信テーマ *
             </label>
             <input
-              id="expertise"
+              id="theme"
               type="text"
-              value={config.expertise}
-              onChange={(e) => setConfig({ ...config, expertise: e.target.value })}
+              value={config.theme}
+              onChange={(e) => setConfig({ ...config, theme: e.target.value })}
               placeholder="例: AIと働き方、Web3と教育、デジタルマーケティング"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               required
             />
             <p className="mt-1 text-sm text-gray-500">
-              あなたが発信したい分野やテーマを具体的に入力してください
+              あなたが発信したいテーマを具体的に入力してください
             </p>
           </div>
 
@@ -140,7 +140,7 @@ export default function CoTCreationForm() {
 
           <button
             type="submit"
-            disabled={loading || !config.expertise.trim()}
+            disabled={loading || !config.theme.trim()}
             className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (

@@ -53,7 +53,7 @@ export default function ViralSystemSummary() {
               <div>
                 <h3 className="font-semibold text-lg mb-2">4. 設定機能</h3>
                 <ul className="text-sm text-gray-700 space-y-1 ml-4">
-                  <li>• 専門分野の設定</li>
+                  <li>• 発信テーマの設定</li>
                   <li>• プラットフォーム選択</li>
                   <li>• コンテンツスタイル選択</li>
                   <li>• セッション履歴管理</li>
@@ -70,7 +70,7 @@ export default function ViralSystemSummary() {
               <div className="bg-blue-50 p-4 rounded-lg">
                 <h3 className="font-semibold mb-2">1. 初期設定</h3>
                 <p className="text-sm text-gray-700">
-                  専門分野、プラットフォーム、スタイルを設定して「新規分析を開始」
+                  発信テーマ、プラットフォーム、スタイルを設定して「新規分析を開始」
                 </p>
               </div>
 

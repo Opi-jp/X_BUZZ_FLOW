@@ -329,13 +329,13 @@ export async function POST(
         throw new Error('Session not found for INTEGRATE step')
       }
       
-      // 元のコンテキストを再構築（expertise, style, platformを含む）
+      // 元のコンテキストを再構築（theme, style, platformを含む）
       const baseContext = {
-        expertise: currentSession.expertise,
+        theme: currentSession.theme,
         style: currentSession.style,
         platform: currentSession.platform,
         userConfig: {
-          expertise: currentSession.expertise,
+          theme: currentSession.theme,
           style: currentSession.style,
           platform: currentSession.platform
         }
@@ -614,7 +614,7 @@ function formatTrendedTopics(trendedTopics: any): string {
    - 共有性: ${topic.viralElements?.shareability || 'N/A'}
    - 時間的感度: ${topic.viralElements?.timeSensitivity || 'N/A'}
    - プラットフォーム適合性: ${topic.viralElements?.platformFit || 'N/A'}
-   専門性との関連: ${topic.expertiseRelevance || 'N/A'}`
+   テーマとの関連: ${topic.themeRelevance || 'N/A'}`
     ).join('\n\n')
   }
   return JSON.stringify(trendedTopics, null, 2)
@@ -790,20 +790,20 @@ async function buildSafeContext(session: any, currentPhase: number): Promise<any
     }
     
     const baseContext = {
-      expertise: session.expertise || 'AIと働き方',
+      theme: session.theme || 'AIと働き方',
       style: session.style || '洞察的',
       platform: session.platform || 'Twitter',
     }
     
     const userConfig = {
-      expertise: baseContext.expertise,
+      theme: baseContext.theme,
       style: baseContext.style,
       platform: baseContext.platform
     }
     
     console.log('[CONTEXT] Building context with:', {
       sessionId: session.id,
-      expertise: baseContext.expertise,
+      theme: baseContext.theme,
       style: baseContext.style,
       platform: baseContext.platform,
       currentPhase,
@@ -827,11 +827,11 @@ async function buildSafeContext(session: any, currentPhase: number): Promise<any
     
     // フォールバック：最小限のコンテキスト
     return {
-      expertise: session?.expertise || 'AIと働き方',
+      theme: session?.theme || 'AIと働き方',
       style: session?.style || '洞察的',
       platform: session?.platform || 'Twitter',
       userConfig: {
-        expertise: session?.expertise || 'AIと働き方',
+        theme: session?.theme || 'AIと働き方',
         style: session?.style || '洞察的',
         platform: session?.platform || 'Twitter'
       }

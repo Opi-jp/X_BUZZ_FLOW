@@ -114,7 +114,7 @@ export const Phase1Strategy: OrchestratedPhase = {
 # タスク  
 ユーザーの入力した情報をもとに、下記の視点に基づいてPerplexityに投げる自然言語の質問を作成してください。
 
-発信したい分野: {expertise}
+発信したいテーマ: {theme}
 コンテンツのスタイル: {style}
 プラットフォーム: {platform}
 
@@ -202,7 +202,7 @@ D：バイラルパターン認識
       const searchResults = []
       const perplexityResponses = []
       // 必須パラメータの取得（より安全な取得方法）
-      const expertise = context?.userConfig?.expertise || context?.expertise || 'AIと働き方'
+      const theme = context?.userConfig?.theme || context?.theme || 'AIと働き方'
       const platform = context?.userConfig?.platform || context?.platform || 'Twitter'
       
       // デバッグ用ログ（エラー前に情報を出力）
@@ -211,11 +211,11 @@ D：バイラルパターン認識
         contextType: typeof context,
         contextKeys: context ? Object.keys(context) : 'context is null/undefined',
         userConfigKeys: context?.userConfig ? Object.keys(context.userConfig) : 'userConfig is null/undefined',
-        expertise: expertise,
+        theme: theme,
         platform: platform
       })
       
-      console.log(`[Phase1Execute] Using expertise: ${expertise}, platform: ${platform}`)
+      console.log(`[Phase1Execute] Using theme: ${theme}, platform: ${platform}`)
       
       // 自然言語形式の場合
       if (isNaturalLanguageFormat) {
@@ -444,7 +444,7 @@ D：バイラルパターン認識
         "timeSensitivity": "高/中/低",
         "platformFit": "高/中/低"
       },
-      "expertiseRelevance": "トピックと発信分野の関連性",
+      "themeRelevance": "トピックと発信テーマの関連性",
       "emotionalDrivers": ["感情的な反応を引き起こす要素"],
       "evidenceSources": [
         {

@@ -263,13 +263,13 @@ function interpolatePrompt(template: string, context: any): string {
 
 async function buildContext(session: any, currentPhase: number): Promise<any> {
   const baseContext = {
-    expertise: session.expertise || 'AIと働き方',
+    theme: session.theme || 'AIと働き方',
     style: session.style || '洞察的',
     platform: session.platform || 'Twitter',
   }
   
   const userConfig = {
-    expertise: baseContext.expertise,
+    theme: baseContext.theme,
     style: baseContext.style,
     platform: baseContext.platform
   }

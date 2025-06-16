@@ -19,7 +19,7 @@ export default function SettingsPage() {
   
   // Form states
   const [profile, setProfile] = useState({
-    expertise: 'クリエイティブ × AI活用',
+    theme: 'クリエイティブ × AI活用',
     targetAudience: 'クリエイター、マーケター、起業家',
     contentStyle: 'educational',
     postingFrequency: '3',
@@ -70,21 +70,21 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle>プロフィール情報</CardTitle>
                 <CardDescription>
-                  あなたの専門分野とターゲットオーディエンスを設定してください
+                  あなたの発信テーマとターゲットオーディエンスを設定してください
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="expertise">専門分野</Label>
+                  <Label htmlFor="theme">発信テーマ</Label>
                   <Textarea
-                    id="expertise"
+                    id="theme"
                     placeholder="例: クリエイティブ × AI活用、マーケティング戦略"
-                    value={profile.expertise}
-                    onChange={(e) => setProfile({...profile, expertise: e.target.value})}
+                    value={profile.theme}
+                    onChange={(e) => setProfile({...profile, theme: e.target.value})}
                     rows={3}
                   />
                   <p className="text-sm text-muted-foreground">
-                    AIがコンテンツを生成する際の基準となる専門分野を入力してください
+                    AIがコンテンツを生成する際の基準となる発信テーマを入力してください
                   </p>
                 </div>
 

@@ -13,7 +13,7 @@ interface SessionStatusProps {
 
 interface SessionData {
   id: string
-  expertise: string
+  theme: string
   style: string
   platform: string
   status: 'PENDING' | 'THINKING' | 'EXECUTING' | 'INTEGRATING' | 'COMPLETED' | 'ERROR'
@@ -135,8 +135,8 @@ export default function SessionStatus({ sessionId, onComplete }: SessionStatusPr
         <h2 className="text-xl font-semibold mb-4">Chain of Thought セッション</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
-            <span className="text-gray-500">専門分野:</span>
-            <p className="font-medium">{session.expertise}</p>
+            <span className="text-gray-500">発信テーマ:</span>
+            <p className="font-medium">{session.theme}</p>
           </div>
           <div>
             <span className="text-gray-500">スタイル:</span>

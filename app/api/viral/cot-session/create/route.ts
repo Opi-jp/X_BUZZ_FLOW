@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { expertise, style, platform } = body
+    const { theme, style, platform } = body
 
     // 入力検証
-    if (!expertise || !style || !platform) {
+    if (!theme || !style || !platform) {
       return NextResponse.json(
         { error: '必須パラメータが不足しています' },
         { status: 400 }
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     // 新しいChain of Thoughtセッションを作成
     const session = await prisma.cotSession.create({
       data: {
-        expertise,
+        theme,
         style,
         platform,
         status: 'PENDING',
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       success: true,
       sessionId: session.id,
       config: {
-        expertise,
+        theme,
         style,
         platform
       },
