@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { SmartRTScheduler, RT_STRATEGIES } from '@/lib/smart-rt-scheduler'
 import { format, addHours, addDays } from 'date-fns'
@@ -25,7 +25,7 @@ interface ScheduledItem {
   commentText?: string
 }
 
-export default function SmartSchedulerPage() {
+function SmartSchedulerContent() {
   const searchParams = useSearchParams()
   const postId = searchParams.get('postId')
   const draftId = searchParams.get('draftId')
@@ -350,5 +350,15 @@ export default function SmartSchedulerPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SmartSchedulerPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    </div>}>
+      <SmartSchedulerContent />
+    </Suspense>
   )
 }
