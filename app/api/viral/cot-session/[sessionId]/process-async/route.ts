@@ -285,21 +285,27 @@ async function buildContext(session: any, currentPhase: number): Promise<any> {
     }
   }
   
-  // Phase 2用の特別な処理 - opportunitiesとsearchResultsを追加
-  if (currentPhase === 2 && previousResults.phase1Result) {
-    const phase1Result = previousResults.phase1Result
-    // trendedTopicsをopportunitiesとして渡す
-    previousResults.opportunities = phase1Result.trendedTopics || []
-    // Perplexity検索結果も渡す
+  // Phase 2用の特別な処理 - 記事情報を渡す
+  if (currentPhase === 2) {
+    // Phase 1のexecuteResultから直接記事情報を取得
     const phase1 = session.phases.find((p: any) => p.phaseNumber === 1)
     if (phase1?.executeResult) {
-      previousResults.searchResults = phase1.executeResult.savedPerplexityResponses || []
+      // searchResultsを直接articlesとして渡す（INTEGRATEステップをスキップ）
+      previousResults.articles = phase1.executeResult.searchResults || []
+      console.log('[buildContext] Phase 2: Using executeResult directly, articles count:', previousResults.articles.length)
     }
   }
   
-  // Phase 3用の特別な処理 - conceptsを追加
-  if (currentPhase === 3 && previousResults.phase2Result) {
-    previousResults.concepts = previousResults.phase2Result.concepts || []
+  // Phase 3用の特別な処理 - articlesとconceptsを追加
+  if (currentPhase === 3) {
+    // Phase 1のexecuteResultから直接記事情報を取得
+    const phase1 = session.phases.find((p: any) => p.phaseNumber === 1)
+    if (phase1?.executeResult) {
+      previousResults.articles = phase1.executeResult.searchResults || []
+    }
+    if (previousResults.phase2Result) {
+      previousResults.concepts = previousResults.phase2Result.concepts || []
+    }
   }
   
   // Phase 4用の特別な処理 - conceptsとcontentsを追加

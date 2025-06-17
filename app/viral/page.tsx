@@ -72,13 +72,29 @@ export default function ViralOverviewPage() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Link
+          href="/viral/v2/create"
+          className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-6 hover:from-purple-600 hover:to-purple-700 transition-all"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold flex items-center">
+                新規生成 V2
+                <span className="ml-2 bg-white/20 text-xs px-2 py-0.5 rounded">NEW</span>
+              </h3>
+              <p className="text-sm opacity-90 mt-1">シンプルな3ステップ</p>
+            </div>
+            <Sparkles className="w-8 h-8 opacity-80" />
+          </div>
+        </Link>
+        
+        <Link
           href="/viral/cot"
           className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 hover:from-blue-600 hover:to-blue-700 transition-all"
         >
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold">新規生成</h3>
-              <p className="text-sm opacity-90 mt-1">CoTでコンテンツを作成</p>
+              <h3 className="font-semibold">新規生成（旧）</h3>
+              <p className="text-sm opacity-90 mt-1">5フェーズCoT</p>
             </div>
             <Sparkles className="w-8 h-8 opacity-80" />
           </div>

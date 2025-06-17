@@ -486,3 +486,88 @@ enum CotDraftStatus {
   
   @@map("cot_draft_status")
 }
+
+// 新しいシンプルなV2システム
+model ViralSession {
+  id            String   @id @default(cuid())
+  theme         String   // AIと働き方
+  platform      String   // Twitter
+  style         String   // エンターテイメント
+  status        String   @default("CREATED")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  // Step 1の結果
+  topics        Json?    // Perplexityの生データを保存
+  
+  // Step 2の結果
+  concepts      Json?    // 9つのコンセプト
+  selectedIds   String[] @default([]) @map("selected_ids") // 選択されたコンセプトID
+  
+  // Step 3の結果
+  contents      Json?    // 生成されたコンテンツ
+  
+  // リレーション
+  drafts        ViralDraftV2[]
+  
+  @@map("viral_sessions")
+}
+
+model ViralDraftV2 {
+  id              String   @id @default(cuid())
+  sessionId       String   @map("session_id")
+  session         ViralSession @relation(fields: [sessionId], references: [id])
+  
+  // コンテンツ情報
+  conceptId       String   @map("concept_id")
+  title           String
+  content         String   @db.Text
+  hashtags        String[]
+  visualNote      String?  @map("visual_note")
+  
+  // 投稿情報
+  status          String   @default("DRAFT")
+  scheduledAt     DateTime? @map("scheduled_at")
+  postedAt        DateTime? @map("posted_at")
+  tweetId         String?   @map("tweet_id")
+  
+  // パフォーマンス
+  performance     ViralDraftPerformance?
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  @@map("viral_drafts_v2")
+}
+
+model ViralDraftPerformance {
+  id              String   @id @default(cuid())
+  draftId         String   @unique @map("draft_id")
+  draft           ViralDraftV2 @relation(fields: [draftId], references: [id])
+  
+  // 30分後
+  likes30m        Int?     @map("likes_30m")
+  retweets30m     Int?     @map("retweets_30m")
+  replies30m      Int?     @map("replies_30m")
+  impressions30m  Int?     @map("impressions_30m")
+  
+  // 1時間後
+  likes1h         Int?     @map("likes_1h")
+  retweets1h      Int?     @map("retweets_1h")
+  replies1h       Int?     @map("replies_1h")
+  impressions1h   Int?     @map("impressions_1h")
+  
+  // 24時間後
+  likes24h        Int?     @map("likes_24h")
+  retweets24h     Int?     @map("retweets_24h")
+  replies24h      Int?     @map("replies_24h")
+  impressions24h  Int?     @map("impressions_24h")
+  
+  // 計算フィールド
+  engagementRate  Float?   @map("engagement_rate")
+  viralCoefficient Float?  @map("viral_coefficient")
+  
+  collectedAt     DateTime @default(now()) @map("collected_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  @@map("viral_draft_performance")
+}

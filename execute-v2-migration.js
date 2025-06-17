@@ -1,0 +1,20 @@
+// Supabase SQL Editorで実行するためのコード生成スクリプト
+const fs = require('fs')
+const path = require('path')
+
+const sqlPath = path.join(__dirname, 'prisma/migrations/add_viral_v2_tables.sql')
+const sql = fs.readFileSync(sqlPath, 'utf8')
+
+console.log('=== 以下のSQLをSupabase SQL Editorで実行してください ===\n')
+console.log(sql)
+console.log('\n=== SQLここまで ===')
+console.log('\n実行方法:')
+console.log('1. https://supabase.com にアクセス')
+console.log('2. プロジェクトのダッシュボードを開く')
+console.log('3. 左メニューから「SQL Editor」を選択')
+console.log('4. 上記のSQLを貼り付けて「Run」ボタンをクリック')
+console.log('\n期待される結果:')
+console.log('- viral_sessions テーブルの作成')
+console.log('- viral_drafts_v2 テーブルの作成')
+console.log('- viral_draft_performance テーブルの作成')
+console.log('- 必要なインデックスとトリガーの作成')

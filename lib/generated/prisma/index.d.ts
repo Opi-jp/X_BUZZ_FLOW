@@ -113,6 +113,21 @@ export type CotDraft = $Result.DefaultSelection<Prisma.$CotDraftPayload>
  * 
  */
 export type CotDraftPerformance = $Result.DefaultSelection<Prisma.$CotDraftPerformancePayload>
+/**
+ * Model ViralSession
+ * 
+ */
+export type ViralSession = $Result.DefaultSelection<Prisma.$ViralSessionPayload>
+/**
+ * Model ViralDraftV2
+ * 
+ */
+export type ViralDraftV2 = $Result.DefaultSelection<Prisma.$ViralDraftV2Payload>
+/**
+ * Model ViralDraftPerformance
+ * 
+ */
+export type ViralDraftPerformance = $Result.DefaultSelection<Prisma.$ViralDraftPerformancePayload>
 
 /**
  * Enums
@@ -529,6 +544,36 @@ export class PrismaClient<
     * ```
     */
   get cotDraftPerformance(): Prisma.CotDraftPerformanceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.viralSession`: Exposes CRUD operations for the **ViralSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ViralSessions
+    * const viralSessions = await prisma.viralSession.findMany()
+    * ```
+    */
+  get viralSession(): Prisma.ViralSessionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.viralDraftV2`: Exposes CRUD operations for the **ViralDraftV2** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ViralDraftV2s
+    * const viralDraftV2s = await prisma.viralDraftV2.findMany()
+    * ```
+    */
+  get viralDraftV2(): Prisma.ViralDraftV2Delegate<ExtArgs>;
+
+  /**
+   * `prisma.viralDraftPerformance`: Exposes CRUD operations for the **ViralDraftPerformance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ViralDraftPerformances
+    * const viralDraftPerformances = await prisma.viralDraftPerformance.findMany()
+    * ```
+    */
+  get viralDraftPerformance(): Prisma.ViralDraftPerformanceDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -989,7 +1034,10 @@ export namespace Prisma {
     CotSession: 'CotSession',
     CotPhase: 'CotPhase',
     CotDraft: 'CotDraft',
-    CotDraftPerformance: 'CotDraftPerformance'
+    CotDraftPerformance: 'CotDraftPerformance',
+    ViralSession: 'ViralSession',
+    ViralDraftV2: 'ViralDraftV2',
+    ViralDraftPerformance: 'ViralDraftPerformance'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1005,7 +1053,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance"
+      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "viralSession" | "viralDraftV2" | "viralDraftPerformance"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2409,6 +2457,216 @@ export namespace Prisma {
           }
         }
       }
+      ViralSession: {
+        payload: Prisma.$ViralSessionPayload<ExtArgs>
+        fields: Prisma.ViralSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ViralSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ViralSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.ViralSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ViralSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          findMany: {
+            args: Prisma.ViralSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>[]
+          }
+          create: {
+            args: Prisma.ViralSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          createMany: {
+            args: Prisma.ViralSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ViralSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.ViralSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          update: {
+            args: Prisma.ViralSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ViralSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ViralSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ViralSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.ViralSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateViralSession>
+          }
+          groupBy: {
+            args: Prisma.ViralSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ViralSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ViralSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<ViralSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ViralDraftV2: {
+        payload: Prisma.$ViralDraftV2Payload<ExtArgs>
+        fields: Prisma.ViralDraftV2FieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ViralDraftV2FindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ViralDraftV2FindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          findFirst: {
+            args: Prisma.ViralDraftV2FindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ViralDraftV2FindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          findMany: {
+            args: Prisma.ViralDraftV2FindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>[]
+          }
+          create: {
+            args: Prisma.ViralDraftV2CreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          createMany: {
+            args: Prisma.ViralDraftV2CreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ViralDraftV2CreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>[]
+          }
+          delete: {
+            args: Prisma.ViralDraftV2DeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          update: {
+            args: Prisma.ViralDraftV2UpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          deleteMany: {
+            args: Prisma.ViralDraftV2DeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ViralDraftV2UpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ViralDraftV2UpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftV2Payload>
+          }
+          aggregate: {
+            args: Prisma.ViralDraftV2AggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateViralDraftV2>
+          }
+          groupBy: {
+            args: Prisma.ViralDraftV2GroupByArgs<ExtArgs>
+            result: $Utils.Optional<ViralDraftV2GroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ViralDraftV2CountArgs<ExtArgs>
+            result: $Utils.Optional<ViralDraftV2CountAggregateOutputType> | number
+          }
+        }
+      }
+      ViralDraftPerformance: {
+        payload: Prisma.$ViralDraftPerformancePayload<ExtArgs>
+        fields: Prisma.ViralDraftPerformanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ViralDraftPerformanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ViralDraftPerformanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          findFirst: {
+            args: Prisma.ViralDraftPerformanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ViralDraftPerformanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          findMany: {
+            args: Prisma.ViralDraftPerformanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>[]
+          }
+          create: {
+            args: Prisma.ViralDraftPerformanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          createMany: {
+            args: Prisma.ViralDraftPerformanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ViralDraftPerformanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>[]
+          }
+          delete: {
+            args: Prisma.ViralDraftPerformanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          update: {
+            args: Prisma.ViralDraftPerformanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          deleteMany: {
+            args: Prisma.ViralDraftPerformanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ViralDraftPerformanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ViralDraftPerformanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ViralDraftPerformancePayload>
+          }
+          aggregate: {
+            args: Prisma.ViralDraftPerformanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateViralDraftPerformance>
+          }
+          groupBy: {
+            args: Prisma.ViralDraftPerformanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ViralDraftPerformanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ViralDraftPerformanceCountArgs<ExtArgs>
+            result: $Utils.Optional<ViralDraftPerformanceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2806,6 +3064,37 @@ export namespace Prisma {
    */
   export type CotSessionCountOutputTypeCountDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CotDraftWhereInput
+  }
+
+
+  /**
+   * Count Type ViralSessionCountOutputType
+   */
+
+  export type ViralSessionCountOutputType = {
+    drafts: number
+  }
+
+  export type ViralSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    drafts?: boolean | ViralSessionCountOutputTypeCountDraftsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ViralSessionCountOutputType without action
+   */
+  export type ViralSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSessionCountOutputType
+     */
+    select?: ViralSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ViralSessionCountOutputType without action
+   */
+  export type ViralSessionCountOutputTypeCountDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ViralDraftV2WhereInput
   }
 
 
@@ -23514,6 +23803,3217 @@ export namespace Prisma {
 
 
   /**
+   * Model ViralSession
+   */
+
+  export type AggregateViralSession = {
+    _count: ViralSessionCountAggregateOutputType | null
+    _min: ViralSessionMinAggregateOutputType | null
+    _max: ViralSessionMaxAggregateOutputType | null
+  }
+
+  export type ViralSessionMinAggregateOutputType = {
+    id: string | null
+    theme: string | null
+    platform: string | null
+    style: string | null
+    status: string | null
+    createdAt: Date | null
+  }
+
+  export type ViralSessionMaxAggregateOutputType = {
+    id: string | null
+    theme: string | null
+    platform: string | null
+    style: string | null
+    status: string | null
+    createdAt: Date | null
+  }
+
+  export type ViralSessionCountAggregateOutputType = {
+    id: number
+    theme: number
+    platform: number
+    style: number
+    status: number
+    createdAt: number
+    topics: number
+    concepts: number
+    selectedIds: number
+    contents: number
+    _all: number
+  }
+
+
+  export type ViralSessionMinAggregateInputType = {
+    id?: true
+    theme?: true
+    platform?: true
+    style?: true
+    status?: true
+    createdAt?: true
+  }
+
+  export type ViralSessionMaxAggregateInputType = {
+    id?: true
+    theme?: true
+    platform?: true
+    style?: true
+    status?: true
+    createdAt?: true
+  }
+
+  export type ViralSessionCountAggregateInputType = {
+    id?: true
+    theme?: true
+    platform?: true
+    style?: true
+    status?: true
+    createdAt?: true
+    topics?: true
+    concepts?: true
+    selectedIds?: true
+    contents?: true
+    _all?: true
+  }
+
+  export type ViralSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralSession to aggregate.
+     */
+    where?: ViralSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralSessions to fetch.
+     */
+    orderBy?: ViralSessionOrderByWithRelationInput | ViralSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ViralSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ViralSessions
+    **/
+    _count?: true | ViralSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ViralSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ViralSessionMaxAggregateInputType
+  }
+
+  export type GetViralSessionAggregateType<T extends ViralSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateViralSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateViralSession[P]>
+      : GetScalarType<T[P], AggregateViralSession[P]>
+  }
+
+
+
+
+  export type ViralSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ViralSessionWhereInput
+    orderBy?: ViralSessionOrderByWithAggregationInput | ViralSessionOrderByWithAggregationInput[]
+    by: ViralSessionScalarFieldEnum[] | ViralSessionScalarFieldEnum
+    having?: ViralSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ViralSessionCountAggregateInputType | true
+    _min?: ViralSessionMinAggregateInputType
+    _max?: ViralSessionMaxAggregateInputType
+  }
+
+  export type ViralSessionGroupByOutputType = {
+    id: string
+    theme: string
+    platform: string
+    style: string
+    status: string
+    createdAt: Date
+    topics: JsonValue | null
+    concepts: JsonValue | null
+    selectedIds: string[]
+    contents: JsonValue | null
+    _count: ViralSessionCountAggregateOutputType | null
+    _min: ViralSessionMinAggregateOutputType | null
+    _max: ViralSessionMaxAggregateOutputType | null
+  }
+
+  type GetViralSessionGroupByPayload<T extends ViralSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ViralSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ViralSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ViralSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], ViralSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ViralSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    theme?: boolean
+    platform?: boolean
+    style?: boolean
+    status?: boolean
+    createdAt?: boolean
+    topics?: boolean
+    concepts?: boolean
+    selectedIds?: boolean
+    contents?: boolean
+    drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
+    _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["viralSession"]>
+
+  export type ViralSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    theme?: boolean
+    platform?: boolean
+    style?: boolean
+    status?: boolean
+    createdAt?: boolean
+    topics?: boolean
+    concepts?: boolean
+    selectedIds?: boolean
+    contents?: boolean
+  }, ExtArgs["result"]["viralSession"]>
+
+  export type ViralSessionSelectScalar = {
+    id?: boolean
+    theme?: boolean
+    platform?: boolean
+    style?: boolean
+    status?: boolean
+    createdAt?: boolean
+    topics?: boolean
+    concepts?: boolean
+    selectedIds?: boolean
+    contents?: boolean
+  }
+
+  export type ViralSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
+    _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ViralSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ViralSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ViralSession"
+    objects: {
+      drafts: Prisma.$ViralDraftV2Payload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      theme: string
+      platform: string
+      style: string
+      status: string
+      createdAt: Date
+      topics: Prisma.JsonValue | null
+      concepts: Prisma.JsonValue | null
+      selectedIds: string[]
+      contents: Prisma.JsonValue | null
+    }, ExtArgs["result"]["viralSession"]>
+    composites: {}
+  }
+
+  type ViralSessionGetPayload<S extends boolean | null | undefined | ViralSessionDefaultArgs> = $Result.GetResult<Prisma.$ViralSessionPayload, S>
+
+  type ViralSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ViralSessionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ViralSessionCountAggregateInputType | true
+    }
+
+  export interface ViralSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ViralSession'], meta: { name: 'ViralSession' } }
+    /**
+     * Find zero or one ViralSession that matches the filter.
+     * @param {ViralSessionFindUniqueArgs} args - Arguments to find a ViralSession
+     * @example
+     * // Get one ViralSession
+     * const viralSession = await prisma.viralSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ViralSessionFindUniqueArgs>(args: SelectSubset<T, ViralSessionFindUniqueArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ViralSession that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ViralSessionFindUniqueOrThrowArgs} args - Arguments to find a ViralSession
+     * @example
+     * // Get one ViralSession
+     * const viralSession = await prisma.viralSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ViralSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, ViralSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ViralSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionFindFirstArgs} args - Arguments to find a ViralSession
+     * @example
+     * // Get one ViralSession
+     * const viralSession = await prisma.viralSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ViralSessionFindFirstArgs>(args?: SelectSubset<T, ViralSessionFindFirstArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ViralSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionFindFirstOrThrowArgs} args - Arguments to find a ViralSession
+     * @example
+     * // Get one ViralSession
+     * const viralSession = await prisma.viralSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ViralSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, ViralSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ViralSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ViralSessions
+     * const viralSessions = await prisma.viralSession.findMany()
+     * 
+     * // Get first 10 ViralSessions
+     * const viralSessions = await prisma.viralSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const viralSessionWithIdOnly = await prisma.viralSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ViralSessionFindManyArgs>(args?: SelectSubset<T, ViralSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ViralSession.
+     * @param {ViralSessionCreateArgs} args - Arguments to create a ViralSession.
+     * @example
+     * // Create one ViralSession
+     * const ViralSession = await prisma.viralSession.create({
+     *   data: {
+     *     // ... data to create a ViralSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends ViralSessionCreateArgs>(args: SelectSubset<T, ViralSessionCreateArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ViralSessions.
+     * @param {ViralSessionCreateManyArgs} args - Arguments to create many ViralSessions.
+     * @example
+     * // Create many ViralSessions
+     * const viralSession = await prisma.viralSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ViralSessionCreateManyArgs>(args?: SelectSubset<T, ViralSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ViralSessions and returns the data saved in the database.
+     * @param {ViralSessionCreateManyAndReturnArgs} args - Arguments to create many ViralSessions.
+     * @example
+     * // Create many ViralSessions
+     * const viralSession = await prisma.viralSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ViralSessions and only return the `id`
+     * const viralSessionWithIdOnly = await prisma.viralSession.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ViralSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, ViralSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ViralSession.
+     * @param {ViralSessionDeleteArgs} args - Arguments to delete one ViralSession.
+     * @example
+     * // Delete one ViralSession
+     * const ViralSession = await prisma.viralSession.delete({
+     *   where: {
+     *     // ... filter to delete one ViralSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ViralSessionDeleteArgs>(args: SelectSubset<T, ViralSessionDeleteArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ViralSession.
+     * @param {ViralSessionUpdateArgs} args - Arguments to update one ViralSession.
+     * @example
+     * // Update one ViralSession
+     * const viralSession = await prisma.viralSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ViralSessionUpdateArgs>(args: SelectSubset<T, ViralSessionUpdateArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ViralSessions.
+     * @param {ViralSessionDeleteManyArgs} args - Arguments to filter ViralSessions to delete.
+     * @example
+     * // Delete a few ViralSessions
+     * const { count } = await prisma.viralSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ViralSessionDeleteManyArgs>(args?: SelectSubset<T, ViralSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ViralSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ViralSessions
+     * const viralSession = await prisma.viralSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ViralSessionUpdateManyArgs>(args: SelectSubset<T, ViralSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ViralSession.
+     * @param {ViralSessionUpsertArgs} args - Arguments to update or create a ViralSession.
+     * @example
+     * // Update or create a ViralSession
+     * const viralSession = await prisma.viralSession.upsert({
+     *   create: {
+     *     // ... data to create a ViralSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ViralSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ViralSessionUpsertArgs>(args: SelectSubset<T, ViralSessionUpsertArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ViralSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionCountArgs} args - Arguments to filter ViralSessions to count.
+     * @example
+     * // Count the number of ViralSessions
+     * const count = await prisma.viralSession.count({
+     *   where: {
+     *     // ... the filter for the ViralSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ViralSessionCountArgs>(
+      args?: Subset<T, ViralSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ViralSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ViralSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ViralSessionAggregateArgs>(args: Subset<T, ViralSessionAggregateArgs>): Prisma.PrismaPromise<GetViralSessionAggregateType<T>>
+
+    /**
+     * Group by ViralSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ViralSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ViralSessionGroupByArgs['orderBy'] }
+        : { orderBy?: ViralSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ViralSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetViralSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ViralSession model
+   */
+  readonly fields: ViralSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ViralSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ViralSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    drafts<T extends ViralSession$draftsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$draftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ViralSession model
+   */ 
+  interface ViralSessionFieldRefs {
+    readonly id: FieldRef<"ViralSession", 'String'>
+    readonly theme: FieldRef<"ViralSession", 'String'>
+    readonly platform: FieldRef<"ViralSession", 'String'>
+    readonly style: FieldRef<"ViralSession", 'String'>
+    readonly status: FieldRef<"ViralSession", 'String'>
+    readonly createdAt: FieldRef<"ViralSession", 'DateTime'>
+    readonly topics: FieldRef<"ViralSession", 'Json'>
+    readonly concepts: FieldRef<"ViralSession", 'Json'>
+    readonly selectedIds: FieldRef<"ViralSession", 'String[]'>
+    readonly contents: FieldRef<"ViralSession", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ViralSession findUnique
+   */
+  export type ViralSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralSession to fetch.
+     */
+    where: ViralSessionWhereUniqueInput
+  }
+
+  /**
+   * ViralSession findUniqueOrThrow
+   */
+  export type ViralSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralSession to fetch.
+     */
+    where: ViralSessionWhereUniqueInput
+  }
+
+  /**
+   * ViralSession findFirst
+   */
+  export type ViralSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralSession to fetch.
+     */
+    where?: ViralSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralSessions to fetch.
+     */
+    orderBy?: ViralSessionOrderByWithRelationInput | ViralSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralSessions.
+     */
+    cursor?: ViralSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralSessions.
+     */
+    distinct?: ViralSessionScalarFieldEnum | ViralSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ViralSession findFirstOrThrow
+   */
+  export type ViralSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralSession to fetch.
+     */
+    where?: ViralSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralSessions to fetch.
+     */
+    orderBy?: ViralSessionOrderByWithRelationInput | ViralSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralSessions.
+     */
+    cursor?: ViralSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralSessions.
+     */
+    distinct?: ViralSessionScalarFieldEnum | ViralSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ViralSession findMany
+   */
+  export type ViralSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralSessions to fetch.
+     */
+    where?: ViralSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralSessions to fetch.
+     */
+    orderBy?: ViralSessionOrderByWithRelationInput | ViralSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ViralSessions.
+     */
+    cursor?: ViralSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralSessions.
+     */
+    skip?: number
+    distinct?: ViralSessionScalarFieldEnum | ViralSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ViralSession create
+   */
+  export type ViralSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ViralSession.
+     */
+    data: XOR<ViralSessionCreateInput, ViralSessionUncheckedCreateInput>
+  }
+
+  /**
+   * ViralSession createMany
+   */
+  export type ViralSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ViralSessions.
+     */
+    data: ViralSessionCreateManyInput | ViralSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ViralSession createManyAndReturn
+   */
+  export type ViralSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ViralSessions.
+     */
+    data: ViralSessionCreateManyInput | ViralSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ViralSession update
+   */
+  export type ViralSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ViralSession.
+     */
+    data: XOR<ViralSessionUpdateInput, ViralSessionUncheckedUpdateInput>
+    /**
+     * Choose, which ViralSession to update.
+     */
+    where: ViralSessionWhereUniqueInput
+  }
+
+  /**
+   * ViralSession updateMany
+   */
+  export type ViralSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ViralSessions.
+     */
+    data: XOR<ViralSessionUpdateManyMutationInput, ViralSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which ViralSessions to update
+     */
+    where?: ViralSessionWhereInput
+  }
+
+  /**
+   * ViralSession upsert
+   */
+  export type ViralSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ViralSession to update in case it exists.
+     */
+    where: ViralSessionWhereUniqueInput
+    /**
+     * In case the ViralSession found by the `where` argument doesn't exist, create a new ViralSession with this data.
+     */
+    create: XOR<ViralSessionCreateInput, ViralSessionUncheckedCreateInput>
+    /**
+     * In case the ViralSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ViralSessionUpdateInput, ViralSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * ViralSession delete
+   */
+  export type ViralSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    /**
+     * Filter which ViralSession to delete.
+     */
+    where: ViralSessionWhereUniqueInput
+  }
+
+  /**
+   * ViralSession deleteMany
+   */
+  export type ViralSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralSessions to delete
+     */
+    where?: ViralSessionWhereInput
+  }
+
+  /**
+   * ViralSession.drafts
+   */
+  export type ViralSession$draftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    where?: ViralDraftV2WhereInput
+    orderBy?: ViralDraftV2OrderByWithRelationInput | ViralDraftV2OrderByWithRelationInput[]
+    cursor?: ViralDraftV2WhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ViralDraftV2ScalarFieldEnum | ViralDraftV2ScalarFieldEnum[]
+  }
+
+  /**
+   * ViralSession without action
+   */
+  export type ViralSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ViralDraftV2
+   */
+
+  export type AggregateViralDraftV2 = {
+    _count: ViralDraftV2CountAggregateOutputType | null
+    _min: ViralDraftV2MinAggregateOutputType | null
+    _max: ViralDraftV2MaxAggregateOutputType | null
+  }
+
+  export type ViralDraftV2MinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    conceptId: string | null
+    title: string | null
+    content: string | null
+    visualNote: string | null
+    status: string | null
+    scheduledAt: Date | null
+    postedAt: Date | null
+    tweetId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ViralDraftV2MaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    conceptId: string | null
+    title: string | null
+    content: string | null
+    visualNote: string | null
+    status: string | null
+    scheduledAt: Date | null
+    postedAt: Date | null
+    tweetId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ViralDraftV2CountAggregateOutputType = {
+    id: number
+    sessionId: number
+    conceptId: number
+    title: number
+    content: number
+    hashtags: number
+    visualNote: number
+    status: number
+    scheduledAt: number
+    postedAt: number
+    tweetId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ViralDraftV2MinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    conceptId?: true
+    title?: true
+    content?: true
+    visualNote?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    tweetId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ViralDraftV2MaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    conceptId?: true
+    title?: true
+    content?: true
+    visualNote?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    tweetId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ViralDraftV2CountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    conceptId?: true
+    title?: true
+    content?: true
+    hashtags?: true
+    visualNote?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    tweetId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ViralDraftV2AggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralDraftV2 to aggregate.
+     */
+    where?: ViralDraftV2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftV2s to fetch.
+     */
+    orderBy?: ViralDraftV2OrderByWithRelationInput | ViralDraftV2OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ViralDraftV2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftV2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftV2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ViralDraftV2s
+    **/
+    _count?: true | ViralDraftV2CountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ViralDraftV2MinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ViralDraftV2MaxAggregateInputType
+  }
+
+  export type GetViralDraftV2AggregateType<T extends ViralDraftV2AggregateArgs> = {
+        [P in keyof T & keyof AggregateViralDraftV2]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateViralDraftV2[P]>
+      : GetScalarType<T[P], AggregateViralDraftV2[P]>
+  }
+
+
+
+
+  export type ViralDraftV2GroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ViralDraftV2WhereInput
+    orderBy?: ViralDraftV2OrderByWithAggregationInput | ViralDraftV2OrderByWithAggregationInput[]
+    by: ViralDraftV2ScalarFieldEnum[] | ViralDraftV2ScalarFieldEnum
+    having?: ViralDraftV2ScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ViralDraftV2CountAggregateInputType | true
+    _min?: ViralDraftV2MinAggregateInputType
+    _max?: ViralDraftV2MaxAggregateInputType
+  }
+
+  export type ViralDraftV2GroupByOutputType = {
+    id: string
+    sessionId: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags: string[]
+    visualNote: string | null
+    status: string
+    scheduledAt: Date | null
+    postedAt: Date | null
+    tweetId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ViralDraftV2CountAggregateOutputType | null
+    _min: ViralDraftV2MinAggregateOutputType | null
+    _max: ViralDraftV2MaxAggregateOutputType | null
+  }
+
+  type GetViralDraftV2GroupByPayload<T extends ViralDraftV2GroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ViralDraftV2GroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ViralDraftV2GroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ViralDraftV2GroupByOutputType[P]>
+            : GetScalarType<T[P], ViralDraftV2GroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ViralDraftV2Select<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    conceptId?: boolean
+    title?: boolean
+    content?: boolean
+    hashtags?: boolean
+    visualNote?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    tweetId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+    performance?: boolean | ViralDraftV2$performanceArgs<ExtArgs>
+  }, ExtArgs["result"]["viralDraftV2"]>
+
+  export type ViralDraftV2SelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    conceptId?: boolean
+    title?: boolean
+    content?: boolean
+    hashtags?: boolean
+    visualNote?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    tweetId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["viralDraftV2"]>
+
+  export type ViralDraftV2SelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    conceptId?: boolean
+    title?: boolean
+    content?: boolean
+    hashtags?: boolean
+    visualNote?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    tweetId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ViralDraftV2Include<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+    performance?: boolean | ViralDraftV2$performanceArgs<ExtArgs>
+  }
+  export type ViralDraftV2IncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $ViralDraftV2Payload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ViralDraftV2"
+    objects: {
+      session: Prisma.$ViralSessionPayload<ExtArgs>
+      performance: Prisma.$ViralDraftPerformancePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      conceptId: string
+      title: string
+      content: string
+      hashtags: string[]
+      visualNote: string | null
+      status: string
+      scheduledAt: Date | null
+      postedAt: Date | null
+      tweetId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["viralDraftV2"]>
+    composites: {}
+  }
+
+  type ViralDraftV2GetPayload<S extends boolean | null | undefined | ViralDraftV2DefaultArgs> = $Result.GetResult<Prisma.$ViralDraftV2Payload, S>
+
+  type ViralDraftV2CountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ViralDraftV2FindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ViralDraftV2CountAggregateInputType | true
+    }
+
+  export interface ViralDraftV2Delegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ViralDraftV2'], meta: { name: 'ViralDraftV2' } }
+    /**
+     * Find zero or one ViralDraftV2 that matches the filter.
+     * @param {ViralDraftV2FindUniqueArgs} args - Arguments to find a ViralDraftV2
+     * @example
+     * // Get one ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ViralDraftV2FindUniqueArgs>(args: SelectSubset<T, ViralDraftV2FindUniqueArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ViralDraftV2 that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ViralDraftV2FindUniqueOrThrowArgs} args - Arguments to find a ViralDraftV2
+     * @example
+     * // Get one ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ViralDraftV2FindUniqueOrThrowArgs>(args: SelectSubset<T, ViralDraftV2FindUniqueOrThrowArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ViralDraftV2 that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2FindFirstArgs} args - Arguments to find a ViralDraftV2
+     * @example
+     * // Get one ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ViralDraftV2FindFirstArgs>(args?: SelectSubset<T, ViralDraftV2FindFirstArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ViralDraftV2 that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2FindFirstOrThrowArgs} args - Arguments to find a ViralDraftV2
+     * @example
+     * // Get one ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ViralDraftV2FindFirstOrThrowArgs>(args?: SelectSubset<T, ViralDraftV2FindFirstOrThrowArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ViralDraftV2s that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2FindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ViralDraftV2s
+     * const viralDraftV2s = await prisma.viralDraftV2.findMany()
+     * 
+     * // Get first 10 ViralDraftV2s
+     * const viralDraftV2s = await prisma.viralDraftV2.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const viralDraftV2WithIdOnly = await prisma.viralDraftV2.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ViralDraftV2FindManyArgs>(args?: SelectSubset<T, ViralDraftV2FindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ViralDraftV2.
+     * @param {ViralDraftV2CreateArgs} args - Arguments to create a ViralDraftV2.
+     * @example
+     * // Create one ViralDraftV2
+     * const ViralDraftV2 = await prisma.viralDraftV2.create({
+     *   data: {
+     *     // ... data to create a ViralDraftV2
+     *   }
+     * })
+     * 
+     */
+    create<T extends ViralDraftV2CreateArgs>(args: SelectSubset<T, ViralDraftV2CreateArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ViralDraftV2s.
+     * @param {ViralDraftV2CreateManyArgs} args - Arguments to create many ViralDraftV2s.
+     * @example
+     * // Create many ViralDraftV2s
+     * const viralDraftV2 = await prisma.viralDraftV2.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ViralDraftV2CreateManyArgs>(args?: SelectSubset<T, ViralDraftV2CreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ViralDraftV2s and returns the data saved in the database.
+     * @param {ViralDraftV2CreateManyAndReturnArgs} args - Arguments to create many ViralDraftV2s.
+     * @example
+     * // Create many ViralDraftV2s
+     * const viralDraftV2 = await prisma.viralDraftV2.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ViralDraftV2s and only return the `id`
+     * const viralDraftV2WithIdOnly = await prisma.viralDraftV2.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ViralDraftV2CreateManyAndReturnArgs>(args?: SelectSubset<T, ViralDraftV2CreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ViralDraftV2.
+     * @param {ViralDraftV2DeleteArgs} args - Arguments to delete one ViralDraftV2.
+     * @example
+     * // Delete one ViralDraftV2
+     * const ViralDraftV2 = await prisma.viralDraftV2.delete({
+     *   where: {
+     *     // ... filter to delete one ViralDraftV2
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ViralDraftV2DeleteArgs>(args: SelectSubset<T, ViralDraftV2DeleteArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ViralDraftV2.
+     * @param {ViralDraftV2UpdateArgs} args - Arguments to update one ViralDraftV2.
+     * @example
+     * // Update one ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ViralDraftV2UpdateArgs>(args: SelectSubset<T, ViralDraftV2UpdateArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ViralDraftV2s.
+     * @param {ViralDraftV2DeleteManyArgs} args - Arguments to filter ViralDraftV2s to delete.
+     * @example
+     * // Delete a few ViralDraftV2s
+     * const { count } = await prisma.viralDraftV2.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ViralDraftV2DeleteManyArgs>(args?: SelectSubset<T, ViralDraftV2DeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ViralDraftV2s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2UpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ViralDraftV2s
+     * const viralDraftV2 = await prisma.viralDraftV2.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ViralDraftV2UpdateManyArgs>(args: SelectSubset<T, ViralDraftV2UpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ViralDraftV2.
+     * @param {ViralDraftV2UpsertArgs} args - Arguments to update or create a ViralDraftV2.
+     * @example
+     * // Update or create a ViralDraftV2
+     * const viralDraftV2 = await prisma.viralDraftV2.upsert({
+     *   create: {
+     *     // ... data to create a ViralDraftV2
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ViralDraftV2 we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ViralDraftV2UpsertArgs>(args: SelectSubset<T, ViralDraftV2UpsertArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ViralDraftV2s.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2CountArgs} args - Arguments to filter ViralDraftV2s to count.
+     * @example
+     * // Count the number of ViralDraftV2s
+     * const count = await prisma.viralDraftV2.count({
+     *   where: {
+     *     // ... the filter for the ViralDraftV2s we want to count
+     *   }
+     * })
+    **/
+    count<T extends ViralDraftV2CountArgs>(
+      args?: Subset<T, ViralDraftV2CountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ViralDraftV2CountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ViralDraftV2.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2AggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ViralDraftV2AggregateArgs>(args: Subset<T, ViralDraftV2AggregateArgs>): Prisma.PrismaPromise<GetViralDraftV2AggregateType<T>>
+
+    /**
+     * Group by ViralDraftV2.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftV2GroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ViralDraftV2GroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ViralDraftV2GroupByArgs['orderBy'] }
+        : { orderBy?: ViralDraftV2GroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ViralDraftV2GroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetViralDraftV2GroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ViralDraftV2 model
+   */
+  readonly fields: ViralDraftV2FieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ViralDraftV2.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ViralDraftV2Client<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends ViralSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ViralSessionDefaultArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    performance<T extends ViralDraftV2$performanceArgs<ExtArgs> = {}>(args?: Subset<T, ViralDraftV2$performanceArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ViralDraftV2 model
+   */ 
+  interface ViralDraftV2FieldRefs {
+    readonly id: FieldRef<"ViralDraftV2", 'String'>
+    readonly sessionId: FieldRef<"ViralDraftV2", 'String'>
+    readonly conceptId: FieldRef<"ViralDraftV2", 'String'>
+    readonly title: FieldRef<"ViralDraftV2", 'String'>
+    readonly content: FieldRef<"ViralDraftV2", 'String'>
+    readonly hashtags: FieldRef<"ViralDraftV2", 'String[]'>
+    readonly visualNote: FieldRef<"ViralDraftV2", 'String'>
+    readonly status: FieldRef<"ViralDraftV2", 'String'>
+    readonly scheduledAt: FieldRef<"ViralDraftV2", 'DateTime'>
+    readonly postedAt: FieldRef<"ViralDraftV2", 'DateTime'>
+    readonly tweetId: FieldRef<"ViralDraftV2", 'String'>
+    readonly createdAt: FieldRef<"ViralDraftV2", 'DateTime'>
+    readonly updatedAt: FieldRef<"ViralDraftV2", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ViralDraftV2 findUnique
+   */
+  export type ViralDraftV2FindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftV2 to fetch.
+     */
+    where: ViralDraftV2WhereUniqueInput
+  }
+
+  /**
+   * ViralDraftV2 findUniqueOrThrow
+   */
+  export type ViralDraftV2FindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftV2 to fetch.
+     */
+    where: ViralDraftV2WhereUniqueInput
+  }
+
+  /**
+   * ViralDraftV2 findFirst
+   */
+  export type ViralDraftV2FindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftV2 to fetch.
+     */
+    where?: ViralDraftV2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftV2s to fetch.
+     */
+    orderBy?: ViralDraftV2OrderByWithRelationInput | ViralDraftV2OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralDraftV2s.
+     */
+    cursor?: ViralDraftV2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftV2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftV2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralDraftV2s.
+     */
+    distinct?: ViralDraftV2ScalarFieldEnum | ViralDraftV2ScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftV2 findFirstOrThrow
+   */
+  export type ViralDraftV2FindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftV2 to fetch.
+     */
+    where?: ViralDraftV2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftV2s to fetch.
+     */
+    orderBy?: ViralDraftV2OrderByWithRelationInput | ViralDraftV2OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralDraftV2s.
+     */
+    cursor?: ViralDraftV2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftV2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftV2s.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralDraftV2s.
+     */
+    distinct?: ViralDraftV2ScalarFieldEnum | ViralDraftV2ScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftV2 findMany
+   */
+  export type ViralDraftV2FindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftV2s to fetch.
+     */
+    where?: ViralDraftV2WhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftV2s to fetch.
+     */
+    orderBy?: ViralDraftV2OrderByWithRelationInput | ViralDraftV2OrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ViralDraftV2s.
+     */
+    cursor?: ViralDraftV2WhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftV2s from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftV2s.
+     */
+    skip?: number
+    distinct?: ViralDraftV2ScalarFieldEnum | ViralDraftV2ScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftV2 create
+   */
+  export type ViralDraftV2CreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * The data needed to create a ViralDraftV2.
+     */
+    data: XOR<ViralDraftV2CreateInput, ViralDraftV2UncheckedCreateInput>
+  }
+
+  /**
+   * ViralDraftV2 createMany
+   */
+  export type ViralDraftV2CreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ViralDraftV2s.
+     */
+    data: ViralDraftV2CreateManyInput | ViralDraftV2CreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ViralDraftV2 createManyAndReturn
+   */
+  export type ViralDraftV2CreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2SelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ViralDraftV2s.
+     */
+    data: ViralDraftV2CreateManyInput | ViralDraftV2CreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2IncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ViralDraftV2 update
+   */
+  export type ViralDraftV2UpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * The data needed to update a ViralDraftV2.
+     */
+    data: XOR<ViralDraftV2UpdateInput, ViralDraftV2UncheckedUpdateInput>
+    /**
+     * Choose, which ViralDraftV2 to update.
+     */
+    where: ViralDraftV2WhereUniqueInput
+  }
+
+  /**
+   * ViralDraftV2 updateMany
+   */
+  export type ViralDraftV2UpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ViralDraftV2s.
+     */
+    data: XOR<ViralDraftV2UpdateManyMutationInput, ViralDraftV2UncheckedUpdateManyInput>
+    /**
+     * Filter which ViralDraftV2s to update
+     */
+    where?: ViralDraftV2WhereInput
+  }
+
+  /**
+   * ViralDraftV2 upsert
+   */
+  export type ViralDraftV2UpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * The filter to search for the ViralDraftV2 to update in case it exists.
+     */
+    where: ViralDraftV2WhereUniqueInput
+    /**
+     * In case the ViralDraftV2 found by the `where` argument doesn't exist, create a new ViralDraftV2 with this data.
+     */
+    create: XOR<ViralDraftV2CreateInput, ViralDraftV2UncheckedCreateInput>
+    /**
+     * In case the ViralDraftV2 was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ViralDraftV2UpdateInput, ViralDraftV2UncheckedUpdateInput>
+  }
+
+  /**
+   * ViralDraftV2 delete
+   */
+  export type ViralDraftV2DeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    /**
+     * Filter which ViralDraftV2 to delete.
+     */
+    where: ViralDraftV2WhereUniqueInput
+  }
+
+  /**
+   * ViralDraftV2 deleteMany
+   */
+  export type ViralDraftV2DeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralDraftV2s to delete
+     */
+    where?: ViralDraftV2WhereInput
+  }
+
+  /**
+   * ViralDraftV2.performance
+   */
+  export type ViralDraftV2$performanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    where?: ViralDraftPerformanceWhereInput
+  }
+
+  /**
+   * ViralDraftV2 without action
+   */
+  export type ViralDraftV2DefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ViralDraftPerformance
+   */
+
+  export type AggregateViralDraftPerformance = {
+    _count: ViralDraftPerformanceCountAggregateOutputType | null
+    _avg: ViralDraftPerformanceAvgAggregateOutputType | null
+    _sum: ViralDraftPerformanceSumAggregateOutputType | null
+    _min: ViralDraftPerformanceMinAggregateOutputType | null
+    _max: ViralDraftPerformanceMaxAggregateOutputType | null
+  }
+
+  export type ViralDraftPerformanceAvgAggregateOutputType = {
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+  }
+
+  export type ViralDraftPerformanceSumAggregateOutputType = {
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+  }
+
+  export type ViralDraftPerformanceMinAggregateOutputType = {
+    id: string | null
+    draftId: string | null
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ViralDraftPerformanceMaxAggregateOutputType = {
+    id: string | null
+    draftId: string | null
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ViralDraftPerformanceCountAggregateOutputType = {
+    id: number
+    draftId: number
+    likes30m: number
+    retweets30m: number
+    replies30m: number
+    impressions30m: number
+    likes1h: number
+    retweets1h: number
+    replies1h: number
+    impressions1h: number
+    likes24h: number
+    retweets24h: number
+    replies24h: number
+    impressions24h: number
+    engagementRate: number
+    viralCoefficient: number
+    collectedAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ViralDraftPerformanceAvgAggregateInputType = {
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+  }
+
+  export type ViralDraftPerformanceSumAggregateInputType = {
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+  }
+
+  export type ViralDraftPerformanceMinAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type ViralDraftPerformanceMaxAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type ViralDraftPerformanceCountAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ViralDraftPerformanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralDraftPerformance to aggregate.
+     */
+    where?: ViralDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftPerformances to fetch.
+     */
+    orderBy?: ViralDraftPerformanceOrderByWithRelationInput | ViralDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ViralDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ViralDraftPerformances
+    **/
+    _count?: true | ViralDraftPerformanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ViralDraftPerformanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ViralDraftPerformanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ViralDraftPerformanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ViralDraftPerformanceMaxAggregateInputType
+  }
+
+  export type GetViralDraftPerformanceAggregateType<T extends ViralDraftPerformanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateViralDraftPerformance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateViralDraftPerformance[P]>
+      : GetScalarType<T[P], AggregateViralDraftPerformance[P]>
+  }
+
+
+
+
+  export type ViralDraftPerformanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ViralDraftPerformanceWhereInput
+    orderBy?: ViralDraftPerformanceOrderByWithAggregationInput | ViralDraftPerformanceOrderByWithAggregationInput[]
+    by: ViralDraftPerformanceScalarFieldEnum[] | ViralDraftPerformanceScalarFieldEnum
+    having?: ViralDraftPerformanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ViralDraftPerformanceCountAggregateInputType | true
+    _avg?: ViralDraftPerformanceAvgAggregateInputType
+    _sum?: ViralDraftPerformanceSumAggregateInputType
+    _min?: ViralDraftPerformanceMinAggregateInputType
+    _max?: ViralDraftPerformanceMaxAggregateInputType
+  }
+
+  export type ViralDraftPerformanceGroupByOutputType = {
+    id: string
+    draftId: string
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date
+    updatedAt: Date
+    _count: ViralDraftPerformanceCountAggregateOutputType | null
+    _avg: ViralDraftPerformanceAvgAggregateOutputType | null
+    _sum: ViralDraftPerformanceSumAggregateOutputType | null
+    _min: ViralDraftPerformanceMinAggregateOutputType | null
+    _max: ViralDraftPerformanceMaxAggregateOutputType | null
+  }
+
+  type GetViralDraftPerformanceGroupByPayload<T extends ViralDraftPerformanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ViralDraftPerformanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ViralDraftPerformanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ViralDraftPerformanceGroupByOutputType[P]>
+            : GetScalarType<T[P], ViralDraftPerformanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ViralDraftPerformanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+    draft?: boolean | ViralDraftV2DefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["viralDraftPerformance"]>
+
+  export type ViralDraftPerformanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+    draft?: boolean | ViralDraftV2DefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["viralDraftPerformance"]>
+
+  export type ViralDraftPerformanceSelectScalar = {
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ViralDraftPerformanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    draft?: boolean | ViralDraftV2DefaultArgs<ExtArgs>
+  }
+  export type ViralDraftPerformanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    draft?: boolean | ViralDraftV2DefaultArgs<ExtArgs>
+  }
+
+  export type $ViralDraftPerformancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ViralDraftPerformance"
+    objects: {
+      draft: Prisma.$ViralDraftV2Payload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      draftId: string
+      likes30m: number | null
+      retweets30m: number | null
+      replies30m: number | null
+      impressions30m: number | null
+      likes1h: number | null
+      retweets1h: number | null
+      replies1h: number | null
+      impressions1h: number | null
+      likes24h: number | null
+      retweets24h: number | null
+      replies24h: number | null
+      impressions24h: number | null
+      engagementRate: number | null
+      viralCoefficient: number | null
+      collectedAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["viralDraftPerformance"]>
+    composites: {}
+  }
+
+  type ViralDraftPerformanceGetPayload<S extends boolean | null | undefined | ViralDraftPerformanceDefaultArgs> = $Result.GetResult<Prisma.$ViralDraftPerformancePayload, S>
+
+  type ViralDraftPerformanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ViralDraftPerformanceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ViralDraftPerformanceCountAggregateInputType | true
+    }
+
+  export interface ViralDraftPerformanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ViralDraftPerformance'], meta: { name: 'ViralDraftPerformance' } }
+    /**
+     * Find zero or one ViralDraftPerformance that matches the filter.
+     * @param {ViralDraftPerformanceFindUniqueArgs} args - Arguments to find a ViralDraftPerformance
+     * @example
+     * // Get one ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ViralDraftPerformanceFindUniqueArgs>(args: SelectSubset<T, ViralDraftPerformanceFindUniqueArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ViralDraftPerformance that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ViralDraftPerformanceFindUniqueOrThrowArgs} args - Arguments to find a ViralDraftPerformance
+     * @example
+     * // Get one ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ViralDraftPerformanceFindUniqueOrThrowArgs>(args: SelectSubset<T, ViralDraftPerformanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ViralDraftPerformance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceFindFirstArgs} args - Arguments to find a ViralDraftPerformance
+     * @example
+     * // Get one ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ViralDraftPerformanceFindFirstArgs>(args?: SelectSubset<T, ViralDraftPerformanceFindFirstArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ViralDraftPerformance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceFindFirstOrThrowArgs} args - Arguments to find a ViralDraftPerformance
+     * @example
+     * // Get one ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ViralDraftPerformanceFindFirstOrThrowArgs>(args?: SelectSubset<T, ViralDraftPerformanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ViralDraftPerformances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ViralDraftPerformances
+     * const viralDraftPerformances = await prisma.viralDraftPerformance.findMany()
+     * 
+     * // Get first 10 ViralDraftPerformances
+     * const viralDraftPerformances = await prisma.viralDraftPerformance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const viralDraftPerformanceWithIdOnly = await prisma.viralDraftPerformance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ViralDraftPerformanceFindManyArgs>(args?: SelectSubset<T, ViralDraftPerformanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ViralDraftPerformance.
+     * @param {ViralDraftPerformanceCreateArgs} args - Arguments to create a ViralDraftPerformance.
+     * @example
+     * // Create one ViralDraftPerformance
+     * const ViralDraftPerformance = await prisma.viralDraftPerformance.create({
+     *   data: {
+     *     // ... data to create a ViralDraftPerformance
+     *   }
+     * })
+     * 
+     */
+    create<T extends ViralDraftPerformanceCreateArgs>(args: SelectSubset<T, ViralDraftPerformanceCreateArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ViralDraftPerformances.
+     * @param {ViralDraftPerformanceCreateManyArgs} args - Arguments to create many ViralDraftPerformances.
+     * @example
+     * // Create many ViralDraftPerformances
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ViralDraftPerformanceCreateManyArgs>(args?: SelectSubset<T, ViralDraftPerformanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ViralDraftPerformances and returns the data saved in the database.
+     * @param {ViralDraftPerformanceCreateManyAndReturnArgs} args - Arguments to create many ViralDraftPerformances.
+     * @example
+     * // Create many ViralDraftPerformances
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ViralDraftPerformances and only return the `id`
+     * const viralDraftPerformanceWithIdOnly = await prisma.viralDraftPerformance.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ViralDraftPerformanceCreateManyAndReturnArgs>(args?: SelectSubset<T, ViralDraftPerformanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ViralDraftPerformance.
+     * @param {ViralDraftPerformanceDeleteArgs} args - Arguments to delete one ViralDraftPerformance.
+     * @example
+     * // Delete one ViralDraftPerformance
+     * const ViralDraftPerformance = await prisma.viralDraftPerformance.delete({
+     *   where: {
+     *     // ... filter to delete one ViralDraftPerformance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ViralDraftPerformanceDeleteArgs>(args: SelectSubset<T, ViralDraftPerformanceDeleteArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ViralDraftPerformance.
+     * @param {ViralDraftPerformanceUpdateArgs} args - Arguments to update one ViralDraftPerformance.
+     * @example
+     * // Update one ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ViralDraftPerformanceUpdateArgs>(args: SelectSubset<T, ViralDraftPerformanceUpdateArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ViralDraftPerformances.
+     * @param {ViralDraftPerformanceDeleteManyArgs} args - Arguments to filter ViralDraftPerformances to delete.
+     * @example
+     * // Delete a few ViralDraftPerformances
+     * const { count } = await prisma.viralDraftPerformance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ViralDraftPerformanceDeleteManyArgs>(args?: SelectSubset<T, ViralDraftPerformanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ViralDraftPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ViralDraftPerformances
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ViralDraftPerformanceUpdateManyArgs>(args: SelectSubset<T, ViralDraftPerformanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ViralDraftPerformance.
+     * @param {ViralDraftPerformanceUpsertArgs} args - Arguments to update or create a ViralDraftPerformance.
+     * @example
+     * // Update or create a ViralDraftPerformance
+     * const viralDraftPerformance = await prisma.viralDraftPerformance.upsert({
+     *   create: {
+     *     // ... data to create a ViralDraftPerformance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ViralDraftPerformance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ViralDraftPerformanceUpsertArgs>(args: SelectSubset<T, ViralDraftPerformanceUpsertArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ViralDraftPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceCountArgs} args - Arguments to filter ViralDraftPerformances to count.
+     * @example
+     * // Count the number of ViralDraftPerformances
+     * const count = await prisma.viralDraftPerformance.count({
+     *   where: {
+     *     // ... the filter for the ViralDraftPerformances we want to count
+     *   }
+     * })
+    **/
+    count<T extends ViralDraftPerformanceCountArgs>(
+      args?: Subset<T, ViralDraftPerformanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ViralDraftPerformanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ViralDraftPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ViralDraftPerformanceAggregateArgs>(args: Subset<T, ViralDraftPerformanceAggregateArgs>): Prisma.PrismaPromise<GetViralDraftPerformanceAggregateType<T>>
+
+    /**
+     * Group by ViralDraftPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ViralDraftPerformanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ViralDraftPerformanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ViralDraftPerformanceGroupByArgs['orderBy'] }
+        : { orderBy?: ViralDraftPerformanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ViralDraftPerformanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetViralDraftPerformanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ViralDraftPerformance model
+   */
+  readonly fields: ViralDraftPerformanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ViralDraftPerformance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ViralDraftPerformanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    draft<T extends ViralDraftV2DefaultArgs<ExtArgs> = {}>(args?: Subset<T, ViralDraftV2DefaultArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ViralDraftPerformance model
+   */ 
+  interface ViralDraftPerformanceFieldRefs {
+    readonly id: FieldRef<"ViralDraftPerformance", 'String'>
+    readonly draftId: FieldRef<"ViralDraftPerformance", 'String'>
+    readonly likes30m: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly retweets30m: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly replies30m: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly impressions30m: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly likes1h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly retweets1h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly replies1h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly impressions1h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly likes24h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly retweets24h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly replies24h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly impressions24h: FieldRef<"ViralDraftPerformance", 'Int'>
+    readonly engagementRate: FieldRef<"ViralDraftPerformance", 'Float'>
+    readonly viralCoefficient: FieldRef<"ViralDraftPerformance", 'Float'>
+    readonly collectedAt: FieldRef<"ViralDraftPerformance", 'DateTime'>
+    readonly updatedAt: FieldRef<"ViralDraftPerformance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ViralDraftPerformance findUnique
+   */
+  export type ViralDraftPerformanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftPerformance to fetch.
+     */
+    where: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * ViralDraftPerformance findUniqueOrThrow
+   */
+  export type ViralDraftPerformanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftPerformance to fetch.
+     */
+    where: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * ViralDraftPerformance findFirst
+   */
+  export type ViralDraftPerformanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftPerformance to fetch.
+     */
+    where?: ViralDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftPerformances to fetch.
+     */
+    orderBy?: ViralDraftPerformanceOrderByWithRelationInput | ViralDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralDraftPerformances.
+     */
+    cursor?: ViralDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralDraftPerformances.
+     */
+    distinct?: ViralDraftPerformanceScalarFieldEnum | ViralDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftPerformance findFirstOrThrow
+   */
+  export type ViralDraftPerformanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftPerformance to fetch.
+     */
+    where?: ViralDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftPerformances to fetch.
+     */
+    orderBy?: ViralDraftPerformanceOrderByWithRelationInput | ViralDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ViralDraftPerformances.
+     */
+    cursor?: ViralDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ViralDraftPerformances.
+     */
+    distinct?: ViralDraftPerformanceScalarFieldEnum | ViralDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftPerformance findMany
+   */
+  export type ViralDraftPerformanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which ViralDraftPerformances to fetch.
+     */
+    where?: ViralDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ViralDraftPerformances to fetch.
+     */
+    orderBy?: ViralDraftPerformanceOrderByWithRelationInput | ViralDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ViralDraftPerformances.
+     */
+    cursor?: ViralDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ViralDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ViralDraftPerformances.
+     */
+    skip?: number
+    distinct?: ViralDraftPerformanceScalarFieldEnum | ViralDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * ViralDraftPerformance create
+   */
+  export type ViralDraftPerformanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ViralDraftPerformance.
+     */
+    data: XOR<ViralDraftPerformanceCreateInput, ViralDraftPerformanceUncheckedCreateInput>
+  }
+
+  /**
+   * ViralDraftPerformance createMany
+   */
+  export type ViralDraftPerformanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ViralDraftPerformances.
+     */
+    data: ViralDraftPerformanceCreateManyInput | ViralDraftPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ViralDraftPerformance createManyAndReturn
+   */
+  export type ViralDraftPerformanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ViralDraftPerformances.
+     */
+    data: ViralDraftPerformanceCreateManyInput | ViralDraftPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ViralDraftPerformance update
+   */
+  export type ViralDraftPerformanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ViralDraftPerformance.
+     */
+    data: XOR<ViralDraftPerformanceUpdateInput, ViralDraftPerformanceUncheckedUpdateInput>
+    /**
+     * Choose, which ViralDraftPerformance to update.
+     */
+    where: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * ViralDraftPerformance updateMany
+   */
+  export type ViralDraftPerformanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ViralDraftPerformances.
+     */
+    data: XOR<ViralDraftPerformanceUpdateManyMutationInput, ViralDraftPerformanceUncheckedUpdateManyInput>
+    /**
+     * Filter which ViralDraftPerformances to update
+     */
+    where?: ViralDraftPerformanceWhereInput
+  }
+
+  /**
+   * ViralDraftPerformance upsert
+   */
+  export type ViralDraftPerformanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ViralDraftPerformance to update in case it exists.
+     */
+    where: ViralDraftPerformanceWhereUniqueInput
+    /**
+     * In case the ViralDraftPerformance found by the `where` argument doesn't exist, create a new ViralDraftPerformance with this data.
+     */
+    create: XOR<ViralDraftPerformanceCreateInput, ViralDraftPerformanceUncheckedCreateInput>
+    /**
+     * In case the ViralDraftPerformance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ViralDraftPerformanceUpdateInput, ViralDraftPerformanceUncheckedUpdateInput>
+  }
+
+  /**
+   * ViralDraftPerformance delete
+   */
+  export type ViralDraftPerformanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter which ViralDraftPerformance to delete.
+     */
+    where: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * ViralDraftPerformance deleteMany
+   */
+  export type ViralDraftPerformanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ViralDraftPerformances to delete
+     */
+    where?: ViralDraftPerformanceWhereInput
+  }
+
+  /**
+   * ViralDraftPerformance without action
+   */
+  export type ViralDraftPerformanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftPerformance
+     */
+    select?: ViralDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftPerformanceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -23876,6 +27376,65 @@ export namespace Prisma {
   };
 
   export type CotDraftPerformanceScalarFieldEnum = (typeof CotDraftPerformanceScalarFieldEnum)[keyof typeof CotDraftPerformanceScalarFieldEnum]
+
+
+  export const ViralSessionScalarFieldEnum: {
+    id: 'id',
+    theme: 'theme',
+    platform: 'platform',
+    style: 'style',
+    status: 'status',
+    createdAt: 'createdAt',
+    topics: 'topics',
+    concepts: 'concepts',
+    selectedIds: 'selectedIds',
+    contents: 'contents'
+  };
+
+  export type ViralSessionScalarFieldEnum = (typeof ViralSessionScalarFieldEnum)[keyof typeof ViralSessionScalarFieldEnum]
+
+
+  export const ViralDraftV2ScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    conceptId: 'conceptId',
+    title: 'title',
+    content: 'content',
+    hashtags: 'hashtags',
+    visualNote: 'visualNote',
+    status: 'status',
+    scheduledAt: 'scheduledAt',
+    postedAt: 'postedAt',
+    tweetId: 'tweetId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ViralDraftV2ScalarFieldEnum = (typeof ViralDraftV2ScalarFieldEnum)[keyof typeof ViralDraftV2ScalarFieldEnum]
+
+
+  export const ViralDraftPerformanceScalarFieldEnum: {
+    id: 'id',
+    draftId: 'draftId',
+    likes30m: 'likes30m',
+    retweets30m: 'retweets30m',
+    replies30m: 'replies30m',
+    impressions30m: 'impressions30m',
+    likes1h: 'likes1h',
+    retweets1h: 'retweets1h',
+    replies1h: 'replies1h',
+    impressions1h: 'impressions1h',
+    likes24h: 'likes24h',
+    retweets24h: 'retweets24h',
+    replies24h: 'replies24h',
+    impressions24h: 'impressions24h',
+    engagementRate: 'engagementRate',
+    viralCoefficient: 'viralCoefficient',
+    collectedAt: 'collectedAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ViralDraftPerformanceScalarFieldEnum = (typeof ViralDraftPerformanceScalarFieldEnum)[keyof typeof ViralDraftPerformanceScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -25878,6 +29437,306 @@ export namespace Prisma {
     viralCoefficient?: FloatNullableWithAggregatesFilter<"CotDraftPerformance"> | number | null
     collectedAt?: DateTimeWithAggregatesFilter<"CotDraftPerformance"> | Date | string
     lastUpdateAt?: DateTimeWithAggregatesFilter<"CotDraftPerformance"> | Date | string
+  }
+
+  export type ViralSessionWhereInput = {
+    AND?: ViralSessionWhereInput | ViralSessionWhereInput[]
+    OR?: ViralSessionWhereInput[]
+    NOT?: ViralSessionWhereInput | ViralSessionWhereInput[]
+    id?: StringFilter<"ViralSession"> | string
+    theme?: StringFilter<"ViralSession"> | string
+    platform?: StringFilter<"ViralSession"> | string
+    style?: StringFilter<"ViralSession"> | string
+    status?: StringFilter<"ViralSession"> | string
+    createdAt?: DateTimeFilter<"ViralSession"> | Date | string
+    topics?: JsonNullableFilter<"ViralSession">
+    concepts?: JsonNullableFilter<"ViralSession">
+    selectedIds?: StringNullableListFilter<"ViralSession">
+    contents?: JsonNullableFilter<"ViralSession">
+    drafts?: ViralDraftV2ListRelationFilter
+  }
+
+  export type ViralSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    theme?: SortOrder
+    platform?: SortOrder
+    style?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    topics?: SortOrderInput | SortOrder
+    concepts?: SortOrderInput | SortOrder
+    selectedIds?: SortOrder
+    contents?: SortOrderInput | SortOrder
+    drafts?: ViralDraftV2OrderByRelationAggregateInput
+  }
+
+  export type ViralSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ViralSessionWhereInput | ViralSessionWhereInput[]
+    OR?: ViralSessionWhereInput[]
+    NOT?: ViralSessionWhereInput | ViralSessionWhereInput[]
+    theme?: StringFilter<"ViralSession"> | string
+    platform?: StringFilter<"ViralSession"> | string
+    style?: StringFilter<"ViralSession"> | string
+    status?: StringFilter<"ViralSession"> | string
+    createdAt?: DateTimeFilter<"ViralSession"> | Date | string
+    topics?: JsonNullableFilter<"ViralSession">
+    concepts?: JsonNullableFilter<"ViralSession">
+    selectedIds?: StringNullableListFilter<"ViralSession">
+    contents?: JsonNullableFilter<"ViralSession">
+    drafts?: ViralDraftV2ListRelationFilter
+  }, "id">
+
+  export type ViralSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    theme?: SortOrder
+    platform?: SortOrder
+    style?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    topics?: SortOrderInput | SortOrder
+    concepts?: SortOrderInput | SortOrder
+    selectedIds?: SortOrder
+    contents?: SortOrderInput | SortOrder
+    _count?: ViralSessionCountOrderByAggregateInput
+    _max?: ViralSessionMaxOrderByAggregateInput
+    _min?: ViralSessionMinOrderByAggregateInput
+  }
+
+  export type ViralSessionScalarWhereWithAggregatesInput = {
+    AND?: ViralSessionScalarWhereWithAggregatesInput | ViralSessionScalarWhereWithAggregatesInput[]
+    OR?: ViralSessionScalarWhereWithAggregatesInput[]
+    NOT?: ViralSessionScalarWhereWithAggregatesInput | ViralSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ViralSession"> | string
+    theme?: StringWithAggregatesFilter<"ViralSession"> | string
+    platform?: StringWithAggregatesFilter<"ViralSession"> | string
+    style?: StringWithAggregatesFilter<"ViralSession"> | string
+    status?: StringWithAggregatesFilter<"ViralSession"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ViralSession"> | Date | string
+    topics?: JsonNullableWithAggregatesFilter<"ViralSession">
+    concepts?: JsonNullableWithAggregatesFilter<"ViralSession">
+    selectedIds?: StringNullableListFilter<"ViralSession">
+    contents?: JsonNullableWithAggregatesFilter<"ViralSession">
+  }
+
+  export type ViralDraftV2WhereInput = {
+    AND?: ViralDraftV2WhereInput | ViralDraftV2WhereInput[]
+    OR?: ViralDraftV2WhereInput[]
+    NOT?: ViralDraftV2WhereInput | ViralDraftV2WhereInput[]
+    id?: StringFilter<"ViralDraftV2"> | string
+    sessionId?: StringFilter<"ViralDraftV2"> | string
+    conceptId?: StringFilter<"ViralDraftV2"> | string
+    title?: StringFilter<"ViralDraftV2"> | string
+    content?: StringFilter<"ViralDraftV2"> | string
+    hashtags?: StringNullableListFilter<"ViralDraftV2">
+    visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    status?: StringFilter<"ViralDraftV2"> | string
+    scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    tweetId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    createdAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+    updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+    session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
+    performance?: XOR<ViralDraftPerformanceNullableRelationFilter, ViralDraftPerformanceWhereInput> | null
+  }
+
+  export type ViralDraftV2OrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    conceptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    hashtags?: SortOrder
+    visualNote?: SortOrderInput | SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    postedAt?: SortOrderInput | SortOrder
+    tweetId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    session?: ViralSessionOrderByWithRelationInput
+    performance?: ViralDraftPerformanceOrderByWithRelationInput
+  }
+
+  export type ViralDraftV2WhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ViralDraftV2WhereInput | ViralDraftV2WhereInput[]
+    OR?: ViralDraftV2WhereInput[]
+    NOT?: ViralDraftV2WhereInput | ViralDraftV2WhereInput[]
+    sessionId?: StringFilter<"ViralDraftV2"> | string
+    conceptId?: StringFilter<"ViralDraftV2"> | string
+    title?: StringFilter<"ViralDraftV2"> | string
+    content?: StringFilter<"ViralDraftV2"> | string
+    hashtags?: StringNullableListFilter<"ViralDraftV2">
+    visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    status?: StringFilter<"ViralDraftV2"> | string
+    scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    tweetId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    createdAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+    updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+    session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
+    performance?: XOR<ViralDraftPerformanceNullableRelationFilter, ViralDraftPerformanceWhereInput> | null
+  }, "id">
+
+  export type ViralDraftV2OrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    conceptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    hashtags?: SortOrder
+    visualNote?: SortOrderInput | SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    postedAt?: SortOrderInput | SortOrder
+    tweetId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ViralDraftV2CountOrderByAggregateInput
+    _max?: ViralDraftV2MaxOrderByAggregateInput
+    _min?: ViralDraftV2MinOrderByAggregateInput
+  }
+
+  export type ViralDraftV2ScalarWhereWithAggregatesInput = {
+    AND?: ViralDraftV2ScalarWhereWithAggregatesInput | ViralDraftV2ScalarWhereWithAggregatesInput[]
+    OR?: ViralDraftV2ScalarWhereWithAggregatesInput[]
+    NOT?: ViralDraftV2ScalarWhereWithAggregatesInput | ViralDraftV2ScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    sessionId?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    conceptId?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    title?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    content?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    hashtags?: StringNullableListFilter<"ViralDraftV2">
+    visualNote?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
+    status?: StringWithAggregatesFilter<"ViralDraftV2"> | string
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"ViralDraftV2"> | Date | string | null
+    postedAt?: DateTimeNullableWithAggregatesFilter<"ViralDraftV2"> | Date | string | null
+    tweetId?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ViralDraftV2"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ViralDraftV2"> | Date | string
+  }
+
+  export type ViralDraftPerformanceWhereInput = {
+    AND?: ViralDraftPerformanceWhereInput | ViralDraftPerformanceWhereInput[]
+    OR?: ViralDraftPerformanceWhereInput[]
+    NOT?: ViralDraftPerformanceWhereInput | ViralDraftPerformanceWhereInput[]
+    id?: StringFilter<"ViralDraftPerformance"> | string
+    draftId?: StringFilter<"ViralDraftPerformance"> | string
+    likes30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    likes1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    likes24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    engagementRate?: FloatNullableFilter<"ViralDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"ViralDraftPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"ViralDraftPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"ViralDraftPerformance"> | Date | string
+    draft?: XOR<ViralDraftV2RelationFilter, ViralDraftV2WhereInput>
+  }
+
+  export type ViralDraftPerformanceOrderByWithRelationInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrderInput | SortOrder
+    retweets30m?: SortOrderInput | SortOrder
+    replies30m?: SortOrderInput | SortOrder
+    impressions30m?: SortOrderInput | SortOrder
+    likes1h?: SortOrderInput | SortOrder
+    retweets1h?: SortOrderInput | SortOrder
+    replies1h?: SortOrderInput | SortOrder
+    impressions1h?: SortOrderInput | SortOrder
+    likes24h?: SortOrderInput | SortOrder
+    retweets24h?: SortOrderInput | SortOrder
+    replies24h?: SortOrderInput | SortOrder
+    impressions24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+    draft?: ViralDraftV2OrderByWithRelationInput
+  }
+
+  export type ViralDraftPerformanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    draftId?: string
+    AND?: ViralDraftPerformanceWhereInput | ViralDraftPerformanceWhereInput[]
+    OR?: ViralDraftPerformanceWhereInput[]
+    NOT?: ViralDraftPerformanceWhereInput | ViralDraftPerformanceWhereInput[]
+    likes30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions30m?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    likes1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions1h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    likes24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    retweets24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    replies24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    impressions24h?: IntNullableFilter<"ViralDraftPerformance"> | number | null
+    engagementRate?: FloatNullableFilter<"ViralDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"ViralDraftPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"ViralDraftPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"ViralDraftPerformance"> | Date | string
+    draft?: XOR<ViralDraftV2RelationFilter, ViralDraftV2WhereInput>
+  }, "id" | "draftId">
+
+  export type ViralDraftPerformanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrderInput | SortOrder
+    retweets30m?: SortOrderInput | SortOrder
+    replies30m?: SortOrderInput | SortOrder
+    impressions30m?: SortOrderInput | SortOrder
+    likes1h?: SortOrderInput | SortOrder
+    retweets1h?: SortOrderInput | SortOrder
+    replies1h?: SortOrderInput | SortOrder
+    impressions1h?: SortOrderInput | SortOrder
+    likes24h?: SortOrderInput | SortOrder
+    retweets24h?: SortOrderInput | SortOrder
+    replies24h?: SortOrderInput | SortOrder
+    impressions24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ViralDraftPerformanceCountOrderByAggregateInput
+    _avg?: ViralDraftPerformanceAvgOrderByAggregateInput
+    _max?: ViralDraftPerformanceMaxOrderByAggregateInput
+    _min?: ViralDraftPerformanceMinOrderByAggregateInput
+    _sum?: ViralDraftPerformanceSumOrderByAggregateInput
+  }
+
+  export type ViralDraftPerformanceScalarWhereWithAggregatesInput = {
+    AND?: ViralDraftPerformanceScalarWhereWithAggregatesInput | ViralDraftPerformanceScalarWhereWithAggregatesInput[]
+    OR?: ViralDraftPerformanceScalarWhereWithAggregatesInput[]
+    NOT?: ViralDraftPerformanceScalarWhereWithAggregatesInput | ViralDraftPerformanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ViralDraftPerformance"> | string
+    draftId?: StringWithAggregatesFilter<"ViralDraftPerformance"> | string
+    likes30m?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    retweets30m?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    replies30m?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    impressions30m?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    likes1h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    retweets1h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    replies1h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    impressions1h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    likes24h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    retweets24h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    replies24h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    impressions24h?: IntNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    engagementRate?: FloatNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
+    collectedAt?: DateTimeWithAggregatesFilter<"ViralDraftPerformance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ViralDraftPerformance"> | Date | string
   }
 
   export type BuzzPostCreateInput = {
@@ -27953,6 +31812,362 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ViralSessionCreateInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionUncheckedCreateInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+  }
+
+  export type ViralSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ViralSessionCreateManyInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralDraftV2CreateInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: ViralSessionCreateNestedOneWithoutDraftsInput
+    performance?: ViralDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2UncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2UpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ViralSessionUpdateOneRequiredWithoutDraftsNestedInput
+    performance?: ViralDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type ViralDraftV2UncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type ViralDraftV2CreateManyInput = {
+    id?: string
+    sessionId: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftV2UpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftV2UncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftPerformanceCreateInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+    draft: ViralDraftV2CreateNestedOneWithoutPerformanceInput
+  }
+
+  export type ViralDraftPerformanceUncheckedCreateInput = {
+    id?: string
+    draftId: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftPerformanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    draft?: ViralDraftV2UpdateOneRequiredWithoutPerformanceNestedInput
+  }
+
+  export type ViralDraftPerformanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    draftId?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftPerformanceCreateManyInput = {
+    id?: string
+    draftId: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftPerformanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftPerformanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    draftId?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29556,6 +33771,205 @@ export namespace Prisma {
     viralCoefficient?: SortOrder
   }
 
+  export type ViralDraftV2ListRelationFilter = {
+    every?: ViralDraftV2WhereInput
+    some?: ViralDraftV2WhereInput
+    none?: ViralDraftV2WhereInput
+  }
+
+  export type ViralDraftV2OrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ViralSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    theme?: SortOrder
+    platform?: SortOrder
+    style?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    topics?: SortOrder
+    concepts?: SortOrder
+    selectedIds?: SortOrder
+    contents?: SortOrder
+  }
+
+  export type ViralSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    theme?: SortOrder
+    platform?: SortOrder
+    style?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ViralSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    theme?: SortOrder
+    platform?: SortOrder
+    style?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ViralSessionRelationFilter = {
+    is?: ViralSessionWhereInput
+    isNot?: ViralSessionWhereInput
+  }
+
+  export type ViralDraftPerformanceNullableRelationFilter = {
+    is?: ViralDraftPerformanceWhereInput | null
+    isNot?: ViralDraftPerformanceWhereInput | null
+  }
+
+  export type ViralDraftV2CountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    conceptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    hashtags?: SortOrder
+    visualNote?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    tweetId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftV2MaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    conceptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    visualNote?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    tweetId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftV2MinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    conceptId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    visualNote?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    tweetId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftV2RelationFilter = {
+    is?: ViralDraftV2WhereInput
+    isNot?: ViralDraftV2WhereInput
+  }
+
+  export type ViralDraftPerformanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftPerformanceAvgOrderByAggregateInput = {
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+  }
+
+  export type ViralDraftPerformanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftPerformanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ViralDraftPerformanceSumOrderByAggregateInput = {
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+  }
+
   export type ScheduledPostCreateNestedManyWithoutRefPostInput = {
     create?: XOR<ScheduledPostCreateWithoutRefPostInput, ScheduledPostUncheckedCreateWithoutRefPostInput> | ScheduledPostCreateWithoutRefPostInput[] | ScheduledPostUncheckedCreateWithoutRefPostInput[]
     connectOrCreate?: ScheduledPostCreateOrConnectWithoutRefPostInput | ScheduledPostCreateOrConnectWithoutRefPostInput[]
@@ -30324,6 +34738,126 @@ export namespace Prisma {
     upsert?: CotDraftUpsertWithoutPerformanceInput
     connect?: CotDraftWhereUniqueInput
     update?: XOR<XOR<CotDraftUpdateToOneWithWhereWithoutPerformanceInput, CotDraftUpdateWithoutPerformanceInput>, CotDraftUncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type ViralSessionCreateselectedIdsInput = {
+    set: string[]
+  }
+
+  export type ViralDraftV2CreateNestedManyWithoutSessionInput = {
+    create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
+    createMany?: ViralDraftV2CreateManySessionInputEnvelope
+    connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+  }
+
+  export type ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
+    createMany?: ViralDraftV2CreateManySessionInputEnvelope
+    connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+  }
+
+  export type ViralSessionUpdateselectedIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ViralDraftV2UpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
+    upsert?: ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput | ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ViralDraftV2CreateManySessionInputEnvelope
+    set?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    disconnect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    delete?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    update?: ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput | ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ViralDraftV2UpdateManyWithWhereWithoutSessionInput | ViralDraftV2UpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+  }
+
+  export type ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
+    upsert?: ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput | ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ViralDraftV2CreateManySessionInputEnvelope
+    set?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    disconnect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    delete?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+    update?: ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput | ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ViralDraftV2UpdateManyWithWhereWithoutSessionInput | ViralDraftV2UpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+  }
+
+  export type ViralDraftV2CreatehashtagsInput = {
+    set: string[]
+  }
+
+  export type ViralSessionCreateNestedOneWithoutDraftsInput = {
+    create?: XOR<ViralSessionCreateWithoutDraftsInput, ViralSessionUncheckedCreateWithoutDraftsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutDraftsInput
+    connect?: ViralSessionWhereUniqueInput
+  }
+
+  export type ViralDraftPerformanceCreateNestedOneWithoutDraftInput = {
+    create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
+    connect?: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  export type ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput = {
+    create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
+    connect?: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  export type ViralDraftV2UpdatehashtagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ViralSessionUpdateOneRequiredWithoutDraftsNestedInput = {
+    create?: XOR<ViralSessionCreateWithoutDraftsInput, ViralSessionUncheckedCreateWithoutDraftsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutDraftsInput
+    upsert?: ViralSessionUpsertWithoutDraftsInput
+    connect?: ViralSessionWhereUniqueInput
+    update?: XOR<XOR<ViralSessionUpdateToOneWithWhereWithoutDraftsInput, ViralSessionUpdateWithoutDraftsInput>, ViralSessionUncheckedUpdateWithoutDraftsInput>
+  }
+
+  export type ViralDraftPerformanceUpdateOneWithoutDraftNestedInput = {
+    create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
+    upsert?: ViralDraftPerformanceUpsertWithoutDraftInput
+    disconnect?: ViralDraftPerformanceWhereInput | boolean
+    delete?: ViralDraftPerformanceWhereInput | boolean
+    connect?: ViralDraftPerformanceWhereUniqueInput
+    update?: XOR<XOR<ViralDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, ViralDraftPerformanceUpdateWithoutDraftInput>, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput = {
+    create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
+    upsert?: ViralDraftPerformanceUpsertWithoutDraftInput
+    disconnect?: ViralDraftPerformanceWhereInput | boolean
+    delete?: ViralDraftPerformanceWhereInput | boolean
+    connect?: ViralDraftPerformanceWhereUniqueInput
+    update?: XOR<XOR<ViralDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, ViralDraftPerformanceUpdateWithoutDraftInput>, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type ViralDraftV2CreateNestedOneWithoutPerformanceInput = {
+    create?: XOR<ViralDraftV2CreateWithoutPerformanceInput, ViralDraftV2UncheckedCreateWithoutPerformanceInput>
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutPerformanceInput
+    connect?: ViralDraftV2WhereUniqueInput
+  }
+
+  export type ViralDraftV2UpdateOneRequiredWithoutPerformanceNestedInput = {
+    create?: XOR<ViralDraftV2CreateWithoutPerformanceInput, ViralDraftV2UncheckedCreateWithoutPerformanceInput>
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutPerformanceInput
+    upsert?: ViralDraftV2UpsertWithoutPerformanceInput
+    connect?: ViralDraftV2WhereUniqueInput
+    update?: XOR<XOR<ViralDraftV2UpdateToOneWithWhereWithoutPerformanceInput, ViralDraftV2UpdateWithoutPerformanceInput>, ViralDraftV2UncheckedUpdateWithoutPerformanceInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -32540,6 +37074,327 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ViralDraftV2CreateWithoutSessionInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: ViralDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2UncheckedCreateWithoutSessionInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2CreateOrConnectWithoutSessionInput = {
+    where: ViralDraftV2WhereUniqueInput
+    create: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput>
+  }
+
+  export type ViralDraftV2CreateManySessionInputEnvelope = {
+    data: ViralDraftV2CreateManySessionInput | ViralDraftV2CreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput = {
+    where: ViralDraftV2WhereUniqueInput
+    update: XOR<ViralDraftV2UpdateWithoutSessionInput, ViralDraftV2UncheckedUpdateWithoutSessionInput>
+    create: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput>
+  }
+
+  export type ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput = {
+    where: ViralDraftV2WhereUniqueInput
+    data: XOR<ViralDraftV2UpdateWithoutSessionInput, ViralDraftV2UncheckedUpdateWithoutSessionInput>
+  }
+
+  export type ViralDraftV2UpdateManyWithWhereWithoutSessionInput = {
+    where: ViralDraftV2ScalarWhereInput
+    data: XOR<ViralDraftV2UpdateManyMutationInput, ViralDraftV2UncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type ViralDraftV2ScalarWhereInput = {
+    AND?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+    OR?: ViralDraftV2ScalarWhereInput[]
+    NOT?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+    id?: StringFilter<"ViralDraftV2"> | string
+    sessionId?: StringFilter<"ViralDraftV2"> | string
+    conceptId?: StringFilter<"ViralDraftV2"> | string
+    title?: StringFilter<"ViralDraftV2"> | string
+    content?: StringFilter<"ViralDraftV2"> | string
+    hashtags?: StringNullableListFilter<"ViralDraftV2">
+    visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    status?: StringFilter<"ViralDraftV2"> | string
+    scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
+    tweetId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    createdAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+    updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+  }
+
+  export type ViralSessionCreateWithoutDraftsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionUncheckedCreateWithoutDraftsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionCreateOrConnectWithoutDraftsInput = {
+    where: ViralSessionWhereUniqueInput
+    create: XOR<ViralSessionCreateWithoutDraftsInput, ViralSessionUncheckedCreateWithoutDraftsInput>
+  }
+
+  export type ViralDraftPerformanceCreateWithoutDraftInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftPerformanceUncheckedCreateWithoutDraftInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftPerformanceCreateOrConnectWithoutDraftInput = {
+    where: ViralDraftPerformanceWhereUniqueInput
+    create: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+  }
+
+  export type ViralSessionUpsertWithoutDraftsInput = {
+    update: XOR<ViralSessionUpdateWithoutDraftsInput, ViralSessionUncheckedUpdateWithoutDraftsInput>
+    create: XOR<ViralSessionCreateWithoutDraftsInput, ViralSessionUncheckedCreateWithoutDraftsInput>
+    where?: ViralSessionWhereInput
+  }
+
+  export type ViralSessionUpdateToOneWithWhereWithoutDraftsInput = {
+    where?: ViralSessionWhereInput
+    data: XOR<ViralSessionUpdateWithoutDraftsInput, ViralSessionUncheckedUpdateWithoutDraftsInput>
+  }
+
+  export type ViralSessionUpdateWithoutDraftsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionUncheckedUpdateWithoutDraftsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralDraftPerformanceUpsertWithoutDraftInput = {
+    update: XOR<ViralDraftPerformanceUpdateWithoutDraftInput, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
+    create: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
+    where?: ViralDraftPerformanceWhereInput
+  }
+
+  export type ViralDraftPerformanceUpdateToOneWithWhereWithoutDraftInput = {
+    where?: ViralDraftPerformanceWhereInput
+    data: XOR<ViralDraftPerformanceUpdateWithoutDraftInput, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type ViralDraftPerformanceUpdateWithoutDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftPerformanceUncheckedUpdateWithoutDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralDraftV2CreateWithoutPerformanceInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: ViralSessionCreateNestedOneWithoutDraftsInput
+  }
+
+  export type ViralDraftV2UncheckedCreateWithoutPerformanceInput = {
+    id?: string
+    sessionId: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftV2CreateOrConnectWithoutPerformanceInput = {
+    where: ViralDraftV2WhereUniqueInput
+    create: XOR<ViralDraftV2CreateWithoutPerformanceInput, ViralDraftV2UncheckedCreateWithoutPerformanceInput>
+  }
+
+  export type ViralDraftV2UpsertWithoutPerformanceInput = {
+    update: XOR<ViralDraftV2UpdateWithoutPerformanceInput, ViralDraftV2UncheckedUpdateWithoutPerformanceInput>
+    create: XOR<ViralDraftV2CreateWithoutPerformanceInput, ViralDraftV2UncheckedCreateWithoutPerformanceInput>
+    where?: ViralDraftV2WhereInput
+  }
+
+  export type ViralDraftV2UpdateToOneWithWhereWithoutPerformanceInput = {
+    where?: ViralDraftV2WhereInput
+    data: XOR<ViralDraftV2UpdateWithoutPerformanceInput, ViralDraftV2UncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type ViralDraftV2UpdateWithoutPerformanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ViralSessionUpdateOneRequiredWithoutDraftsNestedInput
+  }
+
+  export type ViralDraftV2UncheckedUpdateWithoutPerformanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ScheduledPostCreateManyRefPostInput = {
     id?: string
     content: string
@@ -33062,6 +37917,68 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ViralDraftV2CreateManySessionInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ViralDraftV2UpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: ViralDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type ViralDraftV2UncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type ViralDraftV2UncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -33095,6 +38012,10 @@ export namespace Prisma {
      * @deprecated Use CotSessionCountOutputTypeDefaultArgs instead
      */
     export type CotSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotSessionCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ViralSessionCountOutputTypeDefaultArgs instead
+     */
+    export type ViralSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use BuzzPostDefaultArgs instead
      */
@@ -33175,6 +38096,18 @@ export namespace Prisma {
      * @deprecated Use CotDraftPerformanceDefaultArgs instead
      */
     export type CotDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotDraftPerformanceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ViralSessionDefaultArgs instead
+     */
+    export type ViralSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralSessionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ViralDraftV2DefaultArgs instead
+     */
+    export type ViralDraftV2Args<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralDraftV2DefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ViralDraftPerformanceDefaultArgs instead
+     */
+    export type ViralDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralDraftPerformanceDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

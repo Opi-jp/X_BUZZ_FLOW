@@ -278,10 +278,16 @@ export default function SessionStatus({ sessionId }: SessionStatusProps) {
               下書きを確認
             </Link>
             <Link
+              href={`/viral/scheduler?sessionId=${sessionId}`}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            >
+              投稿をスケジュール
+            </Link>
+            <Link
               href="/viral/cot"
               className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
             >
-              新しいセッションを開始
+              新しいセッション
             </Link>
           </div>
         </div>

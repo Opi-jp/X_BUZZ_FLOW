@@ -111,12 +111,10 @@ export const Phase1Strategy: OrchestratedPhase = {
   // Step 1: Think（検索クエリ生成）
   think: {
     prompt: `
-# タスク  
-ユーザーの入力した情報をもとに、下記の視点に基づいてPerplexityに投げる自然言語の質問を作成してください。
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-発信したいテーマ: {theme}
-コンテンツのスタイル: {style}
-プラットフォーム: {platform}
+【{theme}】について【{platform}】において【{style}】で発信します。
+そのために必要な情報を下記の視点に基づいて分析と構造化を行います。
 
 A：現在の出来事の分析
 - 最新ニュース
@@ -147,22 +145,31 @@ D：バイラルパターン認識
 - タイミングの敏感さ（関連性のウィンドウが狭い）
 - プラットフォーム調整（{platform}文化に適合）
 
-上記の内容をもとに、Perplexityに投げる質問を考えてください。
+上記の分析と構造化に基づいて、Perplexityで情報を集めるための効果的な質問を考えてください。
 
-# 出力形式
+Perplexityには下記のフォーマットで出力するよう依頼してください。
+
+{
+  "title": "記事のタイトル",
+  "url": "記事のURL",
+  "date": "公開日",
+  "summary": "記事要約（100-200文字）",
+  "detail": "記事詳細（400-600文字）",
+  "perplexityAnalysis": "Perplexityの解説（200-400文字）"
+}
+
+なお、目的に対して、上記で足りない場合は追加の質問を考え、下記のフォーマットで出力するよう依頼してください。
+
+{
+  "additionalInfo": "そのほかGPTが必要と思う情報"
+}
+
+# 出力
 必ず以下のJSON形式で出力してください：
 {
-  "searchStrategy": {
-    "approach": "どのようなアプローチで情報を収集するか",
-    "timeframeRationale": "なぜその時間範囲を選んだか（最新情報、過去との比較、周年など）",
-    "expectedInsights": "どのような洞察を期待しているか"
-  },
   "perplexityQuestions": [
     {
-      "question": "Perplexityにそのまま送信する完全な質問文",
-      "category": "A/B/C/D",
-      "strategicIntent": "この質問で何を達成しようとしているか",
-      "viralAngle": "どのようなバイラル要素を探しているか"
+      "question": "Perplexityへの質問文"
     }
   ]
 }
@@ -224,7 +231,6 @@ D：バイラルパターン認識
         for (const questionObj of thinkResults.perplexityQuestions) {
           try {
             console.log(`[Phase1Execute] Question: "${questionObj.question}"`)
-            console.log(`[Phase1Execute] Strategic intent: ${questionObj.strategicIntent}`)
             
             // GPTが生成した完全な質問文をそのまま使用（タイムアウト対策付き）
             // デバッグモード: モックPerplexityを使用
@@ -271,16 +277,13 @@ D：バイラルパターン認識
             
             searchResults.push({
               question: questionObj.question,
-              category: questionObj.category,
-              strategicIntent: questionObj.strategicIntent,
-              viralAngle: questionObj.viralAngle,
               analysis: content,
               sources: combinedSources.length > 0 ? combinedSources : extractSources(content), // API結果優先、なければテキストから抽出
               citations: citations,
               rawResponse: content // 元の全文も保持
             })
             
-            console.log(`[Phase1Execute] Analysis completed for category ${questionObj.category}`)
+            console.log(`[Phase1Execute] Analysis completed`)
             
           } catch (error) {
             console.error(`[Phase1Execute] Error with question "${questionObj.question}":`, error)
@@ -407,74 +410,8 @@ D：バイラルパターン認識
         searchDate: new Date().toISOString()
       }
     }
-  },
-
-  // Step 3: Integrate（結果分析）
-  integrate: {
-    prompt: `
-# 収集した検索結果
-{searchResults}
-
-# タスク
-上記の調査結果をもとに、バズる可能性のあるトピックを特定してください。
-各トピックには、そのトピックを裏付ける具体的な情報源（ニュースソース名とURL）を含めてください。
-
-トピックを評価する際は以下の観点を考慮してください：
-- 論争レベル（強い意見を生み出す）
-- 感情の強さ（怒り、喜び、驚き、憤慨）
-- 共感性要因（多くの人に影響を与える）
-- 共有可能性（人々が広めたいと思うこと）
-- タイミングの敏感さ（関連性のウィンドウが狭い）
-- プラットフォーム調整（{platform}文化に適合）
-
-# 出力形式
-必ず以下のJSON形式で出力してください：
-{
-  "trendedTopics": [
-    {
-      "topicName": "バズる可能性のあるトピック",
-      "category": "A/B/C/D",
-      "summary": "トピックの概要",
-      "currentStatus": "現在の状況（なぜ今話題なのか）",
-      "viralElements": {
-        "controversy": "高/中/低",
-        "emotion": "高/中/低",
-        "relatability": "高/中/低",
-        "shareability": "高/中/低",
-        "timeSensitivity": "高/中/低",
-        "platformFit": "高/中/低"
-      },
-      "themeRelevance": "トピックと発信テーマの関連性",
-      "emotionalDrivers": ["感情的な反応を引き起こす要素"],
-      "evidenceSources": [
-        {
-          "title": "ニュースソース名または記事タイトル",
-          "url": "情報源のURL"
-        }
-      ],
-      "nextSteps": "このトピックをどう活用するか"
-    }
-  ],
-  "categoryInsights": {
-    "A": "現在の出来事に関する洞察",
-    "B": "テクノロジー・ビジネスに関する洞察",
-    "C": "ソーシャルリスニングからの洞察",
-    "D": "バイラルパターンの総合的な洞察"
-  },
-  "overallAnalysis": "全体的な分析とトレンドの方向性",
-  "warnings": "注意すべき点やリスク",
-  "topicCount": "特定したバズる機会の数（数値）"
-}
-
-重要：
-- バイラルの可能性を冷静に評価（誇張しない）
-- 具体的な証拠（記事からの引用）に基づく
-- {platform}のユーザー文化を考慮した評価
-- topicCountは実際に特定したバズるチャンスの数を入れる`,
-    expectedOutput: 'TrendAnalysis',
-    maxTokens: 4000,
-    temperature: 0.5
-  }  // integrateの終わり
+  }
+  // Phase 1はINTEGRATEステップなし - executeResultを直接使用
 }  // Phase1Strategyの終わり
 
 // フェーズ2: 機会評価とコンセプト作成（旧Phase2とPhase3をマージ）
@@ -482,14 +419,13 @@ export const Phase2Strategy: OrchestratedPhase = {
   // Step 1: 機会分析とコンセプト作成
   think: {
     prompt: `
-前フェーズで特定された機会：
-{opportunities}
+# あなたの役割
+あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-# 収集した情報源（Phase 1より）
-{searchResults}
+# フェーズ1で得た情報
+{articles}
 
-注意：各機会には具体的なevidenceSourcesが含まれています。コンセプト作成時には、これらの情報源から適切なものを選んでnewsSourceとsourceUrlに含めてください。
-
+# タスク
 下記の視点で分析を行い、
 A：ウイルス速度指標
 - 検索ボリュームの急増と成長率
@@ -535,8 +471,7 @@ D：3〜5個のキーポイント
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "opportunityCount": "特定した機会の数",
-  "analysisInsights": "機会分析から得られた主要な洞察",
+  "analysisInsights": "記事分析から得られた主要な洞察",
   "concepts": [
     {
       "title": "コンセプトタイトル",
@@ -550,9 +485,8 @@ D：3〜5個のキーポイント
         "（必要に応じて4つ目）",
         "（必要に応じて5つ目）"
       ],
-      "newsSource": "ニュースソース名",
-      "sourceUrl": "ソースURL",
-      "opportunity": "このコンセプトの基となった機会"
+      "newsSource": "記事のタイトル",
+      "sourceUrl": "記事のURL"
     }
   ],
   "nextStepMessage": "バズるコンテンツのコンセプトの概要は次のとおりです。「続行」と入力すると、各コンセプトに基づいたコンテンツ作成を開始します"
@@ -576,7 +510,6 @@ D：3〜5個のキーポイント
   integrate: {
     prompt: `
 # 分析とコンセプト
-{opportunityCount}
 {analysisInsights}
 {concepts}
 
@@ -586,10 +519,9 @@ Phase 2の結果を確認し、次のフェーズに渡すための形式で出�
 # 出力形式
 必ず以下のJSON形式で出力してください：
 {
-  "opportunityCount": {opportunityCount},
   "analysisInsights": {analysisInsights},
   "concepts": {concepts},
-  "message": "【{opportunityCount}】件の機会を発見しました。コンテンツのコンセプトは以下です。"
+  "message": "3つのコンテンツコンセプトを作成しました。"
 }
 `,
     expectedOutput: 'ConceptsReady',
@@ -632,6 +564,9 @@ export const Phase3Strategy: OrchestratedPhase = {
 # あなたの役割
 あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 {platform}で多くのエンゲージメントを獲得できる魅力的なコンテンツを作成することが得意です。
+
+# フェイズ1で収集した記事情報（参考）
+{articles}
 
 # 前フェーズで作成された3つのコンセプト
 

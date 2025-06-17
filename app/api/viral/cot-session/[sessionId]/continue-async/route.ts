@@ -244,41 +244,69 @@ async function handlePerplexityCompletion(session: any, task: any) {
     }
   })
   
-  // 次のステップへ
-  await prisma.cotSession.update({
-    where: { id: sessionId },
-    data: {
-      currentStep: 'INTEGRATE',
-      status: 'PENDING'
-    }
-  })
-  
-  console.log('[CONTINUE ASYNC] All Perplexity searches completed, moved to INTEGRATE')
-  
-  // 自動的にINTEGRATEステップを実行
-  setTimeout(async () => {
-    try {
-      console.log('[CONTINUE ASYNC] Auto-continue attempting to call process-async for INTEGRATE...')
-      const response = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/process-async`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('[CONTINUE ASYNC] Failed to auto-continue to INTEGRATE:', errorText)
-        console.error('[CONTINUE ASYNC] Response status:', response.status)
-      } else {
-        const result = await response.json()
-        console.log('[CONTINUE ASYNC] Auto-continue success to INTEGRATE step:', result)
+  // Phase 1の場合、INTEGRATEをスキップしてPhase 2へ
+  if (session.currentPhase === 1) {
+    // Phase 1を完了としてマーク
+    await prisma.cotPhase.update({
+      where: {
+        sessionId_phaseNumber: {
+          sessionId,
+          phaseNumber: 1
+        }
+      },
+      data: {
+        status: 'COMPLETED'
       }
-    } catch (e) {
-      console.error('[CONTINUE ASYNC] Auto-continue error:', e)
-      console.error('[CONTINUE ASYNC] Error details:', {
-        message: e.message,
-        stack: e.stack?.split('\n').slice(0, 3).join('\n')
-      })
-    }
-  }, 2000) // タイムアウトを2秒に延長
+    })
+    
+    // Phase 2へ移行
+    await prisma.cotSession.update({
+      where: { id: sessionId },
+      data: {
+        currentPhase: 2,
+        currentStep: 'THINK',
+        status: 'PENDING'
+      }
+    })
+    
+    console.log('[CONTINUE ASYNC] Phase 1 completed (INTEGRATE skipped), moved to Phase 2')
+    
+    // 自動的にPhase 2を開始
+    setTimeout(async () => {
+      try {
+        console.log('[CONTINUE ASYNC] Auto-continue attempting to call process-async for Phase 2 THINK...')
+        const response = await fetch(`http://localhost:3000/api/viral/cot-session/${sessionId}/process-async`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error('[CONTINUE ASYNC] Failed to auto-continue to Phase 2:', errorText)
+          console.error('[CONTINUE ASYNC] Response status:', response.status)
+        } else {
+          const result = await response.json()
+          console.log('[CONTINUE ASYNC] Auto-continue success to Phase 2:', result)
+        }
+      } catch (e) {
+        console.error('[CONTINUE ASYNC] Auto-continue error:', e)
+        console.error('[CONTINUE ASYNC] Error details:', {
+          message: e.message,
+          stack: e.stack?.split('\n').slice(0, 3).join('\n')
+        })
+      }
+    }, 2000)
+  } else {
+    // 他のフェーズは通常通りINTEGRATEへ
+    await prisma.cotSession.update({
+      where: { id: sessionId },
+      data: {
+        currentStep: 'INTEGRATE',
+        status: 'PENDING'
+      }
+    })
+    
+    console.log('[CONTINUE ASYNC] All searches completed, moved to INTEGRATE')
+  }
 }
 
 async function handleIntegrateCompletion(session: any, task: any) {
