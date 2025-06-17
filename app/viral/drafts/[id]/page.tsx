@@ -329,31 +329,32 @@ export default function EditDraftPage() {
         />
       </div>
 
-      {/* アクションボタン */}
-      <div className="flex justify-between pt-6 border-t">
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-          disabled={draft.status === 'posted'}
-        >
-          削除
-        </button>
-        <div className="flex gap-3">
-          <Link
-            href="/viral/drafts"
-            className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
-            キャンセル
-          </Link>
-          <button
-            onClick={handleSave}
-            disabled={saving || isOverLimit}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
-          >
-            {saving ? '保存中...' : '保存'}
-          </button>
-        </div>
-      </div>
+          {/* アクションボタン */}
+          <div className="flex justify-between pt-6 border-t">
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg"
+              disabled={draft.status === 'posted'}
+            >
+              削除
+            </button>
+            <div className="flex gap-3">
+              <Link
+                href="/viral/drafts"
+                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                キャンセル
+              </Link>
+              <button
+                onClick={handleSave}
+                disabled={saving || isOverLimit}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+              >
+                {saving ? '保存中...' : '保存'}
+              </button>
+            </div>
+          </div>
+        </TabsContent>
 
         {/* スケジュール タブ */}
         <TabsContent value="schedule" className="space-y-6">

@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  serverExternalPackages: ['@prisma/client'],
   typescript: {
     // Vercel デプロイ時の TypeScript エラーをバイパス
     ignoreBuildErrors: process.env.VERCEL_ENV === 'production',
