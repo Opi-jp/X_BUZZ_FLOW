@@ -16,11 +16,11 @@ const envSchema = z.object({
   NEXTAUTH_URL: z.string().default('http://localhost:3000'),
   NEXTAUTH_SECRET: z.string().min(1),
   
-  // Twitter API（必須）
-  TWITTER_API_KEY: z.string().min(1),
-  TWITTER_API_SECRET: z.string().min(1),
-  TWITTER_ACCESS_TOKEN: z.string().min(1),
-  TWITTER_ACCESS_SECRET: z.string().min(1),
+  // Twitter API（実行時必須、ビルド時オプション）
+  TWITTER_API_KEY: process.env.VERCEL ? z.string().optional() : z.string().min(1),
+  TWITTER_API_SECRET: process.env.VERCEL ? z.string().optional() : z.string().min(1),
+  TWITTER_ACCESS_TOKEN: process.env.VERCEL ? z.string().optional() : z.string().min(1),
+  TWITTER_ACCESS_SECRET: process.env.VERCEL ? z.string().optional() : z.string().min(1),
   
   // Twitter OAuth（オプション）
   TWITTER_CLIENT_ID: z.string().optional(),
@@ -84,8 +84,8 @@ function loadEnv() {
       console.error('2. .env.exampleを参考にしてください')
       console.error('3. Vercelの場合は管理画面で設定してください')
       
-      // 開発環境では警告のみ、本番環境ではエラー
-      if (process.env.NODE_ENV === 'production') {
+      // ビルド時は警告のみ、実行時のみエラー
+      if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined') {
         throw new Error('環境変数の設定が不完全です')
       }
     }
