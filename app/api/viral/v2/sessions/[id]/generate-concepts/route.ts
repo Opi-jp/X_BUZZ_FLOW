@@ -19,6 +19,14 @@ export async function POST(
   try {
     const { id } = await params
     
+    // Validate ID
+    if (!id || id === 'undefined' || id === 'null') {
+      return NextResponse.json(
+        { error: 'Invalid session ID' },
+        { status: 400 }
+      )
+    }
+    
     // セッションを取得
     const session = await prisma.viralSession.findUnique({
       where: { id }
@@ -50,11 +58,15 @@ export async function POST(
       throw new Error('No topics found in session')
     }
 
-    // 各トピックに対して3つのコンセプトを生成
-    const conceptPromises = topics.map(async (topic: any, topicIndex: number) => {
+    // 最も有望な2つのトピックのみを処理
+    const topicsToProcess = topics.slice(0, 2)
+    console.log(`Processing ${topicsToProcess.length} most promising topics`)
+    
+    // 各トピックに対して5つのコンセプトを生成
+    const conceptPromises = topicsToProcess.map(async (topic: any, topicIndex: number) => {
       const prompt = `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
 
-以下のトピックについて、【${session.platform}】で【${session.style}】スタイルでバズる投稿コンセプトを3つ作成してください。
+以下のトピックについて、【${session.platform}】で【${session.style}】スタイルでバズる投稿コンセプトを5つ作成してください。
 
 トピック: ${topic.TOPIC}
 分析: ${topic.perplexityAnalysis}
@@ -110,7 +122,7 @@ URL: ${topic.url}
 
 structure内の各要素には、具体的な文章ではなく、「どのような内容を含めるか」「どんなアプローチを取るか」「何を狙うか」という方向性を記載してください。
 
-必ず以下のJSON形式で3つのコンセプトを出力してください：
+必ず以下のJSON形式で5つのコンセプトを出力してください：
 [
   {
     "conceptId": "topic${topicIndex + 1}_concept1",
@@ -133,7 +145,13 @@ structure内の各要素には、具体的な文章ではなく、「どのよ�
     "format": "thread",
     "hookType": "使用したフックの種類",
     "angle": "選択した角度",
-    "structure": { 同上の5要素を記載 },
+    "structure": {
+      "openingHook": "このトピックでどう興味を引くか（方向性）",
+      "background": "どんな問題提起をするか（方向性）",
+      "mainContent": "何を伝えるか（方向性）",
+      "reflection": "どう共感を生むか（方向性）",
+      "cta": "どんな行動を促すか（方向性）"
+    },
     "visual": "ビジュアル案",
     "timing": "投稿タイミング",
     "hashtags": ["関連ハッシュタグ"]
@@ -143,7 +161,45 @@ structure内の各要素には、具体的な文章ではなく、「どのよ�
     "format": "carousel",
     "hookType": "使用したフックの種類",
     "angle": "選択した角度",
-    "structure": { 同上の5要素を記載 },
+    "structure": {
+      "openingHook": "このトピックでどう興味を引くか（方向性）",
+      "background": "どんな問題提起をするか（方向性）",
+      "mainContent": "何を伝えるか（方向性）",
+      "reflection": "どう共感を生むか（方向性）",
+      "cta": "どんな行動を促すか（方向性）"
+    },
+    "visual": "ビジュアル案",
+    "timing": "投稿タイミング",
+    "hashtags": ["関連ハッシュタグ"]
+  },
+  {
+    "conceptId": "topic${topicIndex + 1}_concept4",
+    "format": "single",
+    "hookType": "使用したフックの種類",
+    "angle": "選択した角度",
+    "structure": {
+      "openingHook": "このトピックでどう興味を引くか（方向性）",
+      "background": "どんな問題提起をするか（方向性）",
+      "mainContent": "何を伝えるか（方向性）",
+      "reflection": "どう共感を生むか（方向性）",
+      "cta": "どんな行動を促すか（方向性）"
+    },
+    "visual": "ビジュアル案",
+    "timing": "投稿タイミング",
+    "hashtags": ["関連ハッシュタグ"]
+  },
+  {
+    "conceptId": "topic${topicIndex + 1}_concept5",
+    "format": "thread",
+    "hookType": "使用したフックの種類",
+    "angle": "選択した角度",
+    "structure": {
+      "openingHook": "このトピックでどう興味を引くか（方向性）",
+      "background": "どんな問題提起をするか（方向性）",
+      "mainContent": "何を伝えるか（方向性）",
+      "reflection": "どう共感を生むか（方向性）",
+      "cta": "どんな行動を促すか（方向性）"
+    },
     "visual": "ビジュアル案",
     "timing": "投稿タイミング",
     "hashtags": ["関連ハッシュタグ"]

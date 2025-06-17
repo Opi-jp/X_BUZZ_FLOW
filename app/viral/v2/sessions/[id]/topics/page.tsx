@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLink, Calendar, TrendingUp, ChevronLeft } from 'lucide-react'
+import { useViralSession } from '@/hooks/useViralSession'
+import { SessionStatus } from '@/types/viral-v2'
 
 interface PageProps {
   params: Promise<{
@@ -32,30 +34,19 @@ const getSourceTitle = (url: string, additionalSources: any[]) => {
 export default function TopicsPage({ params }: PageProps) {
   const { id } = use(params)
   const router = useRouter()
-  const [session, setSession] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const [collecting, setCollecting] = useState(false)
+  
+  const { session, loading, error, refetch } = useViralSession(id, {
+    autoRedirectOnError: true,
+    autoCollectTopics: true
+  })
 
   useEffect(() => {
-    fetchSession()
-  }, [id])
-
-  const fetchSession = async () => {
-    try {
-      const response = await fetch(`/api/viral/v2/sessions/${id}`)
-      const data = await response.json()
-      setSession(data.session)
-      
-      // トピックがまだない場合は自動的に収集を開始
-      if (data.session && data.session.status === 'CREATED') {
-        handleCollectTopics()
-      }
-    } catch (error) {
-      console.error('Error fetching session:', error)
-    } finally {
-      setLoading(false)
+    // Auto-collect if session is in CREATED state
+    if (session?.status === SessionStatus.CREATED && !collecting) {
+      handleCollectTopics()
     }
-  }
+  }, [session?.status])
 
   const handleCollectTopics = async () => {
     setCollecting(true)
@@ -68,7 +59,7 @@ export default function TopicsPage({ params }: PageProps) {
         throw new Error('Failed to collect topics')
       }
       
-      await fetchSession()
+      await refetch()
     } catch (error) {
       console.error('Error collecting topics:', error)
       alert('トピックの収集に失敗しました')
@@ -85,6 +76,27 @@ export default function TopicsPage({ params }: PageProps) {
     return (
       <div className="container max-w-4xl mx-auto py-8">
         <div className="text-center">読み込み中...</div>
+      </div>
+    )
+  }
+  
+  if (error || !session) {
+    return (
+      <div className="container max-w-4xl mx-auto py-8">
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="py-6">
+            <p className="text-red-700">
+              {error || 'セッションが見つかりません'}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/viral/v2/sessions')}
+              className="mt-4"
+            >
+              セッション一覧に戻る
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }

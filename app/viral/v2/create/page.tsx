@@ -31,6 +31,12 @@ export default function CreateViralSession() {
       }
 
       const data = await response.json()
+      
+      // Validate session ID before navigation
+      if (!data.session?.id) {
+        throw new Error('Session created but no ID returned')
+      }
+      
       router.push(`/viral/v2/sessions/${data.session.id}/topics`)
     } catch (error) {
       console.error('Error creating session:', error)

@@ -18,6 +18,15 @@ export async function POST(
 ) {
   try {
     const { id } = await params
+    
+    // Validate ID
+    if (!id || id === 'undefined' || id === 'null') {
+      return NextResponse.json(
+        { error: 'Invalid session ID' },
+        { status: 400 }
+      )
+    }
+    
     const body = await request.json()
     const { selectedIds } = body
     
@@ -215,7 +224,7 @@ ${concept.structure ? `
         data: {
           sessionId: id,
           conceptId: concept.conceptId,
-          title: concept.hook.substring(0, 100),
+          title: (concept.structure?.openingHook || concept.hook || 'Generated Content').substring(0, 100),
           content: contentText,
           hashtags: generatedContent.hashtags || [],
           visualNote: generatedContent.visualNote || null,

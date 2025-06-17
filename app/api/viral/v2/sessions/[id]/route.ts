@@ -14,6 +14,14 @@ export async function GET(
   try {
     const { id } = await params
     
+    // Validate ID
+    if (!id || id === 'undefined' || id === 'null') {
+      return NextResponse.json(
+        { error: 'Invalid session ID' },
+        { status: 400 }
+      )
+    }
+    
     const session = await prisma.viralSession.findUnique({
       where: { id },
       include: {

@@ -128,6 +128,11 @@ export type ViralDraftV2 = $Result.DefaultSelection<Prisma.$ViralDraftV2Payload>
  * 
  */
 export type ViralDraftPerformance = $Result.DefaultSelection<Prisma.$ViralDraftPerformancePayload>
+/**
+ * Model CharacterProfile
+ * 
+ */
+export type CharacterProfile = $Result.DefaultSelection<Prisma.$CharacterProfilePayload>
 
 /**
  * Enums
@@ -574,6 +579,16 @@ export class PrismaClient<
     * ```
     */
   get viralDraftPerformance(): Prisma.ViralDraftPerformanceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.characterProfile`: Exposes CRUD operations for the **CharacterProfile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CharacterProfiles
+    * const characterProfiles = await prisma.characterProfile.findMany()
+    * ```
+    */
+  get characterProfile(): Prisma.CharacterProfileDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1037,7 +1052,8 @@ export namespace Prisma {
     CotDraftPerformance: 'CotDraftPerformance',
     ViralSession: 'ViralSession',
     ViralDraftV2: 'ViralDraftV2',
-    ViralDraftPerformance: 'ViralDraftPerformance'
+    ViralDraftPerformance: 'ViralDraftPerformance',
+    CharacterProfile: 'CharacterProfile'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1053,7 +1069,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "viralSession" | "viralDraftV2" | "viralDraftPerformance"
+      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "viralSession" | "viralDraftV2" | "viralDraftPerformance" | "characterProfile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2667,6 +2683,76 @@ export namespace Prisma {
           }
         }
       }
+      CharacterProfile: {
+        payload: Prisma.$CharacterProfilePayload<ExtArgs>
+        fields: Prisma.CharacterProfileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CharacterProfileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CharacterProfileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          findFirst: {
+            args: Prisma.CharacterProfileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CharacterProfileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          findMany: {
+            args: Prisma.CharacterProfileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>[]
+          }
+          create: {
+            args: Prisma.CharacterProfileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          createMany: {
+            args: Prisma.CharacterProfileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CharacterProfileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>[]
+          }
+          delete: {
+            args: Prisma.CharacterProfileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          update: {
+            args: Prisma.CharacterProfileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          deleteMany: {
+            args: Prisma.CharacterProfileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CharacterProfileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CharacterProfileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CharacterProfilePayload>
+          }
+          aggregate: {
+            args: Prisma.CharacterProfileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCharacterProfile>
+          }
+          groupBy: {
+            args: Prisma.CharacterProfileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CharacterProfileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CharacterProfileCountArgs<ExtArgs>
+            result: $Utils.Optional<CharacterProfileCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2861,11 +2947,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     sessions: number
     watchlistUsers: number
+    characterProfiles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     watchlistUsers?: boolean | UserCountOutputTypeCountWatchlistUsersArgs
+    characterProfiles?: boolean | UserCountOutputTypeCountCharacterProfilesArgs
   }
 
   // Custom InputTypes
@@ -2891,6 +2979,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountWatchlistUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WatchlistUserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCharacterProfilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CharacterProfileWhereInput
   }
 
 
@@ -3095,6 +3190,37 @@ export namespace Prisma {
    */
   export type ViralSessionCountOutputTypeCountDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ViralDraftV2WhereInput
+  }
+
+
+  /**
+   * Count Type CharacterProfileCountOutputType
+   */
+
+  export type CharacterProfileCountOutputType = {
+    sessions: number
+  }
+
+  export type CharacterProfileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sessions?: boolean | CharacterProfileCountOutputTypeCountSessionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CharacterProfileCountOutputType without action
+   */
+  export type CharacterProfileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfileCountOutputType
+     */
+    select?: CharacterProfileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CharacterProfileCountOutputType without action
+   */
+  export type CharacterProfileCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ViralSessionWhereInput
   }
 
 
@@ -6570,6 +6696,7 @@ export namespace Prisma {
     updatedAt?: boolean
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     watchlistUsers?: boolean | User$watchlistUsersArgs<ExtArgs>
+    characterProfiles?: boolean | User$characterProfilesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -6604,6 +6731,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     watchlistUsers?: boolean | User$watchlistUsersArgs<ExtArgs>
+    characterProfiles?: boolean | User$characterProfilesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6613,6 +6741,7 @@ export namespace Prisma {
     objects: {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       watchlistUsers: Prisma.$WatchlistUserPayload<ExtArgs>[]
+      characterProfiles: Prisma.$CharacterProfilePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6992,6 +7121,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany"> | Null>
     watchlistUsers<T extends User$watchlistUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$watchlistUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WatchlistUserPayload<ExtArgs>, T, "findMany"> | Null>
+    characterProfiles<T extends User$characterProfilesArgs<ExtArgs> = {}>(args?: Subset<T, User$characterProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7383,6 +7513,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WatchlistUserScalarFieldEnum | WatchlistUserScalarFieldEnum[]
+  }
+
+  /**
+   * User.characterProfiles
+   */
+  export type User$characterProfilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    where?: CharacterProfileWhereInput
+    orderBy?: CharacterProfileOrderByWithRelationInput | CharacterProfileOrderByWithRelationInput[]
+    cursor?: CharacterProfileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CharacterProfileScalarFieldEnum | CharacterProfileScalarFieldEnum[]
   }
 
   /**
@@ -23819,6 +23969,8 @@ export namespace Prisma {
     style: string | null
     status: string | null
     createdAt: Date | null
+    characterProfileId: string | null
+    voiceStyleMode: string | null
   }
 
   export type ViralSessionMaxAggregateOutputType = {
@@ -23828,6 +23980,8 @@ export namespace Prisma {
     style: string | null
     status: string | null
     createdAt: Date | null
+    characterProfileId: string | null
+    voiceStyleMode: string | null
   }
 
   export type ViralSessionCountAggregateOutputType = {
@@ -23837,6 +23991,8 @@ export namespace Prisma {
     style: number
     status: number
     createdAt: number
+    characterProfileId: number
+    voiceStyleMode: number
     topics: number
     concepts: number
     selectedIds: number
@@ -23852,6 +24008,8 @@ export namespace Prisma {
     style?: true
     status?: true
     createdAt?: true
+    characterProfileId?: true
+    voiceStyleMode?: true
   }
 
   export type ViralSessionMaxAggregateInputType = {
@@ -23861,6 +24019,8 @@ export namespace Prisma {
     style?: true
     status?: true
     createdAt?: true
+    characterProfileId?: true
+    voiceStyleMode?: true
   }
 
   export type ViralSessionCountAggregateInputType = {
@@ -23870,6 +24030,8 @@ export namespace Prisma {
     style?: true
     status?: true
     createdAt?: true
+    characterProfileId?: true
+    voiceStyleMode?: true
     topics?: true
     concepts?: true
     selectedIds?: true
@@ -23956,6 +24118,8 @@ export namespace Prisma {
     style: string
     status: string
     createdAt: Date
+    characterProfileId: string | null
+    voiceStyleMode: string | null
     topics: JsonValue | null
     concepts: JsonValue | null
     selectedIds: string[]
@@ -23986,11 +24150,14 @@ export namespace Prisma {
     style?: boolean
     status?: boolean
     createdAt?: boolean
+    characterProfileId?: boolean
+    voiceStyleMode?: boolean
     topics?: boolean
     concepts?: boolean
     selectedIds?: boolean
     contents?: boolean
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
+    characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viralSession"]>
 
@@ -24001,10 +24168,13 @@ export namespace Prisma {
     style?: boolean
     status?: boolean
     createdAt?: boolean
+    characterProfileId?: boolean
+    voiceStyleMode?: boolean
     topics?: boolean
     concepts?: boolean
     selectedIds?: boolean
     contents?: boolean
+    characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
   }, ExtArgs["result"]["viralSession"]>
 
   export type ViralSessionSelectScalar = {
@@ -24014,6 +24184,8 @@ export namespace Prisma {
     style?: boolean
     status?: boolean
     createdAt?: boolean
+    characterProfileId?: boolean
+    voiceStyleMode?: boolean
     topics?: boolean
     concepts?: boolean
     selectedIds?: boolean
@@ -24022,14 +24194,18 @@ export namespace Prisma {
 
   export type ViralSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
+    characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type ViralSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ViralSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
+  }
 
   export type $ViralSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ViralSession"
     objects: {
       drafts: Prisma.$ViralDraftV2Payload<ExtArgs>[]
+      characterProfile: Prisma.$CharacterProfilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24038,6 +24214,8 @@ export namespace Prisma {
       style: string
       status: string
       createdAt: Date
+      characterProfileId: string | null
+      voiceStyleMode: string | null
       topics: Prisma.JsonValue | null
       concepts: Prisma.JsonValue | null
       selectedIds: string[]
@@ -24407,6 +24585,7 @@ export namespace Prisma {
   export interface Prisma__ViralSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     drafts<T extends ViralSession$draftsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$draftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findMany"> | Null>
+    characterProfile<T extends ViralSession$characterProfileArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$characterProfileArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24442,6 +24621,8 @@ export namespace Prisma {
     readonly style: FieldRef<"ViralSession", 'String'>
     readonly status: FieldRef<"ViralSession", 'String'>
     readonly createdAt: FieldRef<"ViralSession", 'DateTime'>
+    readonly characterProfileId: FieldRef<"ViralSession", 'String'>
+    readonly voiceStyleMode: FieldRef<"ViralSession", 'String'>
     readonly topics: FieldRef<"ViralSession", 'Json'>
     readonly concepts: FieldRef<"ViralSession", 'Json'>
     readonly selectedIds: FieldRef<"ViralSession", 'String[]'>
@@ -24667,6 +24848,10 @@ export namespace Prisma {
      */
     data: ViralSessionCreateManyInput | ViralSessionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -24780,6 +24965,21 @@ export namespace Prisma {
   }
 
   /**
+   * ViralSession.characterProfile
+   */
+  export type ViralSession$characterProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    where?: CharacterProfileWhereInput
+  }
+
+  /**
    * ViralSession without action
    */
   export type ViralSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24811,6 +25011,8 @@ export namespace Prisma {
     title: string | null
     content: string | null
     visualNote: string | null
+    characterId: string | null
+    characterNote: string | null
     status: string | null
     scheduledAt: Date | null
     postedAt: Date | null
@@ -24826,6 +25028,8 @@ export namespace Prisma {
     title: string | null
     content: string | null
     visualNote: string | null
+    characterId: string | null
+    characterNote: string | null
     status: string | null
     scheduledAt: Date | null
     postedAt: Date | null
@@ -24842,6 +25046,8 @@ export namespace Prisma {
     content: number
     hashtags: number
     visualNote: number
+    characterId: number
+    characterNote: number
     status: number
     scheduledAt: number
     postedAt: number
@@ -24859,6 +25065,8 @@ export namespace Prisma {
     title?: true
     content?: true
     visualNote?: true
+    characterId?: true
+    characterNote?: true
     status?: true
     scheduledAt?: true
     postedAt?: true
@@ -24874,6 +25082,8 @@ export namespace Prisma {
     title?: true
     content?: true
     visualNote?: true
+    characterId?: true
+    characterNote?: true
     status?: true
     scheduledAt?: true
     postedAt?: true
@@ -24890,6 +25100,8 @@ export namespace Prisma {
     content?: true
     hashtags?: true
     visualNote?: true
+    characterId?: true
+    characterNote?: true
     status?: true
     scheduledAt?: true
     postedAt?: true
@@ -24979,6 +25191,8 @@ export namespace Prisma {
     content: string
     hashtags: string[]
     visualNote: string | null
+    characterId: string | null
+    characterNote: string | null
     status: string
     scheduledAt: Date | null
     postedAt: Date | null
@@ -25012,6 +25226,8 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    characterId?: boolean
+    characterNote?: boolean
     status?: boolean
     scheduledAt?: boolean
     postedAt?: boolean
@@ -25030,6 +25246,8 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    characterId?: boolean
+    characterNote?: boolean
     status?: boolean
     scheduledAt?: boolean
     postedAt?: boolean
@@ -25047,6 +25265,8 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    characterId?: boolean
+    characterNote?: boolean
     status?: boolean
     scheduledAt?: boolean
     postedAt?: boolean
@@ -25077,6 +25297,8 @@ export namespace Prisma {
       content: string
       hashtags: string[]
       visualNote: string | null
+      characterId: string | null
+      characterNote: string | null
       status: string
       scheduledAt: Date | null
       postedAt: Date | null
@@ -25485,6 +25707,8 @@ export namespace Prisma {
     readonly content: FieldRef<"ViralDraftV2", 'String'>
     readonly hashtags: FieldRef<"ViralDraftV2", 'String[]'>
     readonly visualNote: FieldRef<"ViralDraftV2", 'String'>
+    readonly characterId: FieldRef<"ViralDraftV2", 'String'>
+    readonly characterNote: FieldRef<"ViralDraftV2", 'String'>
     readonly status: FieldRef<"ViralDraftV2", 'String'>
     readonly scheduledAt: FieldRef<"ViralDraftV2", 'DateTime'>
     readonly postedAt: FieldRef<"ViralDraftV2", 'DateTime'>
@@ -27014,6 +27238,1110 @@ export namespace Prisma {
 
 
   /**
+   * Model CharacterProfile
+   */
+
+  export type AggregateCharacterProfile = {
+    _count: CharacterProfileCountAggregateOutputType | null
+    _avg: CharacterProfileAvgAggregateOutputType | null
+    _sum: CharacterProfileSumAggregateOutputType | null
+    _min: CharacterProfileMinAggregateOutputType | null
+    _max: CharacterProfileMaxAggregateOutputType | null
+  }
+
+  export type CharacterProfileAvgAggregateOutputType = {
+    age: number | null
+  }
+
+  export type CharacterProfileSumAggregateOutputType = {
+    age: number | null
+  }
+
+  export type CharacterProfileMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    age: number | null
+    gender: string | null
+    tone: string | null
+    catchphrase: string | null
+    philosophy: string | null
+    isDefault: boolean | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CharacterProfileMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    age: number | null
+    gender: string | null
+    tone: string | null
+    catchphrase: string | null
+    philosophy: string | null
+    isDefault: boolean | null
+    userId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CharacterProfileCountAggregateOutputType = {
+    id: number
+    name: number
+    age: number
+    gender: number
+    tone: number
+    catchphrase: number
+    philosophy: number
+    voiceStyle: number
+    topics: number
+    visual: number
+    isDefault: number
+    userId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CharacterProfileAvgAggregateInputType = {
+    age?: true
+  }
+
+  export type CharacterProfileSumAggregateInputType = {
+    age?: true
+  }
+
+  export type CharacterProfileMinAggregateInputType = {
+    id?: true
+    name?: true
+    age?: true
+    gender?: true
+    tone?: true
+    catchphrase?: true
+    philosophy?: true
+    isDefault?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CharacterProfileMaxAggregateInputType = {
+    id?: true
+    name?: true
+    age?: true
+    gender?: true
+    tone?: true
+    catchphrase?: true
+    philosophy?: true
+    isDefault?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CharacterProfileCountAggregateInputType = {
+    id?: true
+    name?: true
+    age?: true
+    gender?: true
+    tone?: true
+    catchphrase?: true
+    philosophy?: true
+    voiceStyle?: true
+    topics?: true
+    visual?: true
+    isDefault?: true
+    userId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CharacterProfileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CharacterProfile to aggregate.
+     */
+    where?: CharacterProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CharacterProfiles to fetch.
+     */
+    orderBy?: CharacterProfileOrderByWithRelationInput | CharacterProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CharacterProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CharacterProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CharacterProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CharacterProfiles
+    **/
+    _count?: true | CharacterProfileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CharacterProfileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CharacterProfileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CharacterProfileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CharacterProfileMaxAggregateInputType
+  }
+
+  export type GetCharacterProfileAggregateType<T extends CharacterProfileAggregateArgs> = {
+        [P in keyof T & keyof AggregateCharacterProfile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCharacterProfile[P]>
+      : GetScalarType<T[P], AggregateCharacterProfile[P]>
+  }
+
+
+
+
+  export type CharacterProfileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CharacterProfileWhereInput
+    orderBy?: CharacterProfileOrderByWithAggregationInput | CharacterProfileOrderByWithAggregationInput[]
+    by: CharacterProfileScalarFieldEnum[] | CharacterProfileScalarFieldEnum
+    having?: CharacterProfileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CharacterProfileCountAggregateInputType | true
+    _avg?: CharacterProfileAvgAggregateInputType
+    _sum?: CharacterProfileSumAggregateInputType
+    _min?: CharacterProfileMinAggregateInputType
+    _max?: CharacterProfileMaxAggregateInputType
+  }
+
+  export type CharacterProfileGroupByOutputType = {
+    id: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy: string | null
+    voiceStyle: JsonValue
+    topics: JsonValue
+    visual: JsonValue | null
+    isDefault: boolean
+    userId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CharacterProfileCountAggregateOutputType | null
+    _avg: CharacterProfileAvgAggregateOutputType | null
+    _sum: CharacterProfileSumAggregateOutputType | null
+    _min: CharacterProfileMinAggregateOutputType | null
+    _max: CharacterProfileMaxAggregateOutputType | null
+  }
+
+  type GetCharacterProfileGroupByPayload<T extends CharacterProfileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CharacterProfileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CharacterProfileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CharacterProfileGroupByOutputType[P]>
+            : GetScalarType<T[P], CharacterProfileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CharacterProfileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    age?: boolean
+    gender?: boolean
+    tone?: boolean
+    catchphrase?: boolean
+    philosophy?: boolean
+    voiceStyle?: boolean
+    topics?: boolean
+    visual?: boolean
+    isDefault?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | CharacterProfile$userArgs<ExtArgs>
+    sessions?: boolean | CharacterProfile$sessionsArgs<ExtArgs>
+    _count?: boolean | CharacterProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["characterProfile"]>
+
+  export type CharacterProfileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    age?: boolean
+    gender?: boolean
+    tone?: boolean
+    catchphrase?: boolean
+    philosophy?: boolean
+    voiceStyle?: boolean
+    topics?: boolean
+    visual?: boolean
+    isDefault?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | CharacterProfile$userArgs<ExtArgs>
+  }, ExtArgs["result"]["characterProfile"]>
+
+  export type CharacterProfileSelectScalar = {
+    id?: boolean
+    name?: boolean
+    age?: boolean
+    gender?: boolean
+    tone?: boolean
+    catchphrase?: boolean
+    philosophy?: boolean
+    voiceStyle?: boolean
+    topics?: boolean
+    visual?: boolean
+    isDefault?: boolean
+    userId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CharacterProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | CharacterProfile$userArgs<ExtArgs>
+    sessions?: boolean | CharacterProfile$sessionsArgs<ExtArgs>
+    _count?: boolean | CharacterProfileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CharacterProfileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | CharacterProfile$userArgs<ExtArgs>
+  }
+
+  export type $CharacterProfilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CharacterProfile"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+      sessions: Prisma.$ViralSessionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      age: number
+      gender: string
+      tone: string
+      catchphrase: string
+      philosophy: string | null
+      voiceStyle: Prisma.JsonValue
+      topics: Prisma.JsonValue
+      visual: Prisma.JsonValue | null
+      isDefault: boolean
+      userId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["characterProfile"]>
+    composites: {}
+  }
+
+  type CharacterProfileGetPayload<S extends boolean | null | undefined | CharacterProfileDefaultArgs> = $Result.GetResult<Prisma.$CharacterProfilePayload, S>
+
+  type CharacterProfileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CharacterProfileFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CharacterProfileCountAggregateInputType | true
+    }
+
+  export interface CharacterProfileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CharacterProfile'], meta: { name: 'CharacterProfile' } }
+    /**
+     * Find zero or one CharacterProfile that matches the filter.
+     * @param {CharacterProfileFindUniqueArgs} args - Arguments to find a CharacterProfile
+     * @example
+     * // Get one CharacterProfile
+     * const characterProfile = await prisma.characterProfile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CharacterProfileFindUniqueArgs>(args: SelectSubset<T, CharacterProfileFindUniqueArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one CharacterProfile that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CharacterProfileFindUniqueOrThrowArgs} args - Arguments to find a CharacterProfile
+     * @example
+     * // Get one CharacterProfile
+     * const characterProfile = await prisma.characterProfile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CharacterProfileFindUniqueOrThrowArgs>(args: SelectSubset<T, CharacterProfileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first CharacterProfile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileFindFirstArgs} args - Arguments to find a CharacterProfile
+     * @example
+     * // Get one CharacterProfile
+     * const characterProfile = await prisma.characterProfile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CharacterProfileFindFirstArgs>(args?: SelectSubset<T, CharacterProfileFindFirstArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first CharacterProfile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileFindFirstOrThrowArgs} args - Arguments to find a CharacterProfile
+     * @example
+     * // Get one CharacterProfile
+     * const characterProfile = await prisma.characterProfile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CharacterProfileFindFirstOrThrowArgs>(args?: SelectSubset<T, CharacterProfileFindFirstOrThrowArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more CharacterProfiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CharacterProfiles
+     * const characterProfiles = await prisma.characterProfile.findMany()
+     * 
+     * // Get first 10 CharacterProfiles
+     * const characterProfiles = await prisma.characterProfile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const characterProfileWithIdOnly = await prisma.characterProfile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CharacterProfileFindManyArgs>(args?: SelectSubset<T, CharacterProfileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a CharacterProfile.
+     * @param {CharacterProfileCreateArgs} args - Arguments to create a CharacterProfile.
+     * @example
+     * // Create one CharacterProfile
+     * const CharacterProfile = await prisma.characterProfile.create({
+     *   data: {
+     *     // ... data to create a CharacterProfile
+     *   }
+     * })
+     * 
+     */
+    create<T extends CharacterProfileCreateArgs>(args: SelectSubset<T, CharacterProfileCreateArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many CharacterProfiles.
+     * @param {CharacterProfileCreateManyArgs} args - Arguments to create many CharacterProfiles.
+     * @example
+     * // Create many CharacterProfiles
+     * const characterProfile = await prisma.characterProfile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CharacterProfileCreateManyArgs>(args?: SelectSubset<T, CharacterProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CharacterProfiles and returns the data saved in the database.
+     * @param {CharacterProfileCreateManyAndReturnArgs} args - Arguments to create many CharacterProfiles.
+     * @example
+     * // Create many CharacterProfiles
+     * const characterProfile = await prisma.characterProfile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CharacterProfiles and only return the `id`
+     * const characterProfileWithIdOnly = await prisma.characterProfile.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CharacterProfileCreateManyAndReturnArgs>(args?: SelectSubset<T, CharacterProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a CharacterProfile.
+     * @param {CharacterProfileDeleteArgs} args - Arguments to delete one CharacterProfile.
+     * @example
+     * // Delete one CharacterProfile
+     * const CharacterProfile = await prisma.characterProfile.delete({
+     *   where: {
+     *     // ... filter to delete one CharacterProfile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CharacterProfileDeleteArgs>(args: SelectSubset<T, CharacterProfileDeleteArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one CharacterProfile.
+     * @param {CharacterProfileUpdateArgs} args - Arguments to update one CharacterProfile.
+     * @example
+     * // Update one CharacterProfile
+     * const characterProfile = await prisma.characterProfile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CharacterProfileUpdateArgs>(args: SelectSubset<T, CharacterProfileUpdateArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more CharacterProfiles.
+     * @param {CharacterProfileDeleteManyArgs} args - Arguments to filter CharacterProfiles to delete.
+     * @example
+     * // Delete a few CharacterProfiles
+     * const { count } = await prisma.characterProfile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CharacterProfileDeleteManyArgs>(args?: SelectSubset<T, CharacterProfileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CharacterProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CharacterProfiles
+     * const characterProfile = await prisma.characterProfile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CharacterProfileUpdateManyArgs>(args: SelectSubset<T, CharacterProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CharacterProfile.
+     * @param {CharacterProfileUpsertArgs} args - Arguments to update or create a CharacterProfile.
+     * @example
+     * // Update or create a CharacterProfile
+     * const characterProfile = await prisma.characterProfile.upsert({
+     *   create: {
+     *     // ... data to create a CharacterProfile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CharacterProfile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CharacterProfileUpsertArgs>(args: SelectSubset<T, CharacterProfileUpsertArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of CharacterProfiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileCountArgs} args - Arguments to filter CharacterProfiles to count.
+     * @example
+     * // Count the number of CharacterProfiles
+     * const count = await prisma.characterProfile.count({
+     *   where: {
+     *     // ... the filter for the CharacterProfiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends CharacterProfileCountArgs>(
+      args?: Subset<T, CharacterProfileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CharacterProfileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CharacterProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CharacterProfileAggregateArgs>(args: Subset<T, CharacterProfileAggregateArgs>): Prisma.PrismaPromise<GetCharacterProfileAggregateType<T>>
+
+    /**
+     * Group by CharacterProfile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CharacterProfileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CharacterProfileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CharacterProfileGroupByArgs['orderBy'] }
+        : { orderBy?: CharacterProfileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CharacterProfileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCharacterProfileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CharacterProfile model
+   */
+  readonly fields: CharacterProfileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CharacterProfile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CharacterProfileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends CharacterProfile$userArgs<ExtArgs> = {}>(args?: Subset<T, CharacterProfile$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    sessions<T extends CharacterProfile$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, CharacterProfile$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CharacterProfile model
+   */ 
+  interface CharacterProfileFieldRefs {
+    readonly id: FieldRef<"CharacterProfile", 'String'>
+    readonly name: FieldRef<"CharacterProfile", 'String'>
+    readonly age: FieldRef<"CharacterProfile", 'Int'>
+    readonly gender: FieldRef<"CharacterProfile", 'String'>
+    readonly tone: FieldRef<"CharacterProfile", 'String'>
+    readonly catchphrase: FieldRef<"CharacterProfile", 'String'>
+    readonly philosophy: FieldRef<"CharacterProfile", 'String'>
+    readonly voiceStyle: FieldRef<"CharacterProfile", 'Json'>
+    readonly topics: FieldRef<"CharacterProfile", 'Json'>
+    readonly visual: FieldRef<"CharacterProfile", 'Json'>
+    readonly isDefault: FieldRef<"CharacterProfile", 'Boolean'>
+    readonly userId: FieldRef<"CharacterProfile", 'String'>
+    readonly createdAt: FieldRef<"CharacterProfile", 'DateTime'>
+    readonly updatedAt: FieldRef<"CharacterProfile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CharacterProfile findUnique
+   */
+  export type CharacterProfileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which CharacterProfile to fetch.
+     */
+    where: CharacterProfileWhereUniqueInput
+  }
+
+  /**
+   * CharacterProfile findUniqueOrThrow
+   */
+  export type CharacterProfileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which CharacterProfile to fetch.
+     */
+    where: CharacterProfileWhereUniqueInput
+  }
+
+  /**
+   * CharacterProfile findFirst
+   */
+  export type CharacterProfileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which CharacterProfile to fetch.
+     */
+    where?: CharacterProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CharacterProfiles to fetch.
+     */
+    orderBy?: CharacterProfileOrderByWithRelationInput | CharacterProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CharacterProfiles.
+     */
+    cursor?: CharacterProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CharacterProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CharacterProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CharacterProfiles.
+     */
+    distinct?: CharacterProfileScalarFieldEnum | CharacterProfileScalarFieldEnum[]
+  }
+
+  /**
+   * CharacterProfile findFirstOrThrow
+   */
+  export type CharacterProfileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which CharacterProfile to fetch.
+     */
+    where?: CharacterProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CharacterProfiles to fetch.
+     */
+    orderBy?: CharacterProfileOrderByWithRelationInput | CharacterProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CharacterProfiles.
+     */
+    cursor?: CharacterProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CharacterProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CharacterProfiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CharacterProfiles.
+     */
+    distinct?: CharacterProfileScalarFieldEnum | CharacterProfileScalarFieldEnum[]
+  }
+
+  /**
+   * CharacterProfile findMany
+   */
+  export type CharacterProfileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter, which CharacterProfiles to fetch.
+     */
+    where?: CharacterProfileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CharacterProfiles to fetch.
+     */
+    orderBy?: CharacterProfileOrderByWithRelationInput | CharacterProfileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CharacterProfiles.
+     */
+    cursor?: CharacterProfileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CharacterProfiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CharacterProfiles.
+     */
+    skip?: number
+    distinct?: CharacterProfileScalarFieldEnum | CharacterProfileScalarFieldEnum[]
+  }
+
+  /**
+   * CharacterProfile create
+   */
+  export type CharacterProfileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CharacterProfile.
+     */
+    data: XOR<CharacterProfileCreateInput, CharacterProfileUncheckedCreateInput>
+  }
+
+  /**
+   * CharacterProfile createMany
+   */
+  export type CharacterProfileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CharacterProfiles.
+     */
+    data: CharacterProfileCreateManyInput | CharacterProfileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CharacterProfile createManyAndReturn
+   */
+  export type CharacterProfileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CharacterProfiles.
+     */
+    data: CharacterProfileCreateManyInput | CharacterProfileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CharacterProfile update
+   */
+  export type CharacterProfileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CharacterProfile.
+     */
+    data: XOR<CharacterProfileUpdateInput, CharacterProfileUncheckedUpdateInput>
+    /**
+     * Choose, which CharacterProfile to update.
+     */
+    where: CharacterProfileWhereUniqueInput
+  }
+
+  /**
+   * CharacterProfile updateMany
+   */
+  export type CharacterProfileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CharacterProfiles.
+     */
+    data: XOR<CharacterProfileUpdateManyMutationInput, CharacterProfileUncheckedUpdateManyInput>
+    /**
+     * Filter which CharacterProfiles to update
+     */
+    where?: CharacterProfileWhereInput
+  }
+
+  /**
+   * CharacterProfile upsert
+   */
+  export type CharacterProfileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CharacterProfile to update in case it exists.
+     */
+    where: CharacterProfileWhereUniqueInput
+    /**
+     * In case the CharacterProfile found by the `where` argument doesn't exist, create a new CharacterProfile with this data.
+     */
+    create: XOR<CharacterProfileCreateInput, CharacterProfileUncheckedCreateInput>
+    /**
+     * In case the CharacterProfile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CharacterProfileUpdateInput, CharacterProfileUncheckedUpdateInput>
+  }
+
+  /**
+   * CharacterProfile delete
+   */
+  export type CharacterProfileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+    /**
+     * Filter which CharacterProfile to delete.
+     */
+    where: CharacterProfileWhereUniqueInput
+  }
+
+  /**
+   * CharacterProfile deleteMany
+   */
+  export type CharacterProfileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CharacterProfiles to delete
+     */
+    where?: CharacterProfileWhereInput
+  }
+
+  /**
+   * CharacterProfile.user
+   */
+  export type CharacterProfile$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * CharacterProfile.sessions
+   */
+  export type CharacterProfile$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    where?: ViralSessionWhereInput
+    orderBy?: ViralSessionOrderByWithRelationInput | ViralSessionOrderByWithRelationInput[]
+    cursor?: ViralSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ViralSessionScalarFieldEnum | ViralSessionScalarFieldEnum[]
+  }
+
+  /**
+   * CharacterProfile without action
+   */
+  export type CharacterProfileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CharacterProfile
+     */
+    select?: CharacterProfileSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CharacterProfileInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -27385,6 +28713,8 @@ export namespace Prisma {
     style: 'style',
     status: 'status',
     createdAt: 'createdAt',
+    characterProfileId: 'characterProfileId',
+    voiceStyleMode: 'voiceStyleMode',
     topics: 'topics',
     concepts: 'concepts',
     selectedIds: 'selectedIds',
@@ -27402,6 +28732,8 @@ export namespace Prisma {
     content: 'content',
     hashtags: 'hashtags',
     visualNote: 'visualNote',
+    characterId: 'characterId',
+    characterNote: 'characterNote',
     status: 'status',
     scheduledAt: 'scheduledAt',
     postedAt: 'postedAt',
@@ -27435,6 +28767,26 @@ export namespace Prisma {
   };
 
   export type ViralDraftPerformanceScalarFieldEnum = (typeof ViralDraftPerformanceScalarFieldEnum)[keyof typeof ViralDraftPerformanceScalarFieldEnum]
+
+
+  export const CharacterProfileScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    age: 'age',
+    gender: 'gender',
+    tone: 'tone',
+    catchphrase: 'catchphrase',
+    philosophy: 'philosophy',
+    voiceStyle: 'voiceStyle',
+    topics: 'topics',
+    visual: 'visual',
+    isDefault: 'isDefault',
+    userId: 'userId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CharacterProfileScalarFieldEnum = (typeof CharacterProfileScalarFieldEnum)[keyof typeof CharacterProfileScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -27985,6 +29337,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sessions?: SessionListRelationFilter
     watchlistUsers?: WatchlistUserListRelationFilter
+    characterProfiles?: CharacterProfileListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -28001,6 +29354,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     sessions?: SessionOrderByRelationAggregateInput
     watchlistUsers?: WatchlistUserOrderByRelationAggregateInput
+    characterProfiles?: CharacterProfileOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -28020,6 +29374,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     sessions?: SessionListRelationFilter
     watchlistUsers?: WatchlistUserListRelationFilter
+    characterProfiles?: CharacterProfileListRelationFilter
   }, "id" | "twitterId">
 
   export type UserOrderByWithAggregationInput = {
@@ -29449,11 +30804,14 @@ export namespace Prisma {
     style?: StringFilter<"ViralSession"> | string
     status?: StringFilter<"ViralSession"> | string
     createdAt?: DateTimeFilter<"ViralSession"> | Date | string
+    characterProfileId?: StringNullableFilter<"ViralSession"> | string | null
+    voiceStyleMode?: StringNullableFilter<"ViralSession"> | string | null
     topics?: JsonNullableFilter<"ViralSession">
     concepts?: JsonNullableFilter<"ViralSession">
     selectedIds?: StringNullableListFilter<"ViralSession">
     contents?: JsonNullableFilter<"ViralSession">
     drafts?: ViralDraftV2ListRelationFilter
+    characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
   }
 
   export type ViralSessionOrderByWithRelationInput = {
@@ -29463,11 +30821,14 @@ export namespace Prisma {
     style?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    characterProfileId?: SortOrderInput | SortOrder
+    voiceStyleMode?: SortOrderInput | SortOrder
     topics?: SortOrderInput | SortOrder
     concepts?: SortOrderInput | SortOrder
     selectedIds?: SortOrder
     contents?: SortOrderInput | SortOrder
     drafts?: ViralDraftV2OrderByRelationAggregateInput
+    characterProfile?: CharacterProfileOrderByWithRelationInput
   }
 
   export type ViralSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -29480,11 +30841,14 @@ export namespace Prisma {
     style?: StringFilter<"ViralSession"> | string
     status?: StringFilter<"ViralSession"> | string
     createdAt?: DateTimeFilter<"ViralSession"> | Date | string
+    characterProfileId?: StringNullableFilter<"ViralSession"> | string | null
+    voiceStyleMode?: StringNullableFilter<"ViralSession"> | string | null
     topics?: JsonNullableFilter<"ViralSession">
     concepts?: JsonNullableFilter<"ViralSession">
     selectedIds?: StringNullableListFilter<"ViralSession">
     contents?: JsonNullableFilter<"ViralSession">
     drafts?: ViralDraftV2ListRelationFilter
+    characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
   }, "id">
 
   export type ViralSessionOrderByWithAggregationInput = {
@@ -29494,6 +30858,8 @@ export namespace Prisma {
     style?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    characterProfileId?: SortOrderInput | SortOrder
+    voiceStyleMode?: SortOrderInput | SortOrder
     topics?: SortOrderInput | SortOrder
     concepts?: SortOrderInput | SortOrder
     selectedIds?: SortOrder
@@ -29513,6 +30879,8 @@ export namespace Prisma {
     style?: StringWithAggregatesFilter<"ViralSession"> | string
     status?: StringWithAggregatesFilter<"ViralSession"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ViralSession"> | Date | string
+    characterProfileId?: StringNullableWithAggregatesFilter<"ViralSession"> | string | null
+    voiceStyleMode?: StringNullableWithAggregatesFilter<"ViralSession"> | string | null
     topics?: JsonNullableWithAggregatesFilter<"ViralSession">
     concepts?: JsonNullableWithAggregatesFilter<"ViralSession">
     selectedIds?: StringNullableListFilter<"ViralSession">
@@ -29530,6 +30898,8 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
     scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
     postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
@@ -29548,6 +30918,8 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrderInput | SortOrder
+    characterId?: SortOrderInput | SortOrder
+    characterNote?: SortOrderInput | SortOrder
     status?: SortOrder
     scheduledAt?: SortOrderInput | SortOrder
     postedAt?: SortOrderInput | SortOrder
@@ -29569,6 +30941,8 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
     scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
     postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
@@ -29587,6 +30961,8 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrderInput | SortOrder
+    characterId?: SortOrderInput | SortOrder
+    characterNote?: SortOrderInput | SortOrder
     status?: SortOrder
     scheduledAt?: SortOrderInput | SortOrder
     postedAt?: SortOrderInput | SortOrder
@@ -29609,6 +30985,8 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
+    characterId?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
+    characterNote?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
     status?: StringWithAggregatesFilter<"ViralDraftV2"> | string
     scheduledAt?: DateTimeNullableWithAggregatesFilter<"ViralDraftV2"> | Date | string | null
     postedAt?: DateTimeNullableWithAggregatesFilter<"ViralDraftV2"> | Date | string | null
@@ -29737,6 +31115,111 @@ export namespace Prisma {
     viralCoefficient?: FloatNullableWithAggregatesFilter<"ViralDraftPerformance"> | number | null
     collectedAt?: DateTimeWithAggregatesFilter<"ViralDraftPerformance"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ViralDraftPerformance"> | Date | string
+  }
+
+  export type CharacterProfileWhereInput = {
+    AND?: CharacterProfileWhereInput | CharacterProfileWhereInput[]
+    OR?: CharacterProfileWhereInput[]
+    NOT?: CharacterProfileWhereInput | CharacterProfileWhereInput[]
+    id?: StringFilter<"CharacterProfile"> | string
+    name?: StringFilter<"CharacterProfile"> | string
+    age?: IntFilter<"CharacterProfile"> | number
+    gender?: StringFilter<"CharacterProfile"> | string
+    tone?: StringFilter<"CharacterProfile"> | string
+    catchphrase?: StringFilter<"CharacterProfile"> | string
+    philosophy?: StringNullableFilter<"CharacterProfile"> | string | null
+    voiceStyle?: JsonFilter<"CharacterProfile">
+    topics?: JsonFilter<"CharacterProfile">
+    visual?: JsonNullableFilter<"CharacterProfile">
+    isDefault?: BoolFilter<"CharacterProfile"> | boolean
+    userId?: StringNullableFilter<"CharacterProfile"> | string | null
+    createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    sessions?: ViralSessionListRelationFilter
+  }
+
+  export type CharacterProfileOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    tone?: SortOrder
+    catchphrase?: SortOrder
+    philosophy?: SortOrderInput | SortOrder
+    voiceStyle?: SortOrder
+    topics?: SortOrder
+    visual?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    sessions?: ViralSessionOrderByRelationAggregateInput
+  }
+
+  export type CharacterProfileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CharacterProfileWhereInput | CharacterProfileWhereInput[]
+    OR?: CharacterProfileWhereInput[]
+    NOT?: CharacterProfileWhereInput | CharacterProfileWhereInput[]
+    name?: StringFilter<"CharacterProfile"> | string
+    age?: IntFilter<"CharacterProfile"> | number
+    gender?: StringFilter<"CharacterProfile"> | string
+    tone?: StringFilter<"CharacterProfile"> | string
+    catchphrase?: StringFilter<"CharacterProfile"> | string
+    philosophy?: StringNullableFilter<"CharacterProfile"> | string | null
+    voiceStyle?: JsonFilter<"CharacterProfile">
+    topics?: JsonFilter<"CharacterProfile">
+    visual?: JsonNullableFilter<"CharacterProfile">
+    isDefault?: BoolFilter<"CharacterProfile"> | boolean
+    userId?: StringNullableFilter<"CharacterProfile"> | string | null
+    createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
+    sessions?: ViralSessionListRelationFilter
+  }, "id">
+
+  export type CharacterProfileOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    tone?: SortOrder
+    catchphrase?: SortOrder
+    philosophy?: SortOrderInput | SortOrder
+    voiceStyle?: SortOrder
+    topics?: SortOrder
+    visual?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CharacterProfileCountOrderByAggregateInput
+    _avg?: CharacterProfileAvgOrderByAggregateInput
+    _max?: CharacterProfileMaxOrderByAggregateInput
+    _min?: CharacterProfileMinOrderByAggregateInput
+    _sum?: CharacterProfileSumOrderByAggregateInput
+  }
+
+  export type CharacterProfileScalarWhereWithAggregatesInput = {
+    AND?: CharacterProfileScalarWhereWithAggregatesInput | CharacterProfileScalarWhereWithAggregatesInput[]
+    OR?: CharacterProfileScalarWhereWithAggregatesInput[]
+    NOT?: CharacterProfileScalarWhereWithAggregatesInput | CharacterProfileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CharacterProfile"> | string
+    name?: StringWithAggregatesFilter<"CharacterProfile"> | string
+    age?: IntWithAggregatesFilter<"CharacterProfile"> | number
+    gender?: StringWithAggregatesFilter<"CharacterProfile"> | string
+    tone?: StringWithAggregatesFilter<"CharacterProfile"> | string
+    catchphrase?: StringWithAggregatesFilter<"CharacterProfile"> | string
+    philosophy?: StringNullableWithAggregatesFilter<"CharacterProfile"> | string | null
+    voiceStyle?: JsonWithAggregatesFilter<"CharacterProfile">
+    topics?: JsonWithAggregatesFilter<"CharacterProfile">
+    visual?: JsonNullableWithAggregatesFilter<"CharacterProfile">
+    isDefault?: BoolWithAggregatesFilter<"CharacterProfile"> | boolean
+    userId?: StringNullableWithAggregatesFilter<"CharacterProfile"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CharacterProfile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CharacterProfile"> | Date | string
   }
 
   export type BuzzPostCreateInput = {
@@ -30141,6 +31624,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     watchlistUsers?: WatchlistUserCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -30157,6 +31641,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     watchlistUsers?: WatchlistUserUncheckedCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -30173,6 +31658,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     watchlistUsers?: WatchlistUserUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30189,6 +31675,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     watchlistUsers?: WatchlistUserUncheckedUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -31819,11 +33306,13 @@ export namespace Prisma {
     style: string
     status?: string
     createdAt?: Date | string
+    voiceStyleMode?: string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+    characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
   }
 
   export type ViralSessionUncheckedCreateInput = {
@@ -31833,6 +33322,8 @@ export namespace Prisma {
     style: string
     status?: string
     createdAt?: Date | string
+    characterProfileId?: string | null
+    voiceStyleMode?: string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
@@ -31847,11 +33338,13 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+    characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
   }
 
   export type ViralSessionUncheckedUpdateInput = {
@@ -31861,6 +33354,8 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    characterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
@@ -31875,6 +33370,8 @@ export namespace Prisma {
     style: string
     status?: string
     createdAt?: Date | string
+    characterProfileId?: string | null
+    voiceStyleMode?: string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
@@ -31888,6 +33385,7 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
@@ -31901,6 +33399,8 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    characterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
@@ -31914,6 +33414,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -31932,6 +33434,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -31948,6 +33452,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31966,6 +33472,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -31983,6 +33491,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -31998,6 +33508,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32014,6 +33526,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -32165,6 +33679,128 @@ export namespace Prisma {
     engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
     viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
     collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CharacterProfileCreateInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutCharacterProfilesInput
+    sessions?: ViralSessionCreateNestedManyWithoutCharacterProfileInput
+  }
+
+  export type CharacterProfileUncheckedCreateInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    userId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: ViralSessionUncheckedCreateNestedManyWithoutCharacterProfileInput
+  }
+
+  export type CharacterProfileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutCharacterProfilesNestedInput
+    sessions?: ViralSessionUpdateManyWithoutCharacterProfileNestedInput
+  }
+
+  export type CharacterProfileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: ViralSessionUncheckedUpdateManyWithoutCharacterProfileNestedInput
+  }
+
+  export type CharacterProfileCreateManyInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    userId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CharacterProfileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CharacterProfileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32752,11 +34388,21 @@ export namespace Prisma {
     none?: WatchlistUserWhereInput
   }
 
+  export type CharacterProfileListRelationFilter = {
+    every?: CharacterProfileWhereInput
+    some?: CharacterProfileWhereInput
+    none?: CharacterProfileWhereInput
+  }
+
   export type SessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type WatchlistUserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CharacterProfileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33777,6 +35423,11 @@ export namespace Prisma {
     none?: ViralDraftV2WhereInput
   }
 
+  export type CharacterProfileNullableRelationFilter = {
+    is?: CharacterProfileWhereInput | null
+    isNot?: CharacterProfileWhereInput | null
+  }
+
   export type ViralDraftV2OrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -33788,6 +35439,8 @@ export namespace Prisma {
     style?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    characterProfileId?: SortOrder
+    voiceStyleMode?: SortOrder
     topics?: SortOrder
     concepts?: SortOrder
     selectedIds?: SortOrder
@@ -33801,6 +35454,8 @@ export namespace Prisma {
     style?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    characterProfileId?: SortOrder
+    voiceStyleMode?: SortOrder
   }
 
   export type ViralSessionMinOrderByAggregateInput = {
@@ -33810,6 +35465,8 @@ export namespace Prisma {
     style?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    characterProfileId?: SortOrder
+    voiceStyleMode?: SortOrder
   }
 
   export type ViralSessionRelationFilter = {
@@ -33830,6 +35487,8 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrder
+    characterId?: SortOrder
+    characterNote?: SortOrder
     status?: SortOrder
     scheduledAt?: SortOrder
     postedAt?: SortOrder
@@ -33845,6 +35504,8 @@ export namespace Prisma {
     title?: SortOrder
     content?: SortOrder
     visualNote?: SortOrder
+    characterId?: SortOrder
+    characterNote?: SortOrder
     status?: SortOrder
     scheduledAt?: SortOrder
     postedAt?: SortOrder
@@ -33860,6 +35521,8 @@ export namespace Prisma {
     title?: SortOrder
     content?: SortOrder
     visualNote?: SortOrder
+    characterId?: SortOrder
+    characterNote?: SortOrder
     status?: SortOrder
     scheduledAt?: SortOrder
     postedAt?: SortOrder
@@ -33968,6 +35631,74 @@ export namespace Prisma {
     impressions24h?: SortOrder
     engagementRate?: SortOrder
     viralCoefficient?: SortOrder
+  }
+
+  export type UserNullableRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type ViralSessionListRelationFilter = {
+    every?: ViralSessionWhereInput
+    some?: ViralSessionWhereInput
+    none?: ViralSessionWhereInput
+  }
+
+  export type ViralSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CharacterProfileCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    tone?: SortOrder
+    catchphrase?: SortOrder
+    philosophy?: SortOrder
+    voiceStyle?: SortOrder
+    topics?: SortOrder
+    visual?: SortOrder
+    isDefault?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CharacterProfileAvgOrderByAggregateInput = {
+    age?: SortOrder
+  }
+
+  export type CharacterProfileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    tone?: SortOrder
+    catchphrase?: SortOrder
+    philosophy?: SortOrder
+    isDefault?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CharacterProfileMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    age?: SortOrder
+    gender?: SortOrder
+    tone?: SortOrder
+    catchphrase?: SortOrder
+    philosophy?: SortOrder
+    isDefault?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CharacterProfileSumOrderByAggregateInput = {
+    age?: SortOrder
   }
 
   export type ScheduledPostCreateNestedManyWithoutRefPostInput = {
@@ -34098,6 +35829,13 @@ export namespace Prisma {
     connect?: WatchlistUserWhereUniqueInput | WatchlistUserWhereUniqueInput[]
   }
 
+  export type CharacterProfileCreateNestedManyWithoutUserInput = {
+    create?: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput> | CharacterProfileCreateWithoutUserInput[] | CharacterProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutUserInput | CharacterProfileCreateOrConnectWithoutUserInput[]
+    createMany?: CharacterProfileCreateManyUserInputEnvelope
+    connect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -34110,6 +35848,13 @@ export namespace Prisma {
     connectOrCreate?: WatchlistUserCreateOrConnectWithoutUserInput | WatchlistUserCreateOrConnectWithoutUserInput[]
     createMany?: WatchlistUserCreateManyUserInputEnvelope
     connect?: WatchlistUserWhereUniqueInput | WatchlistUserWhereUniqueInput[]
+  }
+
+  export type CharacterProfileUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput> | CharacterProfileCreateWithoutUserInput[] | CharacterProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutUserInput | CharacterProfileCreateOrConnectWithoutUserInput[]
+    createMany?: CharacterProfileCreateManyUserInputEnvelope
+    connect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
   }
 
   export type SessionUpdateManyWithoutUserNestedInput = {
@@ -34140,6 +35885,20 @@ export namespace Prisma {
     deleteMany?: WatchlistUserScalarWhereInput | WatchlistUserScalarWhereInput[]
   }
 
+  export type CharacterProfileUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput> | CharacterProfileCreateWithoutUserInput[] | CharacterProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutUserInput | CharacterProfileCreateOrConnectWithoutUserInput[]
+    upsert?: CharacterProfileUpsertWithWhereUniqueWithoutUserInput | CharacterProfileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CharacterProfileCreateManyUserInputEnvelope
+    set?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    disconnect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    delete?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    connect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    update?: CharacterProfileUpdateWithWhereUniqueWithoutUserInput | CharacterProfileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CharacterProfileUpdateManyWithWhereWithoutUserInput | CharacterProfileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CharacterProfileScalarWhereInput | CharacterProfileScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -34166,6 +35925,20 @@ export namespace Prisma {
     update?: WatchlistUserUpdateWithWhereUniqueWithoutUserInput | WatchlistUserUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: WatchlistUserUpdateManyWithWhereWithoutUserInput | WatchlistUserUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: WatchlistUserScalarWhereInput | WatchlistUserScalarWhereInput[]
+  }
+
+  export type CharacterProfileUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput> | CharacterProfileCreateWithoutUserInput[] | CharacterProfileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutUserInput | CharacterProfileCreateOrConnectWithoutUserInput[]
+    upsert?: CharacterProfileUpsertWithWhereUniqueWithoutUserInput | CharacterProfileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CharacterProfileCreateManyUserInputEnvelope
+    set?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    disconnect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    delete?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    connect?: CharacterProfileWhereUniqueInput | CharacterProfileWhereUniqueInput[]
+    update?: CharacterProfileUpdateWithWhereUniqueWithoutUserInput | CharacterProfileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CharacterProfileUpdateManyWithWhereWithoutUserInput | CharacterProfileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CharacterProfileScalarWhereInput | CharacterProfileScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -34751,6 +36524,12 @@ export namespace Prisma {
     connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
   }
 
+  export type CharacterProfileCreateNestedOneWithoutSessionsInput = {
+    create?: XOR<CharacterProfileCreateWithoutSessionsInput, CharacterProfileUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutSessionsInput
+    connect?: CharacterProfileWhereUniqueInput
+  }
+
   export type ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
@@ -34775,6 +36554,16 @@ export namespace Prisma {
     update?: ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput | ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: ViralDraftV2UpdateManyWithWhereWithoutSessionInput | ViralDraftV2UpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+  }
+
+  export type CharacterProfileUpdateOneWithoutSessionsNestedInput = {
+    create?: XOR<CharacterProfileCreateWithoutSessionsInput, CharacterProfileUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: CharacterProfileCreateOrConnectWithoutSessionsInput
+    upsert?: CharacterProfileUpsertWithoutSessionsInput
+    disconnect?: CharacterProfileWhereInput | boolean
+    delete?: CharacterProfileWhereInput | boolean
+    connect?: CharacterProfileWhereUniqueInput
+    update?: XOR<XOR<CharacterProfileUpdateToOneWithWhereWithoutSessionsInput, CharacterProfileUpdateWithoutSessionsInput>, CharacterProfileUncheckedUpdateWithoutSessionsInput>
   }
 
   export type ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput = {
@@ -34858,6 +36647,64 @@ export namespace Prisma {
     upsert?: ViralDraftV2UpsertWithoutPerformanceInput
     connect?: ViralDraftV2WhereUniqueInput
     update?: XOR<XOR<ViralDraftV2UpdateToOneWithWhereWithoutPerformanceInput, ViralDraftV2UpdateWithoutPerformanceInput>, ViralDraftV2UncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type UserCreateNestedOneWithoutCharacterProfilesInput = {
+    create?: XOR<UserCreateWithoutCharacterProfilesInput, UserUncheckedCreateWithoutCharacterProfilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCharacterProfilesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ViralSessionCreateNestedManyWithoutCharacterProfileInput = {
+    create?: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput> | ViralSessionCreateWithoutCharacterProfileInput[] | ViralSessionUncheckedCreateWithoutCharacterProfileInput[]
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutCharacterProfileInput | ViralSessionCreateOrConnectWithoutCharacterProfileInput[]
+    createMany?: ViralSessionCreateManyCharacterProfileInputEnvelope
+    connect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+  }
+
+  export type ViralSessionUncheckedCreateNestedManyWithoutCharacterProfileInput = {
+    create?: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput> | ViralSessionCreateWithoutCharacterProfileInput[] | ViralSessionUncheckedCreateWithoutCharacterProfileInput[]
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutCharacterProfileInput | ViralSessionCreateOrConnectWithoutCharacterProfileInput[]
+    createMany?: ViralSessionCreateManyCharacterProfileInputEnvelope
+    connect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneWithoutCharacterProfilesNestedInput = {
+    create?: XOR<UserCreateWithoutCharacterProfilesInput, UserUncheckedCreateWithoutCharacterProfilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCharacterProfilesInput
+    upsert?: UserUpsertWithoutCharacterProfilesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCharacterProfilesInput, UserUpdateWithoutCharacterProfilesInput>, UserUncheckedUpdateWithoutCharacterProfilesInput>
+  }
+
+  export type ViralSessionUpdateManyWithoutCharacterProfileNestedInput = {
+    create?: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput> | ViralSessionCreateWithoutCharacterProfileInput[] | ViralSessionUncheckedCreateWithoutCharacterProfileInput[]
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutCharacterProfileInput | ViralSessionCreateOrConnectWithoutCharacterProfileInput[]
+    upsert?: ViralSessionUpsertWithWhereUniqueWithoutCharacterProfileInput | ViralSessionUpsertWithWhereUniqueWithoutCharacterProfileInput[]
+    createMany?: ViralSessionCreateManyCharacterProfileInputEnvelope
+    set?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    disconnect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    delete?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    connect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    update?: ViralSessionUpdateWithWhereUniqueWithoutCharacterProfileInput | ViralSessionUpdateWithWhereUniqueWithoutCharacterProfileInput[]
+    updateMany?: ViralSessionUpdateManyWithWhereWithoutCharacterProfileInput | ViralSessionUpdateManyWithWhereWithoutCharacterProfileInput[]
+    deleteMany?: ViralSessionScalarWhereInput | ViralSessionScalarWhereInput[]
+  }
+
+  export type ViralSessionUncheckedUpdateManyWithoutCharacterProfileNestedInput = {
+    create?: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput> | ViralSessionCreateWithoutCharacterProfileInput[] | ViralSessionUncheckedCreateWithoutCharacterProfileInput[]
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutCharacterProfileInput | ViralSessionCreateOrConnectWithoutCharacterProfileInput[]
+    upsert?: ViralSessionUpsertWithWhereUniqueWithoutCharacterProfileInput | ViralSessionUpsertWithWhereUniqueWithoutCharacterProfileInput[]
+    createMany?: ViralSessionCreateManyCharacterProfileInputEnvelope
+    set?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    disconnect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    delete?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    connect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+    update?: ViralSessionUpdateWithWhereUniqueWithoutCharacterProfileInput | ViralSessionUpdateWithWhereUniqueWithoutCharacterProfileInput[]
+    updateMany?: ViralSessionUpdateManyWithWhereWithoutCharacterProfileInput | ViralSessionUpdateManyWithWhereWithoutCharacterProfileInput[]
+    deleteMany?: ViralSessionScalarWhereInput | ViralSessionScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -35498,6 +37345,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CharacterProfileCreateWithoutUserInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: ViralSessionCreateNestedManyWithoutCharacterProfileInput
+  }
+
+  export type CharacterProfileUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: ViralSessionUncheckedCreateNestedManyWithoutCharacterProfileInput
+  }
+
+  export type CharacterProfileCreateOrConnectWithoutUserInput = {
+    where: CharacterProfileWhereUniqueInput
+    create: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type CharacterProfileCreateManyUserInputEnvelope = {
+    data: CharacterProfileCreateManyUserInput | CharacterProfileCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -35556,6 +37447,42 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"WatchlistUser"> | Date | string
   }
 
+  export type CharacterProfileUpsertWithWhereUniqueWithoutUserInput = {
+    where: CharacterProfileWhereUniqueInput
+    update: XOR<CharacterProfileUpdateWithoutUserInput, CharacterProfileUncheckedUpdateWithoutUserInput>
+    create: XOR<CharacterProfileCreateWithoutUserInput, CharacterProfileUncheckedCreateWithoutUserInput>
+  }
+
+  export type CharacterProfileUpdateWithWhereUniqueWithoutUserInput = {
+    where: CharacterProfileWhereUniqueInput
+    data: XOR<CharacterProfileUpdateWithoutUserInput, CharacterProfileUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CharacterProfileUpdateManyWithWhereWithoutUserInput = {
+    where: CharacterProfileScalarWhereInput
+    data: XOR<CharacterProfileUpdateManyMutationInput, CharacterProfileUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CharacterProfileScalarWhereInput = {
+    AND?: CharacterProfileScalarWhereInput | CharacterProfileScalarWhereInput[]
+    OR?: CharacterProfileScalarWhereInput[]
+    NOT?: CharacterProfileScalarWhereInput | CharacterProfileScalarWhereInput[]
+    id?: StringFilter<"CharacterProfile"> | string
+    name?: StringFilter<"CharacterProfile"> | string
+    age?: IntFilter<"CharacterProfile"> | number
+    gender?: StringFilter<"CharacterProfile"> | string
+    tone?: StringFilter<"CharacterProfile"> | string
+    catchphrase?: StringFilter<"CharacterProfile"> | string
+    philosophy?: StringNullableFilter<"CharacterProfile"> | string | null
+    voiceStyle?: JsonFilter<"CharacterProfile">
+    topics?: JsonFilter<"CharacterProfile">
+    visual?: JsonNullableFilter<"CharacterProfile">
+    isDefault?: BoolFilter<"CharacterProfile"> | boolean
+    userId?: StringNullableFilter<"CharacterProfile"> | string | null
+    createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     twitterId: string
@@ -35569,6 +37496,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     watchlistUsers?: WatchlistUserCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -35584,6 +37512,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     watchlistUsers?: WatchlistUserUncheckedCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -35615,6 +37544,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     watchlistUsers?: WatchlistUserUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -35630,6 +37560,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     watchlistUsers?: WatchlistUserUncheckedUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type NewsArticleCreateWithoutSourceInput = {
@@ -36149,6 +38080,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWatchlistUsersInput = {
@@ -36164,6 +38096,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    characterProfiles?: CharacterProfileUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWatchlistUsersInput = {
@@ -36253,6 +38186,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWatchlistUsersInput = {
@@ -36268,6 +38202,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    characterProfiles?: CharacterProfileUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WatchlistTweetUpsertWithWhereUniqueWithoutWatchlistUserInput = {
@@ -37081,6 +39016,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -37097,6 +39034,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -37114,6 +39053,45 @@ export namespace Prisma {
   export type ViralDraftV2CreateManySessionInputEnvelope = {
     data: ViralDraftV2CreateManySessionInput | ViralDraftV2CreateManySessionInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CharacterProfileCreateWithoutSessionsInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutCharacterProfilesInput
+  }
+
+  export type CharacterProfileUncheckedCreateWithoutSessionsInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    userId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CharacterProfileCreateOrConnectWithoutSessionsInput = {
+    where: CharacterProfileWhereUniqueInput
+    create: XOR<CharacterProfileCreateWithoutSessionsInput, CharacterProfileUncheckedCreateWithoutSessionsInput>
   }
 
   export type ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput = {
@@ -37143,12 +39121,59 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
+    characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
     scheduledAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
     postedAt?: DateTimeNullableFilter<"ViralDraftV2"> | Date | string | null
     tweetId?: StringNullableFilter<"ViralDraftV2"> | string | null
     createdAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
     updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
+  }
+
+  export type CharacterProfileUpsertWithoutSessionsInput = {
+    update: XOR<CharacterProfileUpdateWithoutSessionsInput, CharacterProfileUncheckedUpdateWithoutSessionsInput>
+    create: XOR<CharacterProfileCreateWithoutSessionsInput, CharacterProfileUncheckedCreateWithoutSessionsInput>
+    where?: CharacterProfileWhereInput
+  }
+
+  export type CharacterProfileUpdateToOneWithWhereWithoutSessionsInput = {
+    where?: CharacterProfileWhereInput
+    data: XOR<CharacterProfileUpdateWithoutSessionsInput, CharacterProfileUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type CharacterProfileUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutCharacterProfilesNestedInput
+  }
+
+  export type CharacterProfileUncheckedUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ViralSessionCreateWithoutDraftsInput = {
@@ -37158,10 +39183,12 @@ export namespace Prisma {
     style: string
     status?: string
     createdAt?: Date | string
+    voiceStyleMode?: string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
+    characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
   }
 
   export type ViralSessionUncheckedCreateWithoutDraftsInput = {
@@ -37171,6 +39198,8 @@ export namespace Prisma {
     style: string
     status?: string
     createdAt?: Date | string
+    characterProfileId?: string | null
+    voiceStyleMode?: string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
@@ -37245,10 +39274,12 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
+    characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutDraftsInput = {
@@ -37258,6 +39289,8 @@ export namespace Prisma {
     style?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    characterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
     topics?: NullableJsonNullValueInput | InputJsonValue
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
@@ -37322,6 +39355,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -37339,6 +39374,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -37370,6 +39407,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37387,12 +39426,168 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutCharacterProfilesInput = {
+    id?: string
+    twitterId: string
+    username: string
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    tokenSecret?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    watchlistUsers?: WatchlistUserCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCharacterProfilesInput = {
+    id?: string
+    twitterId: string
+    username: string
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    accessToken: string
+    refreshToken?: string | null
+    tokenSecret?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    watchlistUsers?: WatchlistUserUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCharacterProfilesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCharacterProfilesInput, UserUncheckedCreateWithoutCharacterProfilesInput>
+  }
+
+  export type ViralSessionCreateWithoutCharacterProfileInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionUncheckedCreateWithoutCharacterProfileInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionCreateOrConnectWithoutCharacterProfileInput = {
+    where: ViralSessionWhereUniqueInput
+    create: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput>
+  }
+
+  export type ViralSessionCreateManyCharacterProfileInputEnvelope = {
+    data: ViralSessionCreateManyCharacterProfileInput | ViralSessionCreateManyCharacterProfileInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutCharacterProfilesInput = {
+    update: XOR<UserUpdateWithoutCharacterProfilesInput, UserUncheckedUpdateWithoutCharacterProfilesInput>
+    create: XOR<UserCreateWithoutCharacterProfilesInput, UserUncheckedCreateWithoutCharacterProfilesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCharacterProfilesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCharacterProfilesInput, UserUncheckedUpdateWithoutCharacterProfilesInput>
+  }
+
+  export type UserUpdateWithoutCharacterProfilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    twitterId?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    watchlistUsers?: WatchlistUserUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCharacterProfilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    twitterId?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    watchlistUsers?: WatchlistUserUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ViralSessionUpsertWithWhereUniqueWithoutCharacterProfileInput = {
+    where: ViralSessionWhereUniqueInput
+    update: XOR<ViralSessionUpdateWithoutCharacterProfileInput, ViralSessionUncheckedUpdateWithoutCharacterProfileInput>
+    create: XOR<ViralSessionCreateWithoutCharacterProfileInput, ViralSessionUncheckedCreateWithoutCharacterProfileInput>
+  }
+
+  export type ViralSessionUpdateWithWhereUniqueWithoutCharacterProfileInput = {
+    where: ViralSessionWhereUniqueInput
+    data: XOR<ViralSessionUpdateWithoutCharacterProfileInput, ViralSessionUncheckedUpdateWithoutCharacterProfileInput>
+  }
+
+  export type ViralSessionUpdateManyWithWhereWithoutCharacterProfileInput = {
+    where: ViralSessionScalarWhereInput
+    data: XOR<ViralSessionUpdateManyMutationInput, ViralSessionUncheckedUpdateManyWithoutCharacterProfileInput>
+  }
+
+  export type ViralSessionScalarWhereInput = {
+    AND?: ViralSessionScalarWhereInput | ViralSessionScalarWhereInput[]
+    OR?: ViralSessionScalarWhereInput[]
+    NOT?: ViralSessionScalarWhereInput | ViralSessionScalarWhereInput[]
+    id?: StringFilter<"ViralSession"> | string
+    theme?: StringFilter<"ViralSession"> | string
+    platform?: StringFilter<"ViralSession"> | string
+    style?: StringFilter<"ViralSession"> | string
+    status?: StringFilter<"ViralSession"> | string
+    createdAt?: DateTimeFilter<"ViralSession"> | Date | string
+    characterProfileId?: StringNullableFilter<"ViralSession"> | string | null
+    voiceStyleMode?: StringNullableFilter<"ViralSession"> | string | null
+    topics?: JsonNullableFilter<"ViralSession">
+    concepts?: JsonNullableFilter<"ViralSession">
+    selectedIds?: StringNullableListFilter<"ViralSession">
+    contents?: JsonNullableFilter<"ViralSession">
   }
 
   export type ScheduledPostCreateManyRefPostInput = {
@@ -37477,6 +39672,22 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CharacterProfileCreateManyUserInput = {
+    id?: string
+    name: string
+    age: number
+    gender: string
+    tone: string
+    catchphrase: string
+    philosophy?: string | null
+    voiceStyle: JsonNullValueInput | InputJsonValue
+    topics: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SessionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     sessionToken?: StringFieldUpdateOperationsInput | string
@@ -37533,6 +39744,56 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     lastChecked?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CharacterProfileUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: ViralSessionUpdateManyWithoutCharacterProfileNestedInput
+  }
+
+  export type CharacterProfileUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: ViralSessionUncheckedUpdateManyWithoutCharacterProfileNestedInput
+  }
+
+  export type CharacterProfileUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    age?: IntFieldUpdateOperationsInput | number
+    gender?: StringFieldUpdateOperationsInput | string
+    tone?: StringFieldUpdateOperationsInput | string
+    catchphrase?: StringFieldUpdateOperationsInput | string
+    philosophy?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyle?: JsonNullValueInput | InputJsonValue
+    topics?: JsonNullValueInput | InputJsonValue
+    visual?: NullableJsonNullValueInput | InputJsonValue
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NewsArticleCreateManySourceInput = {
@@ -37924,6 +40185,8 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
     status?: string
     scheduledAt?: Date | string | null
     postedAt?: Date | string | null
@@ -37939,6 +40202,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37955,6 +40220,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37971,12 +40238,72 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ViralSessionCreateManyCharacterProfileInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type ViralSessionUpdateWithoutCharacterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+  }
+
+  export type ViralSessionUncheckedUpdateWithoutCharacterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ViralSessionUncheckedUpdateManyWithoutCharacterProfileInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
   }
 
 
@@ -38016,6 +40343,10 @@ export namespace Prisma {
      * @deprecated Use ViralSessionCountOutputTypeDefaultArgs instead
      */
     export type ViralSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CharacterProfileCountOutputTypeDefaultArgs instead
+     */
+    export type CharacterProfileCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CharacterProfileCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use BuzzPostDefaultArgs instead
      */
@@ -38108,6 +40439,10 @@ export namespace Prisma {
      * @deprecated Use ViralDraftPerformanceDefaultArgs instead
      */
     export type ViralDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralDraftPerformanceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CharacterProfileDefaultArgs instead
+     */
+    export type CharacterProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CharacterProfileDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

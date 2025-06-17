@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { FileText, MessageSquare, Images, Hash, Image, Calendar, Send, ChevronLeft } from 'lucide-react'
 import { useSession } from 'next-auth/react'
+import { useViralSession } from '@/hooks/useViralSession'
 
 interface PageProps {
   params: Promise<{
@@ -25,25 +26,11 @@ export default function ResultsPage({ params }: PageProps) {
   const { id } = use(params)
   const router = useRouter()
   const { data: authSession } = useSession()
-  const [session, setSession] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const [posting, setPosting] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetchSession()
-  }, [id])
-
-  const fetchSession = async () => {
-    try {
-      const response = await fetch(`/api/viral/v2/sessions/${id}`)
-      const data = await response.json()
-      setSession(data.session)
-    } catch (error) {
-      console.error('Error fetching session:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  
+  const { session, loading, error, refetch } = useViralSession(id, {
+    autoRedirectOnError: true
+  })
 
   const handlePostNow = async (draftId: string) => {
     if (!authSession) {
@@ -75,7 +62,7 @@ export default function ResultsPage({ params }: PageProps) {
         window.open(result.tweetUrl, '_blank')
       }
       
-      await fetchSession()
+      await refetch()
     } catch (error) {
       console.error('Error posting:', error)
       alert('投稿に失敗しました')
@@ -96,6 +83,27 @@ export default function ResultsPage({ params }: PageProps) {
     return (
       <div className="container max-w-6xl mx-auto py-8">
         <div className="text-center">読み込み中...</div>
+      </div>
+    )
+  }
+  
+  if (error || !session) {
+    return (
+      <div className="container max-w-6xl mx-auto py-8">
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="py-6">
+            <p className="text-red-700">
+              {error || 'セッションが見つかりません'}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/viral/v2/sessions')}
+              className="mt-4"
+            >
+              セッション一覧に戻る
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FileText, MessageSquare, Images, ChevronLeft, ExternalLink } from 'lucide-react'
+import { useViralSession } from '@/hooks/useViralSession'
+import { SessionStatus } from '@/types/viral-v2'
 
 interface PageProps {
   params: Promise<{
@@ -23,32 +25,20 @@ const formatIcons = {
 export default function ConceptsPage({ params }: PageProps) {
   const { id } = use(params)
   const router = useRouter()
-  const [session, setSession] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
   const [selectedConcepts, setSelectedConcepts] = useState<Set<string>>(new Set())
   const [submitting, setSubmitting] = useState(false)
+  
+  const { session, loading, error, refetch } = useViralSession(id, {
+    autoRedirectOnError: true
+  })
 
   useEffect(() => {
-    fetchSession()
-  }, [id])
-
-  const fetchSession = async () => {
-    try {
-      const response = await fetch(`/api/viral/v2/sessions/${id}`)
-      const data = await response.json()
-      setSession(data.session)
-      
-      // コンセプトがまだない場合は自動的に生成を開始
-      if (data.session && data.session.status === 'TOPICS_COLLECTED') {
-        handleGenerateConcepts()
-      }
-    } catch (error) {
-      console.error('Error fetching session:', error)
-    } finally {
-      setLoading(false)
+    // コンセプトがまだない場合は自動的に生成を開始
+    if (session?.status === SessionStatus.TOPICS_COLLECTED && !generating) {
+      handleGenerateConcepts()
     }
-  }
+  }, [session?.status])
 
   const handleGenerateConcepts = async () => {
     setGenerating(true)
@@ -61,7 +51,7 @@ export default function ConceptsPage({ params }: PageProps) {
         throw new Error('Failed to generate concepts')
       }
       
-      await fetchSession()
+      await refetch()
     } catch (error) {
       console.error('Error generating concepts:', error)
       alert('コンセプトの生成に失敗しました')
@@ -113,6 +103,27 @@ export default function ConceptsPage({ params }: PageProps) {
     return (
       <div className="container max-w-6xl mx-auto py-8">
         <div className="text-center">読み込み中...</div>
+      </div>
+    )
+  }
+  
+  if (error || !session) {
+    return (
+      <div className="container max-w-6xl mx-auto py-8">
+        <Card className="bg-red-50 border-red-200">
+          <CardContent className="py-6">
+            <p className="text-red-700">
+              {error || 'セッションが見つかりません'}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/viral/v2/sessions')}
+              className="mt-4"
+            >
+              セッション一覧に戻る
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }

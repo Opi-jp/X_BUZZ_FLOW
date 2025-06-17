@@ -49,6 +49,8 @@ export default function SessionsListPage() {
         return `/viral/v2/sessions/${session.id}/concepts`
       case 'CONCEPTS_GENERATED':
         return `/viral/v2/sessions/${session.id}/results`
+      case 'CONTENTS_GENERATED':
+        return `/viral/v2/sessions/${session.id}/character-contents`
       case 'COMPLETED':
         return `/viral/v2/sessions/${session.id}/results`
       default:

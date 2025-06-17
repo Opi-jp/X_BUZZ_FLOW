@@ -13,6 +13,15 @@ export async function POST(
 ) {
   try {
     const { id } = await params
+    const { reuseTopics = false } = await request.json().catch(() => ({}))
+    
+    // Validate ID
+    if (!id || id === 'undefined' || id === 'null') {
+      return NextResponse.json(
+        { error: 'Invalid session ID' },
+        { status: 400 }
+      )
+    }
     
     // セッションを取得
     const session = await prisma.viralSession.findUnique({
@@ -26,11 +35,51 @@ export async function POST(
       )
     }
     
-    if (session.status !== 'CREATED') {
+    if (session.status !== 'CREATED' && !reuseTopics) {
       return NextResponse.json(
         { error: 'Session already processed' },
         { status: 400 }
       )
+    }
+    
+    // 再利用モード: 同じテーマの最新のトピックを探す
+    if (reuseTopics) {
+      const recentSession = await prisma.viralSession.findFirst({
+        where: {
+          theme: session.theme,
+          status: { in: ['TOPICS_COLLECTED', 'CONCEPTS_GENERATED', 'CONTENTS_GENERATED', 'COMPLETED'] },
+          topics: { not: null },
+          createdAt: {
+            gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // 24時間以内
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      })
+      
+      if (recentSession && recentSession.topics) {
+        // 既存のトピックを再利用
+        await prisma.viralSession.update({
+          where: { id },
+          data: {
+            status: 'TOPICS_COLLECTED',
+            topics: recentSession.topics
+          }
+        })
+        
+        const topics = recentSession.topics as any
+        return NextResponse.json({
+          success: true,
+          reused: true,
+          sourceSessionId: recentSession.id,
+          session: {
+            id,
+            theme: session.theme,
+            status: 'TOPICS_COLLECTED',
+            topics
+          },
+          topicsCount: topics.parsed?.length || 0
+        })
+      }
     }
 
     // ステータスを更新
