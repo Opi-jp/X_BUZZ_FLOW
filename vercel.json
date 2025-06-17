@@ -1,4 +1,7 @@
 {
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
   "functions": {
     "app/api/viral/cot-session/[sessionId]/process/route.ts": {
       "maxDuration": 300
@@ -9,10 +12,22 @@
     "app/api/viral/gpt-session/[sessionId]/step1-orchestrated-v2/route.ts": {
       "maxDuration": 300
     },
+    "app/api/viral/v2/sessions/[id]/process-async/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/viral/v2/news/top10/route.ts": {
+      "maxDuration": 60
+    },
     "app/api/cron/process-cot-sessions/route.ts": {
       "maxDuration": 60
     },
     "app/api/cron/scheduled-posts/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/cron/scheduled-rts/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/cron/collect-news/route.ts": {
       "maxDuration": 60
     }
   },
@@ -26,8 +41,16 @@
       "schedule": "*/5 * * * *"
     },
     {
-      "path": "/api/cron/collect-performance",
+      "path": "/api/cron/scheduled-rts",
       "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/collect-news",
+      "schedule": "0 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/collect-performance",
+      "schedule": "*/30 * * * *"
     }
   ]
 }

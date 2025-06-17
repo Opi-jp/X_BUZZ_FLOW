@@ -120,21 +120,22 @@ model NewsSource {
 }
 
 model NewsArticle {
-  id              String           @id @default(uuid())
-  sourceId        String           @map("source_id")
+  id              String              @id @default(uuid())
+  sourceId        String              @map("source_id")
   title           String
   description     String?
-  url             String           @unique
-  publishedAt     DateTime         @map("published_at")
+  url             String              @unique
+  publishedAt     DateTime            @map("published_at")
   category        String?
   tags            String[]
   importance      Float?
-  processed       Boolean          @default(false)
-  createdAt       DateTime         @default(now()) @map("created_at")
-  metadata        Json?            @db.Json
+  processed       Boolean             @default(false)
+  createdAt       DateTime            @default(now()) @map("created_at")
+  metadata        Json?               @db.Json
   analysis        NewsAnalysis?
-  source          NewsSource       @relation(fields: [sourceId], references: [id])
+  source          NewsSource          @relation(fields: [sourceId], references: [id])
   newsThreadItems NewsThreadItem[]
+  viralRelations  NewsViralRelation[]
 
   @@map("news_articles")
 }
@@ -388,8 +389,9 @@ model CotDraft {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // リレーション
-  session     CotSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  performance CotDraftPerformance?
+  session      CotSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  performance  CotDraftPerformance?
+  scheduledRTs ScheduledRetweet[]
 
   @@unique([sessionId, conceptNumber])
   @@index([sessionId])
@@ -488,6 +490,121 @@ enum CotDraftStatus {
   @@map("cot_draft_status")
 }
 
+// ================================================================
+// Unified System Models
+// ================================================================
+
+// Self-RT Management
+model ScheduledRetweet {
+  id              String   @id @default(cuid())
+  originalPostId  String   @map("original_post_id")
+  originalContent String   @map("original_content")
+  scheduledAt     DateTime @map("scheduled_at")
+  status          RTStatus @default(SCHEDULED)
+  rtStrategy      String   @map("rt_strategy") // "6h_spike", "next_day_reminder", etc.
+  addComment      Boolean  @default(false) @map("add_comment")
+  commentText     String?  @map("comment_text")
+
+  // Relations
+  viralDraft   ViralDraftV2? @relation(fields: [viralDraftId], references: [id])
+  viralDraftId String?       @map("viral_draft_id")
+  cotDraft     CotDraft?     @relation(fields: [cotDraftId], references: [id])
+  cotDraftId   String?       @map("cot_draft_id")
+
+  // Execution details
+  executedAt DateTime? @map("executed_at")
+  rtPostId   String?   @map("rt_post_id")
+  error      String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, scheduledAt])
+  @@index([originalPostId])
+  @@map("scheduled_retweets")
+}
+
+enum RTStatus {
+  SCHEDULED
+  EXECUTED
+  FAILED
+  CANCELLED
+
+  @@map("rt_status")
+}
+
+// Unified Performance Tracking
+model UnifiedPerformance {
+  id          String @id @default(cuid())
+  contentId   String @unique @map("content_id")
+  contentType String @map("content_type") // VIRAL_DRAFT, COT_DRAFT, NEWS_THREAD
+
+  // Standard metrics (30m, 1h, 24h)
+  metrics30m Json? @map("metrics_30m")
+  metrics1h  Json? @map("metrics_1h")
+  metrics24h Json? @map("metrics_24h")
+
+  // Calculated fields
+  engagementRate   Float? @map("engagement_rate")
+  viralCoefficient Float? @map("viral_coefficient")
+
+  collectedAt DateTime @default(now()) @map("collected_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("unified_performance")
+}
+
+// News to Viral Relations
+model NewsViralRelation {
+  id             String  @id @default(cuid())
+  newsId         String  @map("news_id")
+  sessionId      String  @map("session_id")
+  relevanceScore Float?  @map("relevance_score")
+  usedInContent  Boolean @default(false) @map("used_in_content")
+
+  newsArticle NewsArticle  @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  session     ViralSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([newsId, sessionId])
+  @@map("news_viral_relations")
+}
+
+// Session Activity Log
+model SessionActivityLog {
+  id           String   @id @default(cuid())
+  sessionId    String   @map("session_id")
+  sessionType  String   @map("session_type") // VIRAL, COT, NEWS
+  activityType String   @map("activity_type") // API_CALL, STATUS_CHANGE, ERROR
+  details      Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("session_activity_logs")
+}
+
+// API Error Tracking
+model ApiErrorLog {
+  id             String   @id @default(cuid())
+  endpoint       String
+  method         String
+  statusCode     Int      @map("status_code")
+  errorMessage   String?  @map("error_message")
+  stackTrace     String?  @map("stack_trace")
+  requestBody    Json?    @map("request_body")
+  requestHeaders Json?    @map("request_headers")
+  userAgent      String?  @map("user_agent")
+  ipAddress      String?  @map("ip_address")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([endpoint])
+  @@index([statusCode])
+  @@index([createdAt])
+  @@map("api_error_logs")
+}
+
 // 新しいシンプルなV2システム
 model ViralSession {
   id        String   @id @default(cuid())
@@ -513,7 +630,8 @@ model ViralSession {
 
   // リレーション
   drafts           ViralDraftV2[]
-  characterProfile CharacterProfile? @relation(fields: [characterProfileId], references: [id])
+  characterProfile CharacterProfile?   @relation(fields: [characterProfileId], references: [id])
+  newsRelations    NewsViralRelation[]
 
   @@map("viral_sessions")
 }
@@ -541,7 +659,8 @@ model ViralDraftV2 {
   tweetId     String?   @map("tweet_id")
 
   // パフォーマンス
-  performance ViralDraftPerformance?
+  performance  ViralDraftPerformance?
+  scheduledRTs ScheduledRetweet[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -598,6 +717,11 @@ model CharacterProfile {
   userId      String?  @map("user_id") // カスタムキャラクターの場合
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // News preferences (for unified system)
+  preferredNewsCategories String[] @default([]) @map("preferred_news_categories")
+  newsCommentStyle        Json?    @map("news_comment_style")
+  topicExpertise          Json?    @map("topic_expertise")
 
   // リレーション
   user     User?          @relation(fields: [userId], references: [id])

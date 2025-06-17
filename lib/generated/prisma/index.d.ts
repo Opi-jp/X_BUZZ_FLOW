@@ -114,6 +114,31 @@ export type CotDraft = $Result.DefaultSelection<Prisma.$CotDraftPayload>
  */
 export type CotDraftPerformance = $Result.DefaultSelection<Prisma.$CotDraftPerformancePayload>
 /**
+ * Model ScheduledRetweet
+ * 
+ */
+export type ScheduledRetweet = $Result.DefaultSelection<Prisma.$ScheduledRetweetPayload>
+/**
+ * Model UnifiedPerformance
+ * 
+ */
+export type UnifiedPerformance = $Result.DefaultSelection<Prisma.$UnifiedPerformancePayload>
+/**
+ * Model NewsViralRelation
+ * 
+ */
+export type NewsViralRelation = $Result.DefaultSelection<Prisma.$NewsViralRelationPayload>
+/**
+ * Model SessionActivityLog
+ * 
+ */
+export type SessionActivityLog = $Result.DefaultSelection<Prisma.$SessionActivityLogPayload>
+/**
+ * Model ApiErrorLog
+ * 
+ */
+export type ApiErrorLog = $Result.DefaultSelection<Prisma.$ApiErrorLogPayload>
+/**
  * Model ViralSession
  * 
  */
@@ -201,6 +226,16 @@ export const CotDraftStatus: {
 
 export type CotDraftStatus = (typeof CotDraftStatus)[keyof typeof CotDraftStatus]
 
+
+export const RTStatus: {
+  SCHEDULED: 'SCHEDULED',
+  EXECUTED: 'EXECUTED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type RTStatus = (typeof RTStatus)[keyof typeof RTStatus]
+
 }
 
 export type PostStatus = $Enums.PostStatus
@@ -226,6 +261,10 @@ export const CotPhaseStatus: typeof $Enums.CotPhaseStatus
 export type CotDraftStatus = $Enums.CotDraftStatus
 
 export const CotDraftStatus: typeof $Enums.CotDraftStatus
+
+export type RTStatus = $Enums.RTStatus
+
+export const RTStatus: typeof $Enums.RTStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -549,6 +588,56 @@ export class PrismaClient<
     * ```
     */
   get cotDraftPerformance(): Prisma.CotDraftPerformanceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.scheduledRetweet`: Exposes CRUD operations for the **ScheduledRetweet** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScheduledRetweets
+    * const scheduledRetweets = await prisma.scheduledRetweet.findMany()
+    * ```
+    */
+  get scheduledRetweet(): Prisma.ScheduledRetweetDelegate<ExtArgs>;
+
+  /**
+   * `prisma.unifiedPerformance`: Exposes CRUD operations for the **UnifiedPerformance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UnifiedPerformances
+    * const unifiedPerformances = await prisma.unifiedPerformance.findMany()
+    * ```
+    */
+  get unifiedPerformance(): Prisma.UnifiedPerformanceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.newsViralRelation`: Exposes CRUD operations for the **NewsViralRelation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NewsViralRelations
+    * const newsViralRelations = await prisma.newsViralRelation.findMany()
+    * ```
+    */
+  get newsViralRelation(): Prisma.NewsViralRelationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.sessionActivityLog`: Exposes CRUD operations for the **SessionActivityLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SessionActivityLogs
+    * const sessionActivityLogs = await prisma.sessionActivityLog.findMany()
+    * ```
+    */
+  get sessionActivityLog(): Prisma.SessionActivityLogDelegate<ExtArgs>;
+
+  /**
+   * `prisma.apiErrorLog`: Exposes CRUD operations for the **ApiErrorLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ApiErrorLogs
+    * const apiErrorLogs = await prisma.apiErrorLog.findMany()
+    * ```
+    */
+  get apiErrorLog(): Prisma.ApiErrorLogDelegate<ExtArgs>;
 
   /**
    * `prisma.viralSession`: Exposes CRUD operations for the **ViralSession** model.
@@ -1050,6 +1139,11 @@ export namespace Prisma {
     CotPhase: 'CotPhase',
     CotDraft: 'CotDraft',
     CotDraftPerformance: 'CotDraftPerformance',
+    ScheduledRetweet: 'ScheduledRetweet',
+    UnifiedPerformance: 'UnifiedPerformance',
+    NewsViralRelation: 'NewsViralRelation',
+    SessionActivityLog: 'SessionActivityLog',
+    ApiErrorLog: 'ApiErrorLog',
     ViralSession: 'ViralSession',
     ViralDraftV2: 'ViralDraftV2',
     ViralDraftPerformance: 'ViralDraftPerformance',
@@ -1069,7 +1163,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "viralSession" | "viralDraftV2" | "viralDraftPerformance" | "characterProfile"
+      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "scheduledRetweet" | "unifiedPerformance" | "newsViralRelation" | "sessionActivityLog" | "apiErrorLog" | "viralSession" | "viralDraftV2" | "viralDraftPerformance" | "characterProfile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2473,6 +2567,356 @@ export namespace Prisma {
           }
         }
       }
+      ScheduledRetweet: {
+        payload: Prisma.$ScheduledRetweetPayload<ExtArgs>
+        fields: Prisma.ScheduledRetweetFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScheduledRetweetFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScheduledRetweetFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          findFirst: {
+            args: Prisma.ScheduledRetweetFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScheduledRetweetFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          findMany: {
+            args: Prisma.ScheduledRetweetFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>[]
+          }
+          create: {
+            args: Prisma.ScheduledRetweetCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          createMany: {
+            args: Prisma.ScheduledRetweetCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScheduledRetweetCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>[]
+          }
+          delete: {
+            args: Prisma.ScheduledRetweetDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          update: {
+            args: Prisma.ScheduledRetweetUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          deleteMany: {
+            args: Prisma.ScheduledRetweetDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScheduledRetweetUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ScheduledRetweetUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScheduledRetweetPayload>
+          }
+          aggregate: {
+            args: Prisma.ScheduledRetweetAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScheduledRetweet>
+          }
+          groupBy: {
+            args: Prisma.ScheduledRetweetGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledRetweetGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScheduledRetweetCountArgs<ExtArgs>
+            result: $Utils.Optional<ScheduledRetweetCountAggregateOutputType> | number
+          }
+        }
+      }
+      UnifiedPerformance: {
+        payload: Prisma.$UnifiedPerformancePayload<ExtArgs>
+        fields: Prisma.UnifiedPerformanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UnifiedPerformanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UnifiedPerformanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          findFirst: {
+            args: Prisma.UnifiedPerformanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UnifiedPerformanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          findMany: {
+            args: Prisma.UnifiedPerformanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>[]
+          }
+          create: {
+            args: Prisma.UnifiedPerformanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          createMany: {
+            args: Prisma.UnifiedPerformanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UnifiedPerformanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>[]
+          }
+          delete: {
+            args: Prisma.UnifiedPerformanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          update: {
+            args: Prisma.UnifiedPerformanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          deleteMany: {
+            args: Prisma.UnifiedPerformanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UnifiedPerformanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UnifiedPerformanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedPerformancePayload>
+          }
+          aggregate: {
+            args: Prisma.UnifiedPerformanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUnifiedPerformance>
+          }
+          groupBy: {
+            args: Prisma.UnifiedPerformanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedPerformanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UnifiedPerformanceCountArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedPerformanceCountAggregateOutputType> | number
+          }
+        }
+      }
+      NewsViralRelation: {
+        payload: Prisma.$NewsViralRelationPayload<ExtArgs>
+        fields: Prisma.NewsViralRelationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NewsViralRelationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NewsViralRelationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          findFirst: {
+            args: Prisma.NewsViralRelationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NewsViralRelationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          findMany: {
+            args: Prisma.NewsViralRelationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>[]
+          }
+          create: {
+            args: Prisma.NewsViralRelationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          createMany: {
+            args: Prisma.NewsViralRelationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NewsViralRelationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>[]
+          }
+          delete: {
+            args: Prisma.NewsViralRelationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          update: {
+            args: Prisma.NewsViralRelationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          deleteMany: {
+            args: Prisma.NewsViralRelationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NewsViralRelationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NewsViralRelationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NewsViralRelationPayload>
+          }
+          aggregate: {
+            args: Prisma.NewsViralRelationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNewsViralRelation>
+          }
+          groupBy: {
+            args: Prisma.NewsViralRelationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NewsViralRelationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NewsViralRelationCountArgs<ExtArgs>
+            result: $Utils.Optional<NewsViralRelationCountAggregateOutputType> | number
+          }
+        }
+      }
+      SessionActivityLog: {
+        payload: Prisma.$SessionActivityLogPayload<ExtArgs>
+        fields: Prisma.SessionActivityLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SessionActivityLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SessionActivityLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          findFirst: {
+            args: Prisma.SessionActivityLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SessionActivityLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          findMany: {
+            args: Prisma.SessionActivityLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>[]
+          }
+          create: {
+            args: Prisma.SessionActivityLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          createMany: {
+            args: Prisma.SessionActivityLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SessionActivityLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>[]
+          }
+          delete: {
+            args: Prisma.SessionActivityLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          update: {
+            args: Prisma.SessionActivityLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.SessionActivityLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SessionActivityLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SessionActivityLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SessionActivityLogPayload>
+          }
+          aggregate: {
+            args: Prisma.SessionActivityLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSessionActivityLog>
+          }
+          groupBy: {
+            args: Prisma.SessionActivityLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SessionActivityLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SessionActivityLogCountArgs<ExtArgs>
+            result: $Utils.Optional<SessionActivityLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      ApiErrorLog: {
+        payload: Prisma.$ApiErrorLogPayload<ExtArgs>
+        fields: Prisma.ApiErrorLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ApiErrorLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ApiErrorLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          findFirst: {
+            args: Prisma.ApiErrorLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ApiErrorLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          findMany: {
+            args: Prisma.ApiErrorLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>[]
+          }
+          create: {
+            args: Prisma.ApiErrorLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          createMany: {
+            args: Prisma.ApiErrorLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ApiErrorLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>[]
+          }
+          delete: {
+            args: Prisma.ApiErrorLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          update: {
+            args: Prisma.ApiErrorLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.ApiErrorLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ApiErrorLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ApiErrorLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ApiErrorLogPayload>
+          }
+          aggregate: {
+            args: Prisma.ApiErrorLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApiErrorLog>
+          }
+          groupBy: {
+            args: Prisma.ApiErrorLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ApiErrorLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ApiErrorLogCountArgs<ExtArgs>
+            result: $Utils.Optional<ApiErrorLogCountAggregateOutputType> | number
+          }
+        }
+      }
       ViralSession: {
         payload: Prisma.$ViralSessionPayload<ExtArgs>
         fields: Prisma.ViralSessionFieldRefs
@@ -3026,10 +3470,12 @@ export namespace Prisma {
 
   export type NewsArticleCountOutputType = {
     newsThreadItems: number
+    viralRelations: number
   }
 
   export type NewsArticleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     newsThreadItems?: boolean | NewsArticleCountOutputTypeCountNewsThreadItemsArgs
+    viralRelations?: boolean | NewsArticleCountOutputTypeCountViralRelationsArgs
   }
 
   // Custom InputTypes
@@ -3048,6 +3494,13 @@ export namespace Prisma {
    */
   export type NewsArticleCountOutputTypeCountNewsThreadItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NewsThreadItemWhereInput
+  }
+
+  /**
+   * NewsArticleCountOutputType without action
+   */
+  export type NewsArticleCountOutputTypeCountViralRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NewsViralRelationWhereInput
   }
 
 
@@ -3163,15 +3616,48 @@ export namespace Prisma {
 
 
   /**
+   * Count Type CotDraftCountOutputType
+   */
+
+  export type CotDraftCountOutputType = {
+    scheduledRTs: number
+  }
+
+  export type CotDraftCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    scheduledRTs?: boolean | CotDraftCountOutputTypeCountScheduledRTsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CotDraftCountOutputType without action
+   */
+  export type CotDraftCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotDraftCountOutputType
+     */
+    select?: CotDraftCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CotDraftCountOutputType without action
+   */
+  export type CotDraftCountOutputTypeCountScheduledRTsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledRetweetWhereInput
+  }
+
+
+  /**
    * Count Type ViralSessionCountOutputType
    */
 
   export type ViralSessionCountOutputType = {
     drafts: number
+    newsRelations: number
   }
 
   export type ViralSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     drafts?: boolean | ViralSessionCountOutputTypeCountDraftsArgs
+    newsRelations?: boolean | ViralSessionCountOutputTypeCountNewsRelationsArgs
   }
 
   // Custom InputTypes
@@ -3190,6 +3676,44 @@ export namespace Prisma {
    */
   export type ViralSessionCountOutputTypeCountDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ViralDraftV2WhereInput
+  }
+
+  /**
+   * ViralSessionCountOutputType without action
+   */
+  export type ViralSessionCountOutputTypeCountNewsRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NewsViralRelationWhereInput
+  }
+
+
+  /**
+   * Count Type ViralDraftV2CountOutputType
+   */
+
+  export type ViralDraftV2CountOutputType = {
+    scheduledRTs: number
+  }
+
+  export type ViralDraftV2CountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    scheduledRTs?: boolean | ViralDraftV2CountOutputTypeCountScheduledRTsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ViralDraftV2CountOutputType without action
+   */
+  export type ViralDraftV2CountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2CountOutputType
+     */
+    select?: ViralDraftV2CountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ViralDraftV2CountOutputType without action
+   */
+  export type ViralDraftV2CountOutputTypeCountScheduledRTsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledRetweetWhereInput
   }
 
 
@@ -9716,6 +10240,7 @@ export namespace Prisma {
     analysis?: boolean | NewsArticle$analysisArgs<ExtArgs>
     source?: boolean | NewsSourceDefaultArgs<ExtArgs>
     newsThreadItems?: boolean | NewsArticle$newsThreadItemsArgs<ExtArgs>
+    viralRelations?: boolean | NewsArticle$viralRelationsArgs<ExtArgs>
     _count?: boolean | NewsArticleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["newsArticle"]>
 
@@ -9754,6 +10279,7 @@ export namespace Prisma {
     analysis?: boolean | NewsArticle$analysisArgs<ExtArgs>
     source?: boolean | NewsSourceDefaultArgs<ExtArgs>
     newsThreadItems?: boolean | NewsArticle$newsThreadItemsArgs<ExtArgs>
+    viralRelations?: boolean | NewsArticle$viralRelationsArgs<ExtArgs>
     _count?: boolean | NewsArticleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type NewsArticleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9766,6 +10292,7 @@ export namespace Prisma {
       analysis: Prisma.$NewsAnalysisPayload<ExtArgs> | null
       source: Prisma.$NewsSourcePayload<ExtArgs>
       newsThreadItems: Prisma.$NewsThreadItemPayload<ExtArgs>[]
+      viralRelations: Prisma.$NewsViralRelationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10147,6 +10674,7 @@ export namespace Prisma {
     analysis<T extends NewsArticle$analysisArgs<ExtArgs> = {}>(args?: Subset<T, NewsArticle$analysisArgs<ExtArgs>>): Prisma__NewsAnalysisClient<$Result.GetResult<Prisma.$NewsAnalysisPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     source<T extends NewsSourceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NewsSourceDefaultArgs<ExtArgs>>): Prisma__NewsSourceClient<$Result.GetResult<Prisma.$NewsSourcePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     newsThreadItems<T extends NewsArticle$newsThreadItemsArgs<ExtArgs> = {}>(args?: Subset<T, NewsArticle$newsThreadItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsThreadItemPayload<ExtArgs>, T, "findMany"> | Null>
+    viralRelations<T extends NewsArticle$viralRelationsArgs<ExtArgs> = {}>(args?: Subset<T, NewsArticle$viralRelationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10538,6 +11066,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NewsThreadItemScalarFieldEnum | NewsThreadItemScalarFieldEnum[]
+  }
+
+  /**
+   * NewsArticle.viralRelations
+   */
+  export type NewsArticle$viralRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    where?: NewsViralRelationWhereInput
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    cursor?: NewsViralRelationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
   }
 
   /**
@@ -21915,6 +22463,8 @@ export namespace Prisma {
     updatedAt?: boolean
     session?: boolean | CotSessionDefaultArgs<ExtArgs>
     performance?: boolean | CotDraft$performanceArgs<ExtArgs>
+    scheduledRTs?: boolean | CotDraft$scheduledRTsArgs<ExtArgs>
+    _count?: boolean | CotDraftCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cotDraft"]>
 
   export type CotDraftSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21975,6 +22525,8 @@ export namespace Prisma {
   export type CotDraftInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     session?: boolean | CotSessionDefaultArgs<ExtArgs>
     performance?: boolean | CotDraft$performanceArgs<ExtArgs>
+    scheduledRTs?: boolean | CotDraft$scheduledRTsArgs<ExtArgs>
+    _count?: boolean | CotDraftCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CotDraftIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     session?: boolean | CotSessionDefaultArgs<ExtArgs>
@@ -21985,6 +22537,7 @@ export namespace Prisma {
     objects: {
       session: Prisma.$CotSessionPayload<ExtArgs>
       performance: Prisma.$CotDraftPerformancePayload<ExtArgs> | null
+      scheduledRTs: Prisma.$ScheduledRetweetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22377,6 +22930,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     session<T extends CotSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CotSessionDefaultArgs<ExtArgs>>): Prisma__CotSessionClient<$Result.GetResult<Prisma.$CotSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     performance<T extends CotDraft$performanceArgs<ExtArgs> = {}>(args?: Subset<T, CotDraft$performanceArgs<ExtArgs>>): Prisma__CotDraftPerformanceClient<$Result.GetResult<Prisma.$CotDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    scheduledRTs<T extends CotDraft$scheduledRTsArgs<ExtArgs> = {}>(args?: Subset<T, CotDraft$scheduledRTsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22760,6 +23314,26 @@ export namespace Prisma {
      */
     include?: CotDraftPerformanceInclude<ExtArgs> | null
     where?: CotDraftPerformanceWhereInput
+  }
+
+  /**
+   * CotDraft.scheduledRTs
+   */
+  export type CotDraft$scheduledRTsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    where?: ScheduledRetweetWhereInput
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    cursor?: ScheduledRetweetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduledRetweetScalarFieldEnum | ScheduledRetweetScalarFieldEnum[]
   }
 
   /**
@@ -23953,6 +24527,4906 @@ export namespace Prisma {
 
 
   /**
+   * Model ScheduledRetweet
+   */
+
+  export type AggregateScheduledRetweet = {
+    _count: ScheduledRetweetCountAggregateOutputType | null
+    _min: ScheduledRetweetMinAggregateOutputType | null
+    _max: ScheduledRetweetMaxAggregateOutputType | null
+  }
+
+  export type ScheduledRetweetMinAggregateOutputType = {
+    id: string | null
+    originalPostId: string | null
+    originalContent: string | null
+    scheduledAt: Date | null
+    status: $Enums.RTStatus | null
+    rtStrategy: string | null
+    addComment: boolean | null
+    commentText: string | null
+    viralDraftId: string | null
+    cotDraftId: string | null
+    executedAt: Date | null
+    rtPostId: string | null
+    error: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScheduledRetweetMaxAggregateOutputType = {
+    id: string | null
+    originalPostId: string | null
+    originalContent: string | null
+    scheduledAt: Date | null
+    status: $Enums.RTStatus | null
+    rtStrategy: string | null
+    addComment: boolean | null
+    commentText: string | null
+    viralDraftId: string | null
+    cotDraftId: string | null
+    executedAt: Date | null
+    rtPostId: string | null
+    error: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ScheduledRetweetCountAggregateOutputType = {
+    id: number
+    originalPostId: number
+    originalContent: number
+    scheduledAt: number
+    status: number
+    rtStrategy: number
+    addComment: number
+    commentText: number
+    viralDraftId: number
+    cotDraftId: number
+    executedAt: number
+    rtPostId: number
+    error: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ScheduledRetweetMinAggregateInputType = {
+    id?: true
+    originalPostId?: true
+    originalContent?: true
+    scheduledAt?: true
+    status?: true
+    rtStrategy?: true
+    addComment?: true
+    commentText?: true
+    viralDraftId?: true
+    cotDraftId?: true
+    executedAt?: true
+    rtPostId?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScheduledRetweetMaxAggregateInputType = {
+    id?: true
+    originalPostId?: true
+    originalContent?: true
+    scheduledAt?: true
+    status?: true
+    rtStrategy?: true
+    addComment?: true
+    commentText?: true
+    viralDraftId?: true
+    cotDraftId?: true
+    executedAt?: true
+    rtPostId?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ScheduledRetweetCountAggregateInputType = {
+    id?: true
+    originalPostId?: true
+    originalContent?: true
+    scheduledAt?: true
+    status?: true
+    rtStrategy?: true
+    addComment?: true
+    commentText?: true
+    viralDraftId?: true
+    cotDraftId?: true
+    executedAt?: true
+    rtPostId?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ScheduledRetweetAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledRetweet to aggregate.
+     */
+    where?: ScheduledRetweetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledRetweets to fetch.
+     */
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScheduledRetweetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledRetweets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledRetweets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScheduledRetweets
+    **/
+    _count?: true | ScheduledRetweetCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScheduledRetweetMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScheduledRetweetMaxAggregateInputType
+  }
+
+  export type GetScheduledRetweetAggregateType<T extends ScheduledRetweetAggregateArgs> = {
+        [P in keyof T & keyof AggregateScheduledRetweet]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScheduledRetweet[P]>
+      : GetScalarType<T[P], AggregateScheduledRetweet[P]>
+  }
+
+
+
+
+  export type ScheduledRetweetGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScheduledRetweetWhereInput
+    orderBy?: ScheduledRetweetOrderByWithAggregationInput | ScheduledRetweetOrderByWithAggregationInput[]
+    by: ScheduledRetweetScalarFieldEnum[] | ScheduledRetweetScalarFieldEnum
+    having?: ScheduledRetweetScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScheduledRetweetCountAggregateInputType | true
+    _min?: ScheduledRetweetMinAggregateInputType
+    _max?: ScheduledRetweetMaxAggregateInputType
+  }
+
+  export type ScheduledRetweetGroupByOutputType = {
+    id: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date
+    status: $Enums.RTStatus
+    rtStrategy: string
+    addComment: boolean
+    commentText: string | null
+    viralDraftId: string | null
+    cotDraftId: string | null
+    executedAt: Date | null
+    rtPostId: string | null
+    error: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ScheduledRetweetCountAggregateOutputType | null
+    _min: ScheduledRetweetMinAggregateOutputType | null
+    _max: ScheduledRetweetMaxAggregateOutputType | null
+  }
+
+  type GetScheduledRetweetGroupByPayload<T extends ScheduledRetweetGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScheduledRetweetGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScheduledRetweetGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScheduledRetweetGroupByOutputType[P]>
+            : GetScalarType<T[P], ScheduledRetweetGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScheduledRetweetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    originalPostId?: boolean
+    originalContent?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    rtStrategy?: boolean
+    addComment?: boolean
+    commentText?: boolean
+    viralDraftId?: boolean
+    cotDraftId?: boolean
+    executedAt?: boolean
+    rtPostId?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    viralDraft?: boolean | ScheduledRetweet$viralDraftArgs<ExtArgs>
+    cotDraft?: boolean | ScheduledRetweet$cotDraftArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledRetweet"]>
+
+  export type ScheduledRetweetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    originalPostId?: boolean
+    originalContent?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    rtStrategy?: boolean
+    addComment?: boolean
+    commentText?: boolean
+    viralDraftId?: boolean
+    cotDraftId?: boolean
+    executedAt?: boolean
+    rtPostId?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    viralDraft?: boolean | ScheduledRetweet$viralDraftArgs<ExtArgs>
+    cotDraft?: boolean | ScheduledRetweet$cotDraftArgs<ExtArgs>
+  }, ExtArgs["result"]["scheduledRetweet"]>
+
+  export type ScheduledRetweetSelectScalar = {
+    id?: boolean
+    originalPostId?: boolean
+    originalContent?: boolean
+    scheduledAt?: boolean
+    status?: boolean
+    rtStrategy?: boolean
+    addComment?: boolean
+    commentText?: boolean
+    viralDraftId?: boolean
+    cotDraftId?: boolean
+    executedAt?: boolean
+    rtPostId?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ScheduledRetweetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    viralDraft?: boolean | ScheduledRetweet$viralDraftArgs<ExtArgs>
+    cotDraft?: boolean | ScheduledRetweet$cotDraftArgs<ExtArgs>
+  }
+  export type ScheduledRetweetIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    viralDraft?: boolean | ScheduledRetweet$viralDraftArgs<ExtArgs>
+    cotDraft?: boolean | ScheduledRetweet$cotDraftArgs<ExtArgs>
+  }
+
+  export type $ScheduledRetweetPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScheduledRetweet"
+    objects: {
+      viralDraft: Prisma.$ViralDraftV2Payload<ExtArgs> | null
+      cotDraft: Prisma.$CotDraftPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      originalPostId: string
+      originalContent: string
+      scheduledAt: Date
+      status: $Enums.RTStatus
+      rtStrategy: string
+      addComment: boolean
+      commentText: string | null
+      viralDraftId: string | null
+      cotDraftId: string | null
+      executedAt: Date | null
+      rtPostId: string | null
+      error: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["scheduledRetweet"]>
+    composites: {}
+  }
+
+  type ScheduledRetweetGetPayload<S extends boolean | null | undefined | ScheduledRetweetDefaultArgs> = $Result.GetResult<Prisma.$ScheduledRetweetPayload, S>
+
+  type ScheduledRetweetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ScheduledRetweetFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ScheduledRetweetCountAggregateInputType | true
+    }
+
+  export interface ScheduledRetweetDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScheduledRetweet'], meta: { name: 'ScheduledRetweet' } }
+    /**
+     * Find zero or one ScheduledRetweet that matches the filter.
+     * @param {ScheduledRetweetFindUniqueArgs} args - Arguments to find a ScheduledRetweet
+     * @example
+     * // Get one ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScheduledRetweetFindUniqueArgs>(args: SelectSubset<T, ScheduledRetweetFindUniqueArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ScheduledRetweet that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ScheduledRetweetFindUniqueOrThrowArgs} args - Arguments to find a ScheduledRetweet
+     * @example
+     * // Get one ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScheduledRetweetFindUniqueOrThrowArgs>(args: SelectSubset<T, ScheduledRetweetFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ScheduledRetweet that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetFindFirstArgs} args - Arguments to find a ScheduledRetweet
+     * @example
+     * // Get one ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScheduledRetweetFindFirstArgs>(args?: SelectSubset<T, ScheduledRetweetFindFirstArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ScheduledRetweet that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetFindFirstOrThrowArgs} args - Arguments to find a ScheduledRetweet
+     * @example
+     * // Get one ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScheduledRetweetFindFirstOrThrowArgs>(args?: SelectSubset<T, ScheduledRetweetFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ScheduledRetweets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScheduledRetweets
+     * const scheduledRetweets = await prisma.scheduledRetweet.findMany()
+     * 
+     * // Get first 10 ScheduledRetweets
+     * const scheduledRetweets = await prisma.scheduledRetweet.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scheduledRetweetWithIdOnly = await prisma.scheduledRetweet.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScheduledRetweetFindManyArgs>(args?: SelectSubset<T, ScheduledRetweetFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ScheduledRetweet.
+     * @param {ScheduledRetweetCreateArgs} args - Arguments to create a ScheduledRetweet.
+     * @example
+     * // Create one ScheduledRetweet
+     * const ScheduledRetweet = await prisma.scheduledRetweet.create({
+     *   data: {
+     *     // ... data to create a ScheduledRetweet
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScheduledRetweetCreateArgs>(args: SelectSubset<T, ScheduledRetweetCreateArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ScheduledRetweets.
+     * @param {ScheduledRetweetCreateManyArgs} args - Arguments to create many ScheduledRetweets.
+     * @example
+     * // Create many ScheduledRetweets
+     * const scheduledRetweet = await prisma.scheduledRetweet.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScheduledRetweetCreateManyArgs>(args?: SelectSubset<T, ScheduledRetweetCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScheduledRetweets and returns the data saved in the database.
+     * @param {ScheduledRetweetCreateManyAndReturnArgs} args - Arguments to create many ScheduledRetweets.
+     * @example
+     * // Create many ScheduledRetweets
+     * const scheduledRetweet = await prisma.scheduledRetweet.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScheduledRetweets and only return the `id`
+     * const scheduledRetweetWithIdOnly = await prisma.scheduledRetweet.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScheduledRetweetCreateManyAndReturnArgs>(args?: SelectSubset<T, ScheduledRetweetCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ScheduledRetweet.
+     * @param {ScheduledRetweetDeleteArgs} args - Arguments to delete one ScheduledRetweet.
+     * @example
+     * // Delete one ScheduledRetweet
+     * const ScheduledRetweet = await prisma.scheduledRetweet.delete({
+     *   where: {
+     *     // ... filter to delete one ScheduledRetweet
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScheduledRetweetDeleteArgs>(args: SelectSubset<T, ScheduledRetweetDeleteArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ScheduledRetweet.
+     * @param {ScheduledRetweetUpdateArgs} args - Arguments to update one ScheduledRetweet.
+     * @example
+     * // Update one ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScheduledRetweetUpdateArgs>(args: SelectSubset<T, ScheduledRetweetUpdateArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ScheduledRetweets.
+     * @param {ScheduledRetweetDeleteManyArgs} args - Arguments to filter ScheduledRetweets to delete.
+     * @example
+     * // Delete a few ScheduledRetweets
+     * const { count } = await prisma.scheduledRetweet.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScheduledRetweetDeleteManyArgs>(args?: SelectSubset<T, ScheduledRetweetDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScheduledRetweets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScheduledRetweets
+     * const scheduledRetweet = await prisma.scheduledRetweet.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScheduledRetweetUpdateManyArgs>(args: SelectSubset<T, ScheduledRetweetUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ScheduledRetweet.
+     * @param {ScheduledRetweetUpsertArgs} args - Arguments to update or create a ScheduledRetweet.
+     * @example
+     * // Update or create a ScheduledRetweet
+     * const scheduledRetweet = await prisma.scheduledRetweet.upsert({
+     *   create: {
+     *     // ... data to create a ScheduledRetweet
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScheduledRetweet we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScheduledRetweetUpsertArgs>(args: SelectSubset<T, ScheduledRetweetUpsertArgs<ExtArgs>>): Prisma__ScheduledRetweetClient<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ScheduledRetweets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetCountArgs} args - Arguments to filter ScheduledRetweets to count.
+     * @example
+     * // Count the number of ScheduledRetweets
+     * const count = await prisma.scheduledRetweet.count({
+     *   where: {
+     *     // ... the filter for the ScheduledRetweets we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScheduledRetweetCountArgs>(
+      args?: Subset<T, ScheduledRetweetCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScheduledRetweetCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScheduledRetweet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScheduledRetweetAggregateArgs>(args: Subset<T, ScheduledRetweetAggregateArgs>): Prisma.PrismaPromise<GetScheduledRetweetAggregateType<T>>
+
+    /**
+     * Group by ScheduledRetweet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScheduledRetweetGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScheduledRetweetGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScheduledRetweetGroupByArgs['orderBy'] }
+        : { orderBy?: ScheduledRetweetGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScheduledRetweetGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScheduledRetweetGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScheduledRetweet model
+   */
+  readonly fields: ScheduledRetweetFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScheduledRetweet.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScheduledRetweetClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    viralDraft<T extends ScheduledRetweet$viralDraftArgs<ExtArgs> = {}>(args?: Subset<T, ScheduledRetweet$viralDraftArgs<ExtArgs>>): Prisma__ViralDraftV2Client<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    cotDraft<T extends ScheduledRetweet$cotDraftArgs<ExtArgs> = {}>(args?: Subset<T, ScheduledRetweet$cotDraftArgs<ExtArgs>>): Prisma__CotDraftClient<$Result.GetResult<Prisma.$CotDraftPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScheduledRetweet model
+   */ 
+  interface ScheduledRetweetFieldRefs {
+    readonly id: FieldRef<"ScheduledRetweet", 'String'>
+    readonly originalPostId: FieldRef<"ScheduledRetweet", 'String'>
+    readonly originalContent: FieldRef<"ScheduledRetweet", 'String'>
+    readonly scheduledAt: FieldRef<"ScheduledRetweet", 'DateTime'>
+    readonly status: FieldRef<"ScheduledRetweet", 'RTStatus'>
+    readonly rtStrategy: FieldRef<"ScheduledRetweet", 'String'>
+    readonly addComment: FieldRef<"ScheduledRetweet", 'Boolean'>
+    readonly commentText: FieldRef<"ScheduledRetweet", 'String'>
+    readonly viralDraftId: FieldRef<"ScheduledRetweet", 'String'>
+    readonly cotDraftId: FieldRef<"ScheduledRetweet", 'String'>
+    readonly executedAt: FieldRef<"ScheduledRetweet", 'DateTime'>
+    readonly rtPostId: FieldRef<"ScheduledRetweet", 'String'>
+    readonly error: FieldRef<"ScheduledRetweet", 'String'>
+    readonly createdAt: FieldRef<"ScheduledRetweet", 'DateTime'>
+    readonly updatedAt: FieldRef<"ScheduledRetweet", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScheduledRetweet findUnique
+   */
+  export type ScheduledRetweetFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledRetweet to fetch.
+     */
+    where: ScheduledRetweetWhereUniqueInput
+  }
+
+  /**
+   * ScheduledRetweet findUniqueOrThrow
+   */
+  export type ScheduledRetweetFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledRetweet to fetch.
+     */
+    where: ScheduledRetweetWhereUniqueInput
+  }
+
+  /**
+   * ScheduledRetweet findFirst
+   */
+  export type ScheduledRetweetFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledRetweet to fetch.
+     */
+    where?: ScheduledRetweetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledRetweets to fetch.
+     */
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledRetweets.
+     */
+    cursor?: ScheduledRetweetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledRetweets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledRetweets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledRetweets.
+     */
+    distinct?: ScheduledRetweetScalarFieldEnum | ScheduledRetweetScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledRetweet findFirstOrThrow
+   */
+  export type ScheduledRetweetFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledRetweet to fetch.
+     */
+    where?: ScheduledRetweetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledRetweets to fetch.
+     */
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScheduledRetweets.
+     */
+    cursor?: ScheduledRetweetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledRetweets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledRetweets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScheduledRetweets.
+     */
+    distinct?: ScheduledRetweetScalarFieldEnum | ScheduledRetweetScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledRetweet findMany
+   */
+  export type ScheduledRetweetFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter, which ScheduledRetweets to fetch.
+     */
+    where?: ScheduledRetweetWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScheduledRetweets to fetch.
+     */
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScheduledRetweets.
+     */
+    cursor?: ScheduledRetweetWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScheduledRetweets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScheduledRetweets.
+     */
+    skip?: number
+    distinct?: ScheduledRetweetScalarFieldEnum | ScheduledRetweetScalarFieldEnum[]
+  }
+
+  /**
+   * ScheduledRetweet create
+   */
+  export type ScheduledRetweetCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ScheduledRetweet.
+     */
+    data: XOR<ScheduledRetweetCreateInput, ScheduledRetweetUncheckedCreateInput>
+  }
+
+  /**
+   * ScheduledRetweet createMany
+   */
+  export type ScheduledRetweetCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScheduledRetweets.
+     */
+    data: ScheduledRetweetCreateManyInput | ScheduledRetweetCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScheduledRetweet createManyAndReturn
+   */
+  export type ScheduledRetweetCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ScheduledRetweets.
+     */
+    data: ScheduledRetweetCreateManyInput | ScheduledRetweetCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ScheduledRetweet update
+   */
+  export type ScheduledRetweetUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ScheduledRetweet.
+     */
+    data: XOR<ScheduledRetweetUpdateInput, ScheduledRetweetUncheckedUpdateInput>
+    /**
+     * Choose, which ScheduledRetweet to update.
+     */
+    where: ScheduledRetweetWhereUniqueInput
+  }
+
+  /**
+   * ScheduledRetweet updateMany
+   */
+  export type ScheduledRetweetUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScheduledRetweets.
+     */
+    data: XOR<ScheduledRetweetUpdateManyMutationInput, ScheduledRetweetUncheckedUpdateManyInput>
+    /**
+     * Filter which ScheduledRetweets to update
+     */
+    where?: ScheduledRetweetWhereInput
+  }
+
+  /**
+   * ScheduledRetweet upsert
+   */
+  export type ScheduledRetweetUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ScheduledRetweet to update in case it exists.
+     */
+    where: ScheduledRetweetWhereUniqueInput
+    /**
+     * In case the ScheduledRetweet found by the `where` argument doesn't exist, create a new ScheduledRetweet with this data.
+     */
+    create: XOR<ScheduledRetweetCreateInput, ScheduledRetweetUncheckedCreateInput>
+    /**
+     * In case the ScheduledRetweet was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScheduledRetweetUpdateInput, ScheduledRetweetUncheckedUpdateInput>
+  }
+
+  /**
+   * ScheduledRetweet delete
+   */
+  export type ScheduledRetweetDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    /**
+     * Filter which ScheduledRetweet to delete.
+     */
+    where: ScheduledRetweetWhereUniqueInput
+  }
+
+  /**
+   * ScheduledRetweet deleteMany
+   */
+  export type ScheduledRetweetDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScheduledRetweets to delete
+     */
+    where?: ScheduledRetweetWhereInput
+  }
+
+  /**
+   * ScheduledRetweet.viralDraft
+   */
+  export type ScheduledRetweet$viralDraftArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralDraftV2
+     */
+    select?: ViralDraftV2Select<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralDraftV2Include<ExtArgs> | null
+    where?: ViralDraftV2WhereInput
+  }
+
+  /**
+   * ScheduledRetweet.cotDraft
+   */
+  export type ScheduledRetweet$cotDraftArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CotDraft
+     */
+    select?: CotDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CotDraftInclude<ExtArgs> | null
+    where?: CotDraftWhereInput
+  }
+
+  /**
+   * ScheduledRetweet without action
+   */
+  export type ScheduledRetweetDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UnifiedPerformance
+   */
+
+  export type AggregateUnifiedPerformance = {
+    _count: UnifiedPerformanceCountAggregateOutputType | null
+    _avg: UnifiedPerformanceAvgAggregateOutputType | null
+    _sum: UnifiedPerformanceSumAggregateOutputType | null
+    _min: UnifiedPerformanceMinAggregateOutputType | null
+    _max: UnifiedPerformanceMaxAggregateOutputType | null
+  }
+
+  export type UnifiedPerformanceAvgAggregateOutputType = {
+    engagementRate: number | null
+    viralCoefficient: number | null
+  }
+
+  export type UnifiedPerformanceSumAggregateOutputType = {
+    engagementRate: number | null
+    viralCoefficient: number | null
+  }
+
+  export type UnifiedPerformanceMinAggregateOutputType = {
+    id: string | null
+    contentId: string | null
+    contentType: string | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UnifiedPerformanceMaxAggregateOutputType = {
+    id: string | null
+    contentId: string | null
+    contentType: string | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UnifiedPerformanceCountAggregateOutputType = {
+    id: number
+    contentId: number
+    contentType: number
+    metrics30m: number
+    metrics1h: number
+    metrics24h: number
+    engagementRate: number
+    viralCoefficient: number
+    collectedAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UnifiedPerformanceAvgAggregateInputType = {
+    engagementRate?: true
+    viralCoefficient?: true
+  }
+
+  export type UnifiedPerformanceSumAggregateInputType = {
+    engagementRate?: true
+    viralCoefficient?: true
+  }
+
+  export type UnifiedPerformanceMinAggregateInputType = {
+    id?: true
+    contentId?: true
+    contentType?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type UnifiedPerformanceMaxAggregateInputType = {
+    id?: true
+    contentId?: true
+    contentType?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type UnifiedPerformanceCountAggregateInputType = {
+    id?: true
+    contentId?: true
+    contentType?: true
+    metrics30m?: true
+    metrics1h?: true
+    metrics24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    collectedAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UnifiedPerformanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedPerformance to aggregate.
+     */
+    where?: UnifiedPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedPerformances to fetch.
+     */
+    orderBy?: UnifiedPerformanceOrderByWithRelationInput | UnifiedPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UnifiedPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UnifiedPerformances
+    **/
+    _count?: true | UnifiedPerformanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UnifiedPerformanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UnifiedPerformanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UnifiedPerformanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UnifiedPerformanceMaxAggregateInputType
+  }
+
+  export type GetUnifiedPerformanceAggregateType<T extends UnifiedPerformanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateUnifiedPerformance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUnifiedPerformance[P]>
+      : GetScalarType<T[P], AggregateUnifiedPerformance[P]>
+  }
+
+
+
+
+  export type UnifiedPerformanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UnifiedPerformanceWhereInput
+    orderBy?: UnifiedPerformanceOrderByWithAggregationInput | UnifiedPerformanceOrderByWithAggregationInput[]
+    by: UnifiedPerformanceScalarFieldEnum[] | UnifiedPerformanceScalarFieldEnum
+    having?: UnifiedPerformanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UnifiedPerformanceCountAggregateInputType | true
+    _avg?: UnifiedPerformanceAvgAggregateInputType
+    _sum?: UnifiedPerformanceSumAggregateInputType
+    _min?: UnifiedPerformanceMinAggregateInputType
+    _max?: UnifiedPerformanceMaxAggregateInputType
+  }
+
+  export type UnifiedPerformanceGroupByOutputType = {
+    id: string
+    contentId: string
+    contentType: string
+    metrics30m: JsonValue | null
+    metrics1h: JsonValue | null
+    metrics24h: JsonValue | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    collectedAt: Date
+    updatedAt: Date
+    _count: UnifiedPerformanceCountAggregateOutputType | null
+    _avg: UnifiedPerformanceAvgAggregateOutputType | null
+    _sum: UnifiedPerformanceSumAggregateOutputType | null
+    _min: UnifiedPerformanceMinAggregateOutputType | null
+    _max: UnifiedPerformanceMaxAggregateOutputType | null
+  }
+
+  type GetUnifiedPerformanceGroupByPayload<T extends UnifiedPerformanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UnifiedPerformanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UnifiedPerformanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UnifiedPerformanceGroupByOutputType[P]>
+            : GetScalarType<T[P], UnifiedPerformanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UnifiedPerformanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contentId?: boolean
+    contentType?: boolean
+    metrics30m?: boolean
+    metrics1h?: boolean
+    metrics24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["unifiedPerformance"]>
+
+  export type UnifiedPerformanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    contentId?: boolean
+    contentType?: boolean
+    metrics30m?: boolean
+    metrics1h?: boolean
+    metrics24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["unifiedPerformance"]>
+
+  export type UnifiedPerformanceSelectScalar = {
+    id?: boolean
+    contentId?: boolean
+    contentType?: boolean
+    metrics30m?: boolean
+    metrics1h?: boolean
+    metrics24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $UnifiedPerformancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UnifiedPerformance"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      contentId: string
+      contentType: string
+      metrics30m: Prisma.JsonValue | null
+      metrics1h: Prisma.JsonValue | null
+      metrics24h: Prisma.JsonValue | null
+      engagementRate: number | null
+      viralCoefficient: number | null
+      collectedAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["unifiedPerformance"]>
+    composites: {}
+  }
+
+  type UnifiedPerformanceGetPayload<S extends boolean | null | undefined | UnifiedPerformanceDefaultArgs> = $Result.GetResult<Prisma.$UnifiedPerformancePayload, S>
+
+  type UnifiedPerformanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UnifiedPerformanceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UnifiedPerformanceCountAggregateInputType | true
+    }
+
+  export interface UnifiedPerformanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UnifiedPerformance'], meta: { name: 'UnifiedPerformance' } }
+    /**
+     * Find zero or one UnifiedPerformance that matches the filter.
+     * @param {UnifiedPerformanceFindUniqueArgs} args - Arguments to find a UnifiedPerformance
+     * @example
+     * // Get one UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UnifiedPerformanceFindUniqueArgs>(args: SelectSubset<T, UnifiedPerformanceFindUniqueArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one UnifiedPerformance that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UnifiedPerformanceFindUniqueOrThrowArgs} args - Arguments to find a UnifiedPerformance
+     * @example
+     * // Get one UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UnifiedPerformanceFindUniqueOrThrowArgs>(args: SelectSubset<T, UnifiedPerformanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first UnifiedPerformance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceFindFirstArgs} args - Arguments to find a UnifiedPerformance
+     * @example
+     * // Get one UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UnifiedPerformanceFindFirstArgs>(args?: SelectSubset<T, UnifiedPerformanceFindFirstArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first UnifiedPerformance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceFindFirstOrThrowArgs} args - Arguments to find a UnifiedPerformance
+     * @example
+     * // Get one UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UnifiedPerformanceFindFirstOrThrowArgs>(args?: SelectSubset<T, UnifiedPerformanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more UnifiedPerformances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UnifiedPerformances
+     * const unifiedPerformances = await prisma.unifiedPerformance.findMany()
+     * 
+     * // Get first 10 UnifiedPerformances
+     * const unifiedPerformances = await prisma.unifiedPerformance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const unifiedPerformanceWithIdOnly = await prisma.unifiedPerformance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UnifiedPerformanceFindManyArgs>(args?: SelectSubset<T, UnifiedPerformanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a UnifiedPerformance.
+     * @param {UnifiedPerformanceCreateArgs} args - Arguments to create a UnifiedPerformance.
+     * @example
+     * // Create one UnifiedPerformance
+     * const UnifiedPerformance = await prisma.unifiedPerformance.create({
+     *   data: {
+     *     // ... data to create a UnifiedPerformance
+     *   }
+     * })
+     * 
+     */
+    create<T extends UnifiedPerformanceCreateArgs>(args: SelectSubset<T, UnifiedPerformanceCreateArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many UnifiedPerformances.
+     * @param {UnifiedPerformanceCreateManyArgs} args - Arguments to create many UnifiedPerformances.
+     * @example
+     * // Create many UnifiedPerformances
+     * const unifiedPerformance = await prisma.unifiedPerformance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UnifiedPerformanceCreateManyArgs>(args?: SelectSubset<T, UnifiedPerformanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UnifiedPerformances and returns the data saved in the database.
+     * @param {UnifiedPerformanceCreateManyAndReturnArgs} args - Arguments to create many UnifiedPerformances.
+     * @example
+     * // Create many UnifiedPerformances
+     * const unifiedPerformance = await prisma.unifiedPerformance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UnifiedPerformances and only return the `id`
+     * const unifiedPerformanceWithIdOnly = await prisma.unifiedPerformance.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UnifiedPerformanceCreateManyAndReturnArgs>(args?: SelectSubset<T, UnifiedPerformanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a UnifiedPerformance.
+     * @param {UnifiedPerformanceDeleteArgs} args - Arguments to delete one UnifiedPerformance.
+     * @example
+     * // Delete one UnifiedPerformance
+     * const UnifiedPerformance = await prisma.unifiedPerformance.delete({
+     *   where: {
+     *     // ... filter to delete one UnifiedPerformance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UnifiedPerformanceDeleteArgs>(args: SelectSubset<T, UnifiedPerformanceDeleteArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one UnifiedPerformance.
+     * @param {UnifiedPerformanceUpdateArgs} args - Arguments to update one UnifiedPerformance.
+     * @example
+     * // Update one UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UnifiedPerformanceUpdateArgs>(args: SelectSubset<T, UnifiedPerformanceUpdateArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more UnifiedPerformances.
+     * @param {UnifiedPerformanceDeleteManyArgs} args - Arguments to filter UnifiedPerformances to delete.
+     * @example
+     * // Delete a few UnifiedPerformances
+     * const { count } = await prisma.unifiedPerformance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UnifiedPerformanceDeleteManyArgs>(args?: SelectSubset<T, UnifiedPerformanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UnifiedPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UnifiedPerformances
+     * const unifiedPerformance = await prisma.unifiedPerformance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UnifiedPerformanceUpdateManyArgs>(args: SelectSubset<T, UnifiedPerformanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UnifiedPerformance.
+     * @param {UnifiedPerformanceUpsertArgs} args - Arguments to update or create a UnifiedPerformance.
+     * @example
+     * // Update or create a UnifiedPerformance
+     * const unifiedPerformance = await prisma.unifiedPerformance.upsert({
+     *   create: {
+     *     // ... data to create a UnifiedPerformance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UnifiedPerformance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UnifiedPerformanceUpsertArgs>(args: SelectSubset<T, UnifiedPerformanceUpsertArgs<ExtArgs>>): Prisma__UnifiedPerformanceClient<$Result.GetResult<Prisma.$UnifiedPerformancePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of UnifiedPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceCountArgs} args - Arguments to filter UnifiedPerformances to count.
+     * @example
+     * // Count the number of UnifiedPerformances
+     * const count = await prisma.unifiedPerformance.count({
+     *   where: {
+     *     // ... the filter for the UnifiedPerformances we want to count
+     *   }
+     * })
+    **/
+    count<T extends UnifiedPerformanceCountArgs>(
+      args?: Subset<T, UnifiedPerformanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UnifiedPerformanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UnifiedPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UnifiedPerformanceAggregateArgs>(args: Subset<T, UnifiedPerformanceAggregateArgs>): Prisma.PrismaPromise<GetUnifiedPerformanceAggregateType<T>>
+
+    /**
+     * Group by UnifiedPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedPerformanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UnifiedPerformanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UnifiedPerformanceGroupByArgs['orderBy'] }
+        : { orderBy?: UnifiedPerformanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UnifiedPerformanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUnifiedPerformanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UnifiedPerformance model
+   */
+  readonly fields: UnifiedPerformanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UnifiedPerformance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UnifiedPerformanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UnifiedPerformance model
+   */ 
+  interface UnifiedPerformanceFieldRefs {
+    readonly id: FieldRef<"UnifiedPerformance", 'String'>
+    readonly contentId: FieldRef<"UnifiedPerformance", 'String'>
+    readonly contentType: FieldRef<"UnifiedPerformance", 'String'>
+    readonly metrics30m: FieldRef<"UnifiedPerformance", 'Json'>
+    readonly metrics1h: FieldRef<"UnifiedPerformance", 'Json'>
+    readonly metrics24h: FieldRef<"UnifiedPerformance", 'Json'>
+    readonly engagementRate: FieldRef<"UnifiedPerformance", 'Float'>
+    readonly viralCoefficient: FieldRef<"UnifiedPerformance", 'Float'>
+    readonly collectedAt: FieldRef<"UnifiedPerformance", 'DateTime'>
+    readonly updatedAt: FieldRef<"UnifiedPerformance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UnifiedPerformance findUnique
+   */
+  export type UnifiedPerformanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter, which UnifiedPerformance to fetch.
+     */
+    where: UnifiedPerformanceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedPerformance findUniqueOrThrow
+   */
+  export type UnifiedPerformanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter, which UnifiedPerformance to fetch.
+     */
+    where: UnifiedPerformanceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedPerformance findFirst
+   */
+  export type UnifiedPerformanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter, which UnifiedPerformance to fetch.
+     */
+    where?: UnifiedPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedPerformances to fetch.
+     */
+    orderBy?: UnifiedPerformanceOrderByWithRelationInput | UnifiedPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedPerformances.
+     */
+    cursor?: UnifiedPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedPerformances.
+     */
+    distinct?: UnifiedPerformanceScalarFieldEnum | UnifiedPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedPerformance findFirstOrThrow
+   */
+  export type UnifiedPerformanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter, which UnifiedPerformance to fetch.
+     */
+    where?: UnifiedPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedPerformances to fetch.
+     */
+    orderBy?: UnifiedPerformanceOrderByWithRelationInput | UnifiedPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedPerformances.
+     */
+    cursor?: UnifiedPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedPerformances.
+     */
+    distinct?: UnifiedPerformanceScalarFieldEnum | UnifiedPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedPerformance findMany
+   */
+  export type UnifiedPerformanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter, which UnifiedPerformances to fetch.
+     */
+    where?: UnifiedPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedPerformances to fetch.
+     */
+    orderBy?: UnifiedPerformanceOrderByWithRelationInput | UnifiedPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UnifiedPerformances.
+     */
+    cursor?: UnifiedPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedPerformances.
+     */
+    skip?: number
+    distinct?: UnifiedPerformanceScalarFieldEnum | UnifiedPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedPerformance create
+   */
+  export type UnifiedPerformanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * The data needed to create a UnifiedPerformance.
+     */
+    data: XOR<UnifiedPerformanceCreateInput, UnifiedPerformanceUncheckedCreateInput>
+  }
+
+  /**
+   * UnifiedPerformance createMany
+   */
+  export type UnifiedPerformanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UnifiedPerformances.
+     */
+    data: UnifiedPerformanceCreateManyInput | UnifiedPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedPerformance createManyAndReturn
+   */
+  export type UnifiedPerformanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UnifiedPerformances.
+     */
+    data: UnifiedPerformanceCreateManyInput | UnifiedPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedPerformance update
+   */
+  export type UnifiedPerformanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * The data needed to update a UnifiedPerformance.
+     */
+    data: XOR<UnifiedPerformanceUpdateInput, UnifiedPerformanceUncheckedUpdateInput>
+    /**
+     * Choose, which UnifiedPerformance to update.
+     */
+    where: UnifiedPerformanceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedPerformance updateMany
+   */
+  export type UnifiedPerformanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UnifiedPerformances.
+     */
+    data: XOR<UnifiedPerformanceUpdateManyMutationInput, UnifiedPerformanceUncheckedUpdateManyInput>
+    /**
+     * Filter which UnifiedPerformances to update
+     */
+    where?: UnifiedPerformanceWhereInput
+  }
+
+  /**
+   * UnifiedPerformance upsert
+   */
+  export type UnifiedPerformanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * The filter to search for the UnifiedPerformance to update in case it exists.
+     */
+    where: UnifiedPerformanceWhereUniqueInput
+    /**
+     * In case the UnifiedPerformance found by the `where` argument doesn't exist, create a new UnifiedPerformance with this data.
+     */
+    create: XOR<UnifiedPerformanceCreateInput, UnifiedPerformanceUncheckedCreateInput>
+    /**
+     * In case the UnifiedPerformance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UnifiedPerformanceUpdateInput, UnifiedPerformanceUncheckedUpdateInput>
+  }
+
+  /**
+   * UnifiedPerformance delete
+   */
+  export type UnifiedPerformanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+    /**
+     * Filter which UnifiedPerformance to delete.
+     */
+    where: UnifiedPerformanceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedPerformance deleteMany
+   */
+  export type UnifiedPerformanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedPerformances to delete
+     */
+    where?: UnifiedPerformanceWhereInput
+  }
+
+  /**
+   * UnifiedPerformance without action
+   */
+  export type UnifiedPerformanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedPerformance
+     */
+    select?: UnifiedPerformanceSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NewsViralRelation
+   */
+
+  export type AggregateNewsViralRelation = {
+    _count: NewsViralRelationCountAggregateOutputType | null
+    _avg: NewsViralRelationAvgAggregateOutputType | null
+    _sum: NewsViralRelationSumAggregateOutputType | null
+    _min: NewsViralRelationMinAggregateOutputType | null
+    _max: NewsViralRelationMaxAggregateOutputType | null
+  }
+
+  export type NewsViralRelationAvgAggregateOutputType = {
+    relevanceScore: number | null
+  }
+
+  export type NewsViralRelationSumAggregateOutputType = {
+    relevanceScore: number | null
+  }
+
+  export type NewsViralRelationMinAggregateOutputType = {
+    id: string | null
+    newsId: string | null
+    sessionId: string | null
+    relevanceScore: number | null
+    usedInContent: boolean | null
+    createdAt: Date | null
+  }
+
+  export type NewsViralRelationMaxAggregateOutputType = {
+    id: string | null
+    newsId: string | null
+    sessionId: string | null
+    relevanceScore: number | null
+    usedInContent: boolean | null
+    createdAt: Date | null
+  }
+
+  export type NewsViralRelationCountAggregateOutputType = {
+    id: number
+    newsId: number
+    sessionId: number
+    relevanceScore: number
+    usedInContent: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type NewsViralRelationAvgAggregateInputType = {
+    relevanceScore?: true
+  }
+
+  export type NewsViralRelationSumAggregateInputType = {
+    relevanceScore?: true
+  }
+
+  export type NewsViralRelationMinAggregateInputType = {
+    id?: true
+    newsId?: true
+    sessionId?: true
+    relevanceScore?: true
+    usedInContent?: true
+    createdAt?: true
+  }
+
+  export type NewsViralRelationMaxAggregateInputType = {
+    id?: true
+    newsId?: true
+    sessionId?: true
+    relevanceScore?: true
+    usedInContent?: true
+    createdAt?: true
+  }
+
+  export type NewsViralRelationCountAggregateInputType = {
+    id?: true
+    newsId?: true
+    sessionId?: true
+    relevanceScore?: true
+    usedInContent?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type NewsViralRelationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NewsViralRelation to aggregate.
+     */
+    where?: NewsViralRelationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NewsViralRelations to fetch.
+     */
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NewsViralRelationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NewsViralRelations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NewsViralRelations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NewsViralRelations
+    **/
+    _count?: true | NewsViralRelationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NewsViralRelationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NewsViralRelationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NewsViralRelationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NewsViralRelationMaxAggregateInputType
+  }
+
+  export type GetNewsViralRelationAggregateType<T extends NewsViralRelationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNewsViralRelation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNewsViralRelation[P]>
+      : GetScalarType<T[P], AggregateNewsViralRelation[P]>
+  }
+
+
+
+
+  export type NewsViralRelationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NewsViralRelationWhereInput
+    orderBy?: NewsViralRelationOrderByWithAggregationInput | NewsViralRelationOrderByWithAggregationInput[]
+    by: NewsViralRelationScalarFieldEnum[] | NewsViralRelationScalarFieldEnum
+    having?: NewsViralRelationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NewsViralRelationCountAggregateInputType | true
+    _avg?: NewsViralRelationAvgAggregateInputType
+    _sum?: NewsViralRelationSumAggregateInputType
+    _min?: NewsViralRelationMinAggregateInputType
+    _max?: NewsViralRelationMaxAggregateInputType
+  }
+
+  export type NewsViralRelationGroupByOutputType = {
+    id: string
+    newsId: string
+    sessionId: string
+    relevanceScore: number | null
+    usedInContent: boolean
+    createdAt: Date
+    _count: NewsViralRelationCountAggregateOutputType | null
+    _avg: NewsViralRelationAvgAggregateOutputType | null
+    _sum: NewsViralRelationSumAggregateOutputType | null
+    _min: NewsViralRelationMinAggregateOutputType | null
+    _max: NewsViralRelationMaxAggregateOutputType | null
+  }
+
+  type GetNewsViralRelationGroupByPayload<T extends NewsViralRelationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NewsViralRelationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NewsViralRelationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NewsViralRelationGroupByOutputType[P]>
+            : GetScalarType<T[P], NewsViralRelationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NewsViralRelationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    newsId?: boolean
+    sessionId?: boolean
+    relevanceScore?: boolean
+    usedInContent?: boolean
+    createdAt?: boolean
+    newsArticle?: boolean | NewsArticleDefaultArgs<ExtArgs>
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["newsViralRelation"]>
+
+  export type NewsViralRelationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    newsId?: boolean
+    sessionId?: boolean
+    relevanceScore?: boolean
+    usedInContent?: boolean
+    createdAt?: boolean
+    newsArticle?: boolean | NewsArticleDefaultArgs<ExtArgs>
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["newsViralRelation"]>
+
+  export type NewsViralRelationSelectScalar = {
+    id?: boolean
+    newsId?: boolean
+    sessionId?: boolean
+    relevanceScore?: boolean
+    usedInContent?: boolean
+    createdAt?: boolean
+  }
+
+  export type NewsViralRelationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    newsArticle?: boolean | NewsArticleDefaultArgs<ExtArgs>
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }
+  export type NewsViralRelationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    newsArticle?: boolean | NewsArticleDefaultArgs<ExtArgs>
+    session?: boolean | ViralSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $NewsViralRelationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NewsViralRelation"
+    objects: {
+      newsArticle: Prisma.$NewsArticlePayload<ExtArgs>
+      session: Prisma.$ViralSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      newsId: string
+      sessionId: string
+      relevanceScore: number | null
+      usedInContent: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["newsViralRelation"]>
+    composites: {}
+  }
+
+  type NewsViralRelationGetPayload<S extends boolean | null | undefined | NewsViralRelationDefaultArgs> = $Result.GetResult<Prisma.$NewsViralRelationPayload, S>
+
+  type NewsViralRelationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<NewsViralRelationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: NewsViralRelationCountAggregateInputType | true
+    }
+
+  export interface NewsViralRelationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NewsViralRelation'], meta: { name: 'NewsViralRelation' } }
+    /**
+     * Find zero or one NewsViralRelation that matches the filter.
+     * @param {NewsViralRelationFindUniqueArgs} args - Arguments to find a NewsViralRelation
+     * @example
+     * // Get one NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NewsViralRelationFindUniqueArgs>(args: SelectSubset<T, NewsViralRelationFindUniqueArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one NewsViralRelation that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {NewsViralRelationFindUniqueOrThrowArgs} args - Arguments to find a NewsViralRelation
+     * @example
+     * // Get one NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NewsViralRelationFindUniqueOrThrowArgs>(args: SelectSubset<T, NewsViralRelationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first NewsViralRelation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationFindFirstArgs} args - Arguments to find a NewsViralRelation
+     * @example
+     * // Get one NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NewsViralRelationFindFirstArgs>(args?: SelectSubset<T, NewsViralRelationFindFirstArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first NewsViralRelation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationFindFirstOrThrowArgs} args - Arguments to find a NewsViralRelation
+     * @example
+     * // Get one NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NewsViralRelationFindFirstOrThrowArgs>(args?: SelectSubset<T, NewsViralRelationFindFirstOrThrowArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more NewsViralRelations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NewsViralRelations
+     * const newsViralRelations = await prisma.newsViralRelation.findMany()
+     * 
+     * // Get first 10 NewsViralRelations
+     * const newsViralRelations = await prisma.newsViralRelation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const newsViralRelationWithIdOnly = await prisma.newsViralRelation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NewsViralRelationFindManyArgs>(args?: SelectSubset<T, NewsViralRelationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a NewsViralRelation.
+     * @param {NewsViralRelationCreateArgs} args - Arguments to create a NewsViralRelation.
+     * @example
+     * // Create one NewsViralRelation
+     * const NewsViralRelation = await prisma.newsViralRelation.create({
+     *   data: {
+     *     // ... data to create a NewsViralRelation
+     *   }
+     * })
+     * 
+     */
+    create<T extends NewsViralRelationCreateArgs>(args: SelectSubset<T, NewsViralRelationCreateArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many NewsViralRelations.
+     * @param {NewsViralRelationCreateManyArgs} args - Arguments to create many NewsViralRelations.
+     * @example
+     * // Create many NewsViralRelations
+     * const newsViralRelation = await prisma.newsViralRelation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NewsViralRelationCreateManyArgs>(args?: SelectSubset<T, NewsViralRelationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NewsViralRelations and returns the data saved in the database.
+     * @param {NewsViralRelationCreateManyAndReturnArgs} args - Arguments to create many NewsViralRelations.
+     * @example
+     * // Create many NewsViralRelations
+     * const newsViralRelation = await prisma.newsViralRelation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NewsViralRelations and only return the `id`
+     * const newsViralRelationWithIdOnly = await prisma.newsViralRelation.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NewsViralRelationCreateManyAndReturnArgs>(args?: SelectSubset<T, NewsViralRelationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a NewsViralRelation.
+     * @param {NewsViralRelationDeleteArgs} args - Arguments to delete one NewsViralRelation.
+     * @example
+     * // Delete one NewsViralRelation
+     * const NewsViralRelation = await prisma.newsViralRelation.delete({
+     *   where: {
+     *     // ... filter to delete one NewsViralRelation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NewsViralRelationDeleteArgs>(args: SelectSubset<T, NewsViralRelationDeleteArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one NewsViralRelation.
+     * @param {NewsViralRelationUpdateArgs} args - Arguments to update one NewsViralRelation.
+     * @example
+     * // Update one NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NewsViralRelationUpdateArgs>(args: SelectSubset<T, NewsViralRelationUpdateArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more NewsViralRelations.
+     * @param {NewsViralRelationDeleteManyArgs} args - Arguments to filter NewsViralRelations to delete.
+     * @example
+     * // Delete a few NewsViralRelations
+     * const { count } = await prisma.newsViralRelation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NewsViralRelationDeleteManyArgs>(args?: SelectSubset<T, NewsViralRelationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NewsViralRelations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NewsViralRelations
+     * const newsViralRelation = await prisma.newsViralRelation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NewsViralRelationUpdateManyArgs>(args: SelectSubset<T, NewsViralRelationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one NewsViralRelation.
+     * @param {NewsViralRelationUpsertArgs} args - Arguments to update or create a NewsViralRelation.
+     * @example
+     * // Update or create a NewsViralRelation
+     * const newsViralRelation = await prisma.newsViralRelation.upsert({
+     *   create: {
+     *     // ... data to create a NewsViralRelation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NewsViralRelation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NewsViralRelationUpsertArgs>(args: SelectSubset<T, NewsViralRelationUpsertArgs<ExtArgs>>): Prisma__NewsViralRelationClient<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of NewsViralRelations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationCountArgs} args - Arguments to filter NewsViralRelations to count.
+     * @example
+     * // Count the number of NewsViralRelations
+     * const count = await prisma.newsViralRelation.count({
+     *   where: {
+     *     // ... the filter for the NewsViralRelations we want to count
+     *   }
+     * })
+    **/
+    count<T extends NewsViralRelationCountArgs>(
+      args?: Subset<T, NewsViralRelationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NewsViralRelationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NewsViralRelation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NewsViralRelationAggregateArgs>(args: Subset<T, NewsViralRelationAggregateArgs>): Prisma.PrismaPromise<GetNewsViralRelationAggregateType<T>>
+
+    /**
+     * Group by NewsViralRelation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NewsViralRelationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NewsViralRelationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NewsViralRelationGroupByArgs['orderBy'] }
+        : { orderBy?: NewsViralRelationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NewsViralRelationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNewsViralRelationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NewsViralRelation model
+   */
+  readonly fields: NewsViralRelationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NewsViralRelation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NewsViralRelationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    newsArticle<T extends NewsArticleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, NewsArticleDefaultArgs<ExtArgs>>): Prisma__NewsArticleClient<$Result.GetResult<Prisma.$NewsArticlePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    session<T extends ViralSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ViralSessionDefaultArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NewsViralRelation model
+   */ 
+  interface NewsViralRelationFieldRefs {
+    readonly id: FieldRef<"NewsViralRelation", 'String'>
+    readonly newsId: FieldRef<"NewsViralRelation", 'String'>
+    readonly sessionId: FieldRef<"NewsViralRelation", 'String'>
+    readonly relevanceScore: FieldRef<"NewsViralRelation", 'Float'>
+    readonly usedInContent: FieldRef<"NewsViralRelation", 'Boolean'>
+    readonly createdAt: FieldRef<"NewsViralRelation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NewsViralRelation findUnique
+   */
+  export type NewsViralRelationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter, which NewsViralRelation to fetch.
+     */
+    where: NewsViralRelationWhereUniqueInput
+  }
+
+  /**
+   * NewsViralRelation findUniqueOrThrow
+   */
+  export type NewsViralRelationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter, which NewsViralRelation to fetch.
+     */
+    where: NewsViralRelationWhereUniqueInput
+  }
+
+  /**
+   * NewsViralRelation findFirst
+   */
+  export type NewsViralRelationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter, which NewsViralRelation to fetch.
+     */
+    where?: NewsViralRelationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NewsViralRelations to fetch.
+     */
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NewsViralRelations.
+     */
+    cursor?: NewsViralRelationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NewsViralRelations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NewsViralRelations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NewsViralRelations.
+     */
+    distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
+  }
+
+  /**
+   * NewsViralRelation findFirstOrThrow
+   */
+  export type NewsViralRelationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter, which NewsViralRelation to fetch.
+     */
+    where?: NewsViralRelationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NewsViralRelations to fetch.
+     */
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NewsViralRelations.
+     */
+    cursor?: NewsViralRelationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NewsViralRelations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NewsViralRelations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NewsViralRelations.
+     */
+    distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
+  }
+
+  /**
+   * NewsViralRelation findMany
+   */
+  export type NewsViralRelationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter, which NewsViralRelations to fetch.
+     */
+    where?: NewsViralRelationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NewsViralRelations to fetch.
+     */
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NewsViralRelations.
+     */
+    cursor?: NewsViralRelationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NewsViralRelations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NewsViralRelations.
+     */
+    skip?: number
+    distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
+  }
+
+  /**
+   * NewsViralRelation create
+   */
+  export type NewsViralRelationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a NewsViralRelation.
+     */
+    data: XOR<NewsViralRelationCreateInput, NewsViralRelationUncheckedCreateInput>
+  }
+
+  /**
+   * NewsViralRelation createMany
+   */
+  export type NewsViralRelationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NewsViralRelations.
+     */
+    data: NewsViralRelationCreateManyInput | NewsViralRelationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NewsViralRelation createManyAndReturn
+   */
+  export type NewsViralRelationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many NewsViralRelations.
+     */
+    data: NewsViralRelationCreateManyInput | NewsViralRelationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * NewsViralRelation update
+   */
+  export type NewsViralRelationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a NewsViralRelation.
+     */
+    data: XOR<NewsViralRelationUpdateInput, NewsViralRelationUncheckedUpdateInput>
+    /**
+     * Choose, which NewsViralRelation to update.
+     */
+    where: NewsViralRelationWhereUniqueInput
+  }
+
+  /**
+   * NewsViralRelation updateMany
+   */
+  export type NewsViralRelationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NewsViralRelations.
+     */
+    data: XOR<NewsViralRelationUpdateManyMutationInput, NewsViralRelationUncheckedUpdateManyInput>
+    /**
+     * Filter which NewsViralRelations to update
+     */
+    where?: NewsViralRelationWhereInput
+  }
+
+  /**
+   * NewsViralRelation upsert
+   */
+  export type NewsViralRelationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the NewsViralRelation to update in case it exists.
+     */
+    where: NewsViralRelationWhereUniqueInput
+    /**
+     * In case the NewsViralRelation found by the `where` argument doesn't exist, create a new NewsViralRelation with this data.
+     */
+    create: XOR<NewsViralRelationCreateInput, NewsViralRelationUncheckedCreateInput>
+    /**
+     * In case the NewsViralRelation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NewsViralRelationUpdateInput, NewsViralRelationUncheckedUpdateInput>
+  }
+
+  /**
+   * NewsViralRelation delete
+   */
+  export type NewsViralRelationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    /**
+     * Filter which NewsViralRelation to delete.
+     */
+    where: NewsViralRelationWhereUniqueInput
+  }
+
+  /**
+   * NewsViralRelation deleteMany
+   */
+  export type NewsViralRelationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NewsViralRelations to delete
+     */
+    where?: NewsViralRelationWhereInput
+  }
+
+  /**
+   * NewsViralRelation without action
+   */
+  export type NewsViralRelationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SessionActivityLog
+   */
+
+  export type AggregateSessionActivityLog = {
+    _count: SessionActivityLogCountAggregateOutputType | null
+    _min: SessionActivityLogMinAggregateOutputType | null
+    _max: SessionActivityLogMaxAggregateOutputType | null
+  }
+
+  export type SessionActivityLogMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    sessionType: string | null
+    activityType: string | null
+    createdAt: Date | null
+  }
+
+  export type SessionActivityLogMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    sessionType: string | null
+    activityType: string | null
+    createdAt: Date | null
+  }
+
+  export type SessionActivityLogCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    sessionType: number
+    activityType: number
+    details: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SessionActivityLogMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sessionType?: true
+    activityType?: true
+    createdAt?: true
+  }
+
+  export type SessionActivityLogMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sessionType?: true
+    activityType?: true
+    createdAt?: true
+  }
+
+  export type SessionActivityLogCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sessionType?: true
+    activityType?: true
+    details?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SessionActivityLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SessionActivityLog to aggregate.
+     */
+    where?: SessionActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionActivityLogs to fetch.
+     */
+    orderBy?: SessionActivityLogOrderByWithRelationInput | SessionActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SessionActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SessionActivityLogs
+    **/
+    _count?: true | SessionActivityLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SessionActivityLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SessionActivityLogMaxAggregateInputType
+  }
+
+  export type GetSessionActivityLogAggregateType<T extends SessionActivityLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateSessionActivityLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSessionActivityLog[P]>
+      : GetScalarType<T[P], AggregateSessionActivityLog[P]>
+  }
+
+
+
+
+  export type SessionActivityLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SessionActivityLogWhereInput
+    orderBy?: SessionActivityLogOrderByWithAggregationInput | SessionActivityLogOrderByWithAggregationInput[]
+    by: SessionActivityLogScalarFieldEnum[] | SessionActivityLogScalarFieldEnum
+    having?: SessionActivityLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SessionActivityLogCountAggregateInputType | true
+    _min?: SessionActivityLogMinAggregateInputType
+    _max?: SessionActivityLogMaxAggregateInputType
+  }
+
+  export type SessionActivityLogGroupByOutputType = {
+    id: string
+    sessionId: string
+    sessionType: string
+    activityType: string
+    details: JsonValue | null
+    createdAt: Date
+    _count: SessionActivityLogCountAggregateOutputType | null
+    _min: SessionActivityLogMinAggregateOutputType | null
+    _max: SessionActivityLogMaxAggregateOutputType | null
+  }
+
+  type GetSessionActivityLogGroupByPayload<T extends SessionActivityLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SessionActivityLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SessionActivityLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SessionActivityLogGroupByOutputType[P]>
+            : GetScalarType<T[P], SessionActivityLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SessionActivityLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    sessionType?: boolean
+    activityType?: boolean
+    details?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["sessionActivityLog"]>
+
+  export type SessionActivityLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    sessionType?: boolean
+    activityType?: boolean
+    details?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["sessionActivityLog"]>
+
+  export type SessionActivityLogSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    sessionType?: boolean
+    activityType?: boolean
+    details?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $SessionActivityLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SessionActivityLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      sessionType: string
+      activityType: string
+      details: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["sessionActivityLog"]>
+    composites: {}
+  }
+
+  type SessionActivityLogGetPayload<S extends boolean | null | undefined | SessionActivityLogDefaultArgs> = $Result.GetResult<Prisma.$SessionActivityLogPayload, S>
+
+  type SessionActivityLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SessionActivityLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SessionActivityLogCountAggregateInputType | true
+    }
+
+  export interface SessionActivityLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SessionActivityLog'], meta: { name: 'SessionActivityLog' } }
+    /**
+     * Find zero or one SessionActivityLog that matches the filter.
+     * @param {SessionActivityLogFindUniqueArgs} args - Arguments to find a SessionActivityLog
+     * @example
+     * // Get one SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SessionActivityLogFindUniqueArgs>(args: SelectSubset<T, SessionActivityLogFindUniqueArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SessionActivityLog that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SessionActivityLogFindUniqueOrThrowArgs} args - Arguments to find a SessionActivityLog
+     * @example
+     * // Get one SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SessionActivityLogFindUniqueOrThrowArgs>(args: SelectSubset<T, SessionActivityLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SessionActivityLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogFindFirstArgs} args - Arguments to find a SessionActivityLog
+     * @example
+     * // Get one SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SessionActivityLogFindFirstArgs>(args?: SelectSubset<T, SessionActivityLogFindFirstArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SessionActivityLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogFindFirstOrThrowArgs} args - Arguments to find a SessionActivityLog
+     * @example
+     * // Get one SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SessionActivityLogFindFirstOrThrowArgs>(args?: SelectSubset<T, SessionActivityLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SessionActivityLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SessionActivityLogs
+     * const sessionActivityLogs = await prisma.sessionActivityLog.findMany()
+     * 
+     * // Get first 10 SessionActivityLogs
+     * const sessionActivityLogs = await prisma.sessionActivityLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const sessionActivityLogWithIdOnly = await prisma.sessionActivityLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SessionActivityLogFindManyArgs>(args?: SelectSubset<T, SessionActivityLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SessionActivityLog.
+     * @param {SessionActivityLogCreateArgs} args - Arguments to create a SessionActivityLog.
+     * @example
+     * // Create one SessionActivityLog
+     * const SessionActivityLog = await prisma.sessionActivityLog.create({
+     *   data: {
+     *     // ... data to create a SessionActivityLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends SessionActivityLogCreateArgs>(args: SelectSubset<T, SessionActivityLogCreateArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SessionActivityLogs.
+     * @param {SessionActivityLogCreateManyArgs} args - Arguments to create many SessionActivityLogs.
+     * @example
+     * // Create many SessionActivityLogs
+     * const sessionActivityLog = await prisma.sessionActivityLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SessionActivityLogCreateManyArgs>(args?: SelectSubset<T, SessionActivityLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SessionActivityLogs and returns the data saved in the database.
+     * @param {SessionActivityLogCreateManyAndReturnArgs} args - Arguments to create many SessionActivityLogs.
+     * @example
+     * // Create many SessionActivityLogs
+     * const sessionActivityLog = await prisma.sessionActivityLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SessionActivityLogs and only return the `id`
+     * const sessionActivityLogWithIdOnly = await prisma.sessionActivityLog.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SessionActivityLogCreateManyAndReturnArgs>(args?: SelectSubset<T, SessionActivityLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SessionActivityLog.
+     * @param {SessionActivityLogDeleteArgs} args - Arguments to delete one SessionActivityLog.
+     * @example
+     * // Delete one SessionActivityLog
+     * const SessionActivityLog = await prisma.sessionActivityLog.delete({
+     *   where: {
+     *     // ... filter to delete one SessionActivityLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SessionActivityLogDeleteArgs>(args: SelectSubset<T, SessionActivityLogDeleteArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SessionActivityLog.
+     * @param {SessionActivityLogUpdateArgs} args - Arguments to update one SessionActivityLog.
+     * @example
+     * // Update one SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SessionActivityLogUpdateArgs>(args: SelectSubset<T, SessionActivityLogUpdateArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SessionActivityLogs.
+     * @param {SessionActivityLogDeleteManyArgs} args - Arguments to filter SessionActivityLogs to delete.
+     * @example
+     * // Delete a few SessionActivityLogs
+     * const { count } = await prisma.sessionActivityLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SessionActivityLogDeleteManyArgs>(args?: SelectSubset<T, SessionActivityLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SessionActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SessionActivityLogs
+     * const sessionActivityLog = await prisma.sessionActivityLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SessionActivityLogUpdateManyArgs>(args: SelectSubset<T, SessionActivityLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SessionActivityLog.
+     * @param {SessionActivityLogUpsertArgs} args - Arguments to update or create a SessionActivityLog.
+     * @example
+     * // Update or create a SessionActivityLog
+     * const sessionActivityLog = await prisma.sessionActivityLog.upsert({
+     *   create: {
+     *     // ... data to create a SessionActivityLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SessionActivityLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SessionActivityLogUpsertArgs>(args: SelectSubset<T, SessionActivityLogUpsertArgs<ExtArgs>>): Prisma__SessionActivityLogClient<$Result.GetResult<Prisma.$SessionActivityLogPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SessionActivityLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogCountArgs} args - Arguments to filter SessionActivityLogs to count.
+     * @example
+     * // Count the number of SessionActivityLogs
+     * const count = await prisma.sessionActivityLog.count({
+     *   where: {
+     *     // ... the filter for the SessionActivityLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends SessionActivityLogCountArgs>(
+      args?: Subset<T, SessionActivityLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SessionActivityLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SessionActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SessionActivityLogAggregateArgs>(args: Subset<T, SessionActivityLogAggregateArgs>): Prisma.PrismaPromise<GetSessionActivityLogAggregateType<T>>
+
+    /**
+     * Group by SessionActivityLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SessionActivityLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SessionActivityLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SessionActivityLogGroupByArgs['orderBy'] }
+        : { orderBy?: SessionActivityLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SessionActivityLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSessionActivityLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SessionActivityLog model
+   */
+  readonly fields: SessionActivityLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SessionActivityLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SessionActivityLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SessionActivityLog model
+   */ 
+  interface SessionActivityLogFieldRefs {
+    readonly id: FieldRef<"SessionActivityLog", 'String'>
+    readonly sessionId: FieldRef<"SessionActivityLog", 'String'>
+    readonly sessionType: FieldRef<"SessionActivityLog", 'String'>
+    readonly activityType: FieldRef<"SessionActivityLog", 'String'>
+    readonly details: FieldRef<"SessionActivityLog", 'Json'>
+    readonly createdAt: FieldRef<"SessionActivityLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SessionActivityLog findUnique
+   */
+  export type SessionActivityLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter, which SessionActivityLog to fetch.
+     */
+    where: SessionActivityLogWhereUniqueInput
+  }
+
+  /**
+   * SessionActivityLog findUniqueOrThrow
+   */
+  export type SessionActivityLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter, which SessionActivityLog to fetch.
+     */
+    where: SessionActivityLogWhereUniqueInput
+  }
+
+  /**
+   * SessionActivityLog findFirst
+   */
+  export type SessionActivityLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter, which SessionActivityLog to fetch.
+     */
+    where?: SessionActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionActivityLogs to fetch.
+     */
+    orderBy?: SessionActivityLogOrderByWithRelationInput | SessionActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SessionActivityLogs.
+     */
+    cursor?: SessionActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SessionActivityLogs.
+     */
+    distinct?: SessionActivityLogScalarFieldEnum | SessionActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * SessionActivityLog findFirstOrThrow
+   */
+  export type SessionActivityLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter, which SessionActivityLog to fetch.
+     */
+    where?: SessionActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionActivityLogs to fetch.
+     */
+    orderBy?: SessionActivityLogOrderByWithRelationInput | SessionActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SessionActivityLogs.
+     */
+    cursor?: SessionActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionActivityLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SessionActivityLogs.
+     */
+    distinct?: SessionActivityLogScalarFieldEnum | SessionActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * SessionActivityLog findMany
+   */
+  export type SessionActivityLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter, which SessionActivityLogs to fetch.
+     */
+    where?: SessionActivityLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SessionActivityLogs to fetch.
+     */
+    orderBy?: SessionActivityLogOrderByWithRelationInput | SessionActivityLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SessionActivityLogs.
+     */
+    cursor?: SessionActivityLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SessionActivityLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SessionActivityLogs.
+     */
+    skip?: number
+    distinct?: SessionActivityLogScalarFieldEnum | SessionActivityLogScalarFieldEnum[]
+  }
+
+  /**
+   * SessionActivityLog create
+   */
+  export type SessionActivityLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * The data needed to create a SessionActivityLog.
+     */
+    data: XOR<SessionActivityLogCreateInput, SessionActivityLogUncheckedCreateInput>
+  }
+
+  /**
+   * SessionActivityLog createMany
+   */
+  export type SessionActivityLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SessionActivityLogs.
+     */
+    data: SessionActivityLogCreateManyInput | SessionActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SessionActivityLog createManyAndReturn
+   */
+  export type SessionActivityLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SessionActivityLogs.
+     */
+    data: SessionActivityLogCreateManyInput | SessionActivityLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SessionActivityLog update
+   */
+  export type SessionActivityLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * The data needed to update a SessionActivityLog.
+     */
+    data: XOR<SessionActivityLogUpdateInput, SessionActivityLogUncheckedUpdateInput>
+    /**
+     * Choose, which SessionActivityLog to update.
+     */
+    where: SessionActivityLogWhereUniqueInput
+  }
+
+  /**
+   * SessionActivityLog updateMany
+   */
+  export type SessionActivityLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SessionActivityLogs.
+     */
+    data: XOR<SessionActivityLogUpdateManyMutationInput, SessionActivityLogUncheckedUpdateManyInput>
+    /**
+     * Filter which SessionActivityLogs to update
+     */
+    where?: SessionActivityLogWhereInput
+  }
+
+  /**
+   * SessionActivityLog upsert
+   */
+  export type SessionActivityLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * The filter to search for the SessionActivityLog to update in case it exists.
+     */
+    where: SessionActivityLogWhereUniqueInput
+    /**
+     * In case the SessionActivityLog found by the `where` argument doesn't exist, create a new SessionActivityLog with this data.
+     */
+    create: XOR<SessionActivityLogCreateInput, SessionActivityLogUncheckedCreateInput>
+    /**
+     * In case the SessionActivityLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SessionActivityLogUpdateInput, SessionActivityLogUncheckedUpdateInput>
+  }
+
+  /**
+   * SessionActivityLog delete
+   */
+  export type SessionActivityLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+    /**
+     * Filter which SessionActivityLog to delete.
+     */
+    where: SessionActivityLogWhereUniqueInput
+  }
+
+  /**
+   * SessionActivityLog deleteMany
+   */
+  export type SessionActivityLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SessionActivityLogs to delete
+     */
+    where?: SessionActivityLogWhereInput
+  }
+
+  /**
+   * SessionActivityLog without action
+   */
+  export type SessionActivityLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SessionActivityLog
+     */
+    select?: SessionActivityLogSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ApiErrorLog
+   */
+
+  export type AggregateApiErrorLog = {
+    _count: ApiErrorLogCountAggregateOutputType | null
+    _avg: ApiErrorLogAvgAggregateOutputType | null
+    _sum: ApiErrorLogSumAggregateOutputType | null
+    _min: ApiErrorLogMinAggregateOutputType | null
+    _max: ApiErrorLogMaxAggregateOutputType | null
+  }
+
+  export type ApiErrorLogAvgAggregateOutputType = {
+    statusCode: number | null
+  }
+
+  export type ApiErrorLogSumAggregateOutputType = {
+    statusCode: number | null
+  }
+
+  export type ApiErrorLogMinAggregateOutputType = {
+    id: string | null
+    endpoint: string | null
+    method: string | null
+    statusCode: number | null
+    errorMessage: string | null
+    stackTrace: string | null
+    userAgent: string | null
+    ipAddress: string | null
+    createdAt: Date | null
+  }
+
+  export type ApiErrorLogMaxAggregateOutputType = {
+    id: string | null
+    endpoint: string | null
+    method: string | null
+    statusCode: number | null
+    errorMessage: string | null
+    stackTrace: string | null
+    userAgent: string | null
+    ipAddress: string | null
+    createdAt: Date | null
+  }
+
+  export type ApiErrorLogCountAggregateOutputType = {
+    id: number
+    endpoint: number
+    method: number
+    statusCode: number
+    errorMessage: number
+    stackTrace: number
+    requestBody: number
+    requestHeaders: number
+    userAgent: number
+    ipAddress: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ApiErrorLogAvgAggregateInputType = {
+    statusCode?: true
+  }
+
+  export type ApiErrorLogSumAggregateInputType = {
+    statusCode?: true
+  }
+
+  export type ApiErrorLogMinAggregateInputType = {
+    id?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    errorMessage?: true
+    stackTrace?: true
+    userAgent?: true
+    ipAddress?: true
+    createdAt?: true
+  }
+
+  export type ApiErrorLogMaxAggregateInputType = {
+    id?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    errorMessage?: true
+    stackTrace?: true
+    userAgent?: true
+    ipAddress?: true
+    createdAt?: true
+  }
+
+  export type ApiErrorLogCountAggregateInputType = {
+    id?: true
+    endpoint?: true
+    method?: true
+    statusCode?: true
+    errorMessage?: true
+    stackTrace?: true
+    requestBody?: true
+    requestHeaders?: true
+    userAgent?: true
+    ipAddress?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ApiErrorLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiErrorLog to aggregate.
+     */
+    where?: ApiErrorLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiErrorLogs to fetch.
+     */
+    orderBy?: ApiErrorLogOrderByWithRelationInput | ApiErrorLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ApiErrorLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiErrorLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiErrorLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ApiErrorLogs
+    **/
+    _count?: true | ApiErrorLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ApiErrorLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ApiErrorLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ApiErrorLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ApiErrorLogMaxAggregateInputType
+  }
+
+  export type GetApiErrorLogAggregateType<T extends ApiErrorLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateApiErrorLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApiErrorLog[P]>
+      : GetScalarType<T[P], AggregateApiErrorLog[P]>
+  }
+
+
+
+
+  export type ApiErrorLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApiErrorLogWhereInput
+    orderBy?: ApiErrorLogOrderByWithAggregationInput | ApiErrorLogOrderByWithAggregationInput[]
+    by: ApiErrorLogScalarFieldEnum[] | ApiErrorLogScalarFieldEnum
+    having?: ApiErrorLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ApiErrorLogCountAggregateInputType | true
+    _avg?: ApiErrorLogAvgAggregateInputType
+    _sum?: ApiErrorLogSumAggregateInputType
+    _min?: ApiErrorLogMinAggregateInputType
+    _max?: ApiErrorLogMaxAggregateInputType
+  }
+
+  export type ApiErrorLogGroupByOutputType = {
+    id: string
+    endpoint: string
+    method: string
+    statusCode: number
+    errorMessage: string | null
+    stackTrace: string | null
+    requestBody: JsonValue | null
+    requestHeaders: JsonValue | null
+    userAgent: string | null
+    ipAddress: string | null
+    createdAt: Date
+    _count: ApiErrorLogCountAggregateOutputType | null
+    _avg: ApiErrorLogAvgAggregateOutputType | null
+    _sum: ApiErrorLogSumAggregateOutputType | null
+    _min: ApiErrorLogMinAggregateOutputType | null
+    _max: ApiErrorLogMaxAggregateOutputType | null
+  }
+
+  type GetApiErrorLogGroupByPayload<T extends ApiErrorLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ApiErrorLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ApiErrorLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ApiErrorLogGroupByOutputType[P]>
+            : GetScalarType<T[P], ApiErrorLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ApiErrorLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    errorMessage?: boolean
+    stackTrace?: boolean
+    requestBody?: boolean
+    requestHeaders?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["apiErrorLog"]>
+
+  export type ApiErrorLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    errorMessage?: boolean
+    stackTrace?: boolean
+    requestBody?: boolean
+    requestHeaders?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["apiErrorLog"]>
+
+  export type ApiErrorLogSelectScalar = {
+    id?: boolean
+    endpoint?: boolean
+    method?: boolean
+    statusCode?: boolean
+    errorMessage?: boolean
+    stackTrace?: boolean
+    requestBody?: boolean
+    requestHeaders?: boolean
+    userAgent?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $ApiErrorLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ApiErrorLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      endpoint: string
+      method: string
+      statusCode: number
+      errorMessage: string | null
+      stackTrace: string | null
+      requestBody: Prisma.JsonValue | null
+      requestHeaders: Prisma.JsonValue | null
+      userAgent: string | null
+      ipAddress: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["apiErrorLog"]>
+    composites: {}
+  }
+
+  type ApiErrorLogGetPayload<S extends boolean | null | undefined | ApiErrorLogDefaultArgs> = $Result.GetResult<Prisma.$ApiErrorLogPayload, S>
+
+  type ApiErrorLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<ApiErrorLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: ApiErrorLogCountAggregateInputType | true
+    }
+
+  export interface ApiErrorLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ApiErrorLog'], meta: { name: 'ApiErrorLog' } }
+    /**
+     * Find zero or one ApiErrorLog that matches the filter.
+     * @param {ApiErrorLogFindUniqueArgs} args - Arguments to find a ApiErrorLog
+     * @example
+     * // Get one ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ApiErrorLogFindUniqueArgs>(args: SelectSubset<T, ApiErrorLogFindUniqueArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one ApiErrorLog that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {ApiErrorLogFindUniqueOrThrowArgs} args - Arguments to find a ApiErrorLog
+     * @example
+     * // Get one ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ApiErrorLogFindUniqueOrThrowArgs>(args: SelectSubset<T, ApiErrorLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first ApiErrorLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogFindFirstArgs} args - Arguments to find a ApiErrorLog
+     * @example
+     * // Get one ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ApiErrorLogFindFirstArgs>(args?: SelectSubset<T, ApiErrorLogFindFirstArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first ApiErrorLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogFindFirstOrThrowArgs} args - Arguments to find a ApiErrorLog
+     * @example
+     * // Get one ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ApiErrorLogFindFirstOrThrowArgs>(args?: SelectSubset<T, ApiErrorLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more ApiErrorLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ApiErrorLogs
+     * const apiErrorLogs = await prisma.apiErrorLog.findMany()
+     * 
+     * // Get first 10 ApiErrorLogs
+     * const apiErrorLogs = await prisma.apiErrorLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const apiErrorLogWithIdOnly = await prisma.apiErrorLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ApiErrorLogFindManyArgs>(args?: SelectSubset<T, ApiErrorLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a ApiErrorLog.
+     * @param {ApiErrorLogCreateArgs} args - Arguments to create a ApiErrorLog.
+     * @example
+     * // Create one ApiErrorLog
+     * const ApiErrorLog = await prisma.apiErrorLog.create({
+     *   data: {
+     *     // ... data to create a ApiErrorLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends ApiErrorLogCreateArgs>(args: SelectSubset<T, ApiErrorLogCreateArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many ApiErrorLogs.
+     * @param {ApiErrorLogCreateManyArgs} args - Arguments to create many ApiErrorLogs.
+     * @example
+     * // Create many ApiErrorLogs
+     * const apiErrorLog = await prisma.apiErrorLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ApiErrorLogCreateManyArgs>(args?: SelectSubset<T, ApiErrorLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ApiErrorLogs and returns the data saved in the database.
+     * @param {ApiErrorLogCreateManyAndReturnArgs} args - Arguments to create many ApiErrorLogs.
+     * @example
+     * // Create many ApiErrorLogs
+     * const apiErrorLog = await prisma.apiErrorLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ApiErrorLogs and only return the `id`
+     * const apiErrorLogWithIdOnly = await prisma.apiErrorLog.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ApiErrorLogCreateManyAndReturnArgs>(args?: SelectSubset<T, ApiErrorLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a ApiErrorLog.
+     * @param {ApiErrorLogDeleteArgs} args - Arguments to delete one ApiErrorLog.
+     * @example
+     * // Delete one ApiErrorLog
+     * const ApiErrorLog = await prisma.apiErrorLog.delete({
+     *   where: {
+     *     // ... filter to delete one ApiErrorLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ApiErrorLogDeleteArgs>(args: SelectSubset<T, ApiErrorLogDeleteArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one ApiErrorLog.
+     * @param {ApiErrorLogUpdateArgs} args - Arguments to update one ApiErrorLog.
+     * @example
+     * // Update one ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ApiErrorLogUpdateArgs>(args: SelectSubset<T, ApiErrorLogUpdateArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more ApiErrorLogs.
+     * @param {ApiErrorLogDeleteManyArgs} args - Arguments to filter ApiErrorLogs to delete.
+     * @example
+     * // Delete a few ApiErrorLogs
+     * const { count } = await prisma.apiErrorLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ApiErrorLogDeleteManyArgs>(args?: SelectSubset<T, ApiErrorLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ApiErrorLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ApiErrorLogs
+     * const apiErrorLog = await prisma.apiErrorLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ApiErrorLogUpdateManyArgs>(args: SelectSubset<T, ApiErrorLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ApiErrorLog.
+     * @param {ApiErrorLogUpsertArgs} args - Arguments to update or create a ApiErrorLog.
+     * @example
+     * // Update or create a ApiErrorLog
+     * const apiErrorLog = await prisma.apiErrorLog.upsert({
+     *   create: {
+     *     // ... data to create a ApiErrorLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ApiErrorLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ApiErrorLogUpsertArgs>(args: SelectSubset<T, ApiErrorLogUpsertArgs<ExtArgs>>): Prisma__ApiErrorLogClient<$Result.GetResult<Prisma.$ApiErrorLogPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of ApiErrorLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogCountArgs} args - Arguments to filter ApiErrorLogs to count.
+     * @example
+     * // Count the number of ApiErrorLogs
+     * const count = await prisma.apiErrorLog.count({
+     *   where: {
+     *     // ... the filter for the ApiErrorLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends ApiErrorLogCountArgs>(
+      args?: Subset<T, ApiErrorLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ApiErrorLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ApiErrorLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ApiErrorLogAggregateArgs>(args: Subset<T, ApiErrorLogAggregateArgs>): Prisma.PrismaPromise<GetApiErrorLogAggregateType<T>>
+
+    /**
+     * Group by ApiErrorLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ApiErrorLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ApiErrorLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ApiErrorLogGroupByArgs['orderBy'] }
+        : { orderBy?: ApiErrorLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ApiErrorLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApiErrorLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ApiErrorLog model
+   */
+  readonly fields: ApiErrorLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ApiErrorLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ApiErrorLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ApiErrorLog model
+   */ 
+  interface ApiErrorLogFieldRefs {
+    readonly id: FieldRef<"ApiErrorLog", 'String'>
+    readonly endpoint: FieldRef<"ApiErrorLog", 'String'>
+    readonly method: FieldRef<"ApiErrorLog", 'String'>
+    readonly statusCode: FieldRef<"ApiErrorLog", 'Int'>
+    readonly errorMessage: FieldRef<"ApiErrorLog", 'String'>
+    readonly stackTrace: FieldRef<"ApiErrorLog", 'String'>
+    readonly requestBody: FieldRef<"ApiErrorLog", 'Json'>
+    readonly requestHeaders: FieldRef<"ApiErrorLog", 'Json'>
+    readonly userAgent: FieldRef<"ApiErrorLog", 'String'>
+    readonly ipAddress: FieldRef<"ApiErrorLog", 'String'>
+    readonly createdAt: FieldRef<"ApiErrorLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ApiErrorLog findUnique
+   */
+  export type ApiErrorLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter, which ApiErrorLog to fetch.
+     */
+    where: ApiErrorLogWhereUniqueInput
+  }
+
+  /**
+   * ApiErrorLog findUniqueOrThrow
+   */
+  export type ApiErrorLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter, which ApiErrorLog to fetch.
+     */
+    where: ApiErrorLogWhereUniqueInput
+  }
+
+  /**
+   * ApiErrorLog findFirst
+   */
+  export type ApiErrorLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter, which ApiErrorLog to fetch.
+     */
+    where?: ApiErrorLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiErrorLogs to fetch.
+     */
+    orderBy?: ApiErrorLogOrderByWithRelationInput | ApiErrorLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiErrorLogs.
+     */
+    cursor?: ApiErrorLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiErrorLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiErrorLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiErrorLogs.
+     */
+    distinct?: ApiErrorLogScalarFieldEnum | ApiErrorLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiErrorLog findFirstOrThrow
+   */
+  export type ApiErrorLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter, which ApiErrorLog to fetch.
+     */
+    where?: ApiErrorLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiErrorLogs to fetch.
+     */
+    orderBy?: ApiErrorLogOrderByWithRelationInput | ApiErrorLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ApiErrorLogs.
+     */
+    cursor?: ApiErrorLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiErrorLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiErrorLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ApiErrorLogs.
+     */
+    distinct?: ApiErrorLogScalarFieldEnum | ApiErrorLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiErrorLog findMany
+   */
+  export type ApiErrorLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter, which ApiErrorLogs to fetch.
+     */
+    where?: ApiErrorLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ApiErrorLogs to fetch.
+     */
+    orderBy?: ApiErrorLogOrderByWithRelationInput | ApiErrorLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ApiErrorLogs.
+     */
+    cursor?: ApiErrorLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ApiErrorLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ApiErrorLogs.
+     */
+    skip?: number
+    distinct?: ApiErrorLogScalarFieldEnum | ApiErrorLogScalarFieldEnum[]
+  }
+
+  /**
+   * ApiErrorLog create
+   */
+  export type ApiErrorLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * The data needed to create a ApiErrorLog.
+     */
+    data: XOR<ApiErrorLogCreateInput, ApiErrorLogUncheckedCreateInput>
+  }
+
+  /**
+   * ApiErrorLog createMany
+   */
+  export type ApiErrorLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ApiErrorLogs.
+     */
+    data: ApiErrorLogCreateManyInput | ApiErrorLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiErrorLog createManyAndReturn
+   */
+  export type ApiErrorLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many ApiErrorLogs.
+     */
+    data: ApiErrorLogCreateManyInput | ApiErrorLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ApiErrorLog update
+   */
+  export type ApiErrorLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * The data needed to update a ApiErrorLog.
+     */
+    data: XOR<ApiErrorLogUpdateInput, ApiErrorLogUncheckedUpdateInput>
+    /**
+     * Choose, which ApiErrorLog to update.
+     */
+    where: ApiErrorLogWhereUniqueInput
+  }
+
+  /**
+   * ApiErrorLog updateMany
+   */
+  export type ApiErrorLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ApiErrorLogs.
+     */
+    data: XOR<ApiErrorLogUpdateManyMutationInput, ApiErrorLogUncheckedUpdateManyInput>
+    /**
+     * Filter which ApiErrorLogs to update
+     */
+    where?: ApiErrorLogWhereInput
+  }
+
+  /**
+   * ApiErrorLog upsert
+   */
+  export type ApiErrorLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * The filter to search for the ApiErrorLog to update in case it exists.
+     */
+    where: ApiErrorLogWhereUniqueInput
+    /**
+     * In case the ApiErrorLog found by the `where` argument doesn't exist, create a new ApiErrorLog with this data.
+     */
+    create: XOR<ApiErrorLogCreateInput, ApiErrorLogUncheckedCreateInput>
+    /**
+     * In case the ApiErrorLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ApiErrorLogUpdateInput, ApiErrorLogUncheckedUpdateInput>
+  }
+
+  /**
+   * ApiErrorLog delete
+   */
+  export type ApiErrorLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+    /**
+     * Filter which ApiErrorLog to delete.
+     */
+    where: ApiErrorLogWhereUniqueInput
+  }
+
+  /**
+   * ApiErrorLog deleteMany
+   */
+  export type ApiErrorLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ApiErrorLogs to delete
+     */
+    where?: ApiErrorLogWhereInput
+  }
+
+  /**
+   * ApiErrorLog without action
+   */
+  export type ApiErrorLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ApiErrorLog
+     */
+    select?: ApiErrorLogSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model ViralSession
    */
 
@@ -24158,6 +29632,7 @@ export namespace Prisma {
     contents?: boolean
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
     characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
+    newsRelations?: boolean | ViralSession$newsRelationsArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viralSession"]>
 
@@ -24195,6 +29670,7 @@ export namespace Prisma {
   export type ViralSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
     characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
+    newsRelations?: boolean | ViralSession$newsRelationsArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ViralSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24206,6 +29682,7 @@ export namespace Prisma {
     objects: {
       drafts: Prisma.$ViralDraftV2Payload<ExtArgs>[]
       characterProfile: Prisma.$CharacterProfilePayload<ExtArgs> | null
+      newsRelations: Prisma.$NewsViralRelationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24586,6 +30063,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     drafts<T extends ViralSession$draftsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$draftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findMany"> | Null>
     characterProfile<T extends ViralSession$characterProfileArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$characterProfileArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    newsRelations<T extends ViralSession$newsRelationsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$newsRelationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24980,6 +30458,26 @@ export namespace Prisma {
   }
 
   /**
+   * ViralSession.newsRelations
+   */
+  export type ViralSession$newsRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NewsViralRelation
+     */
+    select?: NewsViralRelationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NewsViralRelationInclude<ExtArgs> | null
+    where?: NewsViralRelationWhereInput
+    orderBy?: NewsViralRelationOrderByWithRelationInput | NewsViralRelationOrderByWithRelationInput[]
+    cursor?: NewsViralRelationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
+  }
+
+  /**
    * ViralSession without action
    */
   export type ViralSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -25236,6 +30734,8 @@ export namespace Prisma {
     updatedAt?: boolean
     session?: boolean | ViralSessionDefaultArgs<ExtArgs>
     performance?: boolean | ViralDraftV2$performanceArgs<ExtArgs>
+    scheduledRTs?: boolean | ViralDraftV2$scheduledRTsArgs<ExtArgs>
+    _count?: boolean | ViralDraftV2CountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viralDraftV2"]>
 
   export type ViralDraftV2SelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -25278,6 +30778,8 @@ export namespace Prisma {
   export type ViralDraftV2Include<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     session?: boolean | ViralSessionDefaultArgs<ExtArgs>
     performance?: boolean | ViralDraftV2$performanceArgs<ExtArgs>
+    scheduledRTs?: boolean | ViralDraftV2$scheduledRTsArgs<ExtArgs>
+    _count?: boolean | ViralDraftV2CountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ViralDraftV2IncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     session?: boolean | ViralSessionDefaultArgs<ExtArgs>
@@ -25288,6 +30790,7 @@ export namespace Prisma {
     objects: {
       session: Prisma.$ViralSessionPayload<ExtArgs>
       performance: Prisma.$ViralDraftPerformancePayload<ExtArgs> | null
+      scheduledRTs: Prisma.$ScheduledRetweetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -25671,6 +31174,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     session<T extends ViralSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ViralSessionDefaultArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     performance<T extends ViralDraftV2$performanceArgs<ExtArgs> = {}>(args?: Subset<T, ViralDraftV2$performanceArgs<ExtArgs>>): Prisma__ViralDraftPerformanceClient<$Result.GetResult<Prisma.$ViralDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    scheduledRTs<T extends ViralDraftV2$scheduledRTsArgs<ExtArgs> = {}>(args?: Subset<T, ViralDraftV2$scheduledRTsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScheduledRetweetPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26045,6 +31549,26 @@ export namespace Prisma {
      */
     include?: ViralDraftPerformanceInclude<ExtArgs> | null
     where?: ViralDraftPerformanceWhereInput
+  }
+
+  /**
+   * ViralDraftV2.scheduledRTs
+   */
+  export type ViralDraftV2$scheduledRTsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScheduledRetweet
+     */
+    select?: ScheduledRetweetSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ScheduledRetweetInclude<ExtArgs> | null
+    where?: ScheduledRetweetWhereInput
+    orderBy?: ScheduledRetweetOrderByWithRelationInput | ScheduledRetweetOrderByWithRelationInput[]
+    cursor?: ScheduledRetweetWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ScheduledRetweetScalarFieldEnum | ScheduledRetweetScalarFieldEnum[]
   }
 
   /**
@@ -27300,6 +32824,9 @@ export namespace Prisma {
     userId: number
     createdAt: number
     updatedAt: number
+    preferredNewsCategories: number
+    newsCommentStyle: number
+    topicExpertise: number
     _all: number
   }
 
@@ -27355,6 +32882,9 @@ export namespace Prisma {
     userId?: true
     createdAt?: true
     updatedAt?: true
+    preferredNewsCategories?: true
+    newsCommentStyle?: true
+    topicExpertise?: true
     _all?: true
   }
 
@@ -27459,6 +32989,9 @@ export namespace Prisma {
     userId: string | null
     createdAt: Date
     updatedAt: Date
+    preferredNewsCategories: string[]
+    newsCommentStyle: JsonValue | null
+    topicExpertise: JsonValue | null
     _count: CharacterProfileCountAggregateOutputType | null
     _avg: CharacterProfileAvgAggregateOutputType | null
     _sum: CharacterProfileSumAggregateOutputType | null
@@ -27495,6 +33028,9 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    preferredNewsCategories?: boolean
+    newsCommentStyle?: boolean
+    topicExpertise?: boolean
     user?: boolean | CharacterProfile$userArgs<ExtArgs>
     sessions?: boolean | CharacterProfile$sessionsArgs<ExtArgs>
     _count?: boolean | CharacterProfileCountOutputTypeDefaultArgs<ExtArgs>
@@ -27515,6 +33051,9 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    preferredNewsCategories?: boolean
+    newsCommentStyle?: boolean
+    topicExpertise?: boolean
     user?: boolean | CharacterProfile$userArgs<ExtArgs>
   }, ExtArgs["result"]["characterProfile"]>
 
@@ -27533,6 +33072,9 @@ export namespace Prisma {
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    preferredNewsCategories?: boolean
+    newsCommentStyle?: boolean
+    topicExpertise?: boolean
   }
 
   export type CharacterProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27565,6 +33107,9 @@ export namespace Prisma {
       userId: string | null
       createdAt: Date
       updatedAt: Date
+      preferredNewsCategories: string[]
+      newsCommentStyle: Prisma.JsonValue | null
+      topicExpertise: Prisma.JsonValue | null
     }, ExtArgs["result"]["characterProfile"]>
     composites: {}
   }
@@ -27974,6 +33519,9 @@ export namespace Prisma {
     readonly userId: FieldRef<"CharacterProfile", 'String'>
     readonly createdAt: FieldRef<"CharacterProfile", 'DateTime'>
     readonly updatedAt: FieldRef<"CharacterProfile", 'DateTime'>
+    readonly preferredNewsCategories: FieldRef<"CharacterProfile", 'String[]'>
+    readonly newsCommentStyle: FieldRef<"CharacterProfile", 'Json'>
+    readonly topicExpertise: FieldRef<"CharacterProfile", 'Json'>
   }
     
 
@@ -28706,6 +34254,84 @@ export namespace Prisma {
   export type CotDraftPerformanceScalarFieldEnum = (typeof CotDraftPerformanceScalarFieldEnum)[keyof typeof CotDraftPerformanceScalarFieldEnum]
 
 
+  export const ScheduledRetweetScalarFieldEnum: {
+    id: 'id',
+    originalPostId: 'originalPostId',
+    originalContent: 'originalContent',
+    scheduledAt: 'scheduledAt',
+    status: 'status',
+    rtStrategy: 'rtStrategy',
+    addComment: 'addComment',
+    commentText: 'commentText',
+    viralDraftId: 'viralDraftId',
+    cotDraftId: 'cotDraftId',
+    executedAt: 'executedAt',
+    rtPostId: 'rtPostId',
+    error: 'error',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ScheduledRetweetScalarFieldEnum = (typeof ScheduledRetweetScalarFieldEnum)[keyof typeof ScheduledRetweetScalarFieldEnum]
+
+
+  export const UnifiedPerformanceScalarFieldEnum: {
+    id: 'id',
+    contentId: 'contentId',
+    contentType: 'contentType',
+    metrics30m: 'metrics30m',
+    metrics1h: 'metrics1h',
+    metrics24h: 'metrics24h',
+    engagementRate: 'engagementRate',
+    viralCoefficient: 'viralCoefficient',
+    collectedAt: 'collectedAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UnifiedPerformanceScalarFieldEnum = (typeof UnifiedPerformanceScalarFieldEnum)[keyof typeof UnifiedPerformanceScalarFieldEnum]
+
+
+  export const NewsViralRelationScalarFieldEnum: {
+    id: 'id',
+    newsId: 'newsId',
+    sessionId: 'sessionId',
+    relevanceScore: 'relevanceScore',
+    usedInContent: 'usedInContent',
+    createdAt: 'createdAt'
+  };
+
+  export type NewsViralRelationScalarFieldEnum = (typeof NewsViralRelationScalarFieldEnum)[keyof typeof NewsViralRelationScalarFieldEnum]
+
+
+  export const SessionActivityLogScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    sessionType: 'sessionType',
+    activityType: 'activityType',
+    details: 'details',
+    createdAt: 'createdAt'
+  };
+
+  export type SessionActivityLogScalarFieldEnum = (typeof SessionActivityLogScalarFieldEnum)[keyof typeof SessionActivityLogScalarFieldEnum]
+
+
+  export const ApiErrorLogScalarFieldEnum: {
+    id: 'id',
+    endpoint: 'endpoint',
+    method: 'method',
+    statusCode: 'statusCode',
+    errorMessage: 'errorMessage',
+    stackTrace: 'stackTrace',
+    requestBody: 'requestBody',
+    requestHeaders: 'requestHeaders',
+    userAgent: 'userAgent',
+    ipAddress: 'ipAddress',
+    createdAt: 'createdAt'
+  };
+
+  export type ApiErrorLogScalarFieldEnum = (typeof ApiErrorLogScalarFieldEnum)[keyof typeof ApiErrorLogScalarFieldEnum]
+
+
   export const ViralSessionScalarFieldEnum: {
     id: 'id',
     theme: 'theme',
@@ -28783,7 +34409,10 @@ export namespace Prisma {
     isDefault: 'isDefault',
     userId: 'userId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    preferredNewsCategories: 'preferredNewsCategories',
+    newsCommentStyle: 'newsCommentStyle',
+    topicExpertise: 'topicExpertise'
   };
 
   export type CharacterProfileScalarFieldEnum = (typeof CharacterProfileScalarFieldEnum)[keyof typeof CharacterProfileScalarFieldEnum]
@@ -28993,6 +34622,20 @@ export namespace Prisma {
    * Reference to a field of type 'CotDraftStatus[]'
    */
   export type ListEnumCotDraftStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CotDraftStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RTStatus'
+   */
+  export type EnumRTStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RTStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'RTStatus[]'
+   */
+  export type ListEnumRTStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RTStatus[]'>
     
   /**
    * Deep Input Types
@@ -29555,6 +35198,7 @@ export namespace Prisma {
     analysis?: XOR<NewsAnalysisNullableRelationFilter, NewsAnalysisWhereInput> | null
     source?: XOR<NewsSourceRelationFilter, NewsSourceWhereInput>
     newsThreadItems?: NewsThreadItemListRelationFilter
+    viralRelations?: NewsViralRelationListRelationFilter
   }
 
   export type NewsArticleOrderByWithRelationInput = {
@@ -29573,6 +35217,7 @@ export namespace Prisma {
     analysis?: NewsAnalysisOrderByWithRelationInput
     source?: NewsSourceOrderByWithRelationInput
     newsThreadItems?: NewsThreadItemOrderByRelationAggregateInput
+    viralRelations?: NewsViralRelationOrderByRelationAggregateInput
   }
 
   export type NewsArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -29594,6 +35239,7 @@ export namespace Prisma {
     analysis?: XOR<NewsAnalysisNullableRelationFilter, NewsAnalysisWhereInput> | null
     source?: XOR<NewsSourceRelationFilter, NewsSourceWhereInput>
     newsThreadItems?: NewsThreadItemListRelationFilter
+    viralRelations?: NewsViralRelationListRelationFilter
   }, "id" | "url">
 
   export type NewsArticleOrderByWithAggregationInput = {
@@ -30546,6 +36192,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CotDraft"> | Date | string
     session?: XOR<CotSessionRelationFilter, CotSessionWhereInput>
     performance?: XOR<CotDraftPerformanceNullableRelationFilter, CotDraftPerformanceWhereInput> | null
+    scheduledRTs?: ScheduledRetweetListRelationFilter
   }
 
   export type CotDraftOrderByWithRelationInput = {
@@ -30575,6 +36222,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     session?: CotSessionOrderByWithRelationInput
     performance?: CotDraftPerformanceOrderByWithRelationInput
+    scheduledRTs?: ScheduledRetweetOrderByRelationAggregateInput
   }
 
   export type CotDraftWhereUniqueInput = Prisma.AtLeast<{
@@ -30608,6 +36256,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CotDraft"> | Date | string
     session?: XOR<CotSessionRelationFilter, CotSessionWhereInput>
     performance?: XOR<CotDraftPerformanceNullableRelationFilter, CotDraftPerformanceWhereInput> | null
+    scheduledRTs?: ScheduledRetweetListRelationFilter
   }, "id" | "sessionId_conceptNumber">
 
   export type CotDraftOrderByWithAggregationInput = {
@@ -30794,6 +36443,400 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeWithAggregatesFilter<"CotDraftPerformance"> | Date | string
   }
 
+  export type ScheduledRetweetWhereInput = {
+    AND?: ScheduledRetweetWhereInput | ScheduledRetweetWhereInput[]
+    OR?: ScheduledRetweetWhereInput[]
+    NOT?: ScheduledRetweetWhereInput | ScheduledRetweetWhereInput[]
+    id?: StringFilter<"ScheduledRetweet"> | string
+    originalPostId?: StringFilter<"ScheduledRetweet"> | string
+    originalContent?: StringFilter<"ScheduledRetweet"> | string
+    scheduledAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    status?: EnumRTStatusFilter<"ScheduledRetweet"> | $Enums.RTStatus
+    rtStrategy?: StringFilter<"ScheduledRetweet"> | string
+    addComment?: BoolFilter<"ScheduledRetweet"> | boolean
+    commentText?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    viralDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    cotDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    executedAt?: DateTimeNullableFilter<"ScheduledRetweet"> | Date | string | null
+    rtPostId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    error?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    createdAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    viralDraft?: XOR<ViralDraftV2NullableRelationFilter, ViralDraftV2WhereInput> | null
+    cotDraft?: XOR<CotDraftNullableRelationFilter, CotDraftWhereInput> | null
+  }
+
+  export type ScheduledRetweetOrderByWithRelationInput = {
+    id?: SortOrder
+    originalPostId?: SortOrder
+    originalContent?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    rtStrategy?: SortOrder
+    addComment?: SortOrder
+    commentText?: SortOrderInput | SortOrder
+    viralDraftId?: SortOrderInput | SortOrder
+    cotDraftId?: SortOrderInput | SortOrder
+    executedAt?: SortOrderInput | SortOrder
+    rtPostId?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    viralDraft?: ViralDraftV2OrderByWithRelationInput
+    cotDraft?: CotDraftOrderByWithRelationInput
+  }
+
+  export type ScheduledRetweetWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ScheduledRetweetWhereInput | ScheduledRetweetWhereInput[]
+    OR?: ScheduledRetweetWhereInput[]
+    NOT?: ScheduledRetweetWhereInput | ScheduledRetweetWhereInput[]
+    originalPostId?: StringFilter<"ScheduledRetweet"> | string
+    originalContent?: StringFilter<"ScheduledRetweet"> | string
+    scheduledAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    status?: EnumRTStatusFilter<"ScheduledRetweet"> | $Enums.RTStatus
+    rtStrategy?: StringFilter<"ScheduledRetweet"> | string
+    addComment?: BoolFilter<"ScheduledRetweet"> | boolean
+    commentText?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    viralDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    cotDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    executedAt?: DateTimeNullableFilter<"ScheduledRetweet"> | Date | string | null
+    rtPostId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    error?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    createdAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    viralDraft?: XOR<ViralDraftV2NullableRelationFilter, ViralDraftV2WhereInput> | null
+    cotDraft?: XOR<CotDraftNullableRelationFilter, CotDraftWhereInput> | null
+  }, "id">
+
+  export type ScheduledRetweetOrderByWithAggregationInput = {
+    id?: SortOrder
+    originalPostId?: SortOrder
+    originalContent?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    rtStrategy?: SortOrder
+    addComment?: SortOrder
+    commentText?: SortOrderInput | SortOrder
+    viralDraftId?: SortOrderInput | SortOrder
+    cotDraftId?: SortOrderInput | SortOrder
+    executedAt?: SortOrderInput | SortOrder
+    rtPostId?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ScheduledRetweetCountOrderByAggregateInput
+    _max?: ScheduledRetweetMaxOrderByAggregateInput
+    _min?: ScheduledRetweetMinOrderByAggregateInput
+  }
+
+  export type ScheduledRetweetScalarWhereWithAggregatesInput = {
+    AND?: ScheduledRetweetScalarWhereWithAggregatesInput | ScheduledRetweetScalarWhereWithAggregatesInput[]
+    OR?: ScheduledRetweetScalarWhereWithAggregatesInput[]
+    NOT?: ScheduledRetweetScalarWhereWithAggregatesInput | ScheduledRetweetScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ScheduledRetweet"> | string
+    originalPostId?: StringWithAggregatesFilter<"ScheduledRetweet"> | string
+    originalContent?: StringWithAggregatesFilter<"ScheduledRetweet"> | string
+    scheduledAt?: DateTimeWithAggregatesFilter<"ScheduledRetweet"> | Date | string
+    status?: EnumRTStatusWithAggregatesFilter<"ScheduledRetweet"> | $Enums.RTStatus
+    rtStrategy?: StringWithAggregatesFilter<"ScheduledRetweet"> | string
+    addComment?: BoolWithAggregatesFilter<"ScheduledRetweet"> | boolean
+    commentText?: StringNullableWithAggregatesFilter<"ScheduledRetweet"> | string | null
+    viralDraftId?: StringNullableWithAggregatesFilter<"ScheduledRetweet"> | string | null
+    cotDraftId?: StringNullableWithAggregatesFilter<"ScheduledRetweet"> | string | null
+    executedAt?: DateTimeNullableWithAggregatesFilter<"ScheduledRetweet"> | Date | string | null
+    rtPostId?: StringNullableWithAggregatesFilter<"ScheduledRetweet"> | string | null
+    error?: StringNullableWithAggregatesFilter<"ScheduledRetweet"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ScheduledRetweet"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ScheduledRetweet"> | Date | string
+  }
+
+  export type UnifiedPerformanceWhereInput = {
+    AND?: UnifiedPerformanceWhereInput | UnifiedPerformanceWhereInput[]
+    OR?: UnifiedPerformanceWhereInput[]
+    NOT?: UnifiedPerformanceWhereInput | UnifiedPerformanceWhereInput[]
+    id?: StringFilter<"UnifiedPerformance"> | string
+    contentId?: StringFilter<"UnifiedPerformance"> | string
+    contentType?: StringFilter<"UnifiedPerformance"> | string
+    metrics30m?: JsonNullableFilter<"UnifiedPerformance">
+    metrics1h?: JsonNullableFilter<"UnifiedPerformance">
+    metrics24h?: JsonNullableFilter<"UnifiedPerformance">
+    engagementRate?: FloatNullableFilter<"UnifiedPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"UnifiedPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"UnifiedPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"UnifiedPerformance"> | Date | string
+  }
+
+  export type UnifiedPerformanceOrderByWithRelationInput = {
+    id?: SortOrder
+    contentId?: SortOrder
+    contentType?: SortOrder
+    metrics30m?: SortOrderInput | SortOrder
+    metrics1h?: SortOrderInput | SortOrder
+    metrics24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedPerformanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    contentId?: string
+    AND?: UnifiedPerformanceWhereInput | UnifiedPerformanceWhereInput[]
+    OR?: UnifiedPerformanceWhereInput[]
+    NOT?: UnifiedPerformanceWhereInput | UnifiedPerformanceWhereInput[]
+    contentType?: StringFilter<"UnifiedPerformance"> | string
+    metrics30m?: JsonNullableFilter<"UnifiedPerformance">
+    metrics1h?: JsonNullableFilter<"UnifiedPerformance">
+    metrics24h?: JsonNullableFilter<"UnifiedPerformance">
+    engagementRate?: FloatNullableFilter<"UnifiedPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"UnifiedPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"UnifiedPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"UnifiedPerformance"> | Date | string
+  }, "id" | "contentId">
+
+  export type UnifiedPerformanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    contentId?: SortOrder
+    contentType?: SortOrder
+    metrics30m?: SortOrderInput | SortOrder
+    metrics1h?: SortOrderInput | SortOrder
+    metrics24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UnifiedPerformanceCountOrderByAggregateInput
+    _avg?: UnifiedPerformanceAvgOrderByAggregateInput
+    _max?: UnifiedPerformanceMaxOrderByAggregateInput
+    _min?: UnifiedPerformanceMinOrderByAggregateInput
+    _sum?: UnifiedPerformanceSumOrderByAggregateInput
+  }
+
+  export type UnifiedPerformanceScalarWhereWithAggregatesInput = {
+    AND?: UnifiedPerformanceScalarWhereWithAggregatesInput | UnifiedPerformanceScalarWhereWithAggregatesInput[]
+    OR?: UnifiedPerformanceScalarWhereWithAggregatesInput[]
+    NOT?: UnifiedPerformanceScalarWhereWithAggregatesInput | UnifiedPerformanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UnifiedPerformance"> | string
+    contentId?: StringWithAggregatesFilter<"UnifiedPerformance"> | string
+    contentType?: StringWithAggregatesFilter<"UnifiedPerformance"> | string
+    metrics30m?: JsonNullableWithAggregatesFilter<"UnifiedPerformance">
+    metrics1h?: JsonNullableWithAggregatesFilter<"UnifiedPerformance">
+    metrics24h?: JsonNullableWithAggregatesFilter<"UnifiedPerformance">
+    engagementRate?: FloatNullableWithAggregatesFilter<"UnifiedPerformance"> | number | null
+    viralCoefficient?: FloatNullableWithAggregatesFilter<"UnifiedPerformance"> | number | null
+    collectedAt?: DateTimeWithAggregatesFilter<"UnifiedPerformance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UnifiedPerformance"> | Date | string
+  }
+
+  export type NewsViralRelationWhereInput = {
+    AND?: NewsViralRelationWhereInput | NewsViralRelationWhereInput[]
+    OR?: NewsViralRelationWhereInput[]
+    NOT?: NewsViralRelationWhereInput | NewsViralRelationWhereInput[]
+    id?: StringFilter<"NewsViralRelation"> | string
+    newsId?: StringFilter<"NewsViralRelation"> | string
+    sessionId?: StringFilter<"NewsViralRelation"> | string
+    relevanceScore?: FloatNullableFilter<"NewsViralRelation"> | number | null
+    usedInContent?: BoolFilter<"NewsViralRelation"> | boolean
+    createdAt?: DateTimeFilter<"NewsViralRelation"> | Date | string
+    newsArticle?: XOR<NewsArticleRelationFilter, NewsArticleWhereInput>
+    session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
+  }
+
+  export type NewsViralRelationOrderByWithRelationInput = {
+    id?: SortOrder
+    newsId?: SortOrder
+    sessionId?: SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    usedInContent?: SortOrder
+    createdAt?: SortOrder
+    newsArticle?: NewsArticleOrderByWithRelationInput
+    session?: ViralSessionOrderByWithRelationInput
+  }
+
+  export type NewsViralRelationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    newsId_sessionId?: NewsViralRelationNewsIdSessionIdCompoundUniqueInput
+    AND?: NewsViralRelationWhereInput | NewsViralRelationWhereInput[]
+    OR?: NewsViralRelationWhereInput[]
+    NOT?: NewsViralRelationWhereInput | NewsViralRelationWhereInput[]
+    newsId?: StringFilter<"NewsViralRelation"> | string
+    sessionId?: StringFilter<"NewsViralRelation"> | string
+    relevanceScore?: FloatNullableFilter<"NewsViralRelation"> | number | null
+    usedInContent?: BoolFilter<"NewsViralRelation"> | boolean
+    createdAt?: DateTimeFilter<"NewsViralRelation"> | Date | string
+    newsArticle?: XOR<NewsArticleRelationFilter, NewsArticleWhereInput>
+    session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
+  }, "id" | "newsId_sessionId">
+
+  export type NewsViralRelationOrderByWithAggregationInput = {
+    id?: SortOrder
+    newsId?: SortOrder
+    sessionId?: SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    usedInContent?: SortOrder
+    createdAt?: SortOrder
+    _count?: NewsViralRelationCountOrderByAggregateInput
+    _avg?: NewsViralRelationAvgOrderByAggregateInput
+    _max?: NewsViralRelationMaxOrderByAggregateInput
+    _min?: NewsViralRelationMinOrderByAggregateInput
+    _sum?: NewsViralRelationSumOrderByAggregateInput
+  }
+
+  export type NewsViralRelationScalarWhereWithAggregatesInput = {
+    AND?: NewsViralRelationScalarWhereWithAggregatesInput | NewsViralRelationScalarWhereWithAggregatesInput[]
+    OR?: NewsViralRelationScalarWhereWithAggregatesInput[]
+    NOT?: NewsViralRelationScalarWhereWithAggregatesInput | NewsViralRelationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NewsViralRelation"> | string
+    newsId?: StringWithAggregatesFilter<"NewsViralRelation"> | string
+    sessionId?: StringWithAggregatesFilter<"NewsViralRelation"> | string
+    relevanceScore?: FloatNullableWithAggregatesFilter<"NewsViralRelation"> | number | null
+    usedInContent?: BoolWithAggregatesFilter<"NewsViralRelation"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"NewsViralRelation"> | Date | string
+  }
+
+  export type SessionActivityLogWhereInput = {
+    AND?: SessionActivityLogWhereInput | SessionActivityLogWhereInput[]
+    OR?: SessionActivityLogWhereInput[]
+    NOT?: SessionActivityLogWhereInput | SessionActivityLogWhereInput[]
+    id?: StringFilter<"SessionActivityLog"> | string
+    sessionId?: StringFilter<"SessionActivityLog"> | string
+    sessionType?: StringFilter<"SessionActivityLog"> | string
+    activityType?: StringFilter<"SessionActivityLog"> | string
+    details?: JsonNullableFilter<"SessionActivityLog">
+    createdAt?: DateTimeFilter<"SessionActivityLog"> | Date | string
+  }
+
+  export type SessionActivityLogOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sessionType?: SortOrder
+    activityType?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SessionActivityLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SessionActivityLogWhereInput | SessionActivityLogWhereInput[]
+    OR?: SessionActivityLogWhereInput[]
+    NOT?: SessionActivityLogWhereInput | SessionActivityLogWhereInput[]
+    sessionId?: StringFilter<"SessionActivityLog"> | string
+    sessionType?: StringFilter<"SessionActivityLog"> | string
+    activityType?: StringFilter<"SessionActivityLog"> | string
+    details?: JsonNullableFilter<"SessionActivityLog">
+    createdAt?: DateTimeFilter<"SessionActivityLog"> | Date | string
+  }, "id">
+
+  export type SessionActivityLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sessionType?: SortOrder
+    activityType?: SortOrder
+    details?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: SessionActivityLogCountOrderByAggregateInput
+    _max?: SessionActivityLogMaxOrderByAggregateInput
+    _min?: SessionActivityLogMinOrderByAggregateInput
+  }
+
+  export type SessionActivityLogScalarWhereWithAggregatesInput = {
+    AND?: SessionActivityLogScalarWhereWithAggregatesInput | SessionActivityLogScalarWhereWithAggregatesInput[]
+    OR?: SessionActivityLogScalarWhereWithAggregatesInput[]
+    NOT?: SessionActivityLogScalarWhereWithAggregatesInput | SessionActivityLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SessionActivityLog"> | string
+    sessionId?: StringWithAggregatesFilter<"SessionActivityLog"> | string
+    sessionType?: StringWithAggregatesFilter<"SessionActivityLog"> | string
+    activityType?: StringWithAggregatesFilter<"SessionActivityLog"> | string
+    details?: JsonNullableWithAggregatesFilter<"SessionActivityLog">
+    createdAt?: DateTimeWithAggregatesFilter<"SessionActivityLog"> | Date | string
+  }
+
+  export type ApiErrorLogWhereInput = {
+    AND?: ApiErrorLogWhereInput | ApiErrorLogWhereInput[]
+    OR?: ApiErrorLogWhereInput[]
+    NOT?: ApiErrorLogWhereInput | ApiErrorLogWhereInput[]
+    id?: StringFilter<"ApiErrorLog"> | string
+    endpoint?: StringFilter<"ApiErrorLog"> | string
+    method?: StringFilter<"ApiErrorLog"> | string
+    statusCode?: IntFilter<"ApiErrorLog"> | number
+    errorMessage?: StringNullableFilter<"ApiErrorLog"> | string | null
+    stackTrace?: StringNullableFilter<"ApiErrorLog"> | string | null
+    requestBody?: JsonNullableFilter<"ApiErrorLog">
+    requestHeaders?: JsonNullableFilter<"ApiErrorLog">
+    userAgent?: StringNullableFilter<"ApiErrorLog"> | string | null
+    ipAddress?: StringNullableFilter<"ApiErrorLog"> | string | null
+    createdAt?: DateTimeFilter<"ApiErrorLog"> | Date | string
+  }
+
+  export type ApiErrorLogOrderByWithRelationInput = {
+    id?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    stackTrace?: SortOrderInput | SortOrder
+    requestBody?: SortOrderInput | SortOrder
+    requestHeaders?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiErrorLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ApiErrorLogWhereInput | ApiErrorLogWhereInput[]
+    OR?: ApiErrorLogWhereInput[]
+    NOT?: ApiErrorLogWhereInput | ApiErrorLogWhereInput[]
+    endpoint?: StringFilter<"ApiErrorLog"> | string
+    method?: StringFilter<"ApiErrorLog"> | string
+    statusCode?: IntFilter<"ApiErrorLog"> | number
+    errorMessage?: StringNullableFilter<"ApiErrorLog"> | string | null
+    stackTrace?: StringNullableFilter<"ApiErrorLog"> | string | null
+    requestBody?: JsonNullableFilter<"ApiErrorLog">
+    requestHeaders?: JsonNullableFilter<"ApiErrorLog">
+    userAgent?: StringNullableFilter<"ApiErrorLog"> | string | null
+    ipAddress?: StringNullableFilter<"ApiErrorLog"> | string | null
+    createdAt?: DateTimeFilter<"ApiErrorLog"> | Date | string
+  }, "id">
+
+  export type ApiErrorLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    errorMessage?: SortOrderInput | SortOrder
+    stackTrace?: SortOrderInput | SortOrder
+    requestBody?: SortOrderInput | SortOrder
+    requestHeaders?: SortOrderInput | SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    ipAddress?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ApiErrorLogCountOrderByAggregateInput
+    _avg?: ApiErrorLogAvgOrderByAggregateInput
+    _max?: ApiErrorLogMaxOrderByAggregateInput
+    _min?: ApiErrorLogMinOrderByAggregateInput
+    _sum?: ApiErrorLogSumOrderByAggregateInput
+  }
+
+  export type ApiErrorLogScalarWhereWithAggregatesInput = {
+    AND?: ApiErrorLogScalarWhereWithAggregatesInput | ApiErrorLogScalarWhereWithAggregatesInput[]
+    OR?: ApiErrorLogScalarWhereWithAggregatesInput[]
+    NOT?: ApiErrorLogScalarWhereWithAggregatesInput | ApiErrorLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ApiErrorLog"> | string
+    endpoint?: StringWithAggregatesFilter<"ApiErrorLog"> | string
+    method?: StringWithAggregatesFilter<"ApiErrorLog"> | string
+    statusCode?: IntWithAggregatesFilter<"ApiErrorLog"> | number
+    errorMessage?: StringNullableWithAggregatesFilter<"ApiErrorLog"> | string | null
+    stackTrace?: StringNullableWithAggregatesFilter<"ApiErrorLog"> | string | null
+    requestBody?: JsonNullableWithAggregatesFilter<"ApiErrorLog">
+    requestHeaders?: JsonNullableWithAggregatesFilter<"ApiErrorLog">
+    userAgent?: StringNullableWithAggregatesFilter<"ApiErrorLog"> | string | null
+    ipAddress?: StringNullableWithAggregatesFilter<"ApiErrorLog"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ApiErrorLog"> | Date | string
+  }
+
   export type ViralSessionWhereInput = {
     AND?: ViralSessionWhereInput | ViralSessionWhereInput[]
     OR?: ViralSessionWhereInput[]
@@ -30812,6 +36855,7 @@ export namespace Prisma {
     contents?: JsonNullableFilter<"ViralSession">
     drafts?: ViralDraftV2ListRelationFilter
     characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
+    newsRelations?: NewsViralRelationListRelationFilter
   }
 
   export type ViralSessionOrderByWithRelationInput = {
@@ -30829,6 +36873,7 @@ export namespace Prisma {
     contents?: SortOrderInput | SortOrder
     drafts?: ViralDraftV2OrderByRelationAggregateInput
     characterProfile?: CharacterProfileOrderByWithRelationInput
+    newsRelations?: NewsViralRelationOrderByRelationAggregateInput
   }
 
   export type ViralSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -30849,6 +36894,7 @@ export namespace Prisma {
     contents?: JsonNullableFilter<"ViralSession">
     drafts?: ViralDraftV2ListRelationFilter
     characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
+    newsRelations?: NewsViralRelationListRelationFilter
   }, "id">
 
   export type ViralSessionOrderByWithAggregationInput = {
@@ -30908,6 +36954,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
     session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
     performance?: XOR<ViralDraftPerformanceNullableRelationFilter, ViralDraftPerformanceWhereInput> | null
+    scheduledRTs?: ScheduledRetweetListRelationFilter
   }
 
   export type ViralDraftV2OrderByWithRelationInput = {
@@ -30928,6 +36975,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     session?: ViralSessionOrderByWithRelationInput
     performance?: ViralDraftPerformanceOrderByWithRelationInput
+    scheduledRTs?: ScheduledRetweetOrderByRelationAggregateInput
   }
 
   export type ViralDraftV2WhereUniqueInput = Prisma.AtLeast<{
@@ -30951,6 +36999,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ViralDraftV2"> | Date | string
     session?: XOR<ViralSessionRelationFilter, ViralSessionWhereInput>
     performance?: XOR<ViralDraftPerformanceNullableRelationFilter, ViralDraftPerformanceWhereInput> | null
+    scheduledRTs?: ScheduledRetweetListRelationFilter
   }, "id">
 
   export type ViralDraftV2OrderByWithAggregationInput = {
@@ -31135,6 +37184,9 @@ export namespace Prisma {
     userId?: StringNullableFilter<"CharacterProfile"> | string | null
     createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
     updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    preferredNewsCategories?: StringNullableListFilter<"CharacterProfile">
+    newsCommentStyle?: JsonNullableFilter<"CharacterProfile">
+    topicExpertise?: JsonNullableFilter<"CharacterProfile">
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     sessions?: ViralSessionListRelationFilter
   }
@@ -31154,6 +37206,9 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredNewsCategories?: SortOrder
+    newsCommentStyle?: SortOrderInput | SortOrder
+    topicExpertise?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     sessions?: ViralSessionOrderByRelationAggregateInput
   }
@@ -31176,6 +37231,9 @@ export namespace Prisma {
     userId?: StringNullableFilter<"CharacterProfile"> | string | null
     createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
     updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    preferredNewsCategories?: StringNullableListFilter<"CharacterProfile">
+    newsCommentStyle?: JsonNullableFilter<"CharacterProfile">
+    topicExpertise?: JsonNullableFilter<"CharacterProfile">
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
     sessions?: ViralSessionListRelationFilter
   }, "id">
@@ -31195,6 +37253,9 @@ export namespace Prisma {
     userId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredNewsCategories?: SortOrder
+    newsCommentStyle?: SortOrderInput | SortOrder
+    topicExpertise?: SortOrderInput | SortOrder
     _count?: CharacterProfileCountOrderByAggregateInput
     _avg?: CharacterProfileAvgOrderByAggregateInput
     _max?: CharacterProfileMaxOrderByAggregateInput
@@ -31220,6 +37281,9 @@ export namespace Prisma {
     userId?: StringNullableWithAggregatesFilter<"CharacterProfile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CharacterProfile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CharacterProfile"> | Date | string
+    preferredNewsCategories?: StringNullableListFilter<"CharacterProfile">
+    newsCommentStyle?: JsonNullableWithAggregatesFilter<"CharacterProfile">
+    topicExpertise?: JsonNullableWithAggregatesFilter<"CharacterProfile">
   }
 
   export type BuzzPostCreateInput = {
@@ -31871,6 +37935,7 @@ export namespace Prisma {
     analysis?: NewsAnalysisCreateNestedOneWithoutArticleInput
     source: NewsSourceCreateNestedOneWithoutArticlesInput
     newsThreadItems?: NewsThreadItemCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleUncheckedCreateInput = {
@@ -31888,6 +37953,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedCreateNestedOneWithoutArticleInput
     newsThreadItems?: NewsThreadItemUncheckedCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleUpdateInput = {
@@ -31905,6 +37971,7 @@ export namespace Prisma {
     analysis?: NewsAnalysisUpdateOneWithoutArticleNestedInput
     source?: NewsSourceUpdateOneRequiredWithoutArticlesNestedInput
     newsThreadItems?: NewsThreadItemUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleUncheckedUpdateInput = {
@@ -31922,6 +37989,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedUpdateOneWithoutArticleNestedInput
     newsThreadItems?: NewsThreadItemUncheckedUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUncheckedUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleCreateManyInput = {
@@ -32987,6 +39055,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     session: CotSessionCreateNestedOneWithoutDraftsInput
     performance?: CotDraftPerformanceCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftUncheckedCreateInput = {
@@ -33015,6 +39084,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: CotDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftUpdateInput = {
@@ -33043,6 +39113,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     session?: CotSessionUpdateOneRequiredWithoutDraftsNestedInput
     performance?: CotDraftPerformanceUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutCotDraftNestedInput
   }
 
   export type CotDraftUncheckedUpdateInput = {
@@ -33071,6 +39142,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: CotDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutCotDraftNestedInput
   }
 
   export type CotDraftCreateManyInput = {
@@ -33299,6 +39371,443 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScheduledRetweetCreateInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viralDraft?: ViralDraftV2CreateNestedOneWithoutScheduledRTsInput
+    cotDraft?: CotDraftCreateNestedOneWithoutScheduledRTsInput
+  }
+
+  export type ScheduledRetweetUncheckedCreateInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    viralDraftId?: string | null
+    cotDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viralDraft?: ViralDraftV2UpdateOneWithoutScheduledRTsNestedInput
+    cotDraft?: CotDraftUpdateOneWithoutScheduledRTsNestedInput
+  }
+
+  export type ScheduledRetweetUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    viralDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    cotDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledRetweetCreateManyInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    viralDraftId?: string | null
+    cotDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledRetweetUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    viralDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    cotDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedPerformanceCreateInput = {
+    id?: string
+    contentId: string
+    contentType: string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedPerformanceUncheckedCreateInput = {
+    id?: string
+    contentId: string
+    contentType: string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedPerformanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contentId?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedPerformanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contentId?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedPerformanceCreateManyInput = {
+    id?: string
+    contentId: string
+    contentType: string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedPerformanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contentId?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedPerformanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contentId?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    metrics30m?: NullableJsonNullValueInput | InputJsonValue
+    metrics1h?: NullableJsonNullValueInput | InputJsonValue
+    metrics24h?: NullableJsonNullValueInput | InputJsonValue
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationCreateInput = {
+    id?: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+    newsArticle: NewsArticleCreateNestedOneWithoutViralRelationsInput
+    session: ViralSessionCreateNestedOneWithoutNewsRelationsInput
+  }
+
+  export type NewsViralRelationUncheckedCreateInput = {
+    id?: string
+    newsId: string
+    sessionId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NewsViralRelationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    newsArticle?: NewsArticleUpdateOneRequiredWithoutViralRelationsNestedInput
+    session?: ViralSessionUpdateOneRequiredWithoutNewsRelationsNestedInput
+  }
+
+  export type NewsViralRelationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    newsId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationCreateManyInput = {
+    id?: string
+    newsId: string
+    sessionId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NewsViralRelationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    newsId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionActivityLogCreateInput = {
+    id?: string
+    sessionId: string
+    sessionType: string
+    activityType: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SessionActivityLogUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    sessionType: string
+    activityType: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SessionActivityLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    activityType?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionActivityLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    activityType?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionActivityLogCreateManyInput = {
+    id?: string
+    sessionId: string
+    sessionType: string
+    activityType: string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type SessionActivityLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    activityType?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SessionActivityLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    activityType?: StringFieldUpdateOperationsInput | string
+    details?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiErrorLogCreateInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    errorMessage?: string | null
+    stackTrace?: string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiErrorLogUncheckedCreateInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    errorMessage?: string | null
+    stackTrace?: string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiErrorLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiErrorLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiErrorLogCreateManyInput = {
+    id?: string
+    endpoint: string
+    method: string
+    statusCode: number
+    errorMessage?: string | null
+    stackTrace?: string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: string | null
+    ipAddress?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ApiErrorLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ApiErrorLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    statusCode?: IntFieldUpdateOperationsInput | number
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    stackTrace?: NullableStringFieldUpdateOperationsInput | string | null
+    requestBody?: NullableJsonNullValueInput | InputJsonValue
+    requestHeaders?: NullableJsonNullValueInput | InputJsonValue
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ViralSessionCreateInput = {
     id?: string
     theme: string
@@ -33313,6 +39822,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
     characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
+    newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionUncheckedCreateInput = {
@@ -33329,6 +39839,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+    newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionUpdateInput = {
@@ -33345,6 +39856,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
     characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
+    newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateInput = {
@@ -33361,6 +39873,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+    newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralSessionCreateManyInput = {
@@ -33424,6 +39937,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     session: ViralSessionCreateNestedOneWithoutDraftsInput
     performance?: ViralDraftPerformanceCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2UncheckedCreateInput = {
@@ -33443,6 +39957,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2UpdateInput = {
@@ -33462,6 +39977,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     session?: ViralSessionUpdateOneRequiredWithoutDraftsNestedInput
     performance?: ViralDraftPerformanceUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutViralDraftNestedInput
   }
 
   export type ViralDraftV2UncheckedUpdateInput = {
@@ -33481,6 +39997,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutViralDraftNestedInput
   }
 
   export type ViralDraftV2CreateManyInput = {
@@ -33696,6 +40213,9 @@ export namespace Prisma {
     isDefault?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     user?: UserCreateNestedOneWithoutCharacterProfilesInput
     sessions?: ViralSessionCreateNestedManyWithoutCharacterProfileInput
   }
@@ -33715,6 +40235,9 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionUncheckedCreateNestedManyWithoutCharacterProfileInput
   }
 
@@ -33732,6 +40255,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneWithoutCharacterProfilesNestedInput
     sessions?: ViralSessionUpdateManyWithoutCharacterProfileNestedInput
   }
@@ -33751,6 +40277,9 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionUncheckedUpdateManyWithoutCharacterProfileNestedInput
   }
 
@@ -33769,6 +40298,9 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CharacterProfileUpdateManyMutationInput = {
@@ -33785,6 +40317,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CharacterProfileUncheckedUpdateManyInput = {
@@ -33802,6 +40337,9 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -34555,7 +41093,17 @@ export namespace Prisma {
     none?: NewsThreadItemWhereInput
   }
 
+  export type NewsViralRelationListRelationFilter = {
+    every?: NewsViralRelationWhereInput
+    some?: NewsViralRelationWhereInput
+    none?: NewsViralRelationWhereInput
+  }
+
   export type NewsThreadItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NewsViralRelationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -35217,6 +41765,16 @@ export namespace Prisma {
     isNot?: CotDraftPerformanceWhereInput | null
   }
 
+  export type ScheduledRetweetListRelationFilter = {
+    every?: ScheduledRetweetWhereInput
+    some?: ScheduledRetweetWhereInput
+    none?: ScheduledRetweetWhereInput
+  }
+
+  export type ScheduledRetweetOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CotDraftSessionIdConceptNumberCompoundUniqueInput = {
     sessionId: string
     conceptNumber: number
@@ -35417,6 +41975,246 @@ export namespace Prisma {
     viralCoefficient?: SortOrder
   }
 
+  export type EnumRTStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RTStatus | EnumRTStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRTStatusFilter<$PrismaModel> | $Enums.RTStatus
+  }
+
+  export type ViralDraftV2NullableRelationFilter = {
+    is?: ViralDraftV2WhereInput | null
+    isNot?: ViralDraftV2WhereInput | null
+  }
+
+  export type CotDraftNullableRelationFilter = {
+    is?: CotDraftWhereInput | null
+    isNot?: CotDraftWhereInput | null
+  }
+
+  export type ScheduledRetweetCountOrderByAggregateInput = {
+    id?: SortOrder
+    originalPostId?: SortOrder
+    originalContent?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    rtStrategy?: SortOrder
+    addComment?: SortOrder
+    commentText?: SortOrder
+    viralDraftId?: SortOrder
+    cotDraftId?: SortOrder
+    executedAt?: SortOrder
+    rtPostId?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScheduledRetweetMaxOrderByAggregateInput = {
+    id?: SortOrder
+    originalPostId?: SortOrder
+    originalContent?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    rtStrategy?: SortOrder
+    addComment?: SortOrder
+    commentText?: SortOrder
+    viralDraftId?: SortOrder
+    cotDraftId?: SortOrder
+    executedAt?: SortOrder
+    rtPostId?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScheduledRetweetMinOrderByAggregateInput = {
+    id?: SortOrder
+    originalPostId?: SortOrder
+    originalContent?: SortOrder
+    scheduledAt?: SortOrder
+    status?: SortOrder
+    rtStrategy?: SortOrder
+    addComment?: SortOrder
+    commentText?: SortOrder
+    viralDraftId?: SortOrder
+    cotDraftId?: SortOrder
+    executedAt?: SortOrder
+    rtPostId?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumRTStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RTStatus | EnumRTStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRTStatusWithAggregatesFilter<$PrismaModel> | $Enums.RTStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRTStatusFilter<$PrismaModel>
+    _max?: NestedEnumRTStatusFilter<$PrismaModel>
+  }
+
+  export type UnifiedPerformanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    contentId?: SortOrder
+    contentType?: SortOrder
+    metrics30m?: SortOrder
+    metrics1h?: SortOrder
+    metrics24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedPerformanceAvgOrderByAggregateInput = {
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+  }
+
+  export type UnifiedPerformanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    contentId?: SortOrder
+    contentType?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedPerformanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    contentId?: SortOrder
+    contentType?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedPerformanceSumOrderByAggregateInput = {
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+  }
+
+  export type ViralSessionRelationFilter = {
+    is?: ViralSessionWhereInput
+    isNot?: ViralSessionWhereInput
+  }
+
+  export type NewsViralRelationNewsIdSessionIdCompoundUniqueInput = {
+    newsId: string
+    sessionId: string
+  }
+
+  export type NewsViralRelationCountOrderByAggregateInput = {
+    id?: SortOrder
+    newsId?: SortOrder
+    sessionId?: SortOrder
+    relevanceScore?: SortOrder
+    usedInContent?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NewsViralRelationAvgOrderByAggregateInput = {
+    relevanceScore?: SortOrder
+  }
+
+  export type NewsViralRelationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    newsId?: SortOrder
+    sessionId?: SortOrder
+    relevanceScore?: SortOrder
+    usedInContent?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NewsViralRelationMinOrderByAggregateInput = {
+    id?: SortOrder
+    newsId?: SortOrder
+    sessionId?: SortOrder
+    relevanceScore?: SortOrder
+    usedInContent?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NewsViralRelationSumOrderByAggregateInput = {
+    relevanceScore?: SortOrder
+  }
+
+  export type SessionActivityLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sessionType?: SortOrder
+    activityType?: SortOrder
+    details?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SessionActivityLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sessionType?: SortOrder
+    activityType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SessionActivityLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sessionType?: SortOrder
+    activityType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiErrorLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    errorMessage?: SortOrder
+    stackTrace?: SortOrder
+    requestBody?: SortOrder
+    requestHeaders?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiErrorLogAvgOrderByAggregateInput = {
+    statusCode?: SortOrder
+  }
+
+  export type ApiErrorLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    errorMessage?: SortOrder
+    stackTrace?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiErrorLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    endpoint?: SortOrder
+    method?: SortOrder
+    statusCode?: SortOrder
+    errorMessage?: SortOrder
+    stackTrace?: SortOrder
+    userAgent?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ApiErrorLogSumOrderByAggregateInput = {
+    statusCode?: SortOrder
+  }
+
   export type ViralDraftV2ListRelationFilter = {
     every?: ViralDraftV2WhereInput
     some?: ViralDraftV2WhereInput
@@ -35467,11 +42265,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     characterProfileId?: SortOrder
     voiceStyleMode?: SortOrder
-  }
-
-  export type ViralSessionRelationFilter = {
-    is?: ViralSessionWhereInput
-    isNot?: ViralSessionWhereInput
   }
 
   export type ViralDraftPerformanceNullableRelationFilter = {
@@ -35663,6 +42456,9 @@ export namespace Prisma {
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredNewsCategories?: SortOrder
+    newsCommentStyle?: SortOrder
+    topicExpertise?: SortOrder
   }
 
   export type CharacterProfileAvgOrderByAggregateInput = {
@@ -36020,6 +42816,13 @@ export namespace Prisma {
     connect?: NewsThreadItemWhereUniqueInput | NewsThreadItemWhereUniqueInput[]
   }
 
+  export type NewsViralRelationCreateNestedManyWithoutNewsArticleInput = {
+    create?: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput> | NewsViralRelationCreateWithoutNewsArticleInput[] | NewsViralRelationUncheckedCreateWithoutNewsArticleInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutNewsArticleInput | NewsViralRelationCreateOrConnectWithoutNewsArticleInput[]
+    createMany?: NewsViralRelationCreateManyNewsArticleInputEnvelope
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+  }
+
   export type NewsAnalysisUncheckedCreateNestedOneWithoutArticleInput = {
     create?: XOR<NewsAnalysisCreateWithoutArticleInput, NewsAnalysisUncheckedCreateWithoutArticleInput>
     connectOrCreate?: NewsAnalysisCreateOrConnectWithoutArticleInput
@@ -36031,6 +42834,13 @@ export namespace Prisma {
     connectOrCreate?: NewsThreadItemCreateOrConnectWithoutArticleInput | NewsThreadItemCreateOrConnectWithoutArticleInput[]
     createMany?: NewsThreadItemCreateManyArticleInputEnvelope
     connect?: NewsThreadItemWhereUniqueInput | NewsThreadItemWhereUniqueInput[]
+  }
+
+  export type NewsViralRelationUncheckedCreateNestedManyWithoutNewsArticleInput = {
+    create?: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput> | NewsViralRelationCreateWithoutNewsArticleInput[] | NewsViralRelationUncheckedCreateWithoutNewsArticleInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutNewsArticleInput | NewsViralRelationCreateOrConnectWithoutNewsArticleInput[]
+    createMany?: NewsViralRelationCreateManyNewsArticleInputEnvelope
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
   }
 
   export type NewsArticleUpdatetagsInput = {
@@ -36078,6 +42888,20 @@ export namespace Prisma {
     deleteMany?: NewsThreadItemScalarWhereInput | NewsThreadItemScalarWhereInput[]
   }
 
+  export type NewsViralRelationUpdateManyWithoutNewsArticleNestedInput = {
+    create?: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput> | NewsViralRelationCreateWithoutNewsArticleInput[] | NewsViralRelationUncheckedCreateWithoutNewsArticleInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutNewsArticleInput | NewsViralRelationCreateOrConnectWithoutNewsArticleInput[]
+    upsert?: NewsViralRelationUpsertWithWhereUniqueWithoutNewsArticleInput | NewsViralRelationUpsertWithWhereUniqueWithoutNewsArticleInput[]
+    createMany?: NewsViralRelationCreateManyNewsArticleInputEnvelope
+    set?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    disconnect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    delete?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    update?: NewsViralRelationUpdateWithWhereUniqueWithoutNewsArticleInput | NewsViralRelationUpdateWithWhereUniqueWithoutNewsArticleInput[]
+    updateMany?: NewsViralRelationUpdateManyWithWhereWithoutNewsArticleInput | NewsViralRelationUpdateManyWithWhereWithoutNewsArticleInput[]
+    deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
+  }
+
   export type NewsAnalysisUncheckedUpdateOneWithoutArticleNestedInput = {
     create?: XOR<NewsAnalysisCreateWithoutArticleInput, NewsAnalysisUncheckedCreateWithoutArticleInput>
     connectOrCreate?: NewsAnalysisCreateOrConnectWithoutArticleInput
@@ -36100,6 +42924,20 @@ export namespace Prisma {
     update?: NewsThreadItemUpdateWithWhereUniqueWithoutArticleInput | NewsThreadItemUpdateWithWhereUniqueWithoutArticleInput[]
     updateMany?: NewsThreadItemUpdateManyWithWhereWithoutArticleInput | NewsThreadItemUpdateManyWithWhereWithoutArticleInput[]
     deleteMany?: NewsThreadItemScalarWhereInput | NewsThreadItemScalarWhereInput[]
+  }
+
+  export type NewsViralRelationUncheckedUpdateManyWithoutNewsArticleNestedInput = {
+    create?: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput> | NewsViralRelationCreateWithoutNewsArticleInput[] | NewsViralRelationUncheckedCreateWithoutNewsArticleInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutNewsArticleInput | NewsViralRelationCreateOrConnectWithoutNewsArticleInput[]
+    upsert?: NewsViralRelationUpsertWithWhereUniqueWithoutNewsArticleInput | NewsViralRelationUpsertWithWhereUniqueWithoutNewsArticleInput[]
+    createMany?: NewsViralRelationCreateManyNewsArticleInputEnvelope
+    set?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    disconnect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    delete?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    update?: NewsViralRelationUpdateWithWhereUniqueWithoutNewsArticleInput | NewsViralRelationUpdateWithWhereUniqueWithoutNewsArticleInput[]
+    updateMany?: NewsViralRelationUpdateManyWithWhereWithoutNewsArticleInput | NewsViralRelationUpdateManyWithWhereWithoutNewsArticleInput[]
+    deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
   }
 
   export type NewsThreadItemCreateNestedManyWithoutThreadInput = {
@@ -36456,10 +43294,24 @@ export namespace Prisma {
     connect?: CotDraftPerformanceWhereUniqueInput
   }
 
+  export type ScheduledRetweetCreateNestedManyWithoutCotDraftInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput> | ScheduledRetweetCreateWithoutCotDraftInput[] | ScheduledRetweetUncheckedCreateWithoutCotDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutCotDraftInput | ScheduledRetweetCreateOrConnectWithoutCotDraftInput[]
+    createMany?: ScheduledRetweetCreateManyCotDraftInputEnvelope
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+  }
+
   export type CotDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput = {
     create?: XOR<CotDraftPerformanceCreateWithoutDraftInput, CotDraftPerformanceUncheckedCreateWithoutDraftInput>
     connectOrCreate?: CotDraftPerformanceCreateOrConnectWithoutDraftInput
     connect?: CotDraftPerformanceWhereUniqueInput
+  }
+
+  export type ScheduledRetweetUncheckedCreateNestedManyWithoutCotDraftInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput> | ScheduledRetweetCreateWithoutCotDraftInput[] | ScheduledRetweetUncheckedCreateWithoutCotDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutCotDraftInput | ScheduledRetweetCreateOrConnectWithoutCotDraftInput[]
+    createMany?: ScheduledRetweetCreateManyCotDraftInputEnvelope
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
   }
 
   export type CotDraftUpdatehashtagsInput = {
@@ -36489,6 +43341,20 @@ export namespace Prisma {
     update?: XOR<XOR<CotDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, CotDraftPerformanceUpdateWithoutDraftInput>, CotDraftPerformanceUncheckedUpdateWithoutDraftInput>
   }
 
+  export type ScheduledRetweetUpdateManyWithoutCotDraftNestedInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput> | ScheduledRetweetCreateWithoutCotDraftInput[] | ScheduledRetweetUncheckedCreateWithoutCotDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutCotDraftInput | ScheduledRetweetCreateOrConnectWithoutCotDraftInput[]
+    upsert?: ScheduledRetweetUpsertWithWhereUniqueWithoutCotDraftInput | ScheduledRetweetUpsertWithWhereUniqueWithoutCotDraftInput[]
+    createMany?: ScheduledRetweetCreateManyCotDraftInputEnvelope
+    set?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    disconnect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    delete?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    update?: ScheduledRetweetUpdateWithWhereUniqueWithoutCotDraftInput | ScheduledRetweetUpdateWithWhereUniqueWithoutCotDraftInput[]
+    updateMany?: ScheduledRetweetUpdateManyWithWhereWithoutCotDraftInput | ScheduledRetweetUpdateManyWithWhereWithoutCotDraftInput[]
+    deleteMany?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
+  }
+
   export type CotDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput = {
     create?: XOR<CotDraftPerformanceCreateWithoutDraftInput, CotDraftPerformanceUncheckedCreateWithoutDraftInput>
     connectOrCreate?: CotDraftPerformanceCreateOrConnectWithoutDraftInput
@@ -36497,6 +43363,20 @@ export namespace Prisma {
     delete?: CotDraftPerformanceWhereInput | boolean
     connect?: CotDraftPerformanceWhereUniqueInput
     update?: XOR<XOR<CotDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, CotDraftPerformanceUpdateWithoutDraftInput>, CotDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type ScheduledRetweetUncheckedUpdateManyWithoutCotDraftNestedInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput> | ScheduledRetweetCreateWithoutCotDraftInput[] | ScheduledRetweetUncheckedCreateWithoutCotDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutCotDraftInput | ScheduledRetweetCreateOrConnectWithoutCotDraftInput[]
+    upsert?: ScheduledRetweetUpsertWithWhereUniqueWithoutCotDraftInput | ScheduledRetweetUpsertWithWhereUniqueWithoutCotDraftInput[]
+    createMany?: ScheduledRetweetCreateManyCotDraftInputEnvelope
+    set?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    disconnect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    delete?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    update?: ScheduledRetweetUpdateWithWhereUniqueWithoutCotDraftInput | ScheduledRetweetUpdateWithWhereUniqueWithoutCotDraftInput[]
+    updateMany?: ScheduledRetweetUpdateManyWithWhereWithoutCotDraftInput | ScheduledRetweetUpdateManyWithWhereWithoutCotDraftInput[]
+    deleteMany?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
   }
 
   export type CotDraftCreateNestedOneWithoutPerformanceInput = {
@@ -36511,6 +43391,70 @@ export namespace Prisma {
     upsert?: CotDraftUpsertWithoutPerformanceInput
     connect?: CotDraftWhereUniqueInput
     update?: XOR<XOR<CotDraftUpdateToOneWithWhereWithoutPerformanceInput, CotDraftUpdateWithoutPerformanceInput>, CotDraftUncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type ViralDraftV2CreateNestedOneWithoutScheduledRTsInput = {
+    create?: XOR<ViralDraftV2CreateWithoutScheduledRTsInput, ViralDraftV2UncheckedCreateWithoutScheduledRTsInput>
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutScheduledRTsInput
+    connect?: ViralDraftV2WhereUniqueInput
+  }
+
+  export type CotDraftCreateNestedOneWithoutScheduledRTsInput = {
+    create?: XOR<CotDraftCreateWithoutScheduledRTsInput, CotDraftUncheckedCreateWithoutScheduledRTsInput>
+    connectOrCreate?: CotDraftCreateOrConnectWithoutScheduledRTsInput
+    connect?: CotDraftWhereUniqueInput
+  }
+
+  export type EnumRTStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RTStatus
+  }
+
+  export type ViralDraftV2UpdateOneWithoutScheduledRTsNestedInput = {
+    create?: XOR<ViralDraftV2CreateWithoutScheduledRTsInput, ViralDraftV2UncheckedCreateWithoutScheduledRTsInput>
+    connectOrCreate?: ViralDraftV2CreateOrConnectWithoutScheduledRTsInput
+    upsert?: ViralDraftV2UpsertWithoutScheduledRTsInput
+    disconnect?: ViralDraftV2WhereInput | boolean
+    delete?: ViralDraftV2WhereInput | boolean
+    connect?: ViralDraftV2WhereUniqueInput
+    update?: XOR<XOR<ViralDraftV2UpdateToOneWithWhereWithoutScheduledRTsInput, ViralDraftV2UpdateWithoutScheduledRTsInput>, ViralDraftV2UncheckedUpdateWithoutScheduledRTsInput>
+  }
+
+  export type CotDraftUpdateOneWithoutScheduledRTsNestedInput = {
+    create?: XOR<CotDraftCreateWithoutScheduledRTsInput, CotDraftUncheckedCreateWithoutScheduledRTsInput>
+    connectOrCreate?: CotDraftCreateOrConnectWithoutScheduledRTsInput
+    upsert?: CotDraftUpsertWithoutScheduledRTsInput
+    disconnect?: CotDraftWhereInput | boolean
+    delete?: CotDraftWhereInput | boolean
+    connect?: CotDraftWhereUniqueInput
+    update?: XOR<XOR<CotDraftUpdateToOneWithWhereWithoutScheduledRTsInput, CotDraftUpdateWithoutScheduledRTsInput>, CotDraftUncheckedUpdateWithoutScheduledRTsInput>
+  }
+
+  export type NewsArticleCreateNestedOneWithoutViralRelationsInput = {
+    create?: XOR<NewsArticleCreateWithoutViralRelationsInput, NewsArticleUncheckedCreateWithoutViralRelationsInput>
+    connectOrCreate?: NewsArticleCreateOrConnectWithoutViralRelationsInput
+    connect?: NewsArticleWhereUniqueInput
+  }
+
+  export type ViralSessionCreateNestedOneWithoutNewsRelationsInput = {
+    create?: XOR<ViralSessionCreateWithoutNewsRelationsInput, ViralSessionUncheckedCreateWithoutNewsRelationsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutNewsRelationsInput
+    connect?: ViralSessionWhereUniqueInput
+  }
+
+  export type NewsArticleUpdateOneRequiredWithoutViralRelationsNestedInput = {
+    create?: XOR<NewsArticleCreateWithoutViralRelationsInput, NewsArticleUncheckedCreateWithoutViralRelationsInput>
+    connectOrCreate?: NewsArticleCreateOrConnectWithoutViralRelationsInput
+    upsert?: NewsArticleUpsertWithoutViralRelationsInput
+    connect?: NewsArticleWhereUniqueInput
+    update?: XOR<XOR<NewsArticleUpdateToOneWithWhereWithoutViralRelationsInput, NewsArticleUpdateWithoutViralRelationsInput>, NewsArticleUncheckedUpdateWithoutViralRelationsInput>
+  }
+
+  export type ViralSessionUpdateOneRequiredWithoutNewsRelationsNestedInput = {
+    create?: XOR<ViralSessionCreateWithoutNewsRelationsInput, ViralSessionUncheckedCreateWithoutNewsRelationsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutNewsRelationsInput
+    upsert?: ViralSessionUpsertWithoutNewsRelationsInput
+    connect?: ViralSessionWhereUniqueInput
+    update?: XOR<XOR<ViralSessionUpdateToOneWithWhereWithoutNewsRelationsInput, ViralSessionUpdateWithoutNewsRelationsInput>, ViralSessionUncheckedUpdateWithoutNewsRelationsInput>
   }
 
   export type ViralSessionCreateselectedIdsInput = {
@@ -36530,11 +43474,25 @@ export namespace Prisma {
     connect?: CharacterProfileWhereUniqueInput
   }
 
+  export type NewsViralRelationCreateNestedManyWithoutSessionInput = {
+    create?: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput> | NewsViralRelationCreateWithoutSessionInput[] | NewsViralRelationUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutSessionInput | NewsViralRelationCreateOrConnectWithoutSessionInput[]
+    createMany?: NewsViralRelationCreateManySessionInputEnvelope
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+  }
+
   export type ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
     createMany?: ViralDraftV2CreateManySessionInputEnvelope
     connect?: ViralDraftV2WhereUniqueInput | ViralDraftV2WhereUniqueInput[]
+  }
+
+  export type NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput> | NewsViralRelationCreateWithoutSessionInput[] | NewsViralRelationUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutSessionInput | NewsViralRelationCreateOrConnectWithoutSessionInput[]
+    createMany?: NewsViralRelationCreateManySessionInputEnvelope
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
   }
 
   export type ViralSessionUpdateselectedIdsInput = {
@@ -36566,6 +43524,20 @@ export namespace Prisma {
     update?: XOR<XOR<CharacterProfileUpdateToOneWithWhereWithoutSessionsInput, CharacterProfileUpdateWithoutSessionsInput>, CharacterProfileUncheckedUpdateWithoutSessionsInput>
   }
 
+  export type NewsViralRelationUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput> | NewsViralRelationCreateWithoutSessionInput[] | NewsViralRelationUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutSessionInput | NewsViralRelationCreateOrConnectWithoutSessionInput[]
+    upsert?: NewsViralRelationUpsertWithWhereUniqueWithoutSessionInput | NewsViralRelationUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: NewsViralRelationCreateManySessionInputEnvelope
+    set?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    disconnect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    delete?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    update?: NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput | NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: NewsViralRelationUpdateManyWithWhereWithoutSessionInput | NewsViralRelationUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
+  }
+
   export type ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
@@ -36578,6 +43550,20 @@ export namespace Prisma {
     update?: ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput | ViralDraftV2UpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: ViralDraftV2UpdateManyWithWhereWithoutSessionInput | ViralDraftV2UpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: ViralDraftV2ScalarWhereInput | ViralDraftV2ScalarWhereInput[]
+  }
+
+  export type NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput> | NewsViralRelationCreateWithoutSessionInput[] | NewsViralRelationUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: NewsViralRelationCreateOrConnectWithoutSessionInput | NewsViralRelationCreateOrConnectWithoutSessionInput[]
+    upsert?: NewsViralRelationUpsertWithWhereUniqueWithoutSessionInput | NewsViralRelationUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: NewsViralRelationCreateManySessionInputEnvelope
+    set?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    disconnect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    delete?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+    update?: NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput | NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: NewsViralRelationUpdateManyWithWhereWithoutSessionInput | NewsViralRelationUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
   }
 
   export type ViralDraftV2CreatehashtagsInput = {
@@ -36596,10 +43582,24 @@ export namespace Prisma {
     connect?: ViralDraftPerformanceWhereUniqueInput
   }
 
+  export type ScheduledRetweetCreateNestedManyWithoutViralDraftInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput> | ScheduledRetweetCreateWithoutViralDraftInput[] | ScheduledRetweetUncheckedCreateWithoutViralDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutViralDraftInput | ScheduledRetweetCreateOrConnectWithoutViralDraftInput[]
+    createMany?: ScheduledRetweetCreateManyViralDraftInputEnvelope
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+  }
+
   export type ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput = {
     create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
     connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
     connect?: ViralDraftPerformanceWhereUniqueInput
+  }
+
+  export type ScheduledRetweetUncheckedCreateNestedManyWithoutViralDraftInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput> | ScheduledRetweetCreateWithoutViralDraftInput[] | ScheduledRetweetUncheckedCreateWithoutViralDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutViralDraftInput | ScheduledRetweetCreateOrConnectWithoutViralDraftInput[]
+    createMany?: ScheduledRetweetCreateManyViralDraftInputEnvelope
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
   }
 
   export type ViralDraftV2UpdatehashtagsInput = {
@@ -36625,6 +43625,20 @@ export namespace Prisma {
     update?: XOR<XOR<ViralDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, ViralDraftPerformanceUpdateWithoutDraftInput>, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
   }
 
+  export type ScheduledRetweetUpdateManyWithoutViralDraftNestedInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput> | ScheduledRetweetCreateWithoutViralDraftInput[] | ScheduledRetweetUncheckedCreateWithoutViralDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutViralDraftInput | ScheduledRetweetCreateOrConnectWithoutViralDraftInput[]
+    upsert?: ScheduledRetweetUpsertWithWhereUniqueWithoutViralDraftInput | ScheduledRetweetUpsertWithWhereUniqueWithoutViralDraftInput[]
+    createMany?: ScheduledRetweetCreateManyViralDraftInputEnvelope
+    set?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    disconnect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    delete?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    update?: ScheduledRetweetUpdateWithWhereUniqueWithoutViralDraftInput | ScheduledRetweetUpdateWithWhereUniqueWithoutViralDraftInput[]
+    updateMany?: ScheduledRetweetUpdateManyWithWhereWithoutViralDraftInput | ScheduledRetweetUpdateManyWithWhereWithoutViralDraftInput[]
+    deleteMany?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
+  }
+
   export type ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput = {
     create?: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
     connectOrCreate?: ViralDraftPerformanceCreateOrConnectWithoutDraftInput
@@ -36633,6 +43647,20 @@ export namespace Prisma {
     delete?: ViralDraftPerformanceWhereInput | boolean
     connect?: ViralDraftPerformanceWhereUniqueInput
     update?: XOR<XOR<ViralDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, ViralDraftPerformanceUpdateWithoutDraftInput>, ViralDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type ScheduledRetweetUncheckedUpdateManyWithoutViralDraftNestedInput = {
+    create?: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput> | ScheduledRetweetCreateWithoutViralDraftInput[] | ScheduledRetweetUncheckedCreateWithoutViralDraftInput[]
+    connectOrCreate?: ScheduledRetweetCreateOrConnectWithoutViralDraftInput | ScheduledRetweetCreateOrConnectWithoutViralDraftInput[]
+    upsert?: ScheduledRetweetUpsertWithWhereUniqueWithoutViralDraftInput | ScheduledRetweetUpsertWithWhereUniqueWithoutViralDraftInput[]
+    createMany?: ScheduledRetweetCreateManyViralDraftInputEnvelope
+    set?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    disconnect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    delete?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    connect?: ScheduledRetweetWhereUniqueInput | ScheduledRetweetWhereUniqueInput[]
+    update?: ScheduledRetweetUpdateWithWhereUniqueWithoutViralDraftInput | ScheduledRetweetUpdateWithWhereUniqueWithoutViralDraftInput[]
+    updateMany?: ScheduledRetweetUpdateManyWithWhereWithoutViralDraftInput | ScheduledRetweetUpdateManyWithWhereWithoutViralDraftInput[]
+    deleteMany?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
   }
 
   export type ViralDraftV2CreateNestedOneWithoutPerformanceInput = {
@@ -36647,6 +43675,10 @@ export namespace Prisma {
     upsert?: ViralDraftV2UpsertWithoutPerformanceInput
     connect?: ViralDraftV2WhereUniqueInput
     update?: XOR<XOR<ViralDraftV2UpdateToOneWithWhereWithoutPerformanceInput, ViralDraftV2UpdateWithoutPerformanceInput>, ViralDraftV2UncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type CharacterProfileCreatepreferredNewsCategoriesInput = {
+    set: string[]
   }
 
   export type UserCreateNestedOneWithoutCharacterProfilesInput = {
@@ -36667,6 +43699,11 @@ export namespace Prisma {
     connectOrCreate?: ViralSessionCreateOrConnectWithoutCharacterProfileInput | ViralSessionCreateOrConnectWithoutCharacterProfileInput[]
     createMany?: ViralSessionCreateManyCharacterProfileInputEnvelope
     connect?: ViralSessionWhereUniqueInput | ViralSessionWhereUniqueInput[]
+  }
+
+  export type CharacterProfileUpdatepreferredNewsCategoriesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneWithoutCharacterProfilesNestedInput = {
@@ -37099,6 +44136,23 @@ export namespace Prisma {
     _max?: NestedEnumCotDraftStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumRTStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.RTStatus | EnumRTStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRTStatusFilter<$PrismaModel> | $Enums.RTStatus
+  }
+
+  export type NestedEnumRTStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RTStatus | EnumRTStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumRTStatusWithAggregatesFilter<$PrismaModel> | $Enums.RTStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRTStatusFilter<$PrismaModel>
+    _max?: NestedEnumRTStatusFilter<$PrismaModel>
+  }
+
   export type ScheduledPostCreateWithoutRefPostInput = {
     id?: string
     content: string
@@ -37359,6 +44413,9 @@ export namespace Prisma {
     isDefault?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionCreateNestedManyWithoutCharacterProfileInput
   }
 
@@ -37376,6 +44433,9 @@ export namespace Prisma {
     isDefault?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionUncheckedCreateNestedManyWithoutCharacterProfileInput
   }
 
@@ -37481,6 +44541,9 @@ export namespace Prisma {
     userId?: StringNullableFilter<"CharacterProfile"> | string | null
     createdAt?: DateTimeFilter<"CharacterProfile"> | Date | string
     updatedAt?: DateTimeFilter<"CharacterProfile"> | Date | string
+    preferredNewsCategories?: StringNullableListFilter<"CharacterProfile">
+    newsCommentStyle?: JsonNullableFilter<"CharacterProfile">
+    topicExpertise?: JsonNullableFilter<"CharacterProfile">
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -37577,6 +44640,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisCreateNestedOneWithoutArticleInput
     newsThreadItems?: NewsThreadItemCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleUncheckedCreateWithoutSourceInput = {
@@ -37593,6 +44657,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedCreateNestedOneWithoutArticleInput
     newsThreadItems?: NewsThreadItemUncheckedCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleCreateOrConnectWithoutSourceInput = {
@@ -37717,6 +44782,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NewsViralRelationCreateWithoutNewsArticleInput = {
+    id?: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+    session: ViralSessionCreateNestedOneWithoutNewsRelationsInput
+  }
+
+  export type NewsViralRelationUncheckedCreateWithoutNewsArticleInput = {
+    id?: string
+    sessionId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NewsViralRelationCreateOrConnectWithoutNewsArticleInput = {
+    where: NewsViralRelationWhereUniqueInput
+    create: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput>
+  }
+
+  export type NewsViralRelationCreateManyNewsArticleInputEnvelope = {
+    data: NewsViralRelationCreateManyNewsArticleInput | NewsViralRelationCreateManyNewsArticleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type NewsAnalysisUpsertWithoutArticleInput = {
     update: XOR<NewsAnalysisUpdateWithoutArticleInput, NewsAnalysisUncheckedUpdateWithoutArticleInput>
     create: XOR<NewsAnalysisCreateWithoutArticleInput, NewsAnalysisUncheckedCreateWithoutArticleInput>
@@ -37809,6 +44900,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"NewsThreadItem"> | Date | string
   }
 
+  export type NewsViralRelationUpsertWithWhereUniqueWithoutNewsArticleInput = {
+    where: NewsViralRelationWhereUniqueInput
+    update: XOR<NewsViralRelationUpdateWithoutNewsArticleInput, NewsViralRelationUncheckedUpdateWithoutNewsArticleInput>
+    create: XOR<NewsViralRelationCreateWithoutNewsArticleInput, NewsViralRelationUncheckedCreateWithoutNewsArticleInput>
+  }
+
+  export type NewsViralRelationUpdateWithWhereUniqueWithoutNewsArticleInput = {
+    where: NewsViralRelationWhereUniqueInput
+    data: XOR<NewsViralRelationUpdateWithoutNewsArticleInput, NewsViralRelationUncheckedUpdateWithoutNewsArticleInput>
+  }
+
+  export type NewsViralRelationUpdateManyWithWhereWithoutNewsArticleInput = {
+    where: NewsViralRelationScalarWhereInput
+    data: XOR<NewsViralRelationUpdateManyMutationInput, NewsViralRelationUncheckedUpdateManyWithoutNewsArticleInput>
+  }
+
+  export type NewsViralRelationScalarWhereInput = {
+    AND?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
+    OR?: NewsViralRelationScalarWhereInput[]
+    NOT?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
+    id?: StringFilter<"NewsViralRelation"> | string
+    newsId?: StringFilter<"NewsViralRelation"> | string
+    sessionId?: StringFilter<"NewsViralRelation"> | string
+    relevanceScore?: FloatNullableFilter<"NewsViralRelation"> | number | null
+    usedInContent?: BoolFilter<"NewsViralRelation"> | boolean
+    createdAt?: DateTimeFilter<"NewsViralRelation"> | Date | string
+  }
+
   export type NewsThreadItemCreateWithoutThreadInput = {
     id?: string
     order: number
@@ -37890,6 +45009,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisCreateNestedOneWithoutArticleInput
     source: NewsSourceCreateNestedOneWithoutArticlesInput
+    viralRelations?: NewsViralRelationCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleUncheckedCreateWithoutNewsThreadItemsInput = {
@@ -37906,6 +45026,7 @@ export namespace Prisma {
     createdAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedCreateNestedOneWithoutArticleInput
+    viralRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleCreateOrConnectWithoutNewsThreadItemsInput = {
@@ -37969,6 +45090,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUpdateOneWithoutArticleNestedInput
     source?: NewsSourceUpdateOneRequiredWithoutArticlesNestedInput
+    viralRelations?: NewsViralRelationUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleUncheckedUpdateWithoutNewsThreadItemsInput = {
@@ -37985,6 +45107,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedUpdateOneWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUncheckedUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleCreateWithoutAnalysisInput = {
@@ -38001,6 +45124,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     source: NewsSourceCreateNestedOneWithoutArticlesInput
     newsThreadItems?: NewsThreadItemCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleUncheckedCreateWithoutAnalysisInput = {
@@ -38017,6 +45141,7 @@ export namespace Prisma {
     createdAt?: Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     newsThreadItems?: NewsThreadItemUncheckedCreateNestedManyWithoutArticleInput
+    viralRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutNewsArticleInput
   }
 
   export type NewsArticleCreateOrConnectWithoutAnalysisInput = {
@@ -38049,6 +45174,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     source?: NewsSourceUpdateOneRequiredWithoutArticlesNestedInput
     newsThreadItems?: NewsThreadItemUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleUncheckedUpdateWithoutAnalysisInput = {
@@ -38065,6 +45191,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     newsThreadItems?: NewsThreadItemUncheckedUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUncheckedUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type UserCreateWithoutWatchlistUsersInput = {
@@ -38481,6 +45608,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: CotDraftPerformanceCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftUncheckedCreateWithoutSessionInput = {
@@ -38508,6 +45636,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: CotDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftCreateOrConnectWithoutSessionInput = {
@@ -38785,6 +45914,50 @@ export namespace Prisma {
     create: XOR<CotDraftPerformanceCreateWithoutDraftInput, CotDraftPerformanceUncheckedCreateWithoutDraftInput>
   }
 
+  export type ScheduledRetweetCreateWithoutCotDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    viralDraft?: ViralDraftV2CreateNestedOneWithoutScheduledRTsInput
+  }
+
+  export type ScheduledRetweetUncheckedCreateWithoutCotDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    viralDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetCreateOrConnectWithoutCotDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    create: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput>
+  }
+
+  export type ScheduledRetweetCreateManyCotDraftInputEnvelope = {
+    data: ScheduledRetweetCreateManyCotDraftInput | ScheduledRetweetCreateManyCotDraftInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CotSessionUpsertWithoutDraftsInput = {
     update: XOR<CotSessionUpdateWithoutDraftsInput, CotSessionUncheckedUpdateWithoutDraftsInput>
     create: XOR<CotSessionCreateWithoutDraftsInput, CotSessionUncheckedCreateWithoutDraftsInput>
@@ -38885,6 +46058,43 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScheduledRetweetUpsertWithWhereUniqueWithoutCotDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    update: XOR<ScheduledRetweetUpdateWithoutCotDraftInput, ScheduledRetweetUncheckedUpdateWithoutCotDraftInput>
+    create: XOR<ScheduledRetweetCreateWithoutCotDraftInput, ScheduledRetweetUncheckedCreateWithoutCotDraftInput>
+  }
+
+  export type ScheduledRetweetUpdateWithWhereUniqueWithoutCotDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    data: XOR<ScheduledRetweetUpdateWithoutCotDraftInput, ScheduledRetweetUncheckedUpdateWithoutCotDraftInput>
+  }
+
+  export type ScheduledRetweetUpdateManyWithWhereWithoutCotDraftInput = {
+    where: ScheduledRetweetScalarWhereInput
+    data: XOR<ScheduledRetweetUpdateManyMutationInput, ScheduledRetweetUncheckedUpdateManyWithoutCotDraftInput>
+  }
+
+  export type ScheduledRetweetScalarWhereInput = {
+    AND?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
+    OR?: ScheduledRetweetScalarWhereInput[]
+    NOT?: ScheduledRetweetScalarWhereInput | ScheduledRetweetScalarWhereInput[]
+    id?: StringFilter<"ScheduledRetweet"> | string
+    originalPostId?: StringFilter<"ScheduledRetweet"> | string
+    originalContent?: StringFilter<"ScheduledRetweet"> | string
+    scheduledAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    status?: EnumRTStatusFilter<"ScheduledRetweet"> | $Enums.RTStatus
+    rtStrategy?: StringFilter<"ScheduledRetweet"> | string
+    addComment?: BoolFilter<"ScheduledRetweet"> | boolean
+    commentText?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    viralDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    cotDraftId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    executedAt?: DateTimeNullableFilter<"ScheduledRetweet"> | Date | string | null
+    rtPostId?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    error?: StringNullableFilter<"ScheduledRetweet"> | string | null
+    createdAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+    updatedAt?: DateTimeFilter<"ScheduledRetweet"> | Date | string
+  }
+
   export type CotDraftCreateWithoutPerformanceInput = {
     id?: string
     conceptNumber: number
@@ -38910,6 +46120,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     session: CotSessionCreateNestedOneWithoutDraftsInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftUncheckedCreateWithoutPerformanceInput = {
@@ -38937,6 +46148,7 @@ export namespace Prisma {
     viralScore?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutCotDraftInput
   }
 
   export type CotDraftCreateOrConnectWithoutPerformanceInput = {
@@ -38980,6 +46192,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     session?: CotSessionUpdateOneRequiredWithoutDraftsNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutCotDraftNestedInput
   }
 
   export type CotDraftUncheckedUpdateWithoutPerformanceInput = {
@@ -39007,6 +46220,391 @@ export namespace Prisma {
     viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutCotDraftNestedInput
+  }
+
+  export type ViralDraftV2CreateWithoutScheduledRTsInput = {
+    id?: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: ViralSessionCreateNestedOneWithoutDraftsInput
+    performance?: ViralDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2UncheckedCreateWithoutScheduledRTsInput = {
+    id?: string
+    sessionId: string
+    conceptId: string
+    title: string
+    content: string
+    hashtags?: ViralDraftV2CreatehashtagsInput | string[]
+    visualNote?: string | null
+    characterId?: string | null
+    characterNote?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    tweetId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type ViralDraftV2CreateOrConnectWithoutScheduledRTsInput = {
+    where: ViralDraftV2WhereUniqueInput
+    create: XOR<ViralDraftV2CreateWithoutScheduledRTsInput, ViralDraftV2UncheckedCreateWithoutScheduledRTsInput>
+  }
+
+  export type CotDraftCreateWithoutScheduledRTsInput = {
+    id?: string
+    conceptNumber: number
+    title: string
+    hook: string
+    angle: string
+    format: string
+    content?: string | null
+    visualGuide?: string | null
+    timing: string
+    hashtags?: CotDraftCreatehashtagsInput | string[]
+    newsSource?: string | null
+    sourceUrl?: string | null
+    kpis?: NullableJsonNullValueInput | InputJsonValue
+    riskAssessment?: NullableJsonNullValueInput | InputJsonValue
+    optimizationTips?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.CotDraftStatus
+    editedContent?: string | null
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: CotSessionCreateNestedOneWithoutDraftsInput
+    performance?: CotDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type CotDraftUncheckedCreateWithoutScheduledRTsInput = {
+    id?: string
+    sessionId: string
+    conceptNumber: number
+    title: string
+    hook: string
+    angle: string
+    format: string
+    content?: string | null
+    visualGuide?: string | null
+    timing: string
+    hashtags?: CotDraftCreatehashtagsInput | string[]
+    newsSource?: string | null
+    sourceUrl?: string | null
+    kpis?: NullableJsonNullValueInput | InputJsonValue
+    riskAssessment?: NullableJsonNullValueInput | InputJsonValue
+    optimizationTips?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.CotDraftStatus
+    editedContent?: string | null
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: CotDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type CotDraftCreateOrConnectWithoutScheduledRTsInput = {
+    where: CotDraftWhereUniqueInput
+    create: XOR<CotDraftCreateWithoutScheduledRTsInput, CotDraftUncheckedCreateWithoutScheduledRTsInput>
+  }
+
+  export type ViralDraftV2UpsertWithoutScheduledRTsInput = {
+    update: XOR<ViralDraftV2UpdateWithoutScheduledRTsInput, ViralDraftV2UncheckedUpdateWithoutScheduledRTsInput>
+    create: XOR<ViralDraftV2CreateWithoutScheduledRTsInput, ViralDraftV2UncheckedCreateWithoutScheduledRTsInput>
+    where?: ViralDraftV2WhereInput
+  }
+
+  export type ViralDraftV2UpdateToOneWithWhereWithoutScheduledRTsInput = {
+    where?: ViralDraftV2WhereInput
+    data: XOR<ViralDraftV2UpdateWithoutScheduledRTsInput, ViralDraftV2UncheckedUpdateWithoutScheduledRTsInput>
+  }
+
+  export type ViralDraftV2UpdateWithoutScheduledRTsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ViralSessionUpdateOneRequiredWithoutDraftsNestedInput
+    performance?: ViralDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type ViralDraftV2UncheckedUpdateWithoutScheduledRTsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    conceptId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
+    visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    characterId?: NullableStringFieldUpdateOperationsInput | string | null
+    characterNote?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type CotDraftUpsertWithoutScheduledRTsInput = {
+    update: XOR<CotDraftUpdateWithoutScheduledRTsInput, CotDraftUncheckedUpdateWithoutScheduledRTsInput>
+    create: XOR<CotDraftCreateWithoutScheduledRTsInput, CotDraftUncheckedCreateWithoutScheduledRTsInput>
+    where?: CotDraftWhereInput
+  }
+
+  export type CotDraftUpdateToOneWithWhereWithoutScheduledRTsInput = {
+    where?: CotDraftWhereInput
+    data: XOR<CotDraftUpdateWithoutScheduledRTsInput, CotDraftUncheckedUpdateWithoutScheduledRTsInput>
+  }
+
+  export type CotDraftUpdateWithoutScheduledRTsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conceptNumber?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    hook?: StringFieldUpdateOperationsInput | string
+    angle?: StringFieldUpdateOperationsInput | string
+    format?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    timing?: StringFieldUpdateOperationsInput | string
+    hashtags?: CotDraftUpdatehashtagsInput | string[]
+    newsSource?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    kpis?: NullableJsonNullValueInput | InputJsonValue
+    riskAssessment?: NullableJsonNullValueInput | InputJsonValue
+    optimizationTips?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumCotDraftStatusFieldUpdateOperationsInput | $Enums.CotDraftStatus
+    editedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: CotSessionUpdateOneRequiredWithoutDraftsNestedInput
+    performance?: CotDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type CotDraftUncheckedUpdateWithoutScheduledRTsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    conceptNumber?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    hook?: StringFieldUpdateOperationsInput | string
+    angle?: StringFieldUpdateOperationsInput | string
+    format?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    timing?: StringFieldUpdateOperationsInput | string
+    hashtags?: CotDraftUpdatehashtagsInput | string[]
+    newsSource?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    kpis?: NullableJsonNullValueInput | InputJsonValue
+    riskAssessment?: NullableJsonNullValueInput | InputJsonValue
+    optimizationTips?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumCotDraftStatusFieldUpdateOperationsInput | $Enums.CotDraftStatus
+    editedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: CotDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type NewsArticleCreateWithoutViralRelationsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    url: string
+    publishedAt: Date | string
+    category?: string | null
+    tags?: NewsArticleCreatetagsInput | string[]
+    importance?: number | null
+    processed?: boolean
+    createdAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    analysis?: NewsAnalysisCreateNestedOneWithoutArticleInput
+    source: NewsSourceCreateNestedOneWithoutArticlesInput
+    newsThreadItems?: NewsThreadItemCreateNestedManyWithoutArticleInput
+  }
+
+  export type NewsArticleUncheckedCreateWithoutViralRelationsInput = {
+    id?: string
+    sourceId: string
+    title: string
+    description?: string | null
+    url: string
+    publishedAt: Date | string
+    category?: string | null
+    tags?: NewsArticleCreatetagsInput | string[]
+    importance?: number | null
+    processed?: boolean
+    createdAt?: Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    analysis?: NewsAnalysisUncheckedCreateNestedOneWithoutArticleInput
+    newsThreadItems?: NewsThreadItemUncheckedCreateNestedManyWithoutArticleInput
+  }
+
+  export type NewsArticleCreateOrConnectWithoutViralRelationsInput = {
+    where: NewsArticleWhereUniqueInput
+    create: XOR<NewsArticleCreateWithoutViralRelationsInput, NewsArticleUncheckedCreateWithoutViralRelationsInput>
+  }
+
+  export type ViralSessionCreateWithoutNewsRelationsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+    characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
+  }
+
+  export type ViralSessionUncheckedCreateWithoutNewsRelationsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    characterProfileId?: string | null
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionCreateOrConnectWithoutNewsRelationsInput = {
+    where: ViralSessionWhereUniqueInput
+    create: XOR<ViralSessionCreateWithoutNewsRelationsInput, ViralSessionUncheckedCreateWithoutNewsRelationsInput>
+  }
+
+  export type NewsArticleUpsertWithoutViralRelationsInput = {
+    update: XOR<NewsArticleUpdateWithoutViralRelationsInput, NewsArticleUncheckedUpdateWithoutViralRelationsInput>
+    create: XOR<NewsArticleCreateWithoutViralRelationsInput, NewsArticleUncheckedCreateWithoutViralRelationsInput>
+    where?: NewsArticleWhereInput
+  }
+
+  export type NewsArticleUpdateToOneWithWhereWithoutViralRelationsInput = {
+    where?: NewsArticleWhereInput
+    data: XOR<NewsArticleUpdateWithoutViralRelationsInput, NewsArticleUncheckedUpdateWithoutViralRelationsInput>
+  }
+
+  export type NewsArticleUpdateWithoutViralRelationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NewsArticleUpdatetagsInput | string[]
+    importance?: NullableFloatFieldUpdateOperationsInput | number | null
+    processed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    analysis?: NewsAnalysisUpdateOneWithoutArticleNestedInput
+    source?: NewsSourceUpdateOneRequiredWithoutArticlesNestedInput
+    newsThreadItems?: NewsThreadItemUpdateManyWithoutArticleNestedInput
+  }
+
+  export type NewsArticleUncheckedUpdateWithoutViralRelationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    url?: StringFieldUpdateOperationsInput | string
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: NewsArticleUpdatetagsInput | string[]
+    importance?: NullableFloatFieldUpdateOperationsInput | number | null
+    processed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    analysis?: NewsAnalysisUncheckedUpdateOneWithoutArticleNestedInput
+    newsThreadItems?: NewsThreadItemUncheckedUpdateManyWithoutArticleNestedInput
+  }
+
+  export type ViralSessionUpsertWithoutNewsRelationsInput = {
+    update: XOR<ViralSessionUpdateWithoutNewsRelationsInput, ViralSessionUncheckedUpdateWithoutNewsRelationsInput>
+    create: XOR<ViralSessionCreateWithoutNewsRelationsInput, ViralSessionUncheckedCreateWithoutNewsRelationsInput>
+    where?: ViralSessionWhereInput
+  }
+
+  export type ViralSessionUpdateToOneWithWhereWithoutNewsRelationsInput = {
+    where?: ViralSessionWhereInput
+    data: XOR<ViralSessionUpdateWithoutNewsRelationsInput, ViralSessionUncheckedUpdateWithoutNewsRelationsInput>
+  }
+
+  export type ViralSessionUpdateWithoutNewsRelationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+    characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
+  }
+
+  export type ViralSessionUncheckedUpdateWithoutNewsRelationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    characterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralDraftV2CreateWithoutSessionInput = {
@@ -39025,6 +46623,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: ViralDraftPerformanceCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2UncheckedCreateWithoutSessionInput = {
@@ -39043,6 +46642,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     performance?: ViralDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2CreateOrConnectWithoutSessionInput = {
@@ -39069,6 +46669,9 @@ export namespace Prisma {
     isDefault?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     user?: UserCreateNestedOneWithoutCharacterProfilesInput
   }
 
@@ -39087,11 +46690,40 @@ export namespace Prisma {
     userId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CharacterProfileCreateOrConnectWithoutSessionsInput = {
     where: CharacterProfileWhereUniqueInput
     create: XOR<CharacterProfileCreateWithoutSessionsInput, CharacterProfileUncheckedCreateWithoutSessionsInput>
+  }
+
+  export type NewsViralRelationCreateWithoutSessionInput = {
+    id?: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+    newsArticle: NewsArticleCreateNestedOneWithoutViralRelationsInput
+  }
+
+  export type NewsViralRelationUncheckedCreateWithoutSessionInput = {
+    id?: string
+    newsId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NewsViralRelationCreateOrConnectWithoutSessionInput = {
+    where: NewsViralRelationWhereUniqueInput
+    create: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput>
+  }
+
+  export type NewsViralRelationCreateManySessionInputEnvelope = {
+    data: NewsViralRelationCreateManySessionInput | NewsViralRelationCreateManySessionInput[]
+    skipDuplicates?: boolean
   }
 
   export type ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput = {
@@ -39156,6 +46788,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     user?: UserUpdateOneWithoutCharacterProfilesNestedInput
   }
 
@@ -39174,6 +46809,25 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type NewsViralRelationUpsertWithWhereUniqueWithoutSessionInput = {
+    where: NewsViralRelationWhereUniqueInput
+    update: XOR<NewsViralRelationUpdateWithoutSessionInput, NewsViralRelationUncheckedUpdateWithoutSessionInput>
+    create: XOR<NewsViralRelationCreateWithoutSessionInput, NewsViralRelationUncheckedCreateWithoutSessionInput>
+  }
+
+  export type NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput = {
+    where: NewsViralRelationWhereUniqueInput
+    data: XOR<NewsViralRelationUpdateWithoutSessionInput, NewsViralRelationUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type NewsViralRelationUpdateManyWithWhereWithoutSessionInput = {
+    where: NewsViralRelationScalarWhereInput
+    data: XOR<NewsViralRelationUpdateManyMutationInput, NewsViralRelationUncheckedUpdateManyWithoutSessionInput>
   }
 
   export type ViralSessionCreateWithoutDraftsInput = {
@@ -39189,6 +46843,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
+    newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionUncheckedCreateWithoutDraftsInput = {
@@ -39204,6 +46859,7 @@ export namespace Prisma {
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
+    newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionCreateOrConnectWithoutDraftsInput = {
@@ -39256,6 +46912,50 @@ export namespace Prisma {
     create: XOR<ViralDraftPerformanceCreateWithoutDraftInput, ViralDraftPerformanceUncheckedCreateWithoutDraftInput>
   }
 
+  export type ScheduledRetweetCreateWithoutViralDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cotDraft?: CotDraftCreateNestedOneWithoutScheduledRTsInput
+  }
+
+  export type ScheduledRetweetUncheckedCreateWithoutViralDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    cotDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetCreateOrConnectWithoutViralDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    create: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput>
+  }
+
+  export type ScheduledRetweetCreateManyViralDraftInputEnvelope = {
+    data: ScheduledRetweetCreateManyViralDraftInput | ScheduledRetweetCreateManyViralDraftInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ViralSessionUpsertWithoutDraftsInput = {
     update: XOR<ViralSessionUpdateWithoutDraftsInput, ViralSessionUncheckedUpdateWithoutDraftsInput>
     create: XOR<ViralSessionCreateWithoutDraftsInput, ViralSessionUncheckedCreateWithoutDraftsInput>
@@ -39280,6 +46980,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
+    newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutDraftsInput = {
@@ -39295,6 +46996,7 @@ export namespace Prisma {
     concepts?: NullableJsonNullValueInput | InputJsonValue
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
+    newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralDraftPerformanceUpsertWithoutDraftInput = {
@@ -39348,6 +47050,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScheduledRetweetUpsertWithWhereUniqueWithoutViralDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    update: XOR<ScheduledRetweetUpdateWithoutViralDraftInput, ScheduledRetweetUncheckedUpdateWithoutViralDraftInput>
+    create: XOR<ScheduledRetweetCreateWithoutViralDraftInput, ScheduledRetweetUncheckedCreateWithoutViralDraftInput>
+  }
+
+  export type ScheduledRetweetUpdateWithWhereUniqueWithoutViralDraftInput = {
+    where: ScheduledRetweetWhereUniqueInput
+    data: XOR<ScheduledRetweetUpdateWithoutViralDraftInput, ScheduledRetweetUncheckedUpdateWithoutViralDraftInput>
+  }
+
+  export type ScheduledRetweetUpdateManyWithWhereWithoutViralDraftInput = {
+    where: ScheduledRetweetScalarWhereInput
+    data: XOR<ScheduledRetweetUpdateManyMutationInput, ScheduledRetweetUncheckedUpdateManyWithoutViralDraftInput>
+  }
+
   export type ViralDraftV2CreateWithoutPerformanceInput = {
     id?: string
     conceptId: string
@@ -39364,6 +47082,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     session: ViralSessionCreateNestedOneWithoutDraftsInput
+    scheduledRTs?: ScheduledRetweetCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2UncheckedCreateWithoutPerformanceInput = {
@@ -39382,6 +47101,7 @@ export namespace Prisma {
     tweetId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    scheduledRTs?: ScheduledRetweetUncheckedCreateNestedManyWithoutViralDraftInput
   }
 
   export type ViralDraftV2CreateOrConnectWithoutPerformanceInput = {
@@ -39416,6 +47136,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     session?: ViralSessionUpdateOneRequiredWithoutDraftsNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutViralDraftNestedInput
   }
 
   export type ViralDraftV2UncheckedUpdateWithoutPerformanceInput = {
@@ -39434,6 +47155,7 @@ export namespace Prisma {
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutViralDraftNestedInput
   }
 
   export type UserCreateWithoutCharacterProfilesInput = {
@@ -39486,6 +47208,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+    newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionUncheckedCreateWithoutCharacterProfileInput = {
@@ -39501,6 +47224,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+    newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ViralSessionCreateOrConnectWithoutCharacterProfileInput = {
@@ -39686,6 +47410,9 @@ export namespace Prisma {
     isDefault?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredNewsCategories?: CharacterProfileCreatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -39760,6 +47487,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionUpdateManyWithoutCharacterProfileNestedInput
   }
 
@@ -39777,6 +47507,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
     sessions?: ViralSessionUncheckedUpdateManyWithoutCharacterProfileNestedInput
   }
 
@@ -39794,6 +47527,9 @@ export namespace Prisma {
     isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredNewsCategories?: CharacterProfileUpdatepreferredNewsCategoriesInput | string[]
+    newsCommentStyle?: NullableJsonNullValueInput | InputJsonValue
+    topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type NewsArticleCreateManySourceInput = {
@@ -39824,6 +47560,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUpdateOneWithoutArticleNestedInput
     newsThreadItems?: NewsThreadItemUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleUncheckedUpdateWithoutSourceInput = {
@@ -39840,6 +47577,7 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     analysis?: NewsAnalysisUncheckedUpdateOneWithoutArticleNestedInput
     newsThreadItems?: NewsThreadItemUncheckedUpdateManyWithoutArticleNestedInput
+    viralRelations?: NewsViralRelationUncheckedUpdateManyWithoutNewsArticleNestedInput
   }
 
   export type NewsArticleUncheckedUpdateManyWithoutSourceInput = {
@@ -39864,6 +47602,14 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type NewsViralRelationCreateManyNewsArticleInput = {
+    id?: string
+    sessionId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
+  }
+
   export type NewsThreadItemUpdateWithoutArticleInput = {
     id?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
@@ -39885,6 +47631,30 @@ export namespace Prisma {
     threadId?: StringFieldUpdateOperationsInput | string
     order?: IntFieldUpdateOperationsInput | number
     content?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationUpdateWithoutNewsArticleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ViralSessionUpdateOneRequiredWithoutNewsRelationsNestedInput
+  }
+
+  export type NewsViralRelationUncheckedUpdateWithoutNewsArticleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationUncheckedUpdateManyWithoutNewsArticleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40123,6 +47893,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: CotDraftPerformanceUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutCotDraftNestedInput
   }
 
   export type CotDraftUncheckedUpdateWithoutSessionInput = {
@@ -40150,6 +47921,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: CotDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutCotDraftNestedInput
   }
 
   export type CotDraftUncheckedUpdateManyWithoutSessionInput = {
@@ -40178,6 +47950,74 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ScheduledRetweetCreateManyCotDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    viralDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetUpdateWithoutCotDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    viralDraft?: ViralDraftV2UpdateOneWithoutScheduledRTsNestedInput
+  }
+
+  export type ScheduledRetweetUncheckedUpdateWithoutCotDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    viralDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledRetweetUncheckedUpdateManyWithoutCotDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    viralDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ViralDraftV2CreateManySessionInput = {
     id?: string
     conceptId: string
@@ -40193,6 +48033,14 @@ export namespace Prisma {
     tweetId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type NewsViralRelationCreateManySessionInput = {
+    id?: string
+    newsId: string
+    relevanceScore?: number | null
+    usedInContent?: boolean
+    createdAt?: Date | string
   }
 
   export type ViralDraftV2UpdateWithoutSessionInput = {
@@ -40211,6 +48059,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: ViralDraftPerformanceUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUpdateManyWithoutViralDraftNestedInput
   }
 
   export type ViralDraftV2UncheckedUpdateWithoutSessionInput = {
@@ -40229,6 +48078,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     performance?: ViralDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+    scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutViralDraftNestedInput
   }
 
   export type ViralDraftV2UncheckedUpdateManyWithoutSessionInput = {
@@ -40244,6 +48094,98 @@ export namespace Prisma {
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweetId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    newsArticle?: NewsArticleUpdateOneRequiredWithoutViralRelationsNestedInput
+  }
+
+  export type NewsViralRelationUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    newsId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NewsViralRelationUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    newsId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usedInContent?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledRetweetCreateManyViralDraftInput = {
+    id?: string
+    originalPostId: string
+    originalContent: string
+    scheduledAt: Date | string
+    status?: $Enums.RTStatus
+    rtStrategy: string
+    addComment?: boolean
+    commentText?: string | null
+    cotDraftId?: string | null
+    executedAt?: Date | string | null
+    rtPostId?: string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ScheduledRetweetUpdateWithoutViralDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cotDraft?: CotDraftUpdateOneWithoutScheduledRTsNestedInput
+  }
+
+  export type ScheduledRetweetUncheckedUpdateWithoutViralDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    cotDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScheduledRetweetUncheckedUpdateManyWithoutViralDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    originalPostId?: StringFieldUpdateOperationsInput | string
+    originalContent?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRTStatusFieldUpdateOperationsInput | $Enums.RTStatus
+    rtStrategy?: StringFieldUpdateOperationsInput | string
+    addComment?: BoolFieldUpdateOperationsInput | boolean
+    commentText?: NullableStringFieldUpdateOperationsInput | string | null
+    cotDraftId?: NullableStringFieldUpdateOperationsInput | string | null
+    executedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rtPostId?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40275,6 +48217,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+    newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutCharacterProfileInput = {
@@ -40290,6 +48233,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+    newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateManyWithoutCharacterProfileInput = {
@@ -40340,9 +48284,17 @@ export namespace Prisma {
      */
     export type CotSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotSessionCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use CotDraftCountOutputTypeDefaultArgs instead
+     */
+    export type CotDraftCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotDraftCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ViralSessionCountOutputTypeDefaultArgs instead
      */
     export type ViralSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ViralDraftV2CountOutputTypeDefaultArgs instead
+     */
+    export type ViralDraftV2CountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralDraftV2CountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use CharacterProfileCountOutputTypeDefaultArgs instead
      */
@@ -40427,6 +48379,26 @@ export namespace Prisma {
      * @deprecated Use CotDraftPerformanceDefaultArgs instead
      */
     export type CotDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotDraftPerformanceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ScheduledRetweetDefaultArgs instead
+     */
+    export type ScheduledRetweetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ScheduledRetweetDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use UnifiedPerformanceDefaultArgs instead
+     */
+    export type UnifiedPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UnifiedPerformanceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use NewsViralRelationDefaultArgs instead
+     */
+    export type NewsViralRelationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = NewsViralRelationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SessionActivityLogDefaultArgs instead
+     */
+    export type SessionActivityLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SessionActivityLogDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use ApiErrorLogDefaultArgs instead
+     */
+    export type ApiErrorLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ApiErrorLogDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ViralSessionDefaultArgs instead
      */
