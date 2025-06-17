@@ -162,5 +162,5 @@ export async function GET(request: Request) {
 }
 
 // Vercel Cron設定: 10分ごと
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const maxDuration = 60
