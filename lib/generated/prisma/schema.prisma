@@ -38,6 +38,20 @@ model BuzzPost {
   @@map("buzz_posts")
 }
 
+model BuzzConfig {
+  id              String   @id
+  keywords        String[]
+  accounts        String[]
+  minEngagement   Int      @map("min_engagement")
+  minImpressions  Int      @map("min_impressions")
+  collectInterval Int      @map("collect_interval")
+  enabled         Boolean
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("buzz_config")
+}
+
 model ScheduledPost {
   id            String     @id @default(uuid())
   content       String
@@ -491,7 +505,172 @@ enum CotDraftStatus {
 }
 
 // ================================================================
-// Unified System Models
+// Unified System Models - 統合システム
+// ================================================================
+
+// 統合コンテンツソース - ニュース、バズ投稿、トレンドを統合管理
+model UnifiedContentSource {
+  id              String   @id @default(cuid())
+  sourceType      String   @map("source_type") // 'news', 'buzz_post', 'trend'
+  sourceId        String   @map("source_id") // 元データのID
+  contentSummary  String?  @map("content_summary") @db.Text
+  importanceScore Float?   @map("importance_score") // 0.0-1.0
+  viralPotential  Float?   @map("viral_potential") // 0.0-1.0
+  keywords        String[] @default([])
+  metadata        Json?    @db.Json // 追加のメタデータ
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  integratedSessions IntegratedSessionSource[]
+
+  @@index([sourceType, importanceScore])
+  @@index([viralPotential])
+  @@index([createdAt])
+  @@map("unified_content_sources")
+}
+
+// 統合セッション - ニュース×バズ×AIの統合生成セッション
+model IntegratedSession {
+  id          String @id @default(cuid())
+  sessionType String @map("session_type") // 'news_viral', 'buzz_viral', 'hybrid'
+
+  // 関連データ
+  v2SessionId    String?  @map("v2_session_id")
+  newsArticleIds String[] @default([]) @map("news_article_ids")
+  buzzPostIds    String[] @default([]) @map("buzz_post_ids")
+
+  // 統合コンテキスト
+  generationContext  Json? @map("generation_context") @db.Json
+  performanceMetrics Json? @map("performance_metrics") @db.Json
+
+  // ステータス管理
+  status      String  @default("created") // created, analyzing, generating, completed, failed
+  currentStep String? @map("current_step")
+
+  // メタデータ
+  theme     String? // 統合テーマ
+  character String? // 使用キャラクター
+  platform  String? // ターゲットプラットフォーム
+  strategy  String? // 生成戦略
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  completedAt DateTime? @map("completed_at")
+
+  // リレーション
+  v2Session ViralSession?             @relation(fields: [v2SessionId], references: [id])
+  sources   IntegratedSessionSource[]
+  drafts    IntegratedDraft[]
+
+  @@index([sessionType, status])
+  @@index([createdAt])
+  @@map("integrated_sessions")
+}
+
+// 統合セッション-ソース関連（多対多）
+model IntegratedSessionSource {
+  id             String @id @default(cuid())
+  sessionId      String @map("session_id")
+  sourceId       String @map("source_id")
+  relevanceScore Float? @map("relevance_score") // このセッションでの関連度
+  usageType      String @map("usage_type") // 'primary', 'reference', 'context'
+
+  session IntegratedSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  source  UnifiedContentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, sourceId])
+  @@map("integrated_session_sources")
+}
+
+// 統合生成下書き
+model IntegratedDraft {
+  id        String @id @default(cuid())
+  sessionId String @map("session_id")
+
+  // コンテンツ情報
+  title       String
+  content     String @db.Text
+  contentType String @map("content_type") // 'single', 'thread', 'carousel'
+
+  // 統合情報
+  sourcesSummary String? @map("sources_summary") @db.Text
+  newsContext    String? @map("news_context") @db.Text
+  buzzContext    String? @map("buzz_context") @db.Text
+
+  // トレーサビリティ情報
+  conceptId          String?  @map("concept_id") // V2システムのコンセプトID
+  hook               String?  @db.Text // 使用したフック
+  angle              String?  @db.Text // 使用したアングル
+  sourceNewsIds      String[] @default([]) @map("source_news_ids") // 参照したニュース記事ID
+  sourceBuzzIds      String[] @default([]) @map("source_buzz_ids") // 参照したバズ投稿ID
+  generationStrategy String?  @map("generation_strategy") // 生成戦略
+
+  // 生成メタデータ
+  generationData Json?    @map("generation_data") @db.Json
+  hashtags       String[] @default([])
+  visualGuide    String?  @map("visual_guide") @db.Text
+
+  // 投稿管理
+  status      String    @default("draft") // draft, scheduled, posted, archived
+  scheduledAt DateTime? @map("scheduled_at")
+  postedAt    DateTime? @map("posted_at")
+  postId      String?   @map("post_id")
+
+  // パフォーマンス予測
+  viralScore Float? @map("viral_score")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  session     IntegratedSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  performance IntegratedDraftPerformance?
+
+  @@index([sessionId])
+  @@index([status])
+  @@map("integrated_drafts")
+}
+
+// 統合下書きパフォーマンス
+model IntegratedDraftPerformance {
+  id      String @id @default(cuid())
+  draftId String @unique @map("draft_id")
+
+  // 30分後メトリクス
+  likes30m       Int? @map("likes_30m")
+  retweets30m    Int? @map("retweets_30m")
+  replies30m     Int? @map("replies_30m")
+  impressions30m Int? @map("impressions_30m")
+
+  // 1時間後メトリクス
+  likes1h       Int? @map("likes_1h")
+  retweets1h    Int? @map("retweets_1h")
+  replies1h     Int? @map("replies_1h")
+  impressions1h Int? @map("impressions_1h")
+
+  // 24時間後メトリクス
+  likes24h       Int? @map("likes_24h")
+  retweets24h    Int? @map("retweets_24h")
+  replies24h     Int? @map("replies_24h")
+  impressions24h Int? @map("impressions_24h")
+
+  // 計算フィールド
+  engagementRate     Float? @map("engagement_rate")
+  viralCoefficient   Float? @map("viral_coefficient")
+  predictionAccuracy Float? @map("prediction_accuracy") // 予測との差異
+
+  collectedAt DateTime @default(now()) @map("collected_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // リレーション
+  draft IntegratedDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@map("integrated_draft_performance")
+}
+
+// ================================================================
+// Existing Unified System Models
 // ================================================================
 
 // Self-RT Management
@@ -629,9 +808,10 @@ model ViralSession {
   contents Json? // 生成されたコンテンツ
 
   // リレーション
-  drafts           ViralDraftV2[]
-  characterProfile CharacterProfile?   @relation(fields: [characterProfileId], references: [id])
-  newsRelations    NewsViralRelation[]
+  drafts             ViralDraftV2[]
+  characterProfile   CharacterProfile?   @relation(fields: [characterProfileId], references: [id])
+  newsRelations      NewsViralRelation[]
+  integratedSessions IntegratedSession[]
 
   @@map("viral_sessions")
 }
@@ -728,4 +908,49 @@ model CharacterProfile {
   sessions ViralSession[]
 
   @@map("character_profiles")
+}
+
+// バズってる人（インフルエンサー）の集計データ
+model BuzzInfluencer {
+  id       String @id @default(cuid())
+  username String @unique
+  userId   String @map("user_id")
+
+  // 基本情報
+  followers    Int     @default(0)
+  following    Int     @default(0)
+  verified     Boolean @default(false)
+  profileImage String? @map("profile_image")
+  bio          String? @db.Text
+
+  // 集計期間別メトリクス
+  metrics7d      Json? @map("metrics_7d") // 7日間の集計
+  metrics30d     Json? @map("metrics_30d") // 30日間の集計
+  metricsAllTime Json? @map("metrics_all_time") // 全期間の集計
+
+  // カテゴリ別専門性スコア (0-100)
+  categoryScores  Json    @map("category_scores") // {ai: 85, work: 60, creative: 40, ...}
+  primaryCategory String? @map("primary_category") // 最も強いカテゴリ
+
+  // パフォーマンス指標
+  engagementRate   Float @default(0) @map("engagement_rate") // 平均エンゲージメント率
+  viralScore       Float @default(0) @map("viral_score") // 総合的なバイラルスコア (0-100)
+  consistencyScore Float @default(0) @map("consistency_score") // 投稿の一貫性スコア (0-100)
+
+  // 時系列分析
+  bestPostingHours Json? @map("best_posting_hours") // 最適な投稿時間帯
+  postingFrequency Json? @map("posting_frequency") // 曜日別投稿頻度
+
+  // 最新活動
+  lastActiveAt   DateTime? @map("last_active_at")
+  lastAnalyzedAt DateTime? @map("last_analyzed_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([viralScore])
+  @@index([primaryCategory])
+  @@index([engagementRate])
+  @@index([followers])
+  @@map("buzz_influencers")
 }

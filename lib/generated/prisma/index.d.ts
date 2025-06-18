@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type BuzzPost = $Result.DefaultSelection<Prisma.$BuzzPostPayload>
 /**
+ * Model BuzzConfig
+ * 
+ */
+export type BuzzConfig = $Result.DefaultSelection<Prisma.$BuzzConfigPayload>
+/**
  * Model ScheduledPost
  * 
  */
@@ -114,6 +119,31 @@ export type CotDraft = $Result.DefaultSelection<Prisma.$CotDraftPayload>
  */
 export type CotDraftPerformance = $Result.DefaultSelection<Prisma.$CotDraftPerformancePayload>
 /**
+ * Model UnifiedContentSource
+ * 
+ */
+export type UnifiedContentSource = $Result.DefaultSelection<Prisma.$UnifiedContentSourcePayload>
+/**
+ * Model IntegratedSession
+ * 
+ */
+export type IntegratedSession = $Result.DefaultSelection<Prisma.$IntegratedSessionPayload>
+/**
+ * Model IntegratedSessionSource
+ * 
+ */
+export type IntegratedSessionSource = $Result.DefaultSelection<Prisma.$IntegratedSessionSourcePayload>
+/**
+ * Model IntegratedDraft
+ * 
+ */
+export type IntegratedDraft = $Result.DefaultSelection<Prisma.$IntegratedDraftPayload>
+/**
+ * Model IntegratedDraftPerformance
+ * 
+ */
+export type IntegratedDraftPerformance = $Result.DefaultSelection<Prisma.$IntegratedDraftPerformancePayload>
+/**
  * Model ScheduledRetweet
  * 
  */
@@ -158,6 +188,11 @@ export type ViralDraftPerformance = $Result.DefaultSelection<Prisma.$ViralDraftP
  * 
  */
 export type CharacterProfile = $Result.DefaultSelection<Prisma.$CharacterProfilePayload>
+/**
+ * Model BuzzInfluencer
+ * 
+ */
+export type BuzzInfluencer = $Result.DefaultSelection<Prisma.$BuzzInfluencerPayload>
 
 /**
  * Enums
@@ -400,6 +435,16 @@ export class PrismaClient<
   get buzzPost(): Prisma.BuzzPostDelegate<ExtArgs>;
 
   /**
+   * `prisma.buzzConfig`: Exposes CRUD operations for the **BuzzConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BuzzConfigs
+    * const buzzConfigs = await prisma.buzzConfig.findMany()
+    * ```
+    */
+  get buzzConfig(): Prisma.BuzzConfigDelegate<ExtArgs>;
+
+  /**
    * `prisma.scheduledPost`: Exposes CRUD operations for the **ScheduledPost** model.
     * Example usage:
     * ```ts
@@ -590,6 +635,56 @@ export class PrismaClient<
   get cotDraftPerformance(): Prisma.CotDraftPerformanceDelegate<ExtArgs>;
 
   /**
+   * `prisma.unifiedContentSource`: Exposes CRUD operations for the **UnifiedContentSource** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UnifiedContentSources
+    * const unifiedContentSources = await prisma.unifiedContentSource.findMany()
+    * ```
+    */
+  get unifiedContentSource(): Prisma.UnifiedContentSourceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.integratedSession`: Exposes CRUD operations for the **IntegratedSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegratedSessions
+    * const integratedSessions = await prisma.integratedSession.findMany()
+    * ```
+    */
+  get integratedSession(): Prisma.IntegratedSessionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.integratedSessionSource`: Exposes CRUD operations for the **IntegratedSessionSource** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegratedSessionSources
+    * const integratedSessionSources = await prisma.integratedSessionSource.findMany()
+    * ```
+    */
+  get integratedSessionSource(): Prisma.IntegratedSessionSourceDelegate<ExtArgs>;
+
+  /**
+   * `prisma.integratedDraft`: Exposes CRUD operations for the **IntegratedDraft** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegratedDrafts
+    * const integratedDrafts = await prisma.integratedDraft.findMany()
+    * ```
+    */
+  get integratedDraft(): Prisma.IntegratedDraftDelegate<ExtArgs>;
+
+  /**
+   * `prisma.integratedDraftPerformance`: Exposes CRUD operations for the **IntegratedDraftPerformance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegratedDraftPerformances
+    * const integratedDraftPerformances = await prisma.integratedDraftPerformance.findMany()
+    * ```
+    */
+  get integratedDraftPerformance(): Prisma.IntegratedDraftPerformanceDelegate<ExtArgs>;
+
+  /**
    * `prisma.scheduledRetweet`: Exposes CRUD operations for the **ScheduledRetweet** model.
     * Example usage:
     * ```ts
@@ -678,6 +773,16 @@ export class PrismaClient<
     * ```
     */
   get characterProfile(): Prisma.CharacterProfileDelegate<ExtArgs>;
+
+  /**
+   * `prisma.buzzInfluencer`: Exposes CRUD operations for the **BuzzInfluencer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more BuzzInfluencers
+    * const buzzInfluencers = await prisma.buzzInfluencer.findMany()
+    * ```
+    */
+  get buzzInfluencer(): Prisma.BuzzInfluencerDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1120,6 +1225,7 @@ export namespace Prisma {
 
   export const ModelName: {
     BuzzPost: 'BuzzPost',
+    BuzzConfig: 'BuzzConfig',
     ScheduledPost: 'ScheduledPost',
     PostAnalytics: 'PostAnalytics',
     User: 'User',
@@ -1139,6 +1245,11 @@ export namespace Prisma {
     CotPhase: 'CotPhase',
     CotDraft: 'CotDraft',
     CotDraftPerformance: 'CotDraftPerformance',
+    UnifiedContentSource: 'UnifiedContentSource',
+    IntegratedSession: 'IntegratedSession',
+    IntegratedSessionSource: 'IntegratedSessionSource',
+    IntegratedDraft: 'IntegratedDraft',
+    IntegratedDraftPerformance: 'IntegratedDraftPerformance',
     ScheduledRetweet: 'ScheduledRetweet',
     UnifiedPerformance: 'UnifiedPerformance',
     NewsViralRelation: 'NewsViralRelation',
@@ -1147,7 +1258,8 @@ export namespace Prisma {
     ViralSession: 'ViralSession',
     ViralDraftV2: 'ViralDraftV2',
     ViralDraftPerformance: 'ViralDraftPerformance',
-    CharacterProfile: 'CharacterProfile'
+    CharacterProfile: 'CharacterProfile',
+    BuzzInfluencer: 'BuzzInfluencer'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1163,7 +1275,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "buzzPost" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "scheduledRetweet" | "unifiedPerformance" | "newsViralRelation" | "sessionActivityLog" | "apiErrorLog" | "viralSession" | "viralDraftV2" | "viralDraftPerformance" | "characterProfile"
+      modelProps: "buzzPost" | "buzzConfig" | "scheduledPost" | "postAnalytics" | "user" | "session" | "newsSource" | "newsArticle" | "newsThread" | "newsThreadItem" | "newsAnalysis" | "jobQueue" | "collectionPreset" | "watchlistUser" | "watchlistTweet" | "interactionHistory" | "perplexityReport" | "cotSession" | "cotPhase" | "cotDraft" | "cotDraftPerformance" | "unifiedContentSource" | "integratedSession" | "integratedSessionSource" | "integratedDraft" | "integratedDraftPerformance" | "scheduledRetweet" | "unifiedPerformance" | "newsViralRelation" | "sessionActivityLog" | "apiErrorLog" | "viralSession" | "viralDraftV2" | "viralDraftPerformance" | "characterProfile" | "buzzInfluencer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1234,6 +1346,76 @@ export namespace Prisma {
           count: {
             args: Prisma.BuzzPostCountArgs<ExtArgs>
             result: $Utils.Optional<BuzzPostCountAggregateOutputType> | number
+          }
+        }
+      }
+      BuzzConfig: {
+        payload: Prisma.$BuzzConfigPayload<ExtArgs>
+        fields: Prisma.BuzzConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BuzzConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BuzzConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.BuzzConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BuzzConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          findMany: {
+            args: Prisma.BuzzConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>[]
+          }
+          create: {
+            args: Prisma.BuzzConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          createMany: {
+            args: Prisma.BuzzConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BuzzConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.BuzzConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          update: {
+            args: Prisma.BuzzConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.BuzzConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BuzzConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BuzzConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.BuzzConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBuzzConfig>
+          }
+          groupBy: {
+            args: Prisma.BuzzConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BuzzConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BuzzConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<BuzzConfigCountAggregateOutputType> | number
           }
         }
       }
@@ -2567,6 +2749,356 @@ export namespace Prisma {
           }
         }
       }
+      UnifiedContentSource: {
+        payload: Prisma.$UnifiedContentSourcePayload<ExtArgs>
+        fields: Prisma.UnifiedContentSourceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UnifiedContentSourceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UnifiedContentSourceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          findFirst: {
+            args: Prisma.UnifiedContentSourceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UnifiedContentSourceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          findMany: {
+            args: Prisma.UnifiedContentSourceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>[]
+          }
+          create: {
+            args: Prisma.UnifiedContentSourceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          createMany: {
+            args: Prisma.UnifiedContentSourceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UnifiedContentSourceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>[]
+          }
+          delete: {
+            args: Prisma.UnifiedContentSourceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          update: {
+            args: Prisma.UnifiedContentSourceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          deleteMany: {
+            args: Prisma.UnifiedContentSourceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UnifiedContentSourceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UnifiedContentSourceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UnifiedContentSourcePayload>
+          }
+          aggregate: {
+            args: Prisma.UnifiedContentSourceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUnifiedContentSource>
+          }
+          groupBy: {
+            args: Prisma.UnifiedContentSourceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedContentSourceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UnifiedContentSourceCountArgs<ExtArgs>
+            result: $Utils.Optional<UnifiedContentSourceCountAggregateOutputType> | number
+          }
+        }
+      }
+      IntegratedSession: {
+        payload: Prisma.$IntegratedSessionPayload<ExtArgs>
+        fields: Prisma.IntegratedSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegratedSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegratedSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.IntegratedSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegratedSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          findMany: {
+            args: Prisma.IntegratedSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>[]
+          }
+          create: {
+            args: Prisma.IntegratedSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          createMany: {
+            args: Prisma.IntegratedSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegratedSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.IntegratedSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          update: {
+            args: Prisma.IntegratedSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegratedSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegratedSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.IntegratedSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.IntegratedSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegratedSession>
+          }
+          groupBy: {
+            args: Prisma.IntegratedSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegratedSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      IntegratedSessionSource: {
+        payload: Prisma.$IntegratedSessionSourcePayload<ExtArgs>
+        fields: Prisma.IntegratedSessionSourceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegratedSessionSourceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegratedSessionSourceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          findFirst: {
+            args: Prisma.IntegratedSessionSourceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegratedSessionSourceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          findMany: {
+            args: Prisma.IntegratedSessionSourceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>[]
+          }
+          create: {
+            args: Prisma.IntegratedSessionSourceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          createMany: {
+            args: Prisma.IntegratedSessionSourceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegratedSessionSourceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>[]
+          }
+          delete: {
+            args: Prisma.IntegratedSessionSourceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          update: {
+            args: Prisma.IntegratedSessionSourceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegratedSessionSourceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegratedSessionSourceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.IntegratedSessionSourceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedSessionSourcePayload>
+          }
+          aggregate: {
+            args: Prisma.IntegratedSessionSourceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegratedSessionSource>
+          }
+          groupBy: {
+            args: Prisma.IntegratedSessionSourceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedSessionSourceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegratedSessionSourceCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedSessionSourceCountAggregateOutputType> | number
+          }
+        }
+      }
+      IntegratedDraft: {
+        payload: Prisma.$IntegratedDraftPayload<ExtArgs>
+        fields: Prisma.IntegratedDraftFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegratedDraftFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegratedDraftFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          findFirst: {
+            args: Prisma.IntegratedDraftFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegratedDraftFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          findMany: {
+            args: Prisma.IntegratedDraftFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>[]
+          }
+          create: {
+            args: Prisma.IntegratedDraftCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          createMany: {
+            args: Prisma.IntegratedDraftCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegratedDraftCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>[]
+          }
+          delete: {
+            args: Prisma.IntegratedDraftDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          update: {
+            args: Prisma.IntegratedDraftUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegratedDraftDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegratedDraftUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.IntegratedDraftUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPayload>
+          }
+          aggregate: {
+            args: Prisma.IntegratedDraftAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegratedDraft>
+          }
+          groupBy: {
+            args: Prisma.IntegratedDraftGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedDraftGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegratedDraftCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedDraftCountAggregateOutputType> | number
+          }
+        }
+      }
+      IntegratedDraftPerformance: {
+        payload: Prisma.$IntegratedDraftPerformancePayload<ExtArgs>
+        fields: Prisma.IntegratedDraftPerformanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegratedDraftPerformanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegratedDraftPerformanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          findFirst: {
+            args: Prisma.IntegratedDraftPerformanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegratedDraftPerformanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          findMany: {
+            args: Prisma.IntegratedDraftPerformanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>[]
+          }
+          create: {
+            args: Prisma.IntegratedDraftPerformanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          createMany: {
+            args: Prisma.IntegratedDraftPerformanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegratedDraftPerformanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>[]
+          }
+          delete: {
+            args: Prisma.IntegratedDraftPerformanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          update: {
+            args: Prisma.IntegratedDraftPerformanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegratedDraftPerformanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegratedDraftPerformanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.IntegratedDraftPerformanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegratedDraftPerformancePayload>
+          }
+          aggregate: {
+            args: Prisma.IntegratedDraftPerformanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegratedDraftPerformance>
+          }
+          groupBy: {
+            args: Prisma.IntegratedDraftPerformanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedDraftPerformanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegratedDraftPerformanceCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegratedDraftPerformanceCountAggregateOutputType> | number
+          }
+        }
+      }
       ScheduledRetweet: {
         payload: Prisma.$ScheduledRetweetPayload<ExtArgs>
         fields: Prisma.ScheduledRetweetFieldRefs
@@ -3197,6 +3729,76 @@ export namespace Prisma {
           }
         }
       }
+      BuzzInfluencer: {
+        payload: Prisma.$BuzzInfluencerPayload<ExtArgs>
+        fields: Prisma.BuzzInfluencerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.BuzzInfluencerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.BuzzInfluencerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          findFirst: {
+            args: Prisma.BuzzInfluencerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.BuzzInfluencerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          findMany: {
+            args: Prisma.BuzzInfluencerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>[]
+          }
+          create: {
+            args: Prisma.BuzzInfluencerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          createMany: {
+            args: Prisma.BuzzInfluencerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.BuzzInfluencerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>[]
+          }
+          delete: {
+            args: Prisma.BuzzInfluencerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          update: {
+            args: Prisma.BuzzInfluencerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          deleteMany: {
+            args: Prisma.BuzzInfluencerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.BuzzInfluencerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.BuzzInfluencerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$BuzzInfluencerPayload>
+          }
+          aggregate: {
+            args: Prisma.BuzzInfluencerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBuzzInfluencer>
+          }
+          groupBy: {
+            args: Prisma.BuzzInfluencerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<BuzzInfluencerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.BuzzInfluencerCountArgs<ExtArgs>
+            result: $Utils.Optional<BuzzInfluencerCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3647,17 +4249,90 @@ export namespace Prisma {
 
 
   /**
+   * Count Type UnifiedContentSourceCountOutputType
+   */
+
+  export type UnifiedContentSourceCountOutputType = {
+    integratedSessions: number
+  }
+
+  export type UnifiedContentSourceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    integratedSessions?: boolean | UnifiedContentSourceCountOutputTypeCountIntegratedSessionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UnifiedContentSourceCountOutputType without action
+   */
+  export type UnifiedContentSourceCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSourceCountOutputType
+     */
+    select?: UnifiedContentSourceCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UnifiedContentSourceCountOutputType without action
+   */
+  export type UnifiedContentSourceCountOutputTypeCountIntegratedSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedSessionSourceWhereInput
+  }
+
+
+  /**
+   * Count Type IntegratedSessionCountOutputType
+   */
+
+  export type IntegratedSessionCountOutputType = {
+    sources: number
+    drafts: number
+  }
+
+  export type IntegratedSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sources?: boolean | IntegratedSessionCountOutputTypeCountSourcesArgs
+    drafts?: boolean | IntegratedSessionCountOutputTypeCountDraftsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * IntegratedSessionCountOutputType without action
+   */
+  export type IntegratedSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionCountOutputType
+     */
+    select?: IntegratedSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * IntegratedSessionCountOutputType without action
+   */
+  export type IntegratedSessionCountOutputTypeCountSourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedSessionSourceWhereInput
+  }
+
+  /**
+   * IntegratedSessionCountOutputType without action
+   */
+  export type IntegratedSessionCountOutputTypeCountDraftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedDraftWhereInput
+  }
+
+
+  /**
    * Count Type ViralSessionCountOutputType
    */
 
   export type ViralSessionCountOutputType = {
     drafts: number
     newsRelations: number
+    integratedSessions: number
   }
 
   export type ViralSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     drafts?: boolean | ViralSessionCountOutputTypeCountDraftsArgs
     newsRelations?: boolean | ViralSessionCountOutputTypeCountNewsRelationsArgs
+    integratedSessions?: boolean | ViralSessionCountOutputTypeCountIntegratedSessionsArgs
   }
 
   // Custom InputTypes
@@ -3683,6 +4358,13 @@ export namespace Prisma {
    */
   export type ViralSessionCountOutputTypeCountNewsRelationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NewsViralRelationWhereInput
+  }
+
+  /**
+   * ViralSessionCountOutputType without action
+   */
+  export type ViralSessionCountOutputTypeCountIntegratedSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedSessionWhereInput
   }
 
 
@@ -4923,6 +5605,966 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: BuzzPostInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model BuzzConfig
+   */
+
+  export type AggregateBuzzConfig = {
+    _count: BuzzConfigCountAggregateOutputType | null
+    _avg: BuzzConfigAvgAggregateOutputType | null
+    _sum: BuzzConfigSumAggregateOutputType | null
+    _min: BuzzConfigMinAggregateOutputType | null
+    _max: BuzzConfigMaxAggregateOutputType | null
+  }
+
+  export type BuzzConfigAvgAggregateOutputType = {
+    minEngagement: number | null
+    minImpressions: number | null
+    collectInterval: number | null
+  }
+
+  export type BuzzConfigSumAggregateOutputType = {
+    minEngagement: number | null
+    minImpressions: number | null
+    collectInterval: number | null
+  }
+
+  export type BuzzConfigMinAggregateOutputType = {
+    id: string | null
+    minEngagement: number | null
+    minImpressions: number | null
+    collectInterval: number | null
+    enabled: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BuzzConfigMaxAggregateOutputType = {
+    id: string | null
+    minEngagement: number | null
+    minImpressions: number | null
+    collectInterval: number | null
+    enabled: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BuzzConfigCountAggregateOutputType = {
+    id: number
+    keywords: number
+    accounts: number
+    minEngagement: number
+    minImpressions: number
+    collectInterval: number
+    enabled: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BuzzConfigAvgAggregateInputType = {
+    minEngagement?: true
+    minImpressions?: true
+    collectInterval?: true
+  }
+
+  export type BuzzConfigSumAggregateInputType = {
+    minEngagement?: true
+    minImpressions?: true
+    collectInterval?: true
+  }
+
+  export type BuzzConfigMinAggregateInputType = {
+    id?: true
+    minEngagement?: true
+    minImpressions?: true
+    collectInterval?: true
+    enabled?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BuzzConfigMaxAggregateInputType = {
+    id?: true
+    minEngagement?: true
+    minImpressions?: true
+    collectInterval?: true
+    enabled?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BuzzConfigCountAggregateInputType = {
+    id?: true
+    keywords?: true
+    accounts?: true
+    minEngagement?: true
+    minImpressions?: true
+    collectInterval?: true
+    enabled?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BuzzConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BuzzConfig to aggregate.
+     */
+    where?: BuzzConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzConfigs to fetch.
+     */
+    orderBy?: BuzzConfigOrderByWithRelationInput | BuzzConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BuzzConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BuzzConfigs
+    **/
+    _count?: true | BuzzConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BuzzConfigAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BuzzConfigSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BuzzConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BuzzConfigMaxAggregateInputType
+  }
+
+  export type GetBuzzConfigAggregateType<T extends BuzzConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateBuzzConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBuzzConfig[P]>
+      : GetScalarType<T[P], AggregateBuzzConfig[P]>
+  }
+
+
+
+
+  export type BuzzConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BuzzConfigWhereInput
+    orderBy?: BuzzConfigOrderByWithAggregationInput | BuzzConfigOrderByWithAggregationInput[]
+    by: BuzzConfigScalarFieldEnum[] | BuzzConfigScalarFieldEnum
+    having?: BuzzConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BuzzConfigCountAggregateInputType | true
+    _avg?: BuzzConfigAvgAggregateInputType
+    _sum?: BuzzConfigSumAggregateInputType
+    _min?: BuzzConfigMinAggregateInputType
+    _max?: BuzzConfigMaxAggregateInputType
+  }
+
+  export type BuzzConfigGroupByOutputType = {
+    id: string
+    keywords: string[]
+    accounts: string[]
+    minEngagement: number
+    minImpressions: number
+    collectInterval: number
+    enabled: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: BuzzConfigCountAggregateOutputType | null
+    _avg: BuzzConfigAvgAggregateOutputType | null
+    _sum: BuzzConfigSumAggregateOutputType | null
+    _min: BuzzConfigMinAggregateOutputType | null
+    _max: BuzzConfigMaxAggregateOutputType | null
+  }
+
+  type GetBuzzConfigGroupByPayload<T extends BuzzConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BuzzConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BuzzConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BuzzConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], BuzzConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BuzzConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    keywords?: boolean
+    accounts?: boolean
+    minEngagement?: boolean
+    minImpressions?: boolean
+    collectInterval?: boolean
+    enabled?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["buzzConfig"]>
+
+  export type BuzzConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    keywords?: boolean
+    accounts?: boolean
+    minEngagement?: boolean
+    minImpressions?: boolean
+    collectInterval?: boolean
+    enabled?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["buzzConfig"]>
+
+  export type BuzzConfigSelectScalar = {
+    id?: boolean
+    keywords?: boolean
+    accounts?: boolean
+    minEngagement?: boolean
+    minImpressions?: boolean
+    collectInterval?: boolean
+    enabled?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $BuzzConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BuzzConfig"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      keywords: string[]
+      accounts: string[]
+      minEngagement: number
+      minImpressions: number
+      collectInterval: number
+      enabled: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["buzzConfig"]>
+    composites: {}
+  }
+
+  type BuzzConfigGetPayload<S extends boolean | null | undefined | BuzzConfigDefaultArgs> = $Result.GetResult<Prisma.$BuzzConfigPayload, S>
+
+  type BuzzConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BuzzConfigFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BuzzConfigCountAggregateInputType | true
+    }
+
+  export interface BuzzConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BuzzConfig'], meta: { name: 'BuzzConfig' } }
+    /**
+     * Find zero or one BuzzConfig that matches the filter.
+     * @param {BuzzConfigFindUniqueArgs} args - Arguments to find a BuzzConfig
+     * @example
+     * // Get one BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BuzzConfigFindUniqueArgs>(args: SelectSubset<T, BuzzConfigFindUniqueArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one BuzzConfig that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BuzzConfigFindUniqueOrThrowArgs} args - Arguments to find a BuzzConfig
+     * @example
+     * // Get one BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BuzzConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, BuzzConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first BuzzConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigFindFirstArgs} args - Arguments to find a BuzzConfig
+     * @example
+     * // Get one BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BuzzConfigFindFirstArgs>(args?: SelectSubset<T, BuzzConfigFindFirstArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first BuzzConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigFindFirstOrThrowArgs} args - Arguments to find a BuzzConfig
+     * @example
+     * // Get one BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BuzzConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, BuzzConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more BuzzConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BuzzConfigs
+     * const buzzConfigs = await prisma.buzzConfig.findMany()
+     * 
+     * // Get first 10 BuzzConfigs
+     * const buzzConfigs = await prisma.buzzConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const buzzConfigWithIdOnly = await prisma.buzzConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BuzzConfigFindManyArgs>(args?: SelectSubset<T, BuzzConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a BuzzConfig.
+     * @param {BuzzConfigCreateArgs} args - Arguments to create a BuzzConfig.
+     * @example
+     * // Create one BuzzConfig
+     * const BuzzConfig = await prisma.buzzConfig.create({
+     *   data: {
+     *     // ... data to create a BuzzConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends BuzzConfigCreateArgs>(args: SelectSubset<T, BuzzConfigCreateArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many BuzzConfigs.
+     * @param {BuzzConfigCreateManyArgs} args - Arguments to create many BuzzConfigs.
+     * @example
+     * // Create many BuzzConfigs
+     * const buzzConfig = await prisma.buzzConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BuzzConfigCreateManyArgs>(args?: SelectSubset<T, BuzzConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BuzzConfigs and returns the data saved in the database.
+     * @param {BuzzConfigCreateManyAndReturnArgs} args - Arguments to create many BuzzConfigs.
+     * @example
+     * // Create many BuzzConfigs
+     * const buzzConfig = await prisma.buzzConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BuzzConfigs and only return the `id`
+     * const buzzConfigWithIdOnly = await prisma.buzzConfig.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BuzzConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, BuzzConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a BuzzConfig.
+     * @param {BuzzConfigDeleteArgs} args - Arguments to delete one BuzzConfig.
+     * @example
+     * // Delete one BuzzConfig
+     * const BuzzConfig = await prisma.buzzConfig.delete({
+     *   where: {
+     *     // ... filter to delete one BuzzConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BuzzConfigDeleteArgs>(args: SelectSubset<T, BuzzConfigDeleteArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one BuzzConfig.
+     * @param {BuzzConfigUpdateArgs} args - Arguments to update one BuzzConfig.
+     * @example
+     * // Update one BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BuzzConfigUpdateArgs>(args: SelectSubset<T, BuzzConfigUpdateArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more BuzzConfigs.
+     * @param {BuzzConfigDeleteManyArgs} args - Arguments to filter BuzzConfigs to delete.
+     * @example
+     * // Delete a few BuzzConfigs
+     * const { count } = await prisma.buzzConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BuzzConfigDeleteManyArgs>(args?: SelectSubset<T, BuzzConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BuzzConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BuzzConfigs
+     * const buzzConfig = await prisma.buzzConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BuzzConfigUpdateManyArgs>(args: SelectSubset<T, BuzzConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BuzzConfig.
+     * @param {BuzzConfigUpsertArgs} args - Arguments to update or create a BuzzConfig.
+     * @example
+     * // Update or create a BuzzConfig
+     * const buzzConfig = await prisma.buzzConfig.upsert({
+     *   create: {
+     *     // ... data to create a BuzzConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BuzzConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BuzzConfigUpsertArgs>(args: SelectSubset<T, BuzzConfigUpsertArgs<ExtArgs>>): Prisma__BuzzConfigClient<$Result.GetResult<Prisma.$BuzzConfigPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of BuzzConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigCountArgs} args - Arguments to filter BuzzConfigs to count.
+     * @example
+     * // Count the number of BuzzConfigs
+     * const count = await prisma.buzzConfig.count({
+     *   where: {
+     *     // ... the filter for the BuzzConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends BuzzConfigCountArgs>(
+      args?: Subset<T, BuzzConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BuzzConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BuzzConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BuzzConfigAggregateArgs>(args: Subset<T, BuzzConfigAggregateArgs>): Prisma.PrismaPromise<GetBuzzConfigAggregateType<T>>
+
+    /**
+     * Group by BuzzConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BuzzConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BuzzConfigGroupByArgs['orderBy'] }
+        : { orderBy?: BuzzConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BuzzConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBuzzConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BuzzConfig model
+   */
+  readonly fields: BuzzConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BuzzConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BuzzConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BuzzConfig model
+   */ 
+  interface BuzzConfigFieldRefs {
+    readonly id: FieldRef<"BuzzConfig", 'String'>
+    readonly keywords: FieldRef<"BuzzConfig", 'String[]'>
+    readonly accounts: FieldRef<"BuzzConfig", 'String[]'>
+    readonly minEngagement: FieldRef<"BuzzConfig", 'Int'>
+    readonly minImpressions: FieldRef<"BuzzConfig", 'Int'>
+    readonly collectInterval: FieldRef<"BuzzConfig", 'Int'>
+    readonly enabled: FieldRef<"BuzzConfig", 'Boolean'>
+    readonly createdAt: FieldRef<"BuzzConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"BuzzConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BuzzConfig findUnique
+   */
+  export type BuzzConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzConfig to fetch.
+     */
+    where: BuzzConfigWhereUniqueInput
+  }
+
+  /**
+   * BuzzConfig findUniqueOrThrow
+   */
+  export type BuzzConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzConfig to fetch.
+     */
+    where: BuzzConfigWhereUniqueInput
+  }
+
+  /**
+   * BuzzConfig findFirst
+   */
+  export type BuzzConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzConfig to fetch.
+     */
+    where?: BuzzConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzConfigs to fetch.
+     */
+    orderBy?: BuzzConfigOrderByWithRelationInput | BuzzConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BuzzConfigs.
+     */
+    cursor?: BuzzConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BuzzConfigs.
+     */
+    distinct?: BuzzConfigScalarFieldEnum | BuzzConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzConfig findFirstOrThrow
+   */
+  export type BuzzConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzConfig to fetch.
+     */
+    where?: BuzzConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzConfigs to fetch.
+     */
+    orderBy?: BuzzConfigOrderByWithRelationInput | BuzzConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BuzzConfigs.
+     */
+    cursor?: BuzzConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BuzzConfigs.
+     */
+    distinct?: BuzzConfigScalarFieldEnum | BuzzConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzConfig findMany
+   */
+  export type BuzzConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzConfigs to fetch.
+     */
+    where?: BuzzConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzConfigs to fetch.
+     */
+    orderBy?: BuzzConfigOrderByWithRelationInput | BuzzConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BuzzConfigs.
+     */
+    cursor?: BuzzConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzConfigs.
+     */
+    skip?: number
+    distinct?: BuzzConfigScalarFieldEnum | BuzzConfigScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzConfig create
+   */
+  export type BuzzConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * The data needed to create a BuzzConfig.
+     */
+    data: XOR<BuzzConfigCreateInput, BuzzConfigUncheckedCreateInput>
+  }
+
+  /**
+   * BuzzConfig createMany
+   */
+  export type BuzzConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BuzzConfigs.
+     */
+    data: BuzzConfigCreateManyInput | BuzzConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BuzzConfig createManyAndReturn
+   */
+  export type BuzzConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BuzzConfigs.
+     */
+    data: BuzzConfigCreateManyInput | BuzzConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BuzzConfig update
+   */
+  export type BuzzConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * The data needed to update a BuzzConfig.
+     */
+    data: XOR<BuzzConfigUpdateInput, BuzzConfigUncheckedUpdateInput>
+    /**
+     * Choose, which BuzzConfig to update.
+     */
+    where: BuzzConfigWhereUniqueInput
+  }
+
+  /**
+   * BuzzConfig updateMany
+   */
+  export type BuzzConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BuzzConfigs.
+     */
+    data: XOR<BuzzConfigUpdateManyMutationInput, BuzzConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which BuzzConfigs to update
+     */
+    where?: BuzzConfigWhereInput
+  }
+
+  /**
+   * BuzzConfig upsert
+   */
+  export type BuzzConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * The filter to search for the BuzzConfig to update in case it exists.
+     */
+    where: BuzzConfigWhereUniqueInput
+    /**
+     * In case the BuzzConfig found by the `where` argument doesn't exist, create a new BuzzConfig with this data.
+     */
+    create: XOR<BuzzConfigCreateInput, BuzzConfigUncheckedCreateInput>
+    /**
+     * In case the BuzzConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BuzzConfigUpdateInput, BuzzConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * BuzzConfig delete
+   */
+  export type BuzzConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
+    /**
+     * Filter which BuzzConfig to delete.
+     */
+    where: BuzzConfigWhereUniqueInput
+  }
+
+  /**
+   * BuzzConfig deleteMany
+   */
+  export type BuzzConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BuzzConfigs to delete
+     */
+    where?: BuzzConfigWhereInput
+  }
+
+  /**
+   * BuzzConfig without action
+   */
+  export type BuzzConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzConfig
+     */
+    select?: BuzzConfigSelect<ExtArgs> | null
   }
 
 
@@ -24527,6 +26169,5520 @@ export namespace Prisma {
 
 
   /**
+   * Model UnifiedContentSource
+   */
+
+  export type AggregateUnifiedContentSource = {
+    _count: UnifiedContentSourceCountAggregateOutputType | null
+    _avg: UnifiedContentSourceAvgAggregateOutputType | null
+    _sum: UnifiedContentSourceSumAggregateOutputType | null
+    _min: UnifiedContentSourceMinAggregateOutputType | null
+    _max: UnifiedContentSourceMaxAggregateOutputType | null
+  }
+
+  export type UnifiedContentSourceAvgAggregateOutputType = {
+    importanceScore: number | null
+    viralPotential: number | null
+  }
+
+  export type UnifiedContentSourceSumAggregateOutputType = {
+    importanceScore: number | null
+    viralPotential: number | null
+  }
+
+  export type UnifiedContentSourceMinAggregateOutputType = {
+    id: string | null
+    sourceType: string | null
+    sourceId: string | null
+    contentSummary: string | null
+    importanceScore: number | null
+    viralPotential: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UnifiedContentSourceMaxAggregateOutputType = {
+    id: string | null
+    sourceType: string | null
+    sourceId: string | null
+    contentSummary: string | null
+    importanceScore: number | null
+    viralPotential: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UnifiedContentSourceCountAggregateOutputType = {
+    id: number
+    sourceType: number
+    sourceId: number
+    contentSummary: number
+    importanceScore: number
+    viralPotential: number
+    keywords: number
+    metadata: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UnifiedContentSourceAvgAggregateInputType = {
+    importanceScore?: true
+    viralPotential?: true
+  }
+
+  export type UnifiedContentSourceSumAggregateInputType = {
+    importanceScore?: true
+    viralPotential?: true
+  }
+
+  export type UnifiedContentSourceMinAggregateInputType = {
+    id?: true
+    sourceType?: true
+    sourceId?: true
+    contentSummary?: true
+    importanceScore?: true
+    viralPotential?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UnifiedContentSourceMaxAggregateInputType = {
+    id?: true
+    sourceType?: true
+    sourceId?: true
+    contentSummary?: true
+    importanceScore?: true
+    viralPotential?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UnifiedContentSourceCountAggregateInputType = {
+    id?: true
+    sourceType?: true
+    sourceId?: true
+    contentSummary?: true
+    importanceScore?: true
+    viralPotential?: true
+    keywords?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UnifiedContentSourceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedContentSource to aggregate.
+     */
+    where?: UnifiedContentSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedContentSources to fetch.
+     */
+    orderBy?: UnifiedContentSourceOrderByWithRelationInput | UnifiedContentSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UnifiedContentSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedContentSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedContentSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UnifiedContentSources
+    **/
+    _count?: true | UnifiedContentSourceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UnifiedContentSourceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UnifiedContentSourceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UnifiedContentSourceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UnifiedContentSourceMaxAggregateInputType
+  }
+
+  export type GetUnifiedContentSourceAggregateType<T extends UnifiedContentSourceAggregateArgs> = {
+        [P in keyof T & keyof AggregateUnifiedContentSource]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUnifiedContentSource[P]>
+      : GetScalarType<T[P], AggregateUnifiedContentSource[P]>
+  }
+
+
+
+
+  export type UnifiedContentSourceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UnifiedContentSourceWhereInput
+    orderBy?: UnifiedContentSourceOrderByWithAggregationInput | UnifiedContentSourceOrderByWithAggregationInput[]
+    by: UnifiedContentSourceScalarFieldEnum[] | UnifiedContentSourceScalarFieldEnum
+    having?: UnifiedContentSourceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UnifiedContentSourceCountAggregateInputType | true
+    _avg?: UnifiedContentSourceAvgAggregateInputType
+    _sum?: UnifiedContentSourceSumAggregateInputType
+    _min?: UnifiedContentSourceMinAggregateInputType
+    _max?: UnifiedContentSourceMaxAggregateInputType
+  }
+
+  export type UnifiedContentSourceGroupByOutputType = {
+    id: string
+    sourceType: string
+    sourceId: string
+    contentSummary: string | null
+    importanceScore: number | null
+    viralPotential: number | null
+    keywords: string[]
+    metadata: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: UnifiedContentSourceCountAggregateOutputType | null
+    _avg: UnifiedContentSourceAvgAggregateOutputType | null
+    _sum: UnifiedContentSourceSumAggregateOutputType | null
+    _min: UnifiedContentSourceMinAggregateOutputType | null
+    _max: UnifiedContentSourceMaxAggregateOutputType | null
+  }
+
+  type GetUnifiedContentSourceGroupByPayload<T extends UnifiedContentSourceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UnifiedContentSourceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UnifiedContentSourceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UnifiedContentSourceGroupByOutputType[P]>
+            : GetScalarType<T[P], UnifiedContentSourceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UnifiedContentSourceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sourceType?: boolean
+    sourceId?: boolean
+    contentSummary?: boolean
+    importanceScore?: boolean
+    viralPotential?: boolean
+    keywords?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    integratedSessions?: boolean | UnifiedContentSource$integratedSessionsArgs<ExtArgs>
+    _count?: boolean | UnifiedContentSourceCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["unifiedContentSource"]>
+
+  export type UnifiedContentSourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sourceType?: boolean
+    sourceId?: boolean
+    contentSummary?: boolean
+    importanceScore?: boolean
+    viralPotential?: boolean
+    keywords?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["unifiedContentSource"]>
+
+  export type UnifiedContentSourceSelectScalar = {
+    id?: boolean
+    sourceType?: boolean
+    sourceId?: boolean
+    contentSummary?: boolean
+    importanceScore?: boolean
+    viralPotential?: boolean
+    keywords?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UnifiedContentSourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    integratedSessions?: boolean | UnifiedContentSource$integratedSessionsArgs<ExtArgs>
+    _count?: boolean | UnifiedContentSourceCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UnifiedContentSourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $UnifiedContentSourcePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UnifiedContentSource"
+    objects: {
+      integratedSessions: Prisma.$IntegratedSessionSourcePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sourceType: string
+      sourceId: string
+      contentSummary: string | null
+      importanceScore: number | null
+      viralPotential: number | null
+      keywords: string[]
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["unifiedContentSource"]>
+    composites: {}
+  }
+
+  type UnifiedContentSourceGetPayload<S extends boolean | null | undefined | UnifiedContentSourceDefaultArgs> = $Result.GetResult<Prisma.$UnifiedContentSourcePayload, S>
+
+  type UnifiedContentSourceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<UnifiedContentSourceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: UnifiedContentSourceCountAggregateInputType | true
+    }
+
+  export interface UnifiedContentSourceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UnifiedContentSource'], meta: { name: 'UnifiedContentSource' } }
+    /**
+     * Find zero or one UnifiedContentSource that matches the filter.
+     * @param {UnifiedContentSourceFindUniqueArgs} args - Arguments to find a UnifiedContentSource
+     * @example
+     * // Get one UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UnifiedContentSourceFindUniqueArgs>(args: SelectSubset<T, UnifiedContentSourceFindUniqueArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one UnifiedContentSource that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {UnifiedContentSourceFindUniqueOrThrowArgs} args - Arguments to find a UnifiedContentSource
+     * @example
+     * // Get one UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UnifiedContentSourceFindUniqueOrThrowArgs>(args: SelectSubset<T, UnifiedContentSourceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first UnifiedContentSource that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceFindFirstArgs} args - Arguments to find a UnifiedContentSource
+     * @example
+     * // Get one UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UnifiedContentSourceFindFirstArgs>(args?: SelectSubset<T, UnifiedContentSourceFindFirstArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first UnifiedContentSource that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceFindFirstOrThrowArgs} args - Arguments to find a UnifiedContentSource
+     * @example
+     * // Get one UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UnifiedContentSourceFindFirstOrThrowArgs>(args?: SelectSubset<T, UnifiedContentSourceFindFirstOrThrowArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more UnifiedContentSources that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UnifiedContentSources
+     * const unifiedContentSources = await prisma.unifiedContentSource.findMany()
+     * 
+     * // Get first 10 UnifiedContentSources
+     * const unifiedContentSources = await prisma.unifiedContentSource.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const unifiedContentSourceWithIdOnly = await prisma.unifiedContentSource.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UnifiedContentSourceFindManyArgs>(args?: SelectSubset<T, UnifiedContentSourceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a UnifiedContentSource.
+     * @param {UnifiedContentSourceCreateArgs} args - Arguments to create a UnifiedContentSource.
+     * @example
+     * // Create one UnifiedContentSource
+     * const UnifiedContentSource = await prisma.unifiedContentSource.create({
+     *   data: {
+     *     // ... data to create a UnifiedContentSource
+     *   }
+     * })
+     * 
+     */
+    create<T extends UnifiedContentSourceCreateArgs>(args: SelectSubset<T, UnifiedContentSourceCreateArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many UnifiedContentSources.
+     * @param {UnifiedContentSourceCreateManyArgs} args - Arguments to create many UnifiedContentSources.
+     * @example
+     * // Create many UnifiedContentSources
+     * const unifiedContentSource = await prisma.unifiedContentSource.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UnifiedContentSourceCreateManyArgs>(args?: SelectSubset<T, UnifiedContentSourceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UnifiedContentSources and returns the data saved in the database.
+     * @param {UnifiedContentSourceCreateManyAndReturnArgs} args - Arguments to create many UnifiedContentSources.
+     * @example
+     * // Create many UnifiedContentSources
+     * const unifiedContentSource = await prisma.unifiedContentSource.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UnifiedContentSources and only return the `id`
+     * const unifiedContentSourceWithIdOnly = await prisma.unifiedContentSource.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UnifiedContentSourceCreateManyAndReturnArgs>(args?: SelectSubset<T, UnifiedContentSourceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a UnifiedContentSource.
+     * @param {UnifiedContentSourceDeleteArgs} args - Arguments to delete one UnifiedContentSource.
+     * @example
+     * // Delete one UnifiedContentSource
+     * const UnifiedContentSource = await prisma.unifiedContentSource.delete({
+     *   where: {
+     *     // ... filter to delete one UnifiedContentSource
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UnifiedContentSourceDeleteArgs>(args: SelectSubset<T, UnifiedContentSourceDeleteArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one UnifiedContentSource.
+     * @param {UnifiedContentSourceUpdateArgs} args - Arguments to update one UnifiedContentSource.
+     * @example
+     * // Update one UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UnifiedContentSourceUpdateArgs>(args: SelectSubset<T, UnifiedContentSourceUpdateArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more UnifiedContentSources.
+     * @param {UnifiedContentSourceDeleteManyArgs} args - Arguments to filter UnifiedContentSources to delete.
+     * @example
+     * // Delete a few UnifiedContentSources
+     * const { count } = await prisma.unifiedContentSource.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UnifiedContentSourceDeleteManyArgs>(args?: SelectSubset<T, UnifiedContentSourceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UnifiedContentSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UnifiedContentSources
+     * const unifiedContentSource = await prisma.unifiedContentSource.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UnifiedContentSourceUpdateManyArgs>(args: SelectSubset<T, UnifiedContentSourceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UnifiedContentSource.
+     * @param {UnifiedContentSourceUpsertArgs} args - Arguments to update or create a UnifiedContentSource.
+     * @example
+     * // Update or create a UnifiedContentSource
+     * const unifiedContentSource = await prisma.unifiedContentSource.upsert({
+     *   create: {
+     *     // ... data to create a UnifiedContentSource
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UnifiedContentSource we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UnifiedContentSourceUpsertArgs>(args: SelectSubset<T, UnifiedContentSourceUpsertArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of UnifiedContentSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceCountArgs} args - Arguments to filter UnifiedContentSources to count.
+     * @example
+     * // Count the number of UnifiedContentSources
+     * const count = await prisma.unifiedContentSource.count({
+     *   where: {
+     *     // ... the filter for the UnifiedContentSources we want to count
+     *   }
+     * })
+    **/
+    count<T extends UnifiedContentSourceCountArgs>(
+      args?: Subset<T, UnifiedContentSourceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UnifiedContentSourceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UnifiedContentSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UnifiedContentSourceAggregateArgs>(args: Subset<T, UnifiedContentSourceAggregateArgs>): Prisma.PrismaPromise<GetUnifiedContentSourceAggregateType<T>>
+
+    /**
+     * Group by UnifiedContentSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UnifiedContentSourceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UnifiedContentSourceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UnifiedContentSourceGroupByArgs['orderBy'] }
+        : { orderBy?: UnifiedContentSourceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UnifiedContentSourceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUnifiedContentSourceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UnifiedContentSource model
+   */
+  readonly fields: UnifiedContentSourceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UnifiedContentSource.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UnifiedContentSourceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    integratedSessions<T extends UnifiedContentSource$integratedSessionsArgs<ExtArgs> = {}>(args?: Subset<T, UnifiedContentSource$integratedSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UnifiedContentSource model
+   */ 
+  interface UnifiedContentSourceFieldRefs {
+    readonly id: FieldRef<"UnifiedContentSource", 'String'>
+    readonly sourceType: FieldRef<"UnifiedContentSource", 'String'>
+    readonly sourceId: FieldRef<"UnifiedContentSource", 'String'>
+    readonly contentSummary: FieldRef<"UnifiedContentSource", 'String'>
+    readonly importanceScore: FieldRef<"UnifiedContentSource", 'Float'>
+    readonly viralPotential: FieldRef<"UnifiedContentSource", 'Float'>
+    readonly keywords: FieldRef<"UnifiedContentSource", 'String[]'>
+    readonly metadata: FieldRef<"UnifiedContentSource", 'Json'>
+    readonly createdAt: FieldRef<"UnifiedContentSource", 'DateTime'>
+    readonly updatedAt: FieldRef<"UnifiedContentSource", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UnifiedContentSource findUnique
+   */
+  export type UnifiedContentSourceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which UnifiedContentSource to fetch.
+     */
+    where: UnifiedContentSourceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedContentSource findUniqueOrThrow
+   */
+  export type UnifiedContentSourceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which UnifiedContentSource to fetch.
+     */
+    where: UnifiedContentSourceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedContentSource findFirst
+   */
+  export type UnifiedContentSourceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which UnifiedContentSource to fetch.
+     */
+    where?: UnifiedContentSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedContentSources to fetch.
+     */
+    orderBy?: UnifiedContentSourceOrderByWithRelationInput | UnifiedContentSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedContentSources.
+     */
+    cursor?: UnifiedContentSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedContentSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedContentSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedContentSources.
+     */
+    distinct?: UnifiedContentSourceScalarFieldEnum | UnifiedContentSourceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedContentSource findFirstOrThrow
+   */
+  export type UnifiedContentSourceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which UnifiedContentSource to fetch.
+     */
+    where?: UnifiedContentSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedContentSources to fetch.
+     */
+    orderBy?: UnifiedContentSourceOrderByWithRelationInput | UnifiedContentSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UnifiedContentSources.
+     */
+    cursor?: UnifiedContentSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedContentSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedContentSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UnifiedContentSources.
+     */
+    distinct?: UnifiedContentSourceScalarFieldEnum | UnifiedContentSourceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedContentSource findMany
+   */
+  export type UnifiedContentSourceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which UnifiedContentSources to fetch.
+     */
+    where?: UnifiedContentSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UnifiedContentSources to fetch.
+     */
+    orderBy?: UnifiedContentSourceOrderByWithRelationInput | UnifiedContentSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UnifiedContentSources.
+     */
+    cursor?: UnifiedContentSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UnifiedContentSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UnifiedContentSources.
+     */
+    skip?: number
+    distinct?: UnifiedContentSourceScalarFieldEnum | UnifiedContentSourceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedContentSource create
+   */
+  export type UnifiedContentSourceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UnifiedContentSource.
+     */
+    data: XOR<UnifiedContentSourceCreateInput, UnifiedContentSourceUncheckedCreateInput>
+  }
+
+  /**
+   * UnifiedContentSource createMany
+   */
+  export type UnifiedContentSourceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UnifiedContentSources.
+     */
+    data: UnifiedContentSourceCreateManyInput | UnifiedContentSourceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedContentSource createManyAndReturn
+   */
+  export type UnifiedContentSourceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many UnifiedContentSources.
+     */
+    data: UnifiedContentSourceCreateManyInput | UnifiedContentSourceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UnifiedContentSource update
+   */
+  export type UnifiedContentSourceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UnifiedContentSource.
+     */
+    data: XOR<UnifiedContentSourceUpdateInput, UnifiedContentSourceUncheckedUpdateInput>
+    /**
+     * Choose, which UnifiedContentSource to update.
+     */
+    where: UnifiedContentSourceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedContentSource updateMany
+   */
+  export type UnifiedContentSourceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UnifiedContentSources.
+     */
+    data: XOR<UnifiedContentSourceUpdateManyMutationInput, UnifiedContentSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which UnifiedContentSources to update
+     */
+    where?: UnifiedContentSourceWhereInput
+  }
+
+  /**
+   * UnifiedContentSource upsert
+   */
+  export type UnifiedContentSourceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UnifiedContentSource to update in case it exists.
+     */
+    where: UnifiedContentSourceWhereUniqueInput
+    /**
+     * In case the UnifiedContentSource found by the `where` argument doesn't exist, create a new UnifiedContentSource with this data.
+     */
+    create: XOR<UnifiedContentSourceCreateInput, UnifiedContentSourceUncheckedCreateInput>
+    /**
+     * In case the UnifiedContentSource was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UnifiedContentSourceUpdateInput, UnifiedContentSourceUncheckedUpdateInput>
+  }
+
+  /**
+   * UnifiedContentSource delete
+   */
+  export type UnifiedContentSourceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+    /**
+     * Filter which UnifiedContentSource to delete.
+     */
+    where: UnifiedContentSourceWhereUniqueInput
+  }
+
+  /**
+   * UnifiedContentSource deleteMany
+   */
+  export type UnifiedContentSourceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UnifiedContentSources to delete
+     */
+    where?: UnifiedContentSourceWhereInput
+  }
+
+  /**
+   * UnifiedContentSource.integratedSessions
+   */
+  export type UnifiedContentSource$integratedSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    where?: IntegratedSessionSourceWhereInput
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegratedSessionSourceScalarFieldEnum | IntegratedSessionSourceScalarFieldEnum[]
+  }
+
+  /**
+   * UnifiedContentSource without action
+   */
+  export type UnifiedContentSourceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UnifiedContentSource
+     */
+    select?: UnifiedContentSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UnifiedContentSourceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IntegratedSession
+   */
+
+  export type AggregateIntegratedSession = {
+    _count: IntegratedSessionCountAggregateOutputType | null
+    _min: IntegratedSessionMinAggregateOutputType | null
+    _max: IntegratedSessionMaxAggregateOutputType | null
+  }
+
+  export type IntegratedSessionMinAggregateOutputType = {
+    id: string | null
+    sessionType: string | null
+    v2SessionId: string | null
+    status: string | null
+    currentStep: string | null
+    theme: string | null
+    character: string | null
+    platform: string | null
+    strategy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type IntegratedSessionMaxAggregateOutputType = {
+    id: string | null
+    sessionType: string | null
+    v2SessionId: string | null
+    status: string | null
+    currentStep: string | null
+    theme: string | null
+    character: string | null
+    platform: string | null
+    strategy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type IntegratedSessionCountAggregateOutputType = {
+    id: number
+    sessionType: number
+    v2SessionId: number
+    newsArticleIds: number
+    buzzPostIds: number
+    generationContext: number
+    performanceMetrics: number
+    status: number
+    currentStep: number
+    theme: number
+    character: number
+    platform: number
+    strategy: number
+    createdAt: number
+    updatedAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type IntegratedSessionMinAggregateInputType = {
+    id?: true
+    sessionType?: true
+    v2SessionId?: true
+    status?: true
+    currentStep?: true
+    theme?: true
+    character?: true
+    platform?: true
+    strategy?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+  }
+
+  export type IntegratedSessionMaxAggregateInputType = {
+    id?: true
+    sessionType?: true
+    v2SessionId?: true
+    status?: true
+    currentStep?: true
+    theme?: true
+    character?: true
+    platform?: true
+    strategy?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+  }
+
+  export type IntegratedSessionCountAggregateInputType = {
+    id?: true
+    sessionType?: true
+    v2SessionId?: true
+    newsArticleIds?: true
+    buzzPostIds?: true
+    generationContext?: true
+    performanceMetrics?: true
+    status?: true
+    currentStep?: true
+    theme?: true
+    character?: true
+    platform?: true
+    strategy?: true
+    createdAt?: true
+    updatedAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type IntegratedSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedSession to aggregate.
+     */
+    where?: IntegratedSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessions to fetch.
+     */
+    orderBy?: IntegratedSessionOrderByWithRelationInput | IntegratedSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegratedSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegratedSessions
+    **/
+    _count?: true | IntegratedSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegratedSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegratedSessionMaxAggregateInputType
+  }
+
+  export type GetIntegratedSessionAggregateType<T extends IntegratedSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegratedSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegratedSession[P]>
+      : GetScalarType<T[P], AggregateIntegratedSession[P]>
+  }
+
+
+
+
+  export type IntegratedSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedSessionWhereInput
+    orderBy?: IntegratedSessionOrderByWithAggregationInput | IntegratedSessionOrderByWithAggregationInput[]
+    by: IntegratedSessionScalarFieldEnum[] | IntegratedSessionScalarFieldEnum
+    having?: IntegratedSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegratedSessionCountAggregateInputType | true
+    _min?: IntegratedSessionMinAggregateInputType
+    _max?: IntegratedSessionMaxAggregateInputType
+  }
+
+  export type IntegratedSessionGroupByOutputType = {
+    id: string
+    sessionType: string
+    v2SessionId: string | null
+    newsArticleIds: string[]
+    buzzPostIds: string[]
+    generationContext: JsonValue | null
+    performanceMetrics: JsonValue | null
+    status: string
+    currentStep: string | null
+    theme: string | null
+    character: string | null
+    platform: string | null
+    strategy: string | null
+    createdAt: Date
+    updatedAt: Date
+    completedAt: Date | null
+    _count: IntegratedSessionCountAggregateOutputType | null
+    _min: IntegratedSessionMinAggregateOutputType | null
+    _max: IntegratedSessionMaxAggregateOutputType | null
+  }
+
+  type GetIntegratedSessionGroupByPayload<T extends IntegratedSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegratedSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegratedSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegratedSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegratedSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegratedSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionType?: boolean
+    v2SessionId?: boolean
+    newsArticleIds?: boolean
+    buzzPostIds?: boolean
+    generationContext?: boolean
+    performanceMetrics?: boolean
+    status?: boolean
+    currentStep?: boolean
+    theme?: boolean
+    character?: boolean
+    platform?: boolean
+    strategy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    v2Session?: boolean | IntegratedSession$v2SessionArgs<ExtArgs>
+    sources?: boolean | IntegratedSession$sourcesArgs<ExtArgs>
+    drafts?: boolean | IntegratedSession$draftsArgs<ExtArgs>
+    _count?: boolean | IntegratedSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedSession"]>
+
+  export type IntegratedSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionType?: boolean
+    v2SessionId?: boolean
+    newsArticleIds?: boolean
+    buzzPostIds?: boolean
+    generationContext?: boolean
+    performanceMetrics?: boolean
+    status?: boolean
+    currentStep?: boolean
+    theme?: boolean
+    character?: boolean
+    platform?: boolean
+    strategy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+    v2Session?: boolean | IntegratedSession$v2SessionArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedSession"]>
+
+  export type IntegratedSessionSelectScalar = {
+    id?: boolean
+    sessionType?: boolean
+    v2SessionId?: boolean
+    newsArticleIds?: boolean
+    buzzPostIds?: boolean
+    generationContext?: boolean
+    performanceMetrics?: boolean
+    status?: boolean
+    currentStep?: boolean
+    theme?: boolean
+    character?: boolean
+    platform?: boolean
+    strategy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type IntegratedSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    v2Session?: boolean | IntegratedSession$v2SessionArgs<ExtArgs>
+    sources?: boolean | IntegratedSession$sourcesArgs<ExtArgs>
+    drafts?: boolean | IntegratedSession$draftsArgs<ExtArgs>
+    _count?: boolean | IntegratedSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type IntegratedSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    v2Session?: boolean | IntegratedSession$v2SessionArgs<ExtArgs>
+  }
+
+  export type $IntegratedSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegratedSession"
+    objects: {
+      v2Session: Prisma.$ViralSessionPayload<ExtArgs> | null
+      sources: Prisma.$IntegratedSessionSourcePayload<ExtArgs>[]
+      drafts: Prisma.$IntegratedDraftPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionType: string
+      v2SessionId: string | null
+      newsArticleIds: string[]
+      buzzPostIds: string[]
+      generationContext: Prisma.JsonValue | null
+      performanceMetrics: Prisma.JsonValue | null
+      status: string
+      currentStep: string | null
+      theme: string | null
+      character: string | null
+      platform: string | null
+      strategy: string | null
+      createdAt: Date
+      updatedAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["integratedSession"]>
+    composites: {}
+  }
+
+  type IntegratedSessionGetPayload<S extends boolean | null | undefined | IntegratedSessionDefaultArgs> = $Result.GetResult<Prisma.$IntegratedSessionPayload, S>
+
+  type IntegratedSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IntegratedSessionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IntegratedSessionCountAggregateInputType | true
+    }
+
+  export interface IntegratedSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegratedSession'], meta: { name: 'IntegratedSession' } }
+    /**
+     * Find zero or one IntegratedSession that matches the filter.
+     * @param {IntegratedSessionFindUniqueArgs} args - Arguments to find a IntegratedSession
+     * @example
+     * // Get one IntegratedSession
+     * const integratedSession = await prisma.integratedSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegratedSessionFindUniqueArgs>(args: SelectSubset<T, IntegratedSessionFindUniqueArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one IntegratedSession that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IntegratedSessionFindUniqueOrThrowArgs} args - Arguments to find a IntegratedSession
+     * @example
+     * // Get one IntegratedSession
+     * const integratedSession = await prisma.integratedSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegratedSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegratedSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first IntegratedSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionFindFirstArgs} args - Arguments to find a IntegratedSession
+     * @example
+     * // Get one IntegratedSession
+     * const integratedSession = await prisma.integratedSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegratedSessionFindFirstArgs>(args?: SelectSubset<T, IntegratedSessionFindFirstArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first IntegratedSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionFindFirstOrThrowArgs} args - Arguments to find a IntegratedSession
+     * @example
+     * // Get one IntegratedSession
+     * const integratedSession = await prisma.integratedSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegratedSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegratedSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more IntegratedSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegratedSessions
+     * const integratedSessions = await prisma.integratedSession.findMany()
+     * 
+     * // Get first 10 IntegratedSessions
+     * const integratedSessions = await prisma.integratedSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integratedSessionWithIdOnly = await prisma.integratedSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegratedSessionFindManyArgs>(args?: SelectSubset<T, IntegratedSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a IntegratedSession.
+     * @param {IntegratedSessionCreateArgs} args - Arguments to create a IntegratedSession.
+     * @example
+     * // Create one IntegratedSession
+     * const IntegratedSession = await prisma.integratedSession.create({
+     *   data: {
+     *     // ... data to create a IntegratedSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegratedSessionCreateArgs>(args: SelectSubset<T, IntegratedSessionCreateArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many IntegratedSessions.
+     * @param {IntegratedSessionCreateManyArgs} args - Arguments to create many IntegratedSessions.
+     * @example
+     * // Create many IntegratedSessions
+     * const integratedSession = await prisma.integratedSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegratedSessionCreateManyArgs>(args?: SelectSubset<T, IntegratedSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegratedSessions and returns the data saved in the database.
+     * @param {IntegratedSessionCreateManyAndReturnArgs} args - Arguments to create many IntegratedSessions.
+     * @example
+     * // Create many IntegratedSessions
+     * const integratedSession = await prisma.integratedSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegratedSessions and only return the `id`
+     * const integratedSessionWithIdOnly = await prisma.integratedSession.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegratedSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegratedSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a IntegratedSession.
+     * @param {IntegratedSessionDeleteArgs} args - Arguments to delete one IntegratedSession.
+     * @example
+     * // Delete one IntegratedSession
+     * const IntegratedSession = await prisma.integratedSession.delete({
+     *   where: {
+     *     // ... filter to delete one IntegratedSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegratedSessionDeleteArgs>(args: SelectSubset<T, IntegratedSessionDeleteArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one IntegratedSession.
+     * @param {IntegratedSessionUpdateArgs} args - Arguments to update one IntegratedSession.
+     * @example
+     * // Update one IntegratedSession
+     * const integratedSession = await prisma.integratedSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegratedSessionUpdateArgs>(args: SelectSubset<T, IntegratedSessionUpdateArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more IntegratedSessions.
+     * @param {IntegratedSessionDeleteManyArgs} args - Arguments to filter IntegratedSessions to delete.
+     * @example
+     * // Delete a few IntegratedSessions
+     * const { count } = await prisma.integratedSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegratedSessionDeleteManyArgs>(args?: SelectSubset<T, IntegratedSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegratedSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegratedSessions
+     * const integratedSession = await prisma.integratedSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegratedSessionUpdateManyArgs>(args: SelectSubset<T, IntegratedSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IntegratedSession.
+     * @param {IntegratedSessionUpsertArgs} args - Arguments to update or create a IntegratedSession.
+     * @example
+     * // Update or create a IntegratedSession
+     * const integratedSession = await prisma.integratedSession.upsert({
+     *   create: {
+     *     // ... data to create a IntegratedSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegratedSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegratedSessionUpsertArgs>(args: SelectSubset<T, IntegratedSessionUpsertArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of IntegratedSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionCountArgs} args - Arguments to filter IntegratedSessions to count.
+     * @example
+     * // Count the number of IntegratedSessions
+     * const count = await prisma.integratedSession.count({
+     *   where: {
+     *     // ... the filter for the IntegratedSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegratedSessionCountArgs>(
+      args?: Subset<T, IntegratedSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegratedSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegratedSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegratedSessionAggregateArgs>(args: Subset<T, IntegratedSessionAggregateArgs>): Prisma.PrismaPromise<GetIntegratedSessionAggregateType<T>>
+
+    /**
+     * Group by IntegratedSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegratedSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegratedSessionGroupByArgs['orderBy'] }
+        : { orderBy?: IntegratedSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegratedSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegratedSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegratedSession model
+   */
+  readonly fields: IntegratedSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegratedSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegratedSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    v2Session<T extends IntegratedSession$v2SessionArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedSession$v2SessionArgs<ExtArgs>>): Prisma__ViralSessionClient<$Result.GetResult<Prisma.$ViralSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    sources<T extends IntegratedSession$sourcesArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedSession$sourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findMany"> | Null>
+    drafts<T extends IntegratedSession$draftsArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedSession$draftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegratedSession model
+   */ 
+  interface IntegratedSessionFieldRefs {
+    readonly id: FieldRef<"IntegratedSession", 'String'>
+    readonly sessionType: FieldRef<"IntegratedSession", 'String'>
+    readonly v2SessionId: FieldRef<"IntegratedSession", 'String'>
+    readonly newsArticleIds: FieldRef<"IntegratedSession", 'String[]'>
+    readonly buzzPostIds: FieldRef<"IntegratedSession", 'String[]'>
+    readonly generationContext: FieldRef<"IntegratedSession", 'Json'>
+    readonly performanceMetrics: FieldRef<"IntegratedSession", 'Json'>
+    readonly status: FieldRef<"IntegratedSession", 'String'>
+    readonly currentStep: FieldRef<"IntegratedSession", 'String'>
+    readonly theme: FieldRef<"IntegratedSession", 'String'>
+    readonly character: FieldRef<"IntegratedSession", 'String'>
+    readonly platform: FieldRef<"IntegratedSession", 'String'>
+    readonly strategy: FieldRef<"IntegratedSession", 'String'>
+    readonly createdAt: FieldRef<"IntegratedSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntegratedSession", 'DateTime'>
+    readonly completedAt: FieldRef<"IntegratedSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegratedSession findUnique
+   */
+  export type IntegratedSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSession to fetch.
+     */
+    where: IntegratedSessionWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSession findUniqueOrThrow
+   */
+  export type IntegratedSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSession to fetch.
+     */
+    where: IntegratedSessionWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSession findFirst
+   */
+  export type IntegratedSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSession to fetch.
+     */
+    where?: IntegratedSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessions to fetch.
+     */
+    orderBy?: IntegratedSessionOrderByWithRelationInput | IntegratedSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedSessions.
+     */
+    cursor?: IntegratedSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedSessions.
+     */
+    distinct?: IntegratedSessionScalarFieldEnum | IntegratedSessionScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSession findFirstOrThrow
+   */
+  export type IntegratedSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSession to fetch.
+     */
+    where?: IntegratedSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessions to fetch.
+     */
+    orderBy?: IntegratedSessionOrderByWithRelationInput | IntegratedSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedSessions.
+     */
+    cursor?: IntegratedSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedSessions.
+     */
+    distinct?: IntegratedSessionScalarFieldEnum | IntegratedSessionScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSession findMany
+   */
+  export type IntegratedSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessions to fetch.
+     */
+    where?: IntegratedSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessions to fetch.
+     */
+    orderBy?: IntegratedSessionOrderByWithRelationInput | IntegratedSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegratedSessions.
+     */
+    cursor?: IntegratedSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessions.
+     */
+    skip?: number
+    distinct?: IntegratedSessionScalarFieldEnum | IntegratedSessionScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSession create
+   */
+  export type IntegratedSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegratedSession.
+     */
+    data: XOR<IntegratedSessionCreateInput, IntegratedSessionUncheckedCreateInput>
+  }
+
+  /**
+   * IntegratedSession createMany
+   */
+  export type IntegratedSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegratedSessions.
+     */
+    data: IntegratedSessionCreateManyInput | IntegratedSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegratedSession createManyAndReturn
+   */
+  export type IntegratedSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IntegratedSessions.
+     */
+    data: IntegratedSessionCreateManyInput | IntegratedSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegratedSession update
+   */
+  export type IntegratedSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegratedSession.
+     */
+    data: XOR<IntegratedSessionUpdateInput, IntegratedSessionUncheckedUpdateInput>
+    /**
+     * Choose, which IntegratedSession to update.
+     */
+    where: IntegratedSessionWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSession updateMany
+   */
+  export type IntegratedSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegratedSessions.
+     */
+    data: XOR<IntegratedSessionUpdateManyMutationInput, IntegratedSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegratedSessions to update
+     */
+    where?: IntegratedSessionWhereInput
+  }
+
+  /**
+   * IntegratedSession upsert
+   */
+  export type IntegratedSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegratedSession to update in case it exists.
+     */
+    where: IntegratedSessionWhereUniqueInput
+    /**
+     * In case the IntegratedSession found by the `where` argument doesn't exist, create a new IntegratedSession with this data.
+     */
+    create: XOR<IntegratedSessionCreateInput, IntegratedSessionUncheckedCreateInput>
+    /**
+     * In case the IntegratedSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegratedSessionUpdateInput, IntegratedSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegratedSession delete
+   */
+  export type IntegratedSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    /**
+     * Filter which IntegratedSession to delete.
+     */
+    where: IntegratedSessionWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSession deleteMany
+   */
+  export type IntegratedSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedSessions to delete
+     */
+    where?: IntegratedSessionWhereInput
+  }
+
+  /**
+   * IntegratedSession.v2Session
+   */
+  export type IntegratedSession$v2SessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ViralSession
+     */
+    select?: ViralSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ViralSessionInclude<ExtArgs> | null
+    where?: ViralSessionWhereInput
+  }
+
+  /**
+   * IntegratedSession.sources
+   */
+  export type IntegratedSession$sourcesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    where?: IntegratedSessionSourceWhereInput
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegratedSessionSourceScalarFieldEnum | IntegratedSessionSourceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSession.drafts
+   */
+  export type IntegratedSession$draftsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    where?: IntegratedDraftWhereInput
+    orderBy?: IntegratedDraftOrderByWithRelationInput | IntegratedDraftOrderByWithRelationInput[]
+    cursor?: IntegratedDraftWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegratedDraftScalarFieldEnum | IntegratedDraftScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSession without action
+   */
+  export type IntegratedSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IntegratedSessionSource
+   */
+
+  export type AggregateIntegratedSessionSource = {
+    _count: IntegratedSessionSourceCountAggregateOutputType | null
+    _avg: IntegratedSessionSourceAvgAggregateOutputType | null
+    _sum: IntegratedSessionSourceSumAggregateOutputType | null
+    _min: IntegratedSessionSourceMinAggregateOutputType | null
+    _max: IntegratedSessionSourceMaxAggregateOutputType | null
+  }
+
+  export type IntegratedSessionSourceAvgAggregateOutputType = {
+    relevanceScore: number | null
+  }
+
+  export type IntegratedSessionSourceSumAggregateOutputType = {
+    relevanceScore: number | null
+  }
+
+  export type IntegratedSessionSourceMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    sourceId: string | null
+    relevanceScore: number | null
+    usageType: string | null
+  }
+
+  export type IntegratedSessionSourceMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    sourceId: string | null
+    relevanceScore: number | null
+    usageType: string | null
+  }
+
+  export type IntegratedSessionSourceCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    sourceId: number
+    relevanceScore: number
+    usageType: number
+    _all: number
+  }
+
+
+  export type IntegratedSessionSourceAvgAggregateInputType = {
+    relevanceScore?: true
+  }
+
+  export type IntegratedSessionSourceSumAggregateInputType = {
+    relevanceScore?: true
+  }
+
+  export type IntegratedSessionSourceMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sourceId?: true
+    relevanceScore?: true
+    usageType?: true
+  }
+
+  export type IntegratedSessionSourceMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sourceId?: true
+    relevanceScore?: true
+    usageType?: true
+  }
+
+  export type IntegratedSessionSourceCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    sourceId?: true
+    relevanceScore?: true
+    usageType?: true
+    _all?: true
+  }
+
+  export type IntegratedSessionSourceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedSessionSource to aggregate.
+     */
+    where?: IntegratedSessionSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessionSources to fetch.
+     */
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessionSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessionSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegratedSessionSources
+    **/
+    _count?: true | IntegratedSessionSourceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IntegratedSessionSourceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IntegratedSessionSourceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegratedSessionSourceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegratedSessionSourceMaxAggregateInputType
+  }
+
+  export type GetIntegratedSessionSourceAggregateType<T extends IntegratedSessionSourceAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegratedSessionSource]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegratedSessionSource[P]>
+      : GetScalarType<T[P], AggregateIntegratedSessionSource[P]>
+  }
+
+
+
+
+  export type IntegratedSessionSourceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedSessionSourceWhereInput
+    orderBy?: IntegratedSessionSourceOrderByWithAggregationInput | IntegratedSessionSourceOrderByWithAggregationInput[]
+    by: IntegratedSessionSourceScalarFieldEnum[] | IntegratedSessionSourceScalarFieldEnum
+    having?: IntegratedSessionSourceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegratedSessionSourceCountAggregateInputType | true
+    _avg?: IntegratedSessionSourceAvgAggregateInputType
+    _sum?: IntegratedSessionSourceSumAggregateInputType
+    _min?: IntegratedSessionSourceMinAggregateInputType
+    _max?: IntegratedSessionSourceMaxAggregateInputType
+  }
+
+  export type IntegratedSessionSourceGroupByOutputType = {
+    id: string
+    sessionId: string
+    sourceId: string
+    relevanceScore: number | null
+    usageType: string
+    _count: IntegratedSessionSourceCountAggregateOutputType | null
+    _avg: IntegratedSessionSourceAvgAggregateOutputType | null
+    _sum: IntegratedSessionSourceSumAggregateOutputType | null
+    _min: IntegratedSessionSourceMinAggregateOutputType | null
+    _max: IntegratedSessionSourceMaxAggregateOutputType | null
+  }
+
+  type GetIntegratedSessionSourceGroupByPayload<T extends IntegratedSessionSourceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegratedSessionSourceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegratedSessionSourceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegratedSessionSourceGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegratedSessionSourceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegratedSessionSourceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    sourceId?: boolean
+    relevanceScore?: boolean
+    usageType?: boolean
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    source?: boolean | UnifiedContentSourceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedSessionSource"]>
+
+  export type IntegratedSessionSourceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    sourceId?: boolean
+    relevanceScore?: boolean
+    usageType?: boolean
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    source?: boolean | UnifiedContentSourceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedSessionSource"]>
+
+  export type IntegratedSessionSourceSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    sourceId?: boolean
+    relevanceScore?: boolean
+    usageType?: boolean
+  }
+
+  export type IntegratedSessionSourceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    source?: boolean | UnifiedContentSourceDefaultArgs<ExtArgs>
+  }
+  export type IntegratedSessionSourceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    source?: boolean | UnifiedContentSourceDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegratedSessionSourcePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegratedSessionSource"
+    objects: {
+      session: Prisma.$IntegratedSessionPayload<ExtArgs>
+      source: Prisma.$UnifiedContentSourcePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      sourceId: string
+      relevanceScore: number | null
+      usageType: string
+    }, ExtArgs["result"]["integratedSessionSource"]>
+    composites: {}
+  }
+
+  type IntegratedSessionSourceGetPayload<S extends boolean | null | undefined | IntegratedSessionSourceDefaultArgs> = $Result.GetResult<Prisma.$IntegratedSessionSourcePayload, S>
+
+  type IntegratedSessionSourceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IntegratedSessionSourceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IntegratedSessionSourceCountAggregateInputType | true
+    }
+
+  export interface IntegratedSessionSourceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegratedSessionSource'], meta: { name: 'IntegratedSessionSource' } }
+    /**
+     * Find zero or one IntegratedSessionSource that matches the filter.
+     * @param {IntegratedSessionSourceFindUniqueArgs} args - Arguments to find a IntegratedSessionSource
+     * @example
+     * // Get one IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegratedSessionSourceFindUniqueArgs>(args: SelectSubset<T, IntegratedSessionSourceFindUniqueArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one IntegratedSessionSource that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IntegratedSessionSourceFindUniqueOrThrowArgs} args - Arguments to find a IntegratedSessionSource
+     * @example
+     * // Get one IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegratedSessionSourceFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegratedSessionSourceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first IntegratedSessionSource that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceFindFirstArgs} args - Arguments to find a IntegratedSessionSource
+     * @example
+     * // Get one IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegratedSessionSourceFindFirstArgs>(args?: SelectSubset<T, IntegratedSessionSourceFindFirstArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first IntegratedSessionSource that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceFindFirstOrThrowArgs} args - Arguments to find a IntegratedSessionSource
+     * @example
+     * // Get one IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegratedSessionSourceFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegratedSessionSourceFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more IntegratedSessionSources that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegratedSessionSources
+     * const integratedSessionSources = await prisma.integratedSessionSource.findMany()
+     * 
+     * // Get first 10 IntegratedSessionSources
+     * const integratedSessionSources = await prisma.integratedSessionSource.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integratedSessionSourceWithIdOnly = await prisma.integratedSessionSource.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegratedSessionSourceFindManyArgs>(args?: SelectSubset<T, IntegratedSessionSourceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a IntegratedSessionSource.
+     * @param {IntegratedSessionSourceCreateArgs} args - Arguments to create a IntegratedSessionSource.
+     * @example
+     * // Create one IntegratedSessionSource
+     * const IntegratedSessionSource = await prisma.integratedSessionSource.create({
+     *   data: {
+     *     // ... data to create a IntegratedSessionSource
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegratedSessionSourceCreateArgs>(args: SelectSubset<T, IntegratedSessionSourceCreateArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many IntegratedSessionSources.
+     * @param {IntegratedSessionSourceCreateManyArgs} args - Arguments to create many IntegratedSessionSources.
+     * @example
+     * // Create many IntegratedSessionSources
+     * const integratedSessionSource = await prisma.integratedSessionSource.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegratedSessionSourceCreateManyArgs>(args?: SelectSubset<T, IntegratedSessionSourceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegratedSessionSources and returns the data saved in the database.
+     * @param {IntegratedSessionSourceCreateManyAndReturnArgs} args - Arguments to create many IntegratedSessionSources.
+     * @example
+     * // Create many IntegratedSessionSources
+     * const integratedSessionSource = await prisma.integratedSessionSource.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegratedSessionSources and only return the `id`
+     * const integratedSessionSourceWithIdOnly = await prisma.integratedSessionSource.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegratedSessionSourceCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegratedSessionSourceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a IntegratedSessionSource.
+     * @param {IntegratedSessionSourceDeleteArgs} args - Arguments to delete one IntegratedSessionSource.
+     * @example
+     * // Delete one IntegratedSessionSource
+     * const IntegratedSessionSource = await prisma.integratedSessionSource.delete({
+     *   where: {
+     *     // ... filter to delete one IntegratedSessionSource
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegratedSessionSourceDeleteArgs>(args: SelectSubset<T, IntegratedSessionSourceDeleteArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one IntegratedSessionSource.
+     * @param {IntegratedSessionSourceUpdateArgs} args - Arguments to update one IntegratedSessionSource.
+     * @example
+     * // Update one IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegratedSessionSourceUpdateArgs>(args: SelectSubset<T, IntegratedSessionSourceUpdateArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more IntegratedSessionSources.
+     * @param {IntegratedSessionSourceDeleteManyArgs} args - Arguments to filter IntegratedSessionSources to delete.
+     * @example
+     * // Delete a few IntegratedSessionSources
+     * const { count } = await prisma.integratedSessionSource.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegratedSessionSourceDeleteManyArgs>(args?: SelectSubset<T, IntegratedSessionSourceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegratedSessionSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegratedSessionSources
+     * const integratedSessionSource = await prisma.integratedSessionSource.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegratedSessionSourceUpdateManyArgs>(args: SelectSubset<T, IntegratedSessionSourceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IntegratedSessionSource.
+     * @param {IntegratedSessionSourceUpsertArgs} args - Arguments to update or create a IntegratedSessionSource.
+     * @example
+     * // Update or create a IntegratedSessionSource
+     * const integratedSessionSource = await prisma.integratedSessionSource.upsert({
+     *   create: {
+     *     // ... data to create a IntegratedSessionSource
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegratedSessionSource we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegratedSessionSourceUpsertArgs>(args: SelectSubset<T, IntegratedSessionSourceUpsertArgs<ExtArgs>>): Prisma__IntegratedSessionSourceClient<$Result.GetResult<Prisma.$IntegratedSessionSourcePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of IntegratedSessionSources.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceCountArgs} args - Arguments to filter IntegratedSessionSources to count.
+     * @example
+     * // Count the number of IntegratedSessionSources
+     * const count = await prisma.integratedSessionSource.count({
+     *   where: {
+     *     // ... the filter for the IntegratedSessionSources we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegratedSessionSourceCountArgs>(
+      args?: Subset<T, IntegratedSessionSourceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegratedSessionSourceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegratedSessionSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegratedSessionSourceAggregateArgs>(args: Subset<T, IntegratedSessionSourceAggregateArgs>): Prisma.PrismaPromise<GetIntegratedSessionSourceAggregateType<T>>
+
+    /**
+     * Group by IntegratedSessionSource.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedSessionSourceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegratedSessionSourceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegratedSessionSourceGroupByArgs['orderBy'] }
+        : { orderBy?: IntegratedSessionSourceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegratedSessionSourceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegratedSessionSourceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegratedSessionSource model
+   */
+  readonly fields: IntegratedSessionSourceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegratedSessionSource.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegratedSessionSourceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends IntegratedSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedSessionDefaultArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    source<T extends UnifiedContentSourceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UnifiedContentSourceDefaultArgs<ExtArgs>>): Prisma__UnifiedContentSourceClient<$Result.GetResult<Prisma.$UnifiedContentSourcePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegratedSessionSource model
+   */ 
+  interface IntegratedSessionSourceFieldRefs {
+    readonly id: FieldRef<"IntegratedSessionSource", 'String'>
+    readonly sessionId: FieldRef<"IntegratedSessionSource", 'String'>
+    readonly sourceId: FieldRef<"IntegratedSessionSource", 'String'>
+    readonly relevanceScore: FieldRef<"IntegratedSessionSource", 'Float'>
+    readonly usageType: FieldRef<"IntegratedSessionSource", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegratedSessionSource findUnique
+   */
+  export type IntegratedSessionSourceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessionSource to fetch.
+     */
+    where: IntegratedSessionSourceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSessionSource findUniqueOrThrow
+   */
+  export type IntegratedSessionSourceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessionSource to fetch.
+     */
+    where: IntegratedSessionSourceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSessionSource findFirst
+   */
+  export type IntegratedSessionSourceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessionSource to fetch.
+     */
+    where?: IntegratedSessionSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessionSources to fetch.
+     */
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedSessionSources.
+     */
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessionSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessionSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedSessionSources.
+     */
+    distinct?: IntegratedSessionSourceScalarFieldEnum | IntegratedSessionSourceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSessionSource findFirstOrThrow
+   */
+  export type IntegratedSessionSourceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessionSource to fetch.
+     */
+    where?: IntegratedSessionSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessionSources to fetch.
+     */
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedSessionSources.
+     */
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessionSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessionSources.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedSessionSources.
+     */
+    distinct?: IntegratedSessionSourceScalarFieldEnum | IntegratedSessionSourceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSessionSource findMany
+   */
+  export type IntegratedSessionSourceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedSessionSources to fetch.
+     */
+    where?: IntegratedSessionSourceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedSessionSources to fetch.
+     */
+    orderBy?: IntegratedSessionSourceOrderByWithRelationInput | IntegratedSessionSourceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegratedSessionSources.
+     */
+    cursor?: IntegratedSessionSourceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedSessionSources from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedSessionSources.
+     */
+    skip?: number
+    distinct?: IntegratedSessionSourceScalarFieldEnum | IntegratedSessionSourceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedSessionSource create
+   */
+  export type IntegratedSessionSourceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegratedSessionSource.
+     */
+    data: XOR<IntegratedSessionSourceCreateInput, IntegratedSessionSourceUncheckedCreateInput>
+  }
+
+  /**
+   * IntegratedSessionSource createMany
+   */
+  export type IntegratedSessionSourceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegratedSessionSources.
+     */
+    data: IntegratedSessionSourceCreateManyInput | IntegratedSessionSourceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegratedSessionSource createManyAndReturn
+   */
+  export type IntegratedSessionSourceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IntegratedSessionSources.
+     */
+    data: IntegratedSessionSourceCreateManyInput | IntegratedSessionSourceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegratedSessionSource update
+   */
+  export type IntegratedSessionSourceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegratedSessionSource.
+     */
+    data: XOR<IntegratedSessionSourceUpdateInput, IntegratedSessionSourceUncheckedUpdateInput>
+    /**
+     * Choose, which IntegratedSessionSource to update.
+     */
+    where: IntegratedSessionSourceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSessionSource updateMany
+   */
+  export type IntegratedSessionSourceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegratedSessionSources.
+     */
+    data: XOR<IntegratedSessionSourceUpdateManyMutationInput, IntegratedSessionSourceUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegratedSessionSources to update
+     */
+    where?: IntegratedSessionSourceWhereInput
+  }
+
+  /**
+   * IntegratedSessionSource upsert
+   */
+  export type IntegratedSessionSourceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegratedSessionSource to update in case it exists.
+     */
+    where: IntegratedSessionSourceWhereUniqueInput
+    /**
+     * In case the IntegratedSessionSource found by the `where` argument doesn't exist, create a new IntegratedSessionSource with this data.
+     */
+    create: XOR<IntegratedSessionSourceCreateInput, IntegratedSessionSourceUncheckedCreateInput>
+    /**
+     * In case the IntegratedSessionSource was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegratedSessionSourceUpdateInput, IntegratedSessionSourceUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegratedSessionSource delete
+   */
+  export type IntegratedSessionSourceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+    /**
+     * Filter which IntegratedSessionSource to delete.
+     */
+    where: IntegratedSessionSourceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedSessionSource deleteMany
+   */
+  export type IntegratedSessionSourceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedSessionSources to delete
+     */
+    where?: IntegratedSessionSourceWhereInput
+  }
+
+  /**
+   * IntegratedSessionSource without action
+   */
+  export type IntegratedSessionSourceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSessionSource
+     */
+    select?: IntegratedSessionSourceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionSourceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IntegratedDraft
+   */
+
+  export type AggregateIntegratedDraft = {
+    _count: IntegratedDraftCountAggregateOutputType | null
+    _avg: IntegratedDraftAvgAggregateOutputType | null
+    _sum: IntegratedDraftSumAggregateOutputType | null
+    _min: IntegratedDraftMinAggregateOutputType | null
+    _max: IntegratedDraftMaxAggregateOutputType | null
+  }
+
+  export type IntegratedDraftAvgAggregateOutputType = {
+    viralScore: number | null
+  }
+
+  export type IntegratedDraftSumAggregateOutputType = {
+    viralScore: number | null
+  }
+
+  export type IntegratedDraftMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    title: string | null
+    content: string | null
+    contentType: string | null
+    sourcesSummary: string | null
+    newsContext: string | null
+    buzzContext: string | null
+    conceptId: string | null
+    hook: string | null
+    angle: string | null
+    generationStrategy: string | null
+    visualGuide: string | null
+    status: string | null
+    scheduledAt: Date | null
+    postedAt: Date | null
+    postId: string | null
+    viralScore: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegratedDraftMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    title: string | null
+    content: string | null
+    contentType: string | null
+    sourcesSummary: string | null
+    newsContext: string | null
+    buzzContext: string | null
+    conceptId: string | null
+    hook: string | null
+    angle: string | null
+    generationStrategy: string | null
+    visualGuide: string | null
+    status: string | null
+    scheduledAt: Date | null
+    postedAt: Date | null
+    postId: string | null
+    viralScore: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegratedDraftCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    title: number
+    content: number
+    contentType: number
+    sourcesSummary: number
+    newsContext: number
+    buzzContext: number
+    conceptId: number
+    hook: number
+    angle: number
+    sourceNewsIds: number
+    sourceBuzzIds: number
+    generationStrategy: number
+    generationData: number
+    hashtags: number
+    visualGuide: number
+    status: number
+    scheduledAt: number
+    postedAt: number
+    postId: number
+    viralScore: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type IntegratedDraftAvgAggregateInputType = {
+    viralScore?: true
+  }
+
+  export type IntegratedDraftSumAggregateInputType = {
+    viralScore?: true
+  }
+
+  export type IntegratedDraftMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    title?: true
+    content?: true
+    contentType?: true
+    sourcesSummary?: true
+    newsContext?: true
+    buzzContext?: true
+    conceptId?: true
+    hook?: true
+    angle?: true
+    generationStrategy?: true
+    visualGuide?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    postId?: true
+    viralScore?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegratedDraftMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    title?: true
+    content?: true
+    contentType?: true
+    sourcesSummary?: true
+    newsContext?: true
+    buzzContext?: true
+    conceptId?: true
+    hook?: true
+    angle?: true
+    generationStrategy?: true
+    visualGuide?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    postId?: true
+    viralScore?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegratedDraftCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    title?: true
+    content?: true
+    contentType?: true
+    sourcesSummary?: true
+    newsContext?: true
+    buzzContext?: true
+    conceptId?: true
+    hook?: true
+    angle?: true
+    sourceNewsIds?: true
+    sourceBuzzIds?: true
+    generationStrategy?: true
+    generationData?: true
+    hashtags?: true
+    visualGuide?: true
+    status?: true
+    scheduledAt?: true
+    postedAt?: true
+    postId?: true
+    viralScore?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type IntegratedDraftAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedDraft to aggregate.
+     */
+    where?: IntegratedDraftWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDrafts to fetch.
+     */
+    orderBy?: IntegratedDraftOrderByWithRelationInput | IntegratedDraftOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegratedDraftWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDrafts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDrafts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegratedDrafts
+    **/
+    _count?: true | IntegratedDraftCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IntegratedDraftAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IntegratedDraftSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegratedDraftMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegratedDraftMaxAggregateInputType
+  }
+
+  export type GetIntegratedDraftAggregateType<T extends IntegratedDraftAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegratedDraft]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegratedDraft[P]>
+      : GetScalarType<T[P], AggregateIntegratedDraft[P]>
+  }
+
+
+
+
+  export type IntegratedDraftGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedDraftWhereInput
+    orderBy?: IntegratedDraftOrderByWithAggregationInput | IntegratedDraftOrderByWithAggregationInput[]
+    by: IntegratedDraftScalarFieldEnum[] | IntegratedDraftScalarFieldEnum
+    having?: IntegratedDraftScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegratedDraftCountAggregateInputType | true
+    _avg?: IntegratedDraftAvgAggregateInputType
+    _sum?: IntegratedDraftSumAggregateInputType
+    _min?: IntegratedDraftMinAggregateInputType
+    _max?: IntegratedDraftMaxAggregateInputType
+  }
+
+  export type IntegratedDraftGroupByOutputType = {
+    id: string
+    sessionId: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary: string | null
+    newsContext: string | null
+    buzzContext: string | null
+    conceptId: string | null
+    hook: string | null
+    angle: string | null
+    sourceNewsIds: string[]
+    sourceBuzzIds: string[]
+    generationStrategy: string | null
+    generationData: JsonValue | null
+    hashtags: string[]
+    visualGuide: string | null
+    status: string
+    scheduledAt: Date | null
+    postedAt: Date | null
+    postId: string | null
+    viralScore: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: IntegratedDraftCountAggregateOutputType | null
+    _avg: IntegratedDraftAvgAggregateOutputType | null
+    _sum: IntegratedDraftSumAggregateOutputType | null
+    _min: IntegratedDraftMinAggregateOutputType | null
+    _max: IntegratedDraftMaxAggregateOutputType | null
+  }
+
+  type GetIntegratedDraftGroupByPayload<T extends IntegratedDraftGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegratedDraftGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegratedDraftGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegratedDraftGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegratedDraftGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegratedDraftSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    title?: boolean
+    content?: boolean
+    contentType?: boolean
+    sourcesSummary?: boolean
+    newsContext?: boolean
+    buzzContext?: boolean
+    conceptId?: boolean
+    hook?: boolean
+    angle?: boolean
+    sourceNewsIds?: boolean
+    sourceBuzzIds?: boolean
+    generationStrategy?: boolean
+    generationData?: boolean
+    hashtags?: boolean
+    visualGuide?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    postId?: boolean
+    viralScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    performance?: boolean | IntegratedDraft$performanceArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedDraft"]>
+
+  export type IntegratedDraftSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    title?: boolean
+    content?: boolean
+    contentType?: boolean
+    sourcesSummary?: boolean
+    newsContext?: boolean
+    buzzContext?: boolean
+    conceptId?: boolean
+    hook?: boolean
+    angle?: boolean
+    sourceNewsIds?: boolean
+    sourceBuzzIds?: boolean
+    generationStrategy?: boolean
+    generationData?: boolean
+    hashtags?: boolean
+    visualGuide?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    postId?: boolean
+    viralScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedDraft"]>
+
+  export type IntegratedDraftSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    title?: boolean
+    content?: boolean
+    contentType?: boolean
+    sourcesSummary?: boolean
+    newsContext?: boolean
+    buzzContext?: boolean
+    conceptId?: boolean
+    hook?: boolean
+    angle?: boolean
+    sourceNewsIds?: boolean
+    sourceBuzzIds?: boolean
+    generationStrategy?: boolean
+    generationData?: boolean
+    hashtags?: boolean
+    visualGuide?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    postedAt?: boolean
+    postId?: boolean
+    viralScore?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type IntegratedDraftInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+    performance?: boolean | IntegratedDraft$performanceArgs<ExtArgs>
+  }
+  export type IntegratedDraftIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | IntegratedSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegratedDraftPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegratedDraft"
+    objects: {
+      session: Prisma.$IntegratedSessionPayload<ExtArgs>
+      performance: Prisma.$IntegratedDraftPerformancePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      title: string
+      content: string
+      contentType: string
+      sourcesSummary: string | null
+      newsContext: string | null
+      buzzContext: string | null
+      conceptId: string | null
+      hook: string | null
+      angle: string | null
+      sourceNewsIds: string[]
+      sourceBuzzIds: string[]
+      generationStrategy: string | null
+      generationData: Prisma.JsonValue | null
+      hashtags: string[]
+      visualGuide: string | null
+      status: string
+      scheduledAt: Date | null
+      postedAt: Date | null
+      postId: string | null
+      viralScore: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["integratedDraft"]>
+    composites: {}
+  }
+
+  type IntegratedDraftGetPayload<S extends boolean | null | undefined | IntegratedDraftDefaultArgs> = $Result.GetResult<Prisma.$IntegratedDraftPayload, S>
+
+  type IntegratedDraftCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IntegratedDraftFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IntegratedDraftCountAggregateInputType | true
+    }
+
+  export interface IntegratedDraftDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegratedDraft'], meta: { name: 'IntegratedDraft' } }
+    /**
+     * Find zero or one IntegratedDraft that matches the filter.
+     * @param {IntegratedDraftFindUniqueArgs} args - Arguments to find a IntegratedDraft
+     * @example
+     * // Get one IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegratedDraftFindUniqueArgs>(args: SelectSubset<T, IntegratedDraftFindUniqueArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one IntegratedDraft that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IntegratedDraftFindUniqueOrThrowArgs} args - Arguments to find a IntegratedDraft
+     * @example
+     * // Get one IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegratedDraftFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegratedDraftFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first IntegratedDraft that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftFindFirstArgs} args - Arguments to find a IntegratedDraft
+     * @example
+     * // Get one IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegratedDraftFindFirstArgs>(args?: SelectSubset<T, IntegratedDraftFindFirstArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first IntegratedDraft that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftFindFirstOrThrowArgs} args - Arguments to find a IntegratedDraft
+     * @example
+     * // Get one IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegratedDraftFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegratedDraftFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more IntegratedDrafts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegratedDrafts
+     * const integratedDrafts = await prisma.integratedDraft.findMany()
+     * 
+     * // Get first 10 IntegratedDrafts
+     * const integratedDrafts = await prisma.integratedDraft.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integratedDraftWithIdOnly = await prisma.integratedDraft.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegratedDraftFindManyArgs>(args?: SelectSubset<T, IntegratedDraftFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a IntegratedDraft.
+     * @param {IntegratedDraftCreateArgs} args - Arguments to create a IntegratedDraft.
+     * @example
+     * // Create one IntegratedDraft
+     * const IntegratedDraft = await prisma.integratedDraft.create({
+     *   data: {
+     *     // ... data to create a IntegratedDraft
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegratedDraftCreateArgs>(args: SelectSubset<T, IntegratedDraftCreateArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many IntegratedDrafts.
+     * @param {IntegratedDraftCreateManyArgs} args - Arguments to create many IntegratedDrafts.
+     * @example
+     * // Create many IntegratedDrafts
+     * const integratedDraft = await prisma.integratedDraft.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegratedDraftCreateManyArgs>(args?: SelectSubset<T, IntegratedDraftCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegratedDrafts and returns the data saved in the database.
+     * @param {IntegratedDraftCreateManyAndReturnArgs} args - Arguments to create many IntegratedDrafts.
+     * @example
+     * // Create many IntegratedDrafts
+     * const integratedDraft = await prisma.integratedDraft.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegratedDrafts and only return the `id`
+     * const integratedDraftWithIdOnly = await prisma.integratedDraft.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegratedDraftCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegratedDraftCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a IntegratedDraft.
+     * @param {IntegratedDraftDeleteArgs} args - Arguments to delete one IntegratedDraft.
+     * @example
+     * // Delete one IntegratedDraft
+     * const IntegratedDraft = await prisma.integratedDraft.delete({
+     *   where: {
+     *     // ... filter to delete one IntegratedDraft
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegratedDraftDeleteArgs>(args: SelectSubset<T, IntegratedDraftDeleteArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one IntegratedDraft.
+     * @param {IntegratedDraftUpdateArgs} args - Arguments to update one IntegratedDraft.
+     * @example
+     * // Update one IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegratedDraftUpdateArgs>(args: SelectSubset<T, IntegratedDraftUpdateArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more IntegratedDrafts.
+     * @param {IntegratedDraftDeleteManyArgs} args - Arguments to filter IntegratedDrafts to delete.
+     * @example
+     * // Delete a few IntegratedDrafts
+     * const { count } = await prisma.integratedDraft.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegratedDraftDeleteManyArgs>(args?: SelectSubset<T, IntegratedDraftDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegratedDrafts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegratedDrafts
+     * const integratedDraft = await prisma.integratedDraft.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegratedDraftUpdateManyArgs>(args: SelectSubset<T, IntegratedDraftUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IntegratedDraft.
+     * @param {IntegratedDraftUpsertArgs} args - Arguments to update or create a IntegratedDraft.
+     * @example
+     * // Update or create a IntegratedDraft
+     * const integratedDraft = await prisma.integratedDraft.upsert({
+     *   create: {
+     *     // ... data to create a IntegratedDraft
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegratedDraft we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegratedDraftUpsertArgs>(args: SelectSubset<T, IntegratedDraftUpsertArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of IntegratedDrafts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftCountArgs} args - Arguments to filter IntegratedDrafts to count.
+     * @example
+     * // Count the number of IntegratedDrafts
+     * const count = await prisma.integratedDraft.count({
+     *   where: {
+     *     // ... the filter for the IntegratedDrafts we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegratedDraftCountArgs>(
+      args?: Subset<T, IntegratedDraftCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegratedDraftCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegratedDraft.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegratedDraftAggregateArgs>(args: Subset<T, IntegratedDraftAggregateArgs>): Prisma.PrismaPromise<GetIntegratedDraftAggregateType<T>>
+
+    /**
+     * Group by IntegratedDraft.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegratedDraftGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegratedDraftGroupByArgs['orderBy'] }
+        : { orderBy?: IntegratedDraftGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegratedDraftGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegratedDraftGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegratedDraft model
+   */
+  readonly fields: IntegratedDraftFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegratedDraft.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegratedDraftClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends IntegratedSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedSessionDefaultArgs<ExtArgs>>): Prisma__IntegratedSessionClient<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    performance<T extends IntegratedDraft$performanceArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedDraft$performanceArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegratedDraft model
+   */ 
+  interface IntegratedDraftFieldRefs {
+    readonly id: FieldRef<"IntegratedDraft", 'String'>
+    readonly sessionId: FieldRef<"IntegratedDraft", 'String'>
+    readonly title: FieldRef<"IntegratedDraft", 'String'>
+    readonly content: FieldRef<"IntegratedDraft", 'String'>
+    readonly contentType: FieldRef<"IntegratedDraft", 'String'>
+    readonly sourcesSummary: FieldRef<"IntegratedDraft", 'String'>
+    readonly newsContext: FieldRef<"IntegratedDraft", 'String'>
+    readonly buzzContext: FieldRef<"IntegratedDraft", 'String'>
+    readonly conceptId: FieldRef<"IntegratedDraft", 'String'>
+    readonly hook: FieldRef<"IntegratedDraft", 'String'>
+    readonly angle: FieldRef<"IntegratedDraft", 'String'>
+    readonly sourceNewsIds: FieldRef<"IntegratedDraft", 'String[]'>
+    readonly sourceBuzzIds: FieldRef<"IntegratedDraft", 'String[]'>
+    readonly generationStrategy: FieldRef<"IntegratedDraft", 'String'>
+    readonly generationData: FieldRef<"IntegratedDraft", 'Json'>
+    readonly hashtags: FieldRef<"IntegratedDraft", 'String[]'>
+    readonly visualGuide: FieldRef<"IntegratedDraft", 'String'>
+    readonly status: FieldRef<"IntegratedDraft", 'String'>
+    readonly scheduledAt: FieldRef<"IntegratedDraft", 'DateTime'>
+    readonly postedAt: FieldRef<"IntegratedDraft", 'DateTime'>
+    readonly postId: FieldRef<"IntegratedDraft", 'String'>
+    readonly viralScore: FieldRef<"IntegratedDraft", 'Float'>
+    readonly createdAt: FieldRef<"IntegratedDraft", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntegratedDraft", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegratedDraft findUnique
+   */
+  export type IntegratedDraftFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraft to fetch.
+     */
+    where: IntegratedDraftWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraft findUniqueOrThrow
+   */
+  export type IntegratedDraftFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraft to fetch.
+     */
+    where: IntegratedDraftWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraft findFirst
+   */
+  export type IntegratedDraftFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraft to fetch.
+     */
+    where?: IntegratedDraftWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDrafts to fetch.
+     */
+    orderBy?: IntegratedDraftOrderByWithRelationInput | IntegratedDraftOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedDrafts.
+     */
+    cursor?: IntegratedDraftWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDrafts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDrafts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedDrafts.
+     */
+    distinct?: IntegratedDraftScalarFieldEnum | IntegratedDraftScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraft findFirstOrThrow
+   */
+  export type IntegratedDraftFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraft to fetch.
+     */
+    where?: IntegratedDraftWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDrafts to fetch.
+     */
+    orderBy?: IntegratedDraftOrderByWithRelationInput | IntegratedDraftOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedDrafts.
+     */
+    cursor?: IntegratedDraftWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDrafts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDrafts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedDrafts.
+     */
+    distinct?: IntegratedDraftScalarFieldEnum | IntegratedDraftScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraft findMany
+   */
+  export type IntegratedDraftFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDrafts to fetch.
+     */
+    where?: IntegratedDraftWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDrafts to fetch.
+     */
+    orderBy?: IntegratedDraftOrderByWithRelationInput | IntegratedDraftOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegratedDrafts.
+     */
+    cursor?: IntegratedDraftWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDrafts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDrafts.
+     */
+    skip?: number
+    distinct?: IntegratedDraftScalarFieldEnum | IntegratedDraftScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraft create
+   */
+  export type IntegratedDraftCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegratedDraft.
+     */
+    data: XOR<IntegratedDraftCreateInput, IntegratedDraftUncheckedCreateInput>
+  }
+
+  /**
+   * IntegratedDraft createMany
+   */
+  export type IntegratedDraftCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegratedDrafts.
+     */
+    data: IntegratedDraftCreateManyInput | IntegratedDraftCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegratedDraft createManyAndReturn
+   */
+  export type IntegratedDraftCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IntegratedDrafts.
+     */
+    data: IntegratedDraftCreateManyInput | IntegratedDraftCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegratedDraft update
+   */
+  export type IntegratedDraftUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegratedDraft.
+     */
+    data: XOR<IntegratedDraftUpdateInput, IntegratedDraftUncheckedUpdateInput>
+    /**
+     * Choose, which IntegratedDraft to update.
+     */
+    where: IntegratedDraftWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraft updateMany
+   */
+  export type IntegratedDraftUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegratedDrafts.
+     */
+    data: XOR<IntegratedDraftUpdateManyMutationInput, IntegratedDraftUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegratedDrafts to update
+     */
+    where?: IntegratedDraftWhereInput
+  }
+
+  /**
+   * IntegratedDraft upsert
+   */
+  export type IntegratedDraftUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegratedDraft to update in case it exists.
+     */
+    where: IntegratedDraftWhereUniqueInput
+    /**
+     * In case the IntegratedDraft found by the `where` argument doesn't exist, create a new IntegratedDraft with this data.
+     */
+    create: XOR<IntegratedDraftCreateInput, IntegratedDraftUncheckedCreateInput>
+    /**
+     * In case the IntegratedDraft was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegratedDraftUpdateInput, IntegratedDraftUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegratedDraft delete
+   */
+  export type IntegratedDraftDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+    /**
+     * Filter which IntegratedDraft to delete.
+     */
+    where: IntegratedDraftWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraft deleteMany
+   */
+  export type IntegratedDraftDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedDrafts to delete
+     */
+    where?: IntegratedDraftWhereInput
+  }
+
+  /**
+   * IntegratedDraft.performance
+   */
+  export type IntegratedDraft$performanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    where?: IntegratedDraftPerformanceWhereInput
+  }
+
+  /**
+   * IntegratedDraft without action
+   */
+  export type IntegratedDraftDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraft
+     */
+    select?: IntegratedDraftSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IntegratedDraftPerformance
+   */
+
+  export type AggregateIntegratedDraftPerformance = {
+    _count: IntegratedDraftPerformanceCountAggregateOutputType | null
+    _avg: IntegratedDraftPerformanceAvgAggregateOutputType | null
+    _sum: IntegratedDraftPerformanceSumAggregateOutputType | null
+    _min: IntegratedDraftPerformanceMinAggregateOutputType | null
+    _max: IntegratedDraftPerformanceMaxAggregateOutputType | null
+  }
+
+  export type IntegratedDraftPerformanceAvgAggregateOutputType = {
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    predictionAccuracy: number | null
+  }
+
+  export type IntegratedDraftPerformanceSumAggregateOutputType = {
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    predictionAccuracy: number | null
+  }
+
+  export type IntegratedDraftPerformanceMinAggregateOutputType = {
+    id: string | null
+    draftId: string | null
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    predictionAccuracy: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegratedDraftPerformanceMaxAggregateOutputType = {
+    id: string | null
+    draftId: string | null
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    predictionAccuracy: number | null
+    collectedAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegratedDraftPerformanceCountAggregateOutputType = {
+    id: number
+    draftId: number
+    likes30m: number
+    retweets30m: number
+    replies30m: number
+    impressions30m: number
+    likes1h: number
+    retweets1h: number
+    replies1h: number
+    impressions1h: number
+    likes24h: number
+    retweets24h: number
+    replies24h: number
+    impressions24h: number
+    engagementRate: number
+    viralCoefficient: number
+    predictionAccuracy: number
+    collectedAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type IntegratedDraftPerformanceAvgAggregateInputType = {
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    predictionAccuracy?: true
+  }
+
+  export type IntegratedDraftPerformanceSumAggregateInputType = {
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    predictionAccuracy?: true
+  }
+
+  export type IntegratedDraftPerformanceMinAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    predictionAccuracy?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegratedDraftPerformanceMaxAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    predictionAccuracy?: true
+    collectedAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegratedDraftPerformanceCountAggregateInputType = {
+    id?: true
+    draftId?: true
+    likes30m?: true
+    retweets30m?: true
+    replies30m?: true
+    impressions30m?: true
+    likes1h?: true
+    retweets1h?: true
+    replies1h?: true
+    impressions1h?: true
+    likes24h?: true
+    retweets24h?: true
+    replies24h?: true
+    impressions24h?: true
+    engagementRate?: true
+    viralCoefficient?: true
+    predictionAccuracy?: true
+    collectedAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type IntegratedDraftPerformanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedDraftPerformance to aggregate.
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDraftPerformances to fetch.
+     */
+    orderBy?: IntegratedDraftPerformanceOrderByWithRelationInput | IntegratedDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegratedDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegratedDraftPerformances
+    **/
+    _count?: true | IntegratedDraftPerformanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IntegratedDraftPerformanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IntegratedDraftPerformanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegratedDraftPerformanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegratedDraftPerformanceMaxAggregateInputType
+  }
+
+  export type GetIntegratedDraftPerformanceAggregateType<T extends IntegratedDraftPerformanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegratedDraftPerformance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegratedDraftPerformance[P]>
+      : GetScalarType<T[P], AggregateIntegratedDraftPerformance[P]>
+  }
+
+
+
+
+  export type IntegratedDraftPerformanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegratedDraftPerformanceWhereInput
+    orderBy?: IntegratedDraftPerformanceOrderByWithAggregationInput | IntegratedDraftPerformanceOrderByWithAggregationInput[]
+    by: IntegratedDraftPerformanceScalarFieldEnum[] | IntegratedDraftPerformanceScalarFieldEnum
+    having?: IntegratedDraftPerformanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegratedDraftPerformanceCountAggregateInputType | true
+    _avg?: IntegratedDraftPerformanceAvgAggregateInputType
+    _sum?: IntegratedDraftPerformanceSumAggregateInputType
+    _min?: IntegratedDraftPerformanceMinAggregateInputType
+    _max?: IntegratedDraftPerformanceMaxAggregateInputType
+  }
+
+  export type IntegratedDraftPerformanceGroupByOutputType = {
+    id: string
+    draftId: string
+    likes30m: number | null
+    retweets30m: number | null
+    replies30m: number | null
+    impressions30m: number | null
+    likes1h: number | null
+    retweets1h: number | null
+    replies1h: number | null
+    impressions1h: number | null
+    likes24h: number | null
+    retweets24h: number | null
+    replies24h: number | null
+    impressions24h: number | null
+    engagementRate: number | null
+    viralCoefficient: number | null
+    predictionAccuracy: number | null
+    collectedAt: Date
+    updatedAt: Date
+    _count: IntegratedDraftPerformanceCountAggregateOutputType | null
+    _avg: IntegratedDraftPerformanceAvgAggregateOutputType | null
+    _sum: IntegratedDraftPerformanceSumAggregateOutputType | null
+    _min: IntegratedDraftPerformanceMinAggregateOutputType | null
+    _max: IntegratedDraftPerformanceMaxAggregateOutputType | null
+  }
+
+  type GetIntegratedDraftPerformanceGroupByPayload<T extends IntegratedDraftPerformanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegratedDraftPerformanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegratedDraftPerformanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegratedDraftPerformanceGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegratedDraftPerformanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegratedDraftPerformanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    predictionAccuracy?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+    draft?: boolean | IntegratedDraftDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedDraftPerformance"]>
+
+  export type IntegratedDraftPerformanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    predictionAccuracy?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+    draft?: boolean | IntegratedDraftDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integratedDraftPerformance"]>
+
+  export type IntegratedDraftPerformanceSelectScalar = {
+    id?: boolean
+    draftId?: boolean
+    likes30m?: boolean
+    retweets30m?: boolean
+    replies30m?: boolean
+    impressions30m?: boolean
+    likes1h?: boolean
+    retweets1h?: boolean
+    replies1h?: boolean
+    impressions1h?: boolean
+    likes24h?: boolean
+    retweets24h?: boolean
+    replies24h?: boolean
+    impressions24h?: boolean
+    engagementRate?: boolean
+    viralCoefficient?: boolean
+    predictionAccuracy?: boolean
+    collectedAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type IntegratedDraftPerformanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    draft?: boolean | IntegratedDraftDefaultArgs<ExtArgs>
+  }
+  export type IntegratedDraftPerformanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    draft?: boolean | IntegratedDraftDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegratedDraftPerformancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegratedDraftPerformance"
+    objects: {
+      draft: Prisma.$IntegratedDraftPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      draftId: string
+      likes30m: number | null
+      retweets30m: number | null
+      replies30m: number | null
+      impressions30m: number | null
+      likes1h: number | null
+      retweets1h: number | null
+      replies1h: number | null
+      impressions1h: number | null
+      likes24h: number | null
+      retweets24h: number | null
+      replies24h: number | null
+      impressions24h: number | null
+      engagementRate: number | null
+      viralCoefficient: number | null
+      predictionAccuracy: number | null
+      collectedAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["integratedDraftPerformance"]>
+    composites: {}
+  }
+
+  type IntegratedDraftPerformanceGetPayload<S extends boolean | null | undefined | IntegratedDraftPerformanceDefaultArgs> = $Result.GetResult<Prisma.$IntegratedDraftPerformancePayload, S>
+
+  type IntegratedDraftPerformanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IntegratedDraftPerformanceFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IntegratedDraftPerformanceCountAggregateInputType | true
+    }
+
+  export interface IntegratedDraftPerformanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegratedDraftPerformance'], meta: { name: 'IntegratedDraftPerformance' } }
+    /**
+     * Find zero or one IntegratedDraftPerformance that matches the filter.
+     * @param {IntegratedDraftPerformanceFindUniqueArgs} args - Arguments to find a IntegratedDraftPerformance
+     * @example
+     * // Get one IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegratedDraftPerformanceFindUniqueArgs>(args: SelectSubset<T, IntegratedDraftPerformanceFindUniqueArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one IntegratedDraftPerformance that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IntegratedDraftPerformanceFindUniqueOrThrowArgs} args - Arguments to find a IntegratedDraftPerformance
+     * @example
+     * // Get one IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegratedDraftPerformanceFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegratedDraftPerformanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first IntegratedDraftPerformance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceFindFirstArgs} args - Arguments to find a IntegratedDraftPerformance
+     * @example
+     * // Get one IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegratedDraftPerformanceFindFirstArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceFindFirstArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first IntegratedDraftPerformance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceFindFirstOrThrowArgs} args - Arguments to find a IntegratedDraftPerformance
+     * @example
+     * // Get one IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegratedDraftPerformanceFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more IntegratedDraftPerformances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegratedDraftPerformances
+     * const integratedDraftPerformances = await prisma.integratedDraftPerformance.findMany()
+     * 
+     * // Get first 10 IntegratedDraftPerformances
+     * const integratedDraftPerformances = await prisma.integratedDraftPerformance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integratedDraftPerformanceWithIdOnly = await prisma.integratedDraftPerformance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegratedDraftPerformanceFindManyArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a IntegratedDraftPerformance.
+     * @param {IntegratedDraftPerformanceCreateArgs} args - Arguments to create a IntegratedDraftPerformance.
+     * @example
+     * // Create one IntegratedDraftPerformance
+     * const IntegratedDraftPerformance = await prisma.integratedDraftPerformance.create({
+     *   data: {
+     *     // ... data to create a IntegratedDraftPerformance
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegratedDraftPerformanceCreateArgs>(args: SelectSubset<T, IntegratedDraftPerformanceCreateArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many IntegratedDraftPerformances.
+     * @param {IntegratedDraftPerformanceCreateManyArgs} args - Arguments to create many IntegratedDraftPerformances.
+     * @example
+     * // Create many IntegratedDraftPerformances
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegratedDraftPerformanceCreateManyArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegratedDraftPerformances and returns the data saved in the database.
+     * @param {IntegratedDraftPerformanceCreateManyAndReturnArgs} args - Arguments to create many IntegratedDraftPerformances.
+     * @example
+     * // Create many IntegratedDraftPerformances
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegratedDraftPerformances and only return the `id`
+     * const integratedDraftPerformanceWithIdOnly = await prisma.integratedDraftPerformance.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegratedDraftPerformanceCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a IntegratedDraftPerformance.
+     * @param {IntegratedDraftPerformanceDeleteArgs} args - Arguments to delete one IntegratedDraftPerformance.
+     * @example
+     * // Delete one IntegratedDraftPerformance
+     * const IntegratedDraftPerformance = await prisma.integratedDraftPerformance.delete({
+     *   where: {
+     *     // ... filter to delete one IntegratedDraftPerformance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegratedDraftPerformanceDeleteArgs>(args: SelectSubset<T, IntegratedDraftPerformanceDeleteArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one IntegratedDraftPerformance.
+     * @param {IntegratedDraftPerformanceUpdateArgs} args - Arguments to update one IntegratedDraftPerformance.
+     * @example
+     * // Update one IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegratedDraftPerformanceUpdateArgs>(args: SelectSubset<T, IntegratedDraftPerformanceUpdateArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more IntegratedDraftPerformances.
+     * @param {IntegratedDraftPerformanceDeleteManyArgs} args - Arguments to filter IntegratedDraftPerformances to delete.
+     * @example
+     * // Delete a few IntegratedDraftPerformances
+     * const { count } = await prisma.integratedDraftPerformance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegratedDraftPerformanceDeleteManyArgs>(args?: SelectSubset<T, IntegratedDraftPerformanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegratedDraftPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegratedDraftPerformances
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegratedDraftPerformanceUpdateManyArgs>(args: SelectSubset<T, IntegratedDraftPerformanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IntegratedDraftPerformance.
+     * @param {IntegratedDraftPerformanceUpsertArgs} args - Arguments to update or create a IntegratedDraftPerformance.
+     * @example
+     * // Update or create a IntegratedDraftPerformance
+     * const integratedDraftPerformance = await prisma.integratedDraftPerformance.upsert({
+     *   create: {
+     *     // ... data to create a IntegratedDraftPerformance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegratedDraftPerformance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegratedDraftPerformanceUpsertArgs>(args: SelectSubset<T, IntegratedDraftPerformanceUpsertArgs<ExtArgs>>): Prisma__IntegratedDraftPerformanceClient<$Result.GetResult<Prisma.$IntegratedDraftPerformancePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of IntegratedDraftPerformances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceCountArgs} args - Arguments to filter IntegratedDraftPerformances to count.
+     * @example
+     * // Count the number of IntegratedDraftPerformances
+     * const count = await prisma.integratedDraftPerformance.count({
+     *   where: {
+     *     // ... the filter for the IntegratedDraftPerformances we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegratedDraftPerformanceCountArgs>(
+      args?: Subset<T, IntegratedDraftPerformanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegratedDraftPerformanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegratedDraftPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegratedDraftPerformanceAggregateArgs>(args: Subset<T, IntegratedDraftPerformanceAggregateArgs>): Prisma.PrismaPromise<GetIntegratedDraftPerformanceAggregateType<T>>
+
+    /**
+     * Group by IntegratedDraftPerformance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegratedDraftPerformanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegratedDraftPerformanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegratedDraftPerformanceGroupByArgs['orderBy'] }
+        : { orderBy?: IntegratedDraftPerformanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegratedDraftPerformanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegratedDraftPerformanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegratedDraftPerformance model
+   */
+  readonly fields: IntegratedDraftPerformanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegratedDraftPerformance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegratedDraftPerformanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    draft<T extends IntegratedDraftDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegratedDraftDefaultArgs<ExtArgs>>): Prisma__IntegratedDraftClient<$Result.GetResult<Prisma.$IntegratedDraftPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegratedDraftPerformance model
+   */ 
+  interface IntegratedDraftPerformanceFieldRefs {
+    readonly id: FieldRef<"IntegratedDraftPerformance", 'String'>
+    readonly draftId: FieldRef<"IntegratedDraftPerformance", 'String'>
+    readonly likes30m: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly retweets30m: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly replies30m: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly impressions30m: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly likes1h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly retweets1h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly replies1h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly impressions1h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly likes24h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly retweets24h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly replies24h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly impressions24h: FieldRef<"IntegratedDraftPerformance", 'Int'>
+    readonly engagementRate: FieldRef<"IntegratedDraftPerformance", 'Float'>
+    readonly viralCoefficient: FieldRef<"IntegratedDraftPerformance", 'Float'>
+    readonly predictionAccuracy: FieldRef<"IntegratedDraftPerformance", 'Float'>
+    readonly collectedAt: FieldRef<"IntegratedDraftPerformance", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntegratedDraftPerformance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegratedDraftPerformance findUnique
+   */
+  export type IntegratedDraftPerformanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraftPerformance to fetch.
+     */
+    where: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraftPerformance findUniqueOrThrow
+   */
+  export type IntegratedDraftPerformanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraftPerformance to fetch.
+     */
+    where: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraftPerformance findFirst
+   */
+  export type IntegratedDraftPerformanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraftPerformance to fetch.
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDraftPerformances to fetch.
+     */
+    orderBy?: IntegratedDraftPerformanceOrderByWithRelationInput | IntegratedDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedDraftPerformances.
+     */
+    cursor?: IntegratedDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedDraftPerformances.
+     */
+    distinct?: IntegratedDraftPerformanceScalarFieldEnum | IntegratedDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraftPerformance findFirstOrThrow
+   */
+  export type IntegratedDraftPerformanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraftPerformance to fetch.
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDraftPerformances to fetch.
+     */
+    orderBy?: IntegratedDraftPerformanceOrderByWithRelationInput | IntegratedDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegratedDraftPerformances.
+     */
+    cursor?: IntegratedDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDraftPerformances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegratedDraftPerformances.
+     */
+    distinct?: IntegratedDraftPerformanceScalarFieldEnum | IntegratedDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraftPerformance findMany
+   */
+  export type IntegratedDraftPerformanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegratedDraftPerformances to fetch.
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegratedDraftPerformances to fetch.
+     */
+    orderBy?: IntegratedDraftPerformanceOrderByWithRelationInput | IntegratedDraftPerformanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegratedDraftPerformances.
+     */
+    cursor?: IntegratedDraftPerformanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegratedDraftPerformances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegratedDraftPerformances.
+     */
+    skip?: number
+    distinct?: IntegratedDraftPerformanceScalarFieldEnum | IntegratedDraftPerformanceScalarFieldEnum[]
+  }
+
+  /**
+   * IntegratedDraftPerformance create
+   */
+  export type IntegratedDraftPerformanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegratedDraftPerformance.
+     */
+    data: XOR<IntegratedDraftPerformanceCreateInput, IntegratedDraftPerformanceUncheckedCreateInput>
+  }
+
+  /**
+   * IntegratedDraftPerformance createMany
+   */
+  export type IntegratedDraftPerformanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegratedDraftPerformances.
+     */
+    data: IntegratedDraftPerformanceCreateManyInput | IntegratedDraftPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegratedDraftPerformance createManyAndReturn
+   */
+  export type IntegratedDraftPerformanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IntegratedDraftPerformances.
+     */
+    data: IntegratedDraftPerformanceCreateManyInput | IntegratedDraftPerformanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegratedDraftPerformance update
+   */
+  export type IntegratedDraftPerformanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegratedDraftPerformance.
+     */
+    data: XOR<IntegratedDraftPerformanceUpdateInput, IntegratedDraftPerformanceUncheckedUpdateInput>
+    /**
+     * Choose, which IntegratedDraftPerformance to update.
+     */
+    where: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraftPerformance updateMany
+   */
+  export type IntegratedDraftPerformanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegratedDraftPerformances.
+     */
+    data: XOR<IntegratedDraftPerformanceUpdateManyMutationInput, IntegratedDraftPerformanceUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegratedDraftPerformances to update
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+  }
+
+  /**
+   * IntegratedDraftPerformance upsert
+   */
+  export type IntegratedDraftPerformanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegratedDraftPerformance to update in case it exists.
+     */
+    where: IntegratedDraftPerformanceWhereUniqueInput
+    /**
+     * In case the IntegratedDraftPerformance found by the `where` argument doesn't exist, create a new IntegratedDraftPerformance with this data.
+     */
+    create: XOR<IntegratedDraftPerformanceCreateInput, IntegratedDraftPerformanceUncheckedCreateInput>
+    /**
+     * In case the IntegratedDraftPerformance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegratedDraftPerformanceUpdateInput, IntegratedDraftPerformanceUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegratedDraftPerformance delete
+   */
+  export type IntegratedDraftPerformanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+    /**
+     * Filter which IntegratedDraftPerformance to delete.
+     */
+    where: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  /**
+   * IntegratedDraftPerformance deleteMany
+   */
+  export type IntegratedDraftPerformanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegratedDraftPerformances to delete
+     */
+    where?: IntegratedDraftPerformanceWhereInput
+  }
+
+  /**
+   * IntegratedDraftPerformance without action
+   */
+  export type IntegratedDraftPerformanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedDraftPerformance
+     */
+    select?: IntegratedDraftPerformanceSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedDraftPerformanceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model ScheduledRetweet
    */
 
@@ -29633,6 +36789,7 @@ export namespace Prisma {
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
     characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
     newsRelations?: boolean | ViralSession$newsRelationsArgs<ExtArgs>
+    integratedSessions?: boolean | ViralSession$integratedSessionsArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viralSession"]>
 
@@ -29671,6 +36828,7 @@ export namespace Prisma {
     drafts?: boolean | ViralSession$draftsArgs<ExtArgs>
     characterProfile?: boolean | ViralSession$characterProfileArgs<ExtArgs>
     newsRelations?: boolean | ViralSession$newsRelationsArgs<ExtArgs>
+    integratedSessions?: boolean | ViralSession$integratedSessionsArgs<ExtArgs>
     _count?: boolean | ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ViralSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -29683,6 +36841,7 @@ export namespace Prisma {
       drafts: Prisma.$ViralDraftV2Payload<ExtArgs>[]
       characterProfile: Prisma.$CharacterProfilePayload<ExtArgs> | null
       newsRelations: Prisma.$NewsViralRelationPayload<ExtArgs>[]
+      integratedSessions: Prisma.$IntegratedSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -30064,6 +37223,7 @@ export namespace Prisma {
     drafts<T extends ViralSession$draftsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$draftsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ViralDraftV2Payload<ExtArgs>, T, "findMany"> | Null>
     characterProfile<T extends ViralSession$characterProfileArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$characterProfileArgs<ExtArgs>>): Prisma__CharacterProfileClient<$Result.GetResult<Prisma.$CharacterProfilePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     newsRelations<T extends ViralSession$newsRelationsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$newsRelationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NewsViralRelationPayload<ExtArgs>, T, "findMany"> | Null>
+    integratedSessions<T extends ViralSession$integratedSessionsArgs<ExtArgs> = {}>(args?: Subset<T, ViralSession$integratedSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegratedSessionPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -30475,6 +37635,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: NewsViralRelationScalarFieldEnum | NewsViralRelationScalarFieldEnum[]
+  }
+
+  /**
+   * ViralSession.integratedSessions
+   */
+  export type ViralSession$integratedSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegratedSession
+     */
+    select?: IntegratedSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegratedSessionInclude<ExtArgs> | null
+    where?: IntegratedSessionWhereInput
+    orderBy?: IntegratedSessionOrderByWithRelationInput | IntegratedSessionOrderByWithRelationInput[]
+    cursor?: IntegratedSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegratedSessionScalarFieldEnum | IntegratedSessionScalarFieldEnum[]
   }
 
   /**
@@ -33890,6 +41070,1114 @@ export namespace Prisma {
 
 
   /**
+   * Model BuzzInfluencer
+   */
+
+  export type AggregateBuzzInfluencer = {
+    _count: BuzzInfluencerCountAggregateOutputType | null
+    _avg: BuzzInfluencerAvgAggregateOutputType | null
+    _sum: BuzzInfluencerSumAggregateOutputType | null
+    _min: BuzzInfluencerMinAggregateOutputType | null
+    _max: BuzzInfluencerMaxAggregateOutputType | null
+  }
+
+  export type BuzzInfluencerAvgAggregateOutputType = {
+    followers: number | null
+    following: number | null
+    engagementRate: number | null
+    viralScore: number | null
+    consistencyScore: number | null
+  }
+
+  export type BuzzInfluencerSumAggregateOutputType = {
+    followers: number | null
+    following: number | null
+    engagementRate: number | null
+    viralScore: number | null
+    consistencyScore: number | null
+  }
+
+  export type BuzzInfluencerMinAggregateOutputType = {
+    id: string | null
+    username: string | null
+    userId: string | null
+    followers: number | null
+    following: number | null
+    verified: boolean | null
+    profileImage: string | null
+    bio: string | null
+    primaryCategory: string | null
+    engagementRate: number | null
+    viralScore: number | null
+    consistencyScore: number | null
+    lastActiveAt: Date | null
+    lastAnalyzedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BuzzInfluencerMaxAggregateOutputType = {
+    id: string | null
+    username: string | null
+    userId: string | null
+    followers: number | null
+    following: number | null
+    verified: boolean | null
+    profileImage: string | null
+    bio: string | null
+    primaryCategory: string | null
+    engagementRate: number | null
+    viralScore: number | null
+    consistencyScore: number | null
+    lastActiveAt: Date | null
+    lastAnalyzedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type BuzzInfluencerCountAggregateOutputType = {
+    id: number
+    username: number
+    userId: number
+    followers: number
+    following: number
+    verified: number
+    profileImage: number
+    bio: number
+    metrics7d: number
+    metrics30d: number
+    metricsAllTime: number
+    categoryScores: number
+    primaryCategory: number
+    engagementRate: number
+    viralScore: number
+    consistencyScore: number
+    bestPostingHours: number
+    postingFrequency: number
+    lastActiveAt: number
+    lastAnalyzedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type BuzzInfluencerAvgAggregateInputType = {
+    followers?: true
+    following?: true
+    engagementRate?: true
+    viralScore?: true
+    consistencyScore?: true
+  }
+
+  export type BuzzInfluencerSumAggregateInputType = {
+    followers?: true
+    following?: true
+    engagementRate?: true
+    viralScore?: true
+    consistencyScore?: true
+  }
+
+  export type BuzzInfluencerMinAggregateInputType = {
+    id?: true
+    username?: true
+    userId?: true
+    followers?: true
+    following?: true
+    verified?: true
+    profileImage?: true
+    bio?: true
+    primaryCategory?: true
+    engagementRate?: true
+    viralScore?: true
+    consistencyScore?: true
+    lastActiveAt?: true
+    lastAnalyzedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BuzzInfluencerMaxAggregateInputType = {
+    id?: true
+    username?: true
+    userId?: true
+    followers?: true
+    following?: true
+    verified?: true
+    profileImage?: true
+    bio?: true
+    primaryCategory?: true
+    engagementRate?: true
+    viralScore?: true
+    consistencyScore?: true
+    lastActiveAt?: true
+    lastAnalyzedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type BuzzInfluencerCountAggregateInputType = {
+    id?: true
+    username?: true
+    userId?: true
+    followers?: true
+    following?: true
+    verified?: true
+    profileImage?: true
+    bio?: true
+    metrics7d?: true
+    metrics30d?: true
+    metricsAllTime?: true
+    categoryScores?: true
+    primaryCategory?: true
+    engagementRate?: true
+    viralScore?: true
+    consistencyScore?: true
+    bestPostingHours?: true
+    postingFrequency?: true
+    lastActiveAt?: true
+    lastAnalyzedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type BuzzInfluencerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BuzzInfluencer to aggregate.
+     */
+    where?: BuzzInfluencerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzInfluencers to fetch.
+     */
+    orderBy?: BuzzInfluencerOrderByWithRelationInput | BuzzInfluencerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: BuzzInfluencerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzInfluencers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzInfluencers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned BuzzInfluencers
+    **/
+    _count?: true | BuzzInfluencerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: BuzzInfluencerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BuzzInfluencerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: BuzzInfluencerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: BuzzInfluencerMaxAggregateInputType
+  }
+
+  export type GetBuzzInfluencerAggregateType<T extends BuzzInfluencerAggregateArgs> = {
+        [P in keyof T & keyof AggregateBuzzInfluencer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBuzzInfluencer[P]>
+      : GetScalarType<T[P], AggregateBuzzInfluencer[P]>
+  }
+
+
+
+
+  export type BuzzInfluencerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BuzzInfluencerWhereInput
+    orderBy?: BuzzInfluencerOrderByWithAggregationInput | BuzzInfluencerOrderByWithAggregationInput[]
+    by: BuzzInfluencerScalarFieldEnum[] | BuzzInfluencerScalarFieldEnum
+    having?: BuzzInfluencerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: BuzzInfluencerCountAggregateInputType | true
+    _avg?: BuzzInfluencerAvgAggregateInputType
+    _sum?: BuzzInfluencerSumAggregateInputType
+    _min?: BuzzInfluencerMinAggregateInputType
+    _max?: BuzzInfluencerMaxAggregateInputType
+  }
+
+  export type BuzzInfluencerGroupByOutputType = {
+    id: string
+    username: string
+    userId: string
+    followers: number
+    following: number
+    verified: boolean
+    profileImage: string | null
+    bio: string | null
+    metrics7d: JsonValue | null
+    metrics30d: JsonValue | null
+    metricsAllTime: JsonValue | null
+    categoryScores: JsonValue
+    primaryCategory: string | null
+    engagementRate: number
+    viralScore: number
+    consistencyScore: number
+    bestPostingHours: JsonValue | null
+    postingFrequency: JsonValue | null
+    lastActiveAt: Date | null
+    lastAnalyzedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: BuzzInfluencerCountAggregateOutputType | null
+    _avg: BuzzInfluencerAvgAggregateOutputType | null
+    _sum: BuzzInfluencerSumAggregateOutputType | null
+    _min: BuzzInfluencerMinAggregateOutputType | null
+    _max: BuzzInfluencerMaxAggregateOutputType | null
+  }
+
+  type GetBuzzInfluencerGroupByPayload<T extends BuzzInfluencerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<BuzzInfluencerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof BuzzInfluencerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], BuzzInfluencerGroupByOutputType[P]>
+            : GetScalarType<T[P], BuzzInfluencerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type BuzzInfluencerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    userId?: boolean
+    followers?: boolean
+    following?: boolean
+    verified?: boolean
+    profileImage?: boolean
+    bio?: boolean
+    metrics7d?: boolean
+    metrics30d?: boolean
+    metricsAllTime?: boolean
+    categoryScores?: boolean
+    primaryCategory?: boolean
+    engagementRate?: boolean
+    viralScore?: boolean
+    consistencyScore?: boolean
+    bestPostingHours?: boolean
+    postingFrequency?: boolean
+    lastActiveAt?: boolean
+    lastAnalyzedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["buzzInfluencer"]>
+
+  export type BuzzInfluencerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    userId?: boolean
+    followers?: boolean
+    following?: boolean
+    verified?: boolean
+    profileImage?: boolean
+    bio?: boolean
+    metrics7d?: boolean
+    metrics30d?: boolean
+    metricsAllTime?: boolean
+    categoryScores?: boolean
+    primaryCategory?: boolean
+    engagementRate?: boolean
+    viralScore?: boolean
+    consistencyScore?: boolean
+    bestPostingHours?: boolean
+    postingFrequency?: boolean
+    lastActiveAt?: boolean
+    lastAnalyzedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["buzzInfluencer"]>
+
+  export type BuzzInfluencerSelectScalar = {
+    id?: boolean
+    username?: boolean
+    userId?: boolean
+    followers?: boolean
+    following?: boolean
+    verified?: boolean
+    profileImage?: boolean
+    bio?: boolean
+    metrics7d?: boolean
+    metrics30d?: boolean
+    metricsAllTime?: boolean
+    categoryScores?: boolean
+    primaryCategory?: boolean
+    engagementRate?: boolean
+    viralScore?: boolean
+    consistencyScore?: boolean
+    bestPostingHours?: boolean
+    postingFrequency?: boolean
+    lastActiveAt?: boolean
+    lastAnalyzedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $BuzzInfluencerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "BuzzInfluencer"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      username: string
+      userId: string
+      followers: number
+      following: number
+      verified: boolean
+      profileImage: string | null
+      bio: string | null
+      metrics7d: Prisma.JsonValue | null
+      metrics30d: Prisma.JsonValue | null
+      metricsAllTime: Prisma.JsonValue | null
+      categoryScores: Prisma.JsonValue
+      primaryCategory: string | null
+      engagementRate: number
+      viralScore: number
+      consistencyScore: number
+      bestPostingHours: Prisma.JsonValue | null
+      postingFrequency: Prisma.JsonValue | null
+      lastActiveAt: Date | null
+      lastAnalyzedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["buzzInfluencer"]>
+    composites: {}
+  }
+
+  type BuzzInfluencerGetPayload<S extends boolean | null | undefined | BuzzInfluencerDefaultArgs> = $Result.GetResult<Prisma.$BuzzInfluencerPayload, S>
+
+  type BuzzInfluencerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<BuzzInfluencerFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: BuzzInfluencerCountAggregateInputType | true
+    }
+
+  export interface BuzzInfluencerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['BuzzInfluencer'], meta: { name: 'BuzzInfluencer' } }
+    /**
+     * Find zero or one BuzzInfluencer that matches the filter.
+     * @param {BuzzInfluencerFindUniqueArgs} args - Arguments to find a BuzzInfluencer
+     * @example
+     * // Get one BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends BuzzInfluencerFindUniqueArgs>(args: SelectSubset<T, BuzzInfluencerFindUniqueArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one BuzzInfluencer that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {BuzzInfluencerFindUniqueOrThrowArgs} args - Arguments to find a BuzzInfluencer
+     * @example
+     * // Get one BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends BuzzInfluencerFindUniqueOrThrowArgs>(args: SelectSubset<T, BuzzInfluencerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first BuzzInfluencer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerFindFirstArgs} args - Arguments to find a BuzzInfluencer
+     * @example
+     * // Get one BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends BuzzInfluencerFindFirstArgs>(args?: SelectSubset<T, BuzzInfluencerFindFirstArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first BuzzInfluencer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerFindFirstOrThrowArgs} args - Arguments to find a BuzzInfluencer
+     * @example
+     * // Get one BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends BuzzInfluencerFindFirstOrThrowArgs>(args?: SelectSubset<T, BuzzInfluencerFindFirstOrThrowArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more BuzzInfluencers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all BuzzInfluencers
+     * const buzzInfluencers = await prisma.buzzInfluencer.findMany()
+     * 
+     * // Get first 10 BuzzInfluencers
+     * const buzzInfluencers = await prisma.buzzInfluencer.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const buzzInfluencerWithIdOnly = await prisma.buzzInfluencer.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends BuzzInfluencerFindManyArgs>(args?: SelectSubset<T, BuzzInfluencerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a BuzzInfluencer.
+     * @param {BuzzInfluencerCreateArgs} args - Arguments to create a BuzzInfluencer.
+     * @example
+     * // Create one BuzzInfluencer
+     * const BuzzInfluencer = await prisma.buzzInfluencer.create({
+     *   data: {
+     *     // ... data to create a BuzzInfluencer
+     *   }
+     * })
+     * 
+     */
+    create<T extends BuzzInfluencerCreateArgs>(args: SelectSubset<T, BuzzInfluencerCreateArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many BuzzInfluencers.
+     * @param {BuzzInfluencerCreateManyArgs} args - Arguments to create many BuzzInfluencers.
+     * @example
+     * // Create many BuzzInfluencers
+     * const buzzInfluencer = await prisma.buzzInfluencer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends BuzzInfluencerCreateManyArgs>(args?: SelectSubset<T, BuzzInfluencerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many BuzzInfluencers and returns the data saved in the database.
+     * @param {BuzzInfluencerCreateManyAndReturnArgs} args - Arguments to create many BuzzInfluencers.
+     * @example
+     * // Create many BuzzInfluencers
+     * const buzzInfluencer = await prisma.buzzInfluencer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many BuzzInfluencers and only return the `id`
+     * const buzzInfluencerWithIdOnly = await prisma.buzzInfluencer.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends BuzzInfluencerCreateManyAndReturnArgs>(args?: SelectSubset<T, BuzzInfluencerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a BuzzInfluencer.
+     * @param {BuzzInfluencerDeleteArgs} args - Arguments to delete one BuzzInfluencer.
+     * @example
+     * // Delete one BuzzInfluencer
+     * const BuzzInfluencer = await prisma.buzzInfluencer.delete({
+     *   where: {
+     *     // ... filter to delete one BuzzInfluencer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends BuzzInfluencerDeleteArgs>(args: SelectSubset<T, BuzzInfluencerDeleteArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one BuzzInfluencer.
+     * @param {BuzzInfluencerUpdateArgs} args - Arguments to update one BuzzInfluencer.
+     * @example
+     * // Update one BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends BuzzInfluencerUpdateArgs>(args: SelectSubset<T, BuzzInfluencerUpdateArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more BuzzInfluencers.
+     * @param {BuzzInfluencerDeleteManyArgs} args - Arguments to filter BuzzInfluencers to delete.
+     * @example
+     * // Delete a few BuzzInfluencers
+     * const { count } = await prisma.buzzInfluencer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends BuzzInfluencerDeleteManyArgs>(args?: SelectSubset<T, BuzzInfluencerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more BuzzInfluencers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many BuzzInfluencers
+     * const buzzInfluencer = await prisma.buzzInfluencer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends BuzzInfluencerUpdateManyArgs>(args: SelectSubset<T, BuzzInfluencerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one BuzzInfluencer.
+     * @param {BuzzInfluencerUpsertArgs} args - Arguments to update or create a BuzzInfluencer.
+     * @example
+     * // Update or create a BuzzInfluencer
+     * const buzzInfluencer = await prisma.buzzInfluencer.upsert({
+     *   create: {
+     *     // ... data to create a BuzzInfluencer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the BuzzInfluencer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends BuzzInfluencerUpsertArgs>(args: SelectSubset<T, BuzzInfluencerUpsertArgs<ExtArgs>>): Prisma__BuzzInfluencerClient<$Result.GetResult<Prisma.$BuzzInfluencerPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of BuzzInfluencers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerCountArgs} args - Arguments to filter BuzzInfluencers to count.
+     * @example
+     * // Count the number of BuzzInfluencers
+     * const count = await prisma.buzzInfluencer.count({
+     *   where: {
+     *     // ... the filter for the BuzzInfluencers we want to count
+     *   }
+     * })
+    **/
+    count<T extends BuzzInfluencerCountArgs>(
+      args?: Subset<T, BuzzInfluencerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], BuzzInfluencerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a BuzzInfluencer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends BuzzInfluencerAggregateArgs>(args: Subset<T, BuzzInfluencerAggregateArgs>): Prisma.PrismaPromise<GetBuzzInfluencerAggregateType<T>>
+
+    /**
+     * Group by BuzzInfluencer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BuzzInfluencerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends BuzzInfluencerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: BuzzInfluencerGroupByArgs['orderBy'] }
+        : { orderBy?: BuzzInfluencerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, BuzzInfluencerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBuzzInfluencerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the BuzzInfluencer model
+   */
+  readonly fields: BuzzInfluencerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for BuzzInfluencer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__BuzzInfluencerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the BuzzInfluencer model
+   */ 
+  interface BuzzInfluencerFieldRefs {
+    readonly id: FieldRef<"BuzzInfluencer", 'String'>
+    readonly username: FieldRef<"BuzzInfluencer", 'String'>
+    readonly userId: FieldRef<"BuzzInfluencer", 'String'>
+    readonly followers: FieldRef<"BuzzInfluencer", 'Int'>
+    readonly following: FieldRef<"BuzzInfluencer", 'Int'>
+    readonly verified: FieldRef<"BuzzInfluencer", 'Boolean'>
+    readonly profileImage: FieldRef<"BuzzInfluencer", 'String'>
+    readonly bio: FieldRef<"BuzzInfluencer", 'String'>
+    readonly metrics7d: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly metrics30d: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly metricsAllTime: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly categoryScores: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly primaryCategory: FieldRef<"BuzzInfluencer", 'String'>
+    readonly engagementRate: FieldRef<"BuzzInfluencer", 'Float'>
+    readonly viralScore: FieldRef<"BuzzInfluencer", 'Float'>
+    readonly consistencyScore: FieldRef<"BuzzInfluencer", 'Float'>
+    readonly bestPostingHours: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly postingFrequency: FieldRef<"BuzzInfluencer", 'Json'>
+    readonly lastActiveAt: FieldRef<"BuzzInfluencer", 'DateTime'>
+    readonly lastAnalyzedAt: FieldRef<"BuzzInfluencer", 'DateTime'>
+    readonly createdAt: FieldRef<"BuzzInfluencer", 'DateTime'>
+    readonly updatedAt: FieldRef<"BuzzInfluencer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * BuzzInfluencer findUnique
+   */
+  export type BuzzInfluencerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzInfluencer to fetch.
+     */
+    where: BuzzInfluencerWhereUniqueInput
+  }
+
+  /**
+   * BuzzInfluencer findUniqueOrThrow
+   */
+  export type BuzzInfluencerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzInfluencer to fetch.
+     */
+    where: BuzzInfluencerWhereUniqueInput
+  }
+
+  /**
+   * BuzzInfluencer findFirst
+   */
+  export type BuzzInfluencerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzInfluencer to fetch.
+     */
+    where?: BuzzInfluencerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzInfluencers to fetch.
+     */
+    orderBy?: BuzzInfluencerOrderByWithRelationInput | BuzzInfluencerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BuzzInfluencers.
+     */
+    cursor?: BuzzInfluencerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzInfluencers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzInfluencers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BuzzInfluencers.
+     */
+    distinct?: BuzzInfluencerScalarFieldEnum | BuzzInfluencerScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzInfluencer findFirstOrThrow
+   */
+  export type BuzzInfluencerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzInfluencer to fetch.
+     */
+    where?: BuzzInfluencerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzInfluencers to fetch.
+     */
+    orderBy?: BuzzInfluencerOrderByWithRelationInput | BuzzInfluencerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BuzzInfluencers.
+     */
+    cursor?: BuzzInfluencerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzInfluencers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzInfluencers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BuzzInfluencers.
+     */
+    distinct?: BuzzInfluencerScalarFieldEnum | BuzzInfluencerScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzInfluencer findMany
+   */
+  export type BuzzInfluencerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter, which BuzzInfluencers to fetch.
+     */
+    where?: BuzzInfluencerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BuzzInfluencers to fetch.
+     */
+    orderBy?: BuzzInfluencerOrderByWithRelationInput | BuzzInfluencerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing BuzzInfluencers.
+     */
+    cursor?: BuzzInfluencerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BuzzInfluencers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BuzzInfluencers.
+     */
+    skip?: number
+    distinct?: BuzzInfluencerScalarFieldEnum | BuzzInfluencerScalarFieldEnum[]
+  }
+
+  /**
+   * BuzzInfluencer create
+   */
+  export type BuzzInfluencerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * The data needed to create a BuzzInfluencer.
+     */
+    data: XOR<BuzzInfluencerCreateInput, BuzzInfluencerUncheckedCreateInput>
+  }
+
+  /**
+   * BuzzInfluencer createMany
+   */
+  export type BuzzInfluencerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many BuzzInfluencers.
+     */
+    data: BuzzInfluencerCreateManyInput | BuzzInfluencerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BuzzInfluencer createManyAndReturn
+   */
+  export type BuzzInfluencerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many BuzzInfluencers.
+     */
+    data: BuzzInfluencerCreateManyInput | BuzzInfluencerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * BuzzInfluencer update
+   */
+  export type BuzzInfluencerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * The data needed to update a BuzzInfluencer.
+     */
+    data: XOR<BuzzInfluencerUpdateInput, BuzzInfluencerUncheckedUpdateInput>
+    /**
+     * Choose, which BuzzInfluencer to update.
+     */
+    where: BuzzInfluencerWhereUniqueInput
+  }
+
+  /**
+   * BuzzInfluencer updateMany
+   */
+  export type BuzzInfluencerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update BuzzInfluencers.
+     */
+    data: XOR<BuzzInfluencerUpdateManyMutationInput, BuzzInfluencerUncheckedUpdateManyInput>
+    /**
+     * Filter which BuzzInfluencers to update
+     */
+    where?: BuzzInfluencerWhereInput
+  }
+
+  /**
+   * BuzzInfluencer upsert
+   */
+  export type BuzzInfluencerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * The filter to search for the BuzzInfluencer to update in case it exists.
+     */
+    where: BuzzInfluencerWhereUniqueInput
+    /**
+     * In case the BuzzInfluencer found by the `where` argument doesn't exist, create a new BuzzInfluencer with this data.
+     */
+    create: XOR<BuzzInfluencerCreateInput, BuzzInfluencerUncheckedCreateInput>
+    /**
+     * In case the BuzzInfluencer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<BuzzInfluencerUpdateInput, BuzzInfluencerUncheckedUpdateInput>
+  }
+
+  /**
+   * BuzzInfluencer delete
+   */
+  export type BuzzInfluencerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+    /**
+     * Filter which BuzzInfluencer to delete.
+     */
+    where: BuzzInfluencerWhereUniqueInput
+  }
+
+  /**
+   * BuzzInfluencer deleteMany
+   */
+  export type BuzzInfluencerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which BuzzInfluencers to delete
+     */
+    where?: BuzzInfluencerWhereInput
+  }
+
+  /**
+   * BuzzInfluencer without action
+   */
+  export type BuzzInfluencerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BuzzInfluencer
+     */
+    select?: BuzzInfluencerSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -33927,6 +42215,21 @@ export namespace Prisma {
   };
 
   export type BuzzPostScalarFieldEnum = (typeof BuzzPostScalarFieldEnum)[keyof typeof BuzzPostScalarFieldEnum]
+
+
+  export const BuzzConfigScalarFieldEnum: {
+    id: 'id',
+    keywords: 'keywords',
+    accounts: 'accounts',
+    minEngagement: 'minEngagement',
+    minImpressions: 'minImpressions',
+    collectInterval: 'collectInterval',
+    enabled: 'enabled',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BuzzConfigScalarFieldEnum = (typeof BuzzConfigScalarFieldEnum)[keyof typeof BuzzConfigScalarFieldEnum]
 
 
   export const ScheduledPostScalarFieldEnum: {
@@ -34254,6 +42557,110 @@ export namespace Prisma {
   export type CotDraftPerformanceScalarFieldEnum = (typeof CotDraftPerformanceScalarFieldEnum)[keyof typeof CotDraftPerformanceScalarFieldEnum]
 
 
+  export const UnifiedContentSourceScalarFieldEnum: {
+    id: 'id',
+    sourceType: 'sourceType',
+    sourceId: 'sourceId',
+    contentSummary: 'contentSummary',
+    importanceScore: 'importanceScore',
+    viralPotential: 'viralPotential',
+    keywords: 'keywords',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UnifiedContentSourceScalarFieldEnum = (typeof UnifiedContentSourceScalarFieldEnum)[keyof typeof UnifiedContentSourceScalarFieldEnum]
+
+
+  export const IntegratedSessionScalarFieldEnum: {
+    id: 'id',
+    sessionType: 'sessionType',
+    v2SessionId: 'v2SessionId',
+    newsArticleIds: 'newsArticleIds',
+    buzzPostIds: 'buzzPostIds',
+    generationContext: 'generationContext',
+    performanceMetrics: 'performanceMetrics',
+    status: 'status',
+    currentStep: 'currentStep',
+    theme: 'theme',
+    character: 'character',
+    platform: 'platform',
+    strategy: 'strategy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    completedAt: 'completedAt'
+  };
+
+  export type IntegratedSessionScalarFieldEnum = (typeof IntegratedSessionScalarFieldEnum)[keyof typeof IntegratedSessionScalarFieldEnum]
+
+
+  export const IntegratedSessionSourceScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    sourceId: 'sourceId',
+    relevanceScore: 'relevanceScore',
+    usageType: 'usageType'
+  };
+
+  export type IntegratedSessionSourceScalarFieldEnum = (typeof IntegratedSessionSourceScalarFieldEnum)[keyof typeof IntegratedSessionSourceScalarFieldEnum]
+
+
+  export const IntegratedDraftScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    title: 'title',
+    content: 'content',
+    contentType: 'contentType',
+    sourcesSummary: 'sourcesSummary',
+    newsContext: 'newsContext',
+    buzzContext: 'buzzContext',
+    conceptId: 'conceptId',
+    hook: 'hook',
+    angle: 'angle',
+    sourceNewsIds: 'sourceNewsIds',
+    sourceBuzzIds: 'sourceBuzzIds',
+    generationStrategy: 'generationStrategy',
+    generationData: 'generationData',
+    hashtags: 'hashtags',
+    visualGuide: 'visualGuide',
+    status: 'status',
+    scheduledAt: 'scheduledAt',
+    postedAt: 'postedAt',
+    postId: 'postId',
+    viralScore: 'viralScore',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type IntegratedDraftScalarFieldEnum = (typeof IntegratedDraftScalarFieldEnum)[keyof typeof IntegratedDraftScalarFieldEnum]
+
+
+  export const IntegratedDraftPerformanceScalarFieldEnum: {
+    id: 'id',
+    draftId: 'draftId',
+    likes30m: 'likes30m',
+    retweets30m: 'retweets30m',
+    replies30m: 'replies30m',
+    impressions30m: 'impressions30m',
+    likes1h: 'likes1h',
+    retweets1h: 'retweets1h',
+    replies1h: 'replies1h',
+    impressions1h: 'impressions1h',
+    likes24h: 'likes24h',
+    retweets24h: 'retweets24h',
+    replies24h: 'replies24h',
+    impressions24h: 'impressions24h',
+    engagementRate: 'engagementRate',
+    viralCoefficient: 'viralCoefficient',
+    predictionAccuracy: 'predictionAccuracy',
+    collectedAt: 'collectedAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type IntegratedDraftPerformanceScalarFieldEnum = (typeof IntegratedDraftPerformanceScalarFieldEnum)[keyof typeof IntegratedDraftPerformanceScalarFieldEnum]
+
+
   export const ScheduledRetweetScalarFieldEnum: {
     id: 'id',
     originalPostId: 'originalPostId',
@@ -34416,6 +42823,34 @@ export namespace Prisma {
   };
 
   export type CharacterProfileScalarFieldEnum = (typeof CharacterProfileScalarFieldEnum)[keyof typeof CharacterProfileScalarFieldEnum]
+
+
+  export const BuzzInfluencerScalarFieldEnum: {
+    id: 'id',
+    username: 'username',
+    userId: 'userId',
+    followers: 'followers',
+    following: 'following',
+    verified: 'verified',
+    profileImage: 'profileImage',
+    bio: 'bio',
+    metrics7d: 'metrics7d',
+    metrics30d: 'metrics30d',
+    metricsAllTime: 'metricsAllTime',
+    categoryScores: 'categoryScores',
+    primaryCategory: 'primaryCategory',
+    engagementRate: 'engagementRate',
+    viralScore: 'viralScore',
+    consistencyScore: 'consistencyScore',
+    bestPostingHours: 'bestPostingHours',
+    postingFrequency: 'postingFrequency',
+    lastActiveAt: 'lastActiveAt',
+    lastAnalyzedAt: 'lastAnalyzedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type BuzzInfluencerScalarFieldEnum = (typeof BuzzInfluencerScalarFieldEnum)[keyof typeof BuzzInfluencerScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -34772,6 +43207,80 @@ export namespace Prisma {
     authorFollowers?: IntNullableWithAggregatesFilter<"BuzzPost"> | number | null
     authorFollowing?: IntNullableWithAggregatesFilter<"BuzzPost"> | number | null
     authorVerified?: BoolNullableWithAggregatesFilter<"BuzzPost"> | boolean | null
+  }
+
+  export type BuzzConfigWhereInput = {
+    AND?: BuzzConfigWhereInput | BuzzConfigWhereInput[]
+    OR?: BuzzConfigWhereInput[]
+    NOT?: BuzzConfigWhereInput | BuzzConfigWhereInput[]
+    id?: StringFilter<"BuzzConfig"> | string
+    keywords?: StringNullableListFilter<"BuzzConfig">
+    accounts?: StringNullableListFilter<"BuzzConfig">
+    minEngagement?: IntFilter<"BuzzConfig"> | number
+    minImpressions?: IntFilter<"BuzzConfig"> | number
+    collectInterval?: IntFilter<"BuzzConfig"> | number
+    enabled?: BoolFilter<"BuzzConfig"> | boolean
+    createdAt?: DateTimeFilter<"BuzzConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"BuzzConfig"> | Date | string
+  }
+
+  export type BuzzConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    keywords?: SortOrder
+    accounts?: SortOrder
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+    enabled?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: BuzzConfigWhereInput | BuzzConfigWhereInput[]
+    OR?: BuzzConfigWhereInput[]
+    NOT?: BuzzConfigWhereInput | BuzzConfigWhereInput[]
+    keywords?: StringNullableListFilter<"BuzzConfig">
+    accounts?: StringNullableListFilter<"BuzzConfig">
+    minEngagement?: IntFilter<"BuzzConfig"> | number
+    minImpressions?: IntFilter<"BuzzConfig"> | number
+    collectInterval?: IntFilter<"BuzzConfig"> | number
+    enabled?: BoolFilter<"BuzzConfig"> | boolean
+    createdAt?: DateTimeFilter<"BuzzConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"BuzzConfig"> | Date | string
+  }, "id">
+
+  export type BuzzConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    keywords?: SortOrder
+    accounts?: SortOrder
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+    enabled?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BuzzConfigCountOrderByAggregateInput
+    _avg?: BuzzConfigAvgOrderByAggregateInput
+    _max?: BuzzConfigMaxOrderByAggregateInput
+    _min?: BuzzConfigMinOrderByAggregateInput
+    _sum?: BuzzConfigSumOrderByAggregateInput
+  }
+
+  export type BuzzConfigScalarWhereWithAggregatesInput = {
+    AND?: BuzzConfigScalarWhereWithAggregatesInput | BuzzConfigScalarWhereWithAggregatesInput[]
+    OR?: BuzzConfigScalarWhereWithAggregatesInput[]
+    NOT?: BuzzConfigScalarWhereWithAggregatesInput | BuzzConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BuzzConfig"> | string
+    keywords?: StringNullableListFilter<"BuzzConfig">
+    accounts?: StringNullableListFilter<"BuzzConfig">
+    minEngagement?: IntWithAggregatesFilter<"BuzzConfig"> | number
+    minImpressions?: IntWithAggregatesFilter<"BuzzConfig"> | number
+    collectInterval?: IntWithAggregatesFilter<"BuzzConfig"> | number
+    enabled?: BoolWithAggregatesFilter<"BuzzConfig"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"BuzzConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BuzzConfig"> | Date | string
   }
 
   export type ScheduledPostWhereInput = {
@@ -36443,6 +44952,547 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeWithAggregatesFilter<"CotDraftPerformance"> | Date | string
   }
 
+  export type UnifiedContentSourceWhereInput = {
+    AND?: UnifiedContentSourceWhereInput | UnifiedContentSourceWhereInput[]
+    OR?: UnifiedContentSourceWhereInput[]
+    NOT?: UnifiedContentSourceWhereInput | UnifiedContentSourceWhereInput[]
+    id?: StringFilter<"UnifiedContentSource"> | string
+    sourceType?: StringFilter<"UnifiedContentSource"> | string
+    sourceId?: StringFilter<"UnifiedContentSource"> | string
+    contentSummary?: StringNullableFilter<"UnifiedContentSource"> | string | null
+    importanceScore?: FloatNullableFilter<"UnifiedContentSource"> | number | null
+    viralPotential?: FloatNullableFilter<"UnifiedContentSource"> | number | null
+    keywords?: StringNullableListFilter<"UnifiedContentSource">
+    metadata?: JsonNullableFilter<"UnifiedContentSource">
+    createdAt?: DateTimeFilter<"UnifiedContentSource"> | Date | string
+    updatedAt?: DateTimeFilter<"UnifiedContentSource"> | Date | string
+    integratedSessions?: IntegratedSessionSourceListRelationFilter
+  }
+
+  export type UnifiedContentSourceOrderByWithRelationInput = {
+    id?: SortOrder
+    sourceType?: SortOrder
+    sourceId?: SortOrder
+    contentSummary?: SortOrderInput | SortOrder
+    importanceScore?: SortOrderInput | SortOrder
+    viralPotential?: SortOrderInput | SortOrder
+    keywords?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    integratedSessions?: IntegratedSessionSourceOrderByRelationAggregateInput
+  }
+
+  export type UnifiedContentSourceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UnifiedContentSourceWhereInput | UnifiedContentSourceWhereInput[]
+    OR?: UnifiedContentSourceWhereInput[]
+    NOT?: UnifiedContentSourceWhereInput | UnifiedContentSourceWhereInput[]
+    sourceType?: StringFilter<"UnifiedContentSource"> | string
+    sourceId?: StringFilter<"UnifiedContentSource"> | string
+    contentSummary?: StringNullableFilter<"UnifiedContentSource"> | string | null
+    importanceScore?: FloatNullableFilter<"UnifiedContentSource"> | number | null
+    viralPotential?: FloatNullableFilter<"UnifiedContentSource"> | number | null
+    keywords?: StringNullableListFilter<"UnifiedContentSource">
+    metadata?: JsonNullableFilter<"UnifiedContentSource">
+    createdAt?: DateTimeFilter<"UnifiedContentSource"> | Date | string
+    updatedAt?: DateTimeFilter<"UnifiedContentSource"> | Date | string
+    integratedSessions?: IntegratedSessionSourceListRelationFilter
+  }, "id">
+
+  export type UnifiedContentSourceOrderByWithAggregationInput = {
+    id?: SortOrder
+    sourceType?: SortOrder
+    sourceId?: SortOrder
+    contentSummary?: SortOrderInput | SortOrder
+    importanceScore?: SortOrderInput | SortOrder
+    viralPotential?: SortOrderInput | SortOrder
+    keywords?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UnifiedContentSourceCountOrderByAggregateInput
+    _avg?: UnifiedContentSourceAvgOrderByAggregateInput
+    _max?: UnifiedContentSourceMaxOrderByAggregateInput
+    _min?: UnifiedContentSourceMinOrderByAggregateInput
+    _sum?: UnifiedContentSourceSumOrderByAggregateInput
+  }
+
+  export type UnifiedContentSourceScalarWhereWithAggregatesInput = {
+    AND?: UnifiedContentSourceScalarWhereWithAggregatesInput | UnifiedContentSourceScalarWhereWithAggregatesInput[]
+    OR?: UnifiedContentSourceScalarWhereWithAggregatesInput[]
+    NOT?: UnifiedContentSourceScalarWhereWithAggregatesInput | UnifiedContentSourceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UnifiedContentSource"> | string
+    sourceType?: StringWithAggregatesFilter<"UnifiedContentSource"> | string
+    sourceId?: StringWithAggregatesFilter<"UnifiedContentSource"> | string
+    contentSummary?: StringNullableWithAggregatesFilter<"UnifiedContentSource"> | string | null
+    importanceScore?: FloatNullableWithAggregatesFilter<"UnifiedContentSource"> | number | null
+    viralPotential?: FloatNullableWithAggregatesFilter<"UnifiedContentSource"> | number | null
+    keywords?: StringNullableListFilter<"UnifiedContentSource">
+    metadata?: JsonNullableWithAggregatesFilter<"UnifiedContentSource">
+    createdAt?: DateTimeWithAggregatesFilter<"UnifiedContentSource"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UnifiedContentSource"> | Date | string
+  }
+
+  export type IntegratedSessionWhereInput = {
+    AND?: IntegratedSessionWhereInput | IntegratedSessionWhereInput[]
+    OR?: IntegratedSessionWhereInput[]
+    NOT?: IntegratedSessionWhereInput | IntegratedSessionWhereInput[]
+    id?: StringFilter<"IntegratedSession"> | string
+    sessionType?: StringFilter<"IntegratedSession"> | string
+    v2SessionId?: StringNullableFilter<"IntegratedSession"> | string | null
+    newsArticleIds?: StringNullableListFilter<"IntegratedSession">
+    buzzPostIds?: StringNullableListFilter<"IntegratedSession">
+    generationContext?: JsonNullableFilter<"IntegratedSession">
+    performanceMetrics?: JsonNullableFilter<"IntegratedSession">
+    status?: StringFilter<"IntegratedSession"> | string
+    currentStep?: StringNullableFilter<"IntegratedSession"> | string | null
+    theme?: StringNullableFilter<"IntegratedSession"> | string | null
+    character?: StringNullableFilter<"IntegratedSession"> | string | null
+    platform?: StringNullableFilter<"IntegratedSession"> | string | null
+    strategy?: StringNullableFilter<"IntegratedSession"> | string | null
+    createdAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntegratedSession"> | Date | string | null
+    v2Session?: XOR<ViralSessionNullableRelationFilter, ViralSessionWhereInput> | null
+    sources?: IntegratedSessionSourceListRelationFilter
+    drafts?: IntegratedDraftListRelationFilter
+  }
+
+  export type IntegratedSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionType?: SortOrder
+    v2SessionId?: SortOrderInput | SortOrder
+    newsArticleIds?: SortOrder
+    buzzPostIds?: SortOrder
+    generationContext?: SortOrderInput | SortOrder
+    performanceMetrics?: SortOrderInput | SortOrder
+    status?: SortOrder
+    currentStep?: SortOrderInput | SortOrder
+    theme?: SortOrderInput | SortOrder
+    character?: SortOrderInput | SortOrder
+    platform?: SortOrderInput | SortOrder
+    strategy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    v2Session?: ViralSessionOrderByWithRelationInput
+    sources?: IntegratedSessionSourceOrderByRelationAggregateInput
+    drafts?: IntegratedDraftOrderByRelationAggregateInput
+  }
+
+  export type IntegratedSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IntegratedSessionWhereInput | IntegratedSessionWhereInput[]
+    OR?: IntegratedSessionWhereInput[]
+    NOT?: IntegratedSessionWhereInput | IntegratedSessionWhereInput[]
+    sessionType?: StringFilter<"IntegratedSession"> | string
+    v2SessionId?: StringNullableFilter<"IntegratedSession"> | string | null
+    newsArticleIds?: StringNullableListFilter<"IntegratedSession">
+    buzzPostIds?: StringNullableListFilter<"IntegratedSession">
+    generationContext?: JsonNullableFilter<"IntegratedSession">
+    performanceMetrics?: JsonNullableFilter<"IntegratedSession">
+    status?: StringFilter<"IntegratedSession"> | string
+    currentStep?: StringNullableFilter<"IntegratedSession"> | string | null
+    theme?: StringNullableFilter<"IntegratedSession"> | string | null
+    character?: StringNullableFilter<"IntegratedSession"> | string | null
+    platform?: StringNullableFilter<"IntegratedSession"> | string | null
+    strategy?: StringNullableFilter<"IntegratedSession"> | string | null
+    createdAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntegratedSession"> | Date | string | null
+    v2Session?: XOR<ViralSessionNullableRelationFilter, ViralSessionWhereInput> | null
+    sources?: IntegratedSessionSourceListRelationFilter
+    drafts?: IntegratedDraftListRelationFilter
+  }, "id">
+
+  export type IntegratedSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionType?: SortOrder
+    v2SessionId?: SortOrderInput | SortOrder
+    newsArticleIds?: SortOrder
+    buzzPostIds?: SortOrder
+    generationContext?: SortOrderInput | SortOrder
+    performanceMetrics?: SortOrderInput | SortOrder
+    status?: SortOrder
+    currentStep?: SortOrderInput | SortOrder
+    theme?: SortOrderInput | SortOrder
+    character?: SortOrderInput | SortOrder
+    platform?: SortOrderInput | SortOrder
+    strategy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: IntegratedSessionCountOrderByAggregateInput
+    _max?: IntegratedSessionMaxOrderByAggregateInput
+    _min?: IntegratedSessionMinOrderByAggregateInput
+  }
+
+  export type IntegratedSessionScalarWhereWithAggregatesInput = {
+    AND?: IntegratedSessionScalarWhereWithAggregatesInput | IntegratedSessionScalarWhereWithAggregatesInput[]
+    OR?: IntegratedSessionScalarWhereWithAggregatesInput[]
+    NOT?: IntegratedSessionScalarWhereWithAggregatesInput | IntegratedSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegratedSession"> | string
+    sessionType?: StringWithAggregatesFilter<"IntegratedSession"> | string
+    v2SessionId?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    newsArticleIds?: StringNullableListFilter<"IntegratedSession">
+    buzzPostIds?: StringNullableListFilter<"IntegratedSession">
+    generationContext?: JsonNullableWithAggregatesFilter<"IntegratedSession">
+    performanceMetrics?: JsonNullableWithAggregatesFilter<"IntegratedSession">
+    status?: StringWithAggregatesFilter<"IntegratedSession"> | string
+    currentStep?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    theme?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    character?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    platform?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    strategy?: StringNullableWithAggregatesFilter<"IntegratedSession"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"IntegratedSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntegratedSession"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"IntegratedSession"> | Date | string | null
+  }
+
+  export type IntegratedSessionSourceWhereInput = {
+    AND?: IntegratedSessionSourceWhereInput | IntegratedSessionSourceWhereInput[]
+    OR?: IntegratedSessionSourceWhereInput[]
+    NOT?: IntegratedSessionSourceWhereInput | IntegratedSessionSourceWhereInput[]
+    id?: StringFilter<"IntegratedSessionSource"> | string
+    sessionId?: StringFilter<"IntegratedSessionSource"> | string
+    sourceId?: StringFilter<"IntegratedSessionSource"> | string
+    relevanceScore?: FloatNullableFilter<"IntegratedSessionSource"> | number | null
+    usageType?: StringFilter<"IntegratedSessionSource"> | string
+    session?: XOR<IntegratedSessionRelationFilter, IntegratedSessionWhereInput>
+    source?: XOR<UnifiedContentSourceRelationFilter, UnifiedContentSourceWhereInput>
+  }
+
+  export type IntegratedSessionSourceOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sourceId?: SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    usageType?: SortOrder
+    session?: IntegratedSessionOrderByWithRelationInput
+    source?: UnifiedContentSourceOrderByWithRelationInput
+  }
+
+  export type IntegratedSessionSourceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    sessionId_sourceId?: IntegratedSessionSourceSessionIdSourceIdCompoundUniqueInput
+    AND?: IntegratedSessionSourceWhereInput | IntegratedSessionSourceWhereInput[]
+    OR?: IntegratedSessionSourceWhereInput[]
+    NOT?: IntegratedSessionSourceWhereInput | IntegratedSessionSourceWhereInput[]
+    sessionId?: StringFilter<"IntegratedSessionSource"> | string
+    sourceId?: StringFilter<"IntegratedSessionSource"> | string
+    relevanceScore?: FloatNullableFilter<"IntegratedSessionSource"> | number | null
+    usageType?: StringFilter<"IntegratedSessionSource"> | string
+    session?: XOR<IntegratedSessionRelationFilter, IntegratedSessionWhereInput>
+    source?: XOR<UnifiedContentSourceRelationFilter, UnifiedContentSourceWhereInput>
+  }, "id" | "sessionId_sourceId">
+
+  export type IntegratedSessionSourceOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sourceId?: SortOrder
+    relevanceScore?: SortOrderInput | SortOrder
+    usageType?: SortOrder
+    _count?: IntegratedSessionSourceCountOrderByAggregateInput
+    _avg?: IntegratedSessionSourceAvgOrderByAggregateInput
+    _max?: IntegratedSessionSourceMaxOrderByAggregateInput
+    _min?: IntegratedSessionSourceMinOrderByAggregateInput
+    _sum?: IntegratedSessionSourceSumOrderByAggregateInput
+  }
+
+  export type IntegratedSessionSourceScalarWhereWithAggregatesInput = {
+    AND?: IntegratedSessionSourceScalarWhereWithAggregatesInput | IntegratedSessionSourceScalarWhereWithAggregatesInput[]
+    OR?: IntegratedSessionSourceScalarWhereWithAggregatesInput[]
+    NOT?: IntegratedSessionSourceScalarWhereWithAggregatesInput | IntegratedSessionSourceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegratedSessionSource"> | string
+    sessionId?: StringWithAggregatesFilter<"IntegratedSessionSource"> | string
+    sourceId?: StringWithAggregatesFilter<"IntegratedSessionSource"> | string
+    relevanceScore?: FloatNullableWithAggregatesFilter<"IntegratedSessionSource"> | number | null
+    usageType?: StringWithAggregatesFilter<"IntegratedSessionSource"> | string
+  }
+
+  export type IntegratedDraftWhereInput = {
+    AND?: IntegratedDraftWhereInput | IntegratedDraftWhereInput[]
+    OR?: IntegratedDraftWhereInput[]
+    NOT?: IntegratedDraftWhereInput | IntegratedDraftWhereInput[]
+    id?: StringFilter<"IntegratedDraft"> | string
+    sessionId?: StringFilter<"IntegratedDraft"> | string
+    title?: StringFilter<"IntegratedDraft"> | string
+    content?: StringFilter<"IntegratedDraft"> | string
+    contentType?: StringFilter<"IntegratedDraft"> | string
+    sourcesSummary?: StringNullableFilter<"IntegratedDraft"> | string | null
+    newsContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    buzzContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    conceptId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    hook?: StringNullableFilter<"IntegratedDraft"> | string | null
+    angle?: StringNullableFilter<"IntegratedDraft"> | string | null
+    sourceNewsIds?: StringNullableListFilter<"IntegratedDraft">
+    sourceBuzzIds?: StringNullableListFilter<"IntegratedDraft">
+    generationStrategy?: StringNullableFilter<"IntegratedDraft"> | string | null
+    generationData?: JsonNullableFilter<"IntegratedDraft">
+    hashtags?: StringNullableListFilter<"IntegratedDraft">
+    visualGuide?: StringNullableFilter<"IntegratedDraft"> | string | null
+    status?: StringFilter<"IntegratedDraft"> | string
+    scheduledAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    viralScore?: FloatNullableFilter<"IntegratedDraft"> | number | null
+    createdAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+    session?: XOR<IntegratedSessionRelationFilter, IntegratedSessionWhereInput>
+    performance?: XOR<IntegratedDraftPerformanceNullableRelationFilter, IntegratedDraftPerformanceWhereInput> | null
+  }
+
+  export type IntegratedDraftOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    contentType?: SortOrder
+    sourcesSummary?: SortOrderInput | SortOrder
+    newsContext?: SortOrderInput | SortOrder
+    buzzContext?: SortOrderInput | SortOrder
+    conceptId?: SortOrderInput | SortOrder
+    hook?: SortOrderInput | SortOrder
+    angle?: SortOrderInput | SortOrder
+    sourceNewsIds?: SortOrder
+    sourceBuzzIds?: SortOrder
+    generationStrategy?: SortOrderInput | SortOrder
+    generationData?: SortOrderInput | SortOrder
+    hashtags?: SortOrder
+    visualGuide?: SortOrderInput | SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    postedAt?: SortOrderInput | SortOrder
+    postId?: SortOrderInput | SortOrder
+    viralScore?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    session?: IntegratedSessionOrderByWithRelationInput
+    performance?: IntegratedDraftPerformanceOrderByWithRelationInput
+  }
+
+  export type IntegratedDraftWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IntegratedDraftWhereInput | IntegratedDraftWhereInput[]
+    OR?: IntegratedDraftWhereInput[]
+    NOT?: IntegratedDraftWhereInput | IntegratedDraftWhereInput[]
+    sessionId?: StringFilter<"IntegratedDraft"> | string
+    title?: StringFilter<"IntegratedDraft"> | string
+    content?: StringFilter<"IntegratedDraft"> | string
+    contentType?: StringFilter<"IntegratedDraft"> | string
+    sourcesSummary?: StringNullableFilter<"IntegratedDraft"> | string | null
+    newsContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    buzzContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    conceptId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    hook?: StringNullableFilter<"IntegratedDraft"> | string | null
+    angle?: StringNullableFilter<"IntegratedDraft"> | string | null
+    sourceNewsIds?: StringNullableListFilter<"IntegratedDraft">
+    sourceBuzzIds?: StringNullableListFilter<"IntegratedDraft">
+    generationStrategy?: StringNullableFilter<"IntegratedDraft"> | string | null
+    generationData?: JsonNullableFilter<"IntegratedDraft">
+    hashtags?: StringNullableListFilter<"IntegratedDraft">
+    visualGuide?: StringNullableFilter<"IntegratedDraft"> | string | null
+    status?: StringFilter<"IntegratedDraft"> | string
+    scheduledAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    viralScore?: FloatNullableFilter<"IntegratedDraft"> | number | null
+    createdAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+    session?: XOR<IntegratedSessionRelationFilter, IntegratedSessionWhereInput>
+    performance?: XOR<IntegratedDraftPerformanceNullableRelationFilter, IntegratedDraftPerformanceWhereInput> | null
+  }, "id">
+
+  export type IntegratedDraftOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    contentType?: SortOrder
+    sourcesSummary?: SortOrderInput | SortOrder
+    newsContext?: SortOrderInput | SortOrder
+    buzzContext?: SortOrderInput | SortOrder
+    conceptId?: SortOrderInput | SortOrder
+    hook?: SortOrderInput | SortOrder
+    angle?: SortOrderInput | SortOrder
+    sourceNewsIds?: SortOrder
+    sourceBuzzIds?: SortOrder
+    generationStrategy?: SortOrderInput | SortOrder
+    generationData?: SortOrderInput | SortOrder
+    hashtags?: SortOrder
+    visualGuide?: SortOrderInput | SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    postedAt?: SortOrderInput | SortOrder
+    postId?: SortOrderInput | SortOrder
+    viralScore?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: IntegratedDraftCountOrderByAggregateInput
+    _avg?: IntegratedDraftAvgOrderByAggregateInput
+    _max?: IntegratedDraftMaxOrderByAggregateInput
+    _min?: IntegratedDraftMinOrderByAggregateInput
+    _sum?: IntegratedDraftSumOrderByAggregateInput
+  }
+
+  export type IntegratedDraftScalarWhereWithAggregatesInput = {
+    AND?: IntegratedDraftScalarWhereWithAggregatesInput | IntegratedDraftScalarWhereWithAggregatesInput[]
+    OR?: IntegratedDraftScalarWhereWithAggregatesInput[]
+    NOT?: IntegratedDraftScalarWhereWithAggregatesInput | IntegratedDraftScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    sessionId?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    title?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    content?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    contentType?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    sourcesSummary?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    newsContext?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    buzzContext?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    conceptId?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    hook?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    angle?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    sourceNewsIds?: StringNullableListFilter<"IntegratedDraft">
+    sourceBuzzIds?: StringNullableListFilter<"IntegratedDraft">
+    generationStrategy?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    generationData?: JsonNullableWithAggregatesFilter<"IntegratedDraft">
+    hashtags?: StringNullableListFilter<"IntegratedDraft">
+    visualGuide?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    status?: StringWithAggregatesFilter<"IntegratedDraft"> | string
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"IntegratedDraft"> | Date | string | null
+    postedAt?: DateTimeNullableWithAggregatesFilter<"IntegratedDraft"> | Date | string | null
+    postId?: StringNullableWithAggregatesFilter<"IntegratedDraft"> | string | null
+    viralScore?: FloatNullableWithAggregatesFilter<"IntegratedDraft"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"IntegratedDraft"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntegratedDraft"> | Date | string
+  }
+
+  export type IntegratedDraftPerformanceWhereInput = {
+    AND?: IntegratedDraftPerformanceWhereInput | IntegratedDraftPerformanceWhereInput[]
+    OR?: IntegratedDraftPerformanceWhereInput[]
+    NOT?: IntegratedDraftPerformanceWhereInput | IntegratedDraftPerformanceWhereInput[]
+    id?: StringFilter<"IntegratedDraftPerformance"> | string
+    draftId?: StringFilter<"IntegratedDraftPerformance"> | string
+    likes30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    likes1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    likes24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    engagementRate?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    predictionAccuracy?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"IntegratedDraftPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedDraftPerformance"> | Date | string
+    draft?: XOR<IntegratedDraftRelationFilter, IntegratedDraftWhereInput>
+  }
+
+  export type IntegratedDraftPerformanceOrderByWithRelationInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrderInput | SortOrder
+    retweets30m?: SortOrderInput | SortOrder
+    replies30m?: SortOrderInput | SortOrder
+    impressions30m?: SortOrderInput | SortOrder
+    likes1h?: SortOrderInput | SortOrder
+    retweets1h?: SortOrderInput | SortOrder
+    replies1h?: SortOrderInput | SortOrder
+    impressions1h?: SortOrderInput | SortOrder
+    likes24h?: SortOrderInput | SortOrder
+    retweets24h?: SortOrderInput | SortOrder
+    replies24h?: SortOrderInput | SortOrder
+    impressions24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    predictionAccuracy?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+    draft?: IntegratedDraftOrderByWithRelationInput
+  }
+
+  export type IntegratedDraftPerformanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    draftId?: string
+    AND?: IntegratedDraftPerformanceWhereInput | IntegratedDraftPerformanceWhereInput[]
+    OR?: IntegratedDraftPerformanceWhereInput[]
+    NOT?: IntegratedDraftPerformanceWhereInput | IntegratedDraftPerformanceWhereInput[]
+    likes30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions30m?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    likes1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions1h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    likes24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    retweets24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    replies24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    impressions24h?: IntNullableFilter<"IntegratedDraftPerformance"> | number | null
+    engagementRate?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    predictionAccuracy?: FloatNullableFilter<"IntegratedDraftPerformance"> | number | null
+    collectedAt?: DateTimeFilter<"IntegratedDraftPerformance"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedDraftPerformance"> | Date | string
+    draft?: XOR<IntegratedDraftRelationFilter, IntegratedDraftWhereInput>
+  }, "id" | "draftId">
+
+  export type IntegratedDraftPerformanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrderInput | SortOrder
+    retweets30m?: SortOrderInput | SortOrder
+    replies30m?: SortOrderInput | SortOrder
+    impressions30m?: SortOrderInput | SortOrder
+    likes1h?: SortOrderInput | SortOrder
+    retweets1h?: SortOrderInput | SortOrder
+    replies1h?: SortOrderInput | SortOrder
+    impressions1h?: SortOrderInput | SortOrder
+    likes24h?: SortOrderInput | SortOrder
+    retweets24h?: SortOrderInput | SortOrder
+    replies24h?: SortOrderInput | SortOrder
+    impressions24h?: SortOrderInput | SortOrder
+    engagementRate?: SortOrderInput | SortOrder
+    viralCoefficient?: SortOrderInput | SortOrder
+    predictionAccuracy?: SortOrderInput | SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: IntegratedDraftPerformanceCountOrderByAggregateInput
+    _avg?: IntegratedDraftPerformanceAvgOrderByAggregateInput
+    _max?: IntegratedDraftPerformanceMaxOrderByAggregateInput
+    _min?: IntegratedDraftPerformanceMinOrderByAggregateInput
+    _sum?: IntegratedDraftPerformanceSumOrderByAggregateInput
+  }
+
+  export type IntegratedDraftPerformanceScalarWhereWithAggregatesInput = {
+    AND?: IntegratedDraftPerformanceScalarWhereWithAggregatesInput | IntegratedDraftPerformanceScalarWhereWithAggregatesInput[]
+    OR?: IntegratedDraftPerformanceScalarWhereWithAggregatesInput[]
+    NOT?: IntegratedDraftPerformanceScalarWhereWithAggregatesInput | IntegratedDraftPerformanceScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegratedDraftPerformance"> | string
+    draftId?: StringWithAggregatesFilter<"IntegratedDraftPerformance"> | string
+    likes30m?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    retweets30m?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    replies30m?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    impressions30m?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    likes1h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    retweets1h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    replies1h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    impressions1h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    likes24h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    retweets24h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    replies24h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    impressions24h?: IntNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    engagementRate?: FloatNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    viralCoefficient?: FloatNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    predictionAccuracy?: FloatNullableWithAggregatesFilter<"IntegratedDraftPerformance"> | number | null
+    collectedAt?: DateTimeWithAggregatesFilter<"IntegratedDraftPerformance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntegratedDraftPerformance"> | Date | string
+  }
+
   export type ScheduledRetweetWhereInput = {
     AND?: ScheduledRetweetWhereInput | ScheduledRetweetWhereInput[]
     OR?: ScheduledRetweetWhereInput[]
@@ -36856,6 +45906,7 @@ export namespace Prisma {
     drafts?: ViralDraftV2ListRelationFilter
     characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
     newsRelations?: NewsViralRelationListRelationFilter
+    integratedSessions?: IntegratedSessionListRelationFilter
   }
 
   export type ViralSessionOrderByWithRelationInput = {
@@ -36874,6 +45925,7 @@ export namespace Prisma {
     drafts?: ViralDraftV2OrderByRelationAggregateInput
     characterProfile?: CharacterProfileOrderByWithRelationInput
     newsRelations?: NewsViralRelationOrderByRelationAggregateInput
+    integratedSessions?: IntegratedSessionOrderByRelationAggregateInput
   }
 
   export type ViralSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -36895,6 +45947,7 @@ export namespace Prisma {
     drafts?: ViralDraftV2ListRelationFilter
     characterProfile?: XOR<CharacterProfileNullableRelationFilter, CharacterProfileWhereInput> | null
     newsRelations?: NewsViralRelationListRelationFilter
+    integratedSessions?: IntegratedSessionListRelationFilter
   }, "id">
 
   export type ViralSessionOrderByWithAggregationInput = {
@@ -37286,6 +46339,145 @@ export namespace Prisma {
     topicExpertise?: JsonNullableWithAggregatesFilter<"CharacterProfile">
   }
 
+  export type BuzzInfluencerWhereInput = {
+    AND?: BuzzInfluencerWhereInput | BuzzInfluencerWhereInput[]
+    OR?: BuzzInfluencerWhereInput[]
+    NOT?: BuzzInfluencerWhereInput | BuzzInfluencerWhereInput[]
+    id?: StringFilter<"BuzzInfluencer"> | string
+    username?: StringFilter<"BuzzInfluencer"> | string
+    userId?: StringFilter<"BuzzInfluencer"> | string
+    followers?: IntFilter<"BuzzInfluencer"> | number
+    following?: IntFilter<"BuzzInfluencer"> | number
+    verified?: BoolFilter<"BuzzInfluencer"> | boolean
+    profileImage?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    bio?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    metrics7d?: JsonNullableFilter<"BuzzInfluencer">
+    metrics30d?: JsonNullableFilter<"BuzzInfluencer">
+    metricsAllTime?: JsonNullableFilter<"BuzzInfluencer">
+    categoryScores?: JsonFilter<"BuzzInfluencer">
+    primaryCategory?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    engagementRate?: FloatFilter<"BuzzInfluencer"> | number
+    viralScore?: FloatFilter<"BuzzInfluencer"> | number
+    consistencyScore?: FloatFilter<"BuzzInfluencer"> | number
+    bestPostingHours?: JsonNullableFilter<"BuzzInfluencer">
+    postingFrequency?: JsonNullableFilter<"BuzzInfluencer">
+    lastActiveAt?: DateTimeNullableFilter<"BuzzInfluencer"> | Date | string | null
+    lastAnalyzedAt?: DateTimeNullableFilter<"BuzzInfluencer"> | Date | string | null
+    createdAt?: DateTimeFilter<"BuzzInfluencer"> | Date | string
+    updatedAt?: DateTimeFilter<"BuzzInfluencer"> | Date | string
+  }
+
+  export type BuzzInfluencerOrderByWithRelationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    userId?: SortOrder
+    followers?: SortOrder
+    following?: SortOrder
+    verified?: SortOrder
+    profileImage?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    metrics7d?: SortOrderInput | SortOrder
+    metrics30d?: SortOrderInput | SortOrder
+    metricsAllTime?: SortOrderInput | SortOrder
+    categoryScores?: SortOrder
+    primaryCategory?: SortOrderInput | SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+    bestPostingHours?: SortOrderInput | SortOrder
+    postingFrequency?: SortOrderInput | SortOrder
+    lastActiveAt?: SortOrderInput | SortOrder
+    lastAnalyzedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzInfluencerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    username?: string
+    AND?: BuzzInfluencerWhereInput | BuzzInfluencerWhereInput[]
+    OR?: BuzzInfluencerWhereInput[]
+    NOT?: BuzzInfluencerWhereInput | BuzzInfluencerWhereInput[]
+    userId?: StringFilter<"BuzzInfluencer"> | string
+    followers?: IntFilter<"BuzzInfluencer"> | number
+    following?: IntFilter<"BuzzInfluencer"> | number
+    verified?: BoolFilter<"BuzzInfluencer"> | boolean
+    profileImage?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    bio?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    metrics7d?: JsonNullableFilter<"BuzzInfluencer">
+    metrics30d?: JsonNullableFilter<"BuzzInfluencer">
+    metricsAllTime?: JsonNullableFilter<"BuzzInfluencer">
+    categoryScores?: JsonFilter<"BuzzInfluencer">
+    primaryCategory?: StringNullableFilter<"BuzzInfluencer"> | string | null
+    engagementRate?: FloatFilter<"BuzzInfluencer"> | number
+    viralScore?: FloatFilter<"BuzzInfluencer"> | number
+    consistencyScore?: FloatFilter<"BuzzInfluencer"> | number
+    bestPostingHours?: JsonNullableFilter<"BuzzInfluencer">
+    postingFrequency?: JsonNullableFilter<"BuzzInfluencer">
+    lastActiveAt?: DateTimeNullableFilter<"BuzzInfluencer"> | Date | string | null
+    lastAnalyzedAt?: DateTimeNullableFilter<"BuzzInfluencer"> | Date | string | null
+    createdAt?: DateTimeFilter<"BuzzInfluencer"> | Date | string
+    updatedAt?: DateTimeFilter<"BuzzInfluencer"> | Date | string
+  }, "id" | "username">
+
+  export type BuzzInfluencerOrderByWithAggregationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    userId?: SortOrder
+    followers?: SortOrder
+    following?: SortOrder
+    verified?: SortOrder
+    profileImage?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    metrics7d?: SortOrderInput | SortOrder
+    metrics30d?: SortOrderInput | SortOrder
+    metricsAllTime?: SortOrderInput | SortOrder
+    categoryScores?: SortOrder
+    primaryCategory?: SortOrderInput | SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+    bestPostingHours?: SortOrderInput | SortOrder
+    postingFrequency?: SortOrderInput | SortOrder
+    lastActiveAt?: SortOrderInput | SortOrder
+    lastAnalyzedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: BuzzInfluencerCountOrderByAggregateInput
+    _avg?: BuzzInfluencerAvgOrderByAggregateInput
+    _max?: BuzzInfluencerMaxOrderByAggregateInput
+    _min?: BuzzInfluencerMinOrderByAggregateInput
+    _sum?: BuzzInfluencerSumOrderByAggregateInput
+  }
+
+  export type BuzzInfluencerScalarWhereWithAggregatesInput = {
+    AND?: BuzzInfluencerScalarWhereWithAggregatesInput | BuzzInfluencerScalarWhereWithAggregatesInput[]
+    OR?: BuzzInfluencerScalarWhereWithAggregatesInput[]
+    NOT?: BuzzInfluencerScalarWhereWithAggregatesInput | BuzzInfluencerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"BuzzInfluencer"> | string
+    username?: StringWithAggregatesFilter<"BuzzInfluencer"> | string
+    userId?: StringWithAggregatesFilter<"BuzzInfluencer"> | string
+    followers?: IntWithAggregatesFilter<"BuzzInfluencer"> | number
+    following?: IntWithAggregatesFilter<"BuzzInfluencer"> | number
+    verified?: BoolWithAggregatesFilter<"BuzzInfluencer"> | boolean
+    profileImage?: StringNullableWithAggregatesFilter<"BuzzInfluencer"> | string | null
+    bio?: StringNullableWithAggregatesFilter<"BuzzInfluencer"> | string | null
+    metrics7d?: JsonNullableWithAggregatesFilter<"BuzzInfluencer">
+    metrics30d?: JsonNullableWithAggregatesFilter<"BuzzInfluencer">
+    metricsAllTime?: JsonNullableWithAggregatesFilter<"BuzzInfluencer">
+    categoryScores?: JsonWithAggregatesFilter<"BuzzInfluencer">
+    primaryCategory?: StringNullableWithAggregatesFilter<"BuzzInfluencer"> | string | null
+    engagementRate?: FloatWithAggregatesFilter<"BuzzInfluencer"> | number
+    viralScore?: FloatWithAggregatesFilter<"BuzzInfluencer"> | number
+    consistencyScore?: FloatWithAggregatesFilter<"BuzzInfluencer"> | number
+    bestPostingHours?: JsonNullableWithAggregatesFilter<"BuzzInfluencer">
+    postingFrequency?: JsonNullableWithAggregatesFilter<"BuzzInfluencer">
+    lastActiveAt?: DateTimeNullableWithAggregatesFilter<"BuzzInfluencer"> | Date | string | null
+    lastAnalyzedAt?: DateTimeNullableWithAggregatesFilter<"BuzzInfluencer"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"BuzzInfluencer"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"BuzzInfluencer"> | Date | string
+  }
+
   export type BuzzPostCreateInput = {
     id?: string
     postId: string
@@ -37449,6 +46641,90 @@ export namespace Prisma {
     authorFollowers?: NullableIntFieldUpdateOperationsInput | number | null
     authorFollowing?: NullableIntFieldUpdateOperationsInput | number | null
     authorVerified?: NullableBoolFieldUpdateOperationsInput | boolean | null
+  }
+
+  export type BuzzConfigCreateInput = {
+    id: string
+    keywords?: BuzzConfigCreatekeywordsInput | string[]
+    accounts?: BuzzConfigCreateaccountsInput | string[]
+    minEngagement: number
+    minImpressions: number
+    collectInterval: number
+    enabled: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzConfigUncheckedCreateInput = {
+    id: string
+    keywords?: BuzzConfigCreatekeywordsInput | string[]
+    accounts?: BuzzConfigCreateaccountsInput | string[]
+    minEngagement: number
+    minImpressions: number
+    collectInterval: number
+    enabled: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    keywords?: BuzzConfigUpdatekeywordsInput | string[]
+    accounts?: BuzzConfigUpdateaccountsInput | string[]
+    minEngagement?: IntFieldUpdateOperationsInput | number
+    minImpressions?: IntFieldUpdateOperationsInput | number
+    collectInterval?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    keywords?: BuzzConfigUpdatekeywordsInput | string[]
+    accounts?: BuzzConfigUpdateaccountsInput | string[]
+    minEngagement?: IntFieldUpdateOperationsInput | number
+    minImpressions?: IntFieldUpdateOperationsInput | number
+    collectInterval?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzConfigCreateManyInput = {
+    id: string
+    keywords?: BuzzConfigCreatekeywordsInput | string[]
+    accounts?: BuzzConfigCreateaccountsInput | string[]
+    minEngagement: number
+    minImpressions: number
+    collectInterval: number
+    enabled: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    keywords?: BuzzConfigUpdatekeywordsInput | string[]
+    accounts?: BuzzConfigUpdateaccountsInput | string[]
+    minEngagement?: IntFieldUpdateOperationsInput | number
+    minImpressions?: IntFieldUpdateOperationsInput | number
+    collectInterval?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    keywords?: BuzzConfigUpdatekeywordsInput | string[]
+    accounts?: BuzzConfigUpdateaccountsInput | string[]
+    minEngagement?: IntFieldUpdateOperationsInput | number
+    minImpressions?: IntFieldUpdateOperationsInput | number
+    collectInterval?: IntFieldUpdateOperationsInput | number
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ScheduledPostCreateInput = {
@@ -39371,6 +48647,640 @@ export namespace Prisma {
     lastUpdateAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UnifiedContentSourceCreateInput = {
+    id?: string
+    sourceType: string
+    sourceId: string
+    contentSummary?: string | null
+    importanceScore?: number | null
+    viralPotential?: number | null
+    keywords?: UnifiedContentSourceCreatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    integratedSessions?: IntegratedSessionSourceCreateNestedManyWithoutSourceInput
+  }
+
+  export type UnifiedContentSourceUncheckedCreateInput = {
+    id?: string
+    sourceType: string
+    sourceId: string
+    contentSummary?: string | null
+    importanceScore?: number | null
+    viralPotential?: number | null
+    keywords?: UnifiedContentSourceCreatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    integratedSessions?: IntegratedSessionSourceUncheckedCreateNestedManyWithoutSourceInput
+  }
+
+  export type UnifiedContentSourceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    integratedSessions?: IntegratedSessionSourceUpdateManyWithoutSourceNestedInput
+  }
+
+  export type UnifiedContentSourceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    integratedSessions?: IntegratedSessionSourceUncheckedUpdateManyWithoutSourceNestedInput
+  }
+
+  export type UnifiedContentSourceCreateManyInput = {
+    id?: string
+    sourceType: string
+    sourceId: string
+    contentSummary?: string | null
+    importanceScore?: number | null
+    viralPotential?: number | null
+    keywords?: UnifiedContentSourceCreatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedContentSourceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedContentSourceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedSessionCreateInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    v2Session?: ViralSessionCreateNestedOneWithoutIntegratedSessionsInput
+    sources?: IntegratedSessionSourceCreateNestedManyWithoutSessionInput
+    drafts?: IntegratedDraftCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionUncheckedCreateInput = {
+    id?: string
+    sessionType: string
+    v2SessionId?: string | null
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sources?: IntegratedSessionSourceUncheckedCreateNestedManyWithoutSessionInput
+    drafts?: IntegratedDraftUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    v2Session?: ViralSessionUpdateOneWithoutIntegratedSessionsNestedInput
+    sources?: IntegratedSessionSourceUpdateManyWithoutSessionNestedInput
+    drafts?: IntegratedDraftUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    v2SessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: IntegratedSessionSourceUncheckedUpdateManyWithoutSessionNestedInput
+    drafts?: IntegratedDraftUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionCreateManyInput = {
+    id?: string
+    sessionType: string
+    v2SessionId?: string | null
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type IntegratedSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntegratedSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    v2SessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntegratedSessionSourceCreateInput = {
+    id?: string
+    relevanceScore?: number | null
+    usageType: string
+    session: IntegratedSessionCreateNestedOneWithoutSourcesInput
+    source: UnifiedContentSourceCreateNestedOneWithoutIntegratedSessionsInput
+  }
+
+  export type IntegratedSessionSourceUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    sourceId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedSessionSourceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+    session?: IntegratedSessionUpdateOneRequiredWithoutSourcesNestedInput
+    source?: UnifiedContentSourceUpdateOneRequiredWithoutIntegratedSessionsNestedInput
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedSessionSourceCreateManyInput = {
+    id?: string
+    sessionId: string
+    sourceId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedSessionSourceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedDraftCreateInput = {
+    id?: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: IntegratedSessionCreateNestedOneWithoutDraftsInput
+    performance?: IntegratedDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type IntegratedDraftUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: IntegratedDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type IntegratedDraftUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: IntegratedSessionUpdateOneRequiredWithoutDraftsNestedInput
+    performance?: IntegratedDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type IntegratedDraftUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: IntegratedDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type IntegratedDraftCreateManyInput = {
+    id?: string
+    sessionId: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftPerformanceCreateInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    predictionAccuracy?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+    draft: IntegratedDraftCreateNestedOneWithoutPerformanceInput
+  }
+
+  export type IntegratedDraftPerformanceUncheckedCreateInput = {
+    id?: string
+    draftId: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    predictionAccuracy?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftPerformanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    draft?: IntegratedDraftUpdateOneRequiredWithoutPerformanceNestedInput
+  }
+
+  export type IntegratedDraftPerformanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    draftId?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftPerformanceCreateManyInput = {
+    id?: string
+    draftId: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    predictionAccuracy?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftPerformanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftPerformanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    draftId?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ScheduledRetweetCreateInput = {
     id?: string
     originalPostId: string
@@ -39823,6 +49733,7 @@ export namespace Prisma {
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
     characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
     newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionUncheckedCreateInput = {
@@ -39840,6 +49751,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
     newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionUncheckedCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionUpdateInput = {
@@ -39857,6 +49769,7 @@ export namespace Prisma {
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
     characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
     newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateInput = {
@@ -39874,6 +49787,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
     newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUncheckedUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionCreateManyInput = {
@@ -40342,6 +50256,181 @@ export namespace Prisma {
     topicExpertise?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type BuzzInfluencerCreateInput = {
+    id?: string
+    username: string
+    userId: string
+    followers?: number
+    following?: number
+    verified?: boolean
+    profileImage?: string | null
+    bio?: string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores: JsonNullValueInput | InputJsonValue
+    primaryCategory?: string | null
+    engagementRate?: number
+    viralScore?: number
+    consistencyScore?: number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: Date | string | null
+    lastAnalyzedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzInfluencerUncheckedCreateInput = {
+    id?: string
+    username: string
+    userId: string
+    followers?: number
+    following?: number
+    verified?: boolean
+    profileImage?: string | null
+    bio?: string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores: JsonNullValueInput | InputJsonValue
+    primaryCategory?: string | null
+    engagementRate?: number
+    viralScore?: number
+    consistencyScore?: number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: Date | string | null
+    lastAnalyzedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzInfluencerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    followers?: IntFieldUpdateOperationsInput | number
+    following?: IntFieldUpdateOperationsInput | number
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores?: JsonNullValueInput | InputJsonValue
+    primaryCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    engagementRate?: FloatFieldUpdateOperationsInput | number
+    viralScore?: FloatFieldUpdateOperationsInput | number
+    consistencyScore?: FloatFieldUpdateOperationsInput | number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAnalyzedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzInfluencerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    followers?: IntFieldUpdateOperationsInput | number
+    following?: IntFieldUpdateOperationsInput | number
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores?: JsonNullValueInput | InputJsonValue
+    primaryCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    engagementRate?: FloatFieldUpdateOperationsInput | number
+    viralScore?: FloatFieldUpdateOperationsInput | number
+    consistencyScore?: FloatFieldUpdateOperationsInput | number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAnalyzedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzInfluencerCreateManyInput = {
+    id?: string
+    username: string
+    userId: string
+    followers?: number
+    following?: number
+    verified?: boolean
+    profileImage?: string | null
+    bio?: string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores: JsonNullValueInput | InputJsonValue
+    primaryCategory?: string | null
+    engagementRate?: number
+    viralScore?: number
+    consistencyScore?: number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: Date | string | null
+    lastAnalyzedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type BuzzInfluencerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    followers?: IntFieldUpdateOperationsInput | number
+    following?: IntFieldUpdateOperationsInput | number
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores?: JsonNullValueInput | InputJsonValue
+    primaryCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    engagementRate?: FloatFieldUpdateOperationsInput | number
+    viralScore?: FloatFieldUpdateOperationsInput | number
+    consistencyScore?: FloatFieldUpdateOperationsInput | number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAnalyzedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type BuzzInfluencerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    followers?: IntFieldUpdateOperationsInput | number
+    following?: IntFieldUpdateOperationsInput | number
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    metrics7d?: NullableJsonNullValueInput | InputJsonValue
+    metrics30d?: NullableJsonNullValueInput | InputJsonValue
+    metricsAllTime?: NullableJsonNullValueInput | InputJsonValue
+    categoryScores?: JsonNullValueInput | InputJsonValue
+    primaryCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    engagementRate?: FloatFieldUpdateOperationsInput | number
+    viralScore?: FloatFieldUpdateOperationsInput | number
+    consistencyScore?: FloatFieldUpdateOperationsInput | number
+    bestPostingHours?: NullableJsonNullValueInput | InputJsonValue
+    postingFrequency?: NullableJsonNullValueInput | InputJsonValue
+    lastActiveAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAnalyzedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -40645,6 +50734,71 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type BuzzConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    keywords?: SortOrder
+    accounts?: SortOrder
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+    enabled?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzConfigAvgOrderByAggregateInput = {
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+  }
+
+  export type BuzzConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+    enabled?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+    enabled?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzConfigSumOrderByAggregateInput = {
+    minEngagement?: SortOrder
+    minImpressions?: SortOrder
+    collectInterval?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type EnumPostStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PostStatus | EnumPostStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PostStatus[] | ListEnumPostStatusFieldRefInput<$PrismaModel>
@@ -40657,11 +50811,6 @@ export namespace Prisma {
     in?: $Enums.PostType[] | ListEnumPostTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.PostType[] | ListEnumPostTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumPostTypeFilter<$PrismaModel> | $Enums.PostType
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -40769,14 +50918,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPostTypeFilter<$PrismaModel>
     _max?: NestedEnumPostTypeFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -41056,14 +51197,6 @@ export namespace Prisma {
     isActive?: SortOrder
     lastFetched?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -41975,6 +52108,365 @@ export namespace Prisma {
     viralCoefficient?: SortOrder
   }
 
+  export type IntegratedSessionSourceListRelationFilter = {
+    every?: IntegratedSessionSourceWhereInput
+    some?: IntegratedSessionSourceWhereInput
+    none?: IntegratedSessionSourceWhereInput
+  }
+
+  export type IntegratedSessionSourceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UnifiedContentSourceCountOrderByAggregateInput = {
+    id?: SortOrder
+    sourceType?: SortOrder
+    sourceId?: SortOrder
+    contentSummary?: SortOrder
+    importanceScore?: SortOrder
+    viralPotential?: SortOrder
+    keywords?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedContentSourceAvgOrderByAggregateInput = {
+    importanceScore?: SortOrder
+    viralPotential?: SortOrder
+  }
+
+  export type UnifiedContentSourceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sourceType?: SortOrder
+    sourceId?: SortOrder
+    contentSummary?: SortOrder
+    importanceScore?: SortOrder
+    viralPotential?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedContentSourceMinOrderByAggregateInput = {
+    id?: SortOrder
+    sourceType?: SortOrder
+    sourceId?: SortOrder
+    contentSummary?: SortOrder
+    importanceScore?: SortOrder
+    viralPotential?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UnifiedContentSourceSumOrderByAggregateInput = {
+    importanceScore?: SortOrder
+    viralPotential?: SortOrder
+  }
+
+  export type ViralSessionNullableRelationFilter = {
+    is?: ViralSessionWhereInput | null
+    isNot?: ViralSessionWhereInput | null
+  }
+
+  export type IntegratedDraftListRelationFilter = {
+    every?: IntegratedDraftWhereInput
+    some?: IntegratedDraftWhereInput
+    none?: IntegratedDraftWhereInput
+  }
+
+  export type IntegratedDraftOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegratedSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionType?: SortOrder
+    v2SessionId?: SortOrder
+    newsArticleIds?: SortOrder
+    buzzPostIds?: SortOrder
+    generationContext?: SortOrder
+    performanceMetrics?: SortOrder
+    status?: SortOrder
+    currentStep?: SortOrder
+    theme?: SortOrder
+    character?: SortOrder
+    platform?: SortOrder
+    strategy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type IntegratedSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionType?: SortOrder
+    v2SessionId?: SortOrder
+    status?: SortOrder
+    currentStep?: SortOrder
+    theme?: SortOrder
+    character?: SortOrder
+    platform?: SortOrder
+    strategy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type IntegratedSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionType?: SortOrder
+    v2SessionId?: SortOrder
+    status?: SortOrder
+    currentStep?: SortOrder
+    theme?: SortOrder
+    character?: SortOrder
+    platform?: SortOrder
+    strategy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type IntegratedSessionRelationFilter = {
+    is?: IntegratedSessionWhereInput
+    isNot?: IntegratedSessionWhereInput
+  }
+
+  export type UnifiedContentSourceRelationFilter = {
+    is?: UnifiedContentSourceWhereInput
+    isNot?: UnifiedContentSourceWhereInput
+  }
+
+  export type IntegratedSessionSourceSessionIdSourceIdCompoundUniqueInput = {
+    sessionId: string
+    sourceId: string
+  }
+
+  export type IntegratedSessionSourceCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sourceId?: SortOrder
+    relevanceScore?: SortOrder
+    usageType?: SortOrder
+  }
+
+  export type IntegratedSessionSourceAvgOrderByAggregateInput = {
+    relevanceScore?: SortOrder
+  }
+
+  export type IntegratedSessionSourceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sourceId?: SortOrder
+    relevanceScore?: SortOrder
+    usageType?: SortOrder
+  }
+
+  export type IntegratedSessionSourceMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    sourceId?: SortOrder
+    relevanceScore?: SortOrder
+    usageType?: SortOrder
+  }
+
+  export type IntegratedSessionSourceSumOrderByAggregateInput = {
+    relevanceScore?: SortOrder
+  }
+
+  export type IntegratedDraftPerformanceNullableRelationFilter = {
+    is?: IntegratedDraftPerformanceWhereInput | null
+    isNot?: IntegratedDraftPerformanceWhereInput | null
+  }
+
+  export type IntegratedDraftCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    contentType?: SortOrder
+    sourcesSummary?: SortOrder
+    newsContext?: SortOrder
+    buzzContext?: SortOrder
+    conceptId?: SortOrder
+    hook?: SortOrder
+    angle?: SortOrder
+    sourceNewsIds?: SortOrder
+    sourceBuzzIds?: SortOrder
+    generationStrategy?: SortOrder
+    generationData?: SortOrder
+    hashtags?: SortOrder
+    visualGuide?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    postId?: SortOrder
+    viralScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftAvgOrderByAggregateInput = {
+    viralScore?: SortOrder
+  }
+
+  export type IntegratedDraftMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    contentType?: SortOrder
+    sourcesSummary?: SortOrder
+    newsContext?: SortOrder
+    buzzContext?: SortOrder
+    conceptId?: SortOrder
+    hook?: SortOrder
+    angle?: SortOrder
+    generationStrategy?: SortOrder
+    visualGuide?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    postId?: SortOrder
+    viralScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    contentType?: SortOrder
+    sourcesSummary?: SortOrder
+    newsContext?: SortOrder
+    buzzContext?: SortOrder
+    conceptId?: SortOrder
+    hook?: SortOrder
+    angle?: SortOrder
+    generationStrategy?: SortOrder
+    visualGuide?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    postedAt?: SortOrder
+    postId?: SortOrder
+    viralScore?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftSumOrderByAggregateInput = {
+    viralScore?: SortOrder
+  }
+
+  export type IntegratedDraftRelationFilter = {
+    is?: IntegratedDraftWhereInput
+    isNot?: IntegratedDraftWhereInput
+  }
+
+  export type IntegratedDraftPerformanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    predictionAccuracy?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftPerformanceAvgOrderByAggregateInput = {
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    predictionAccuracy?: SortOrder
+  }
+
+  export type IntegratedDraftPerformanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    predictionAccuracy?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftPerformanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    draftId?: SortOrder
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    predictionAccuracy?: SortOrder
+    collectedAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegratedDraftPerformanceSumOrderByAggregateInput = {
+    likes30m?: SortOrder
+    retweets30m?: SortOrder
+    replies30m?: SortOrder
+    impressions30m?: SortOrder
+    likes1h?: SortOrder
+    retweets1h?: SortOrder
+    replies1h?: SortOrder
+    impressions1h?: SortOrder
+    likes24h?: SortOrder
+    retweets24h?: SortOrder
+    replies24h?: SortOrder
+    impressions24h?: SortOrder
+    engagementRate?: SortOrder
+    viralCoefficient?: SortOrder
+    predictionAccuracy?: SortOrder
+  }
+
   export type EnumRTStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.RTStatus | EnumRTStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RTStatus[] | ListEnumRTStatusFieldRefInput<$PrismaModel>
@@ -42226,7 +52718,17 @@ export namespace Prisma {
     isNot?: CharacterProfileWhereInput | null
   }
 
+  export type IntegratedSessionListRelationFilter = {
+    every?: IntegratedSessionWhereInput
+    some?: IntegratedSessionWhereInput
+    none?: IntegratedSessionWhereInput
+  }
+
   export type ViralDraftV2OrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegratedSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -42497,6 +52999,85 @@ export namespace Prisma {
     age?: SortOrder
   }
 
+  export type BuzzInfluencerCountOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    userId?: SortOrder
+    followers?: SortOrder
+    following?: SortOrder
+    verified?: SortOrder
+    profileImage?: SortOrder
+    bio?: SortOrder
+    metrics7d?: SortOrder
+    metrics30d?: SortOrder
+    metricsAllTime?: SortOrder
+    categoryScores?: SortOrder
+    primaryCategory?: SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+    bestPostingHours?: SortOrder
+    postingFrequency?: SortOrder
+    lastActiveAt?: SortOrder
+    lastAnalyzedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzInfluencerAvgOrderByAggregateInput = {
+    followers?: SortOrder
+    following?: SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+  }
+
+  export type BuzzInfluencerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    userId?: SortOrder
+    followers?: SortOrder
+    following?: SortOrder
+    verified?: SortOrder
+    profileImage?: SortOrder
+    bio?: SortOrder
+    primaryCategory?: SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+    lastActiveAt?: SortOrder
+    lastAnalyzedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzInfluencerMinOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    userId?: SortOrder
+    followers?: SortOrder
+    following?: SortOrder
+    verified?: SortOrder
+    profileImage?: SortOrder
+    bio?: SortOrder
+    primaryCategory?: SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+    lastActiveAt?: SortOrder
+    lastAnalyzedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BuzzInfluencerSumOrderByAggregateInput = {
+    followers?: SortOrder
+    following?: SortOrder
+    engagementRate?: SortOrder
+    viralScore?: SortOrder
+    consistencyScore?: SortOrder
+  }
+
   export type ScheduledPostCreateNestedManyWithoutRefPostInput = {
     create?: XOR<ScheduledPostCreateWithoutRefPostInput, ScheduledPostUncheckedCreateWithoutRefPostInput> | ScheduledPostCreateWithoutRefPostInput[] | ScheduledPostUncheckedCreateWithoutRefPostInput[]
     connectOrCreate?: ScheduledPostCreateOrConnectWithoutRefPostInput | ScheduledPostCreateOrConnectWithoutRefPostInput[]
@@ -42571,6 +53152,28 @@ export namespace Prisma {
     deleteMany?: ScheduledPostScalarWhereInput | ScheduledPostScalarWhereInput[]
   }
 
+  export type BuzzConfigCreatekeywordsInput = {
+    set: string[]
+  }
+
+  export type BuzzConfigCreateaccountsInput = {
+    set: string[]
+  }
+
+  export type BuzzConfigUpdatekeywordsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type BuzzConfigUpdateaccountsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type BuzzPostCreateNestedOneWithoutScheduledPostsInput = {
     create?: XOR<BuzzPostCreateWithoutScheduledPostsInput, BuzzPostUncheckedCreateWithoutScheduledPostsInput>
     connectOrCreate?: BuzzPostCreateOrConnectWithoutScheduledPostsInput
@@ -42583,10 +53186,6 @@ export namespace Prisma {
 
   export type EnumPostTypeFieldUpdateOperationsInput = {
     set?: $Enums.PostType
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -43393,6 +53992,290 @@ export namespace Prisma {
     update?: XOR<XOR<CotDraftUpdateToOneWithWhereWithoutPerformanceInput, CotDraftUpdateWithoutPerformanceInput>, CotDraftUncheckedUpdateWithoutPerformanceInput>
   }
 
+  export type UnifiedContentSourceCreatekeywordsInput = {
+    set: string[]
+  }
+
+  export type IntegratedSessionSourceCreateNestedManyWithoutSourceInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput> | IntegratedSessionSourceCreateWithoutSourceInput[] | IntegratedSessionSourceUncheckedCreateWithoutSourceInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSourceInput | IntegratedSessionSourceCreateOrConnectWithoutSourceInput[]
+    createMany?: IntegratedSessionSourceCreateManySourceInputEnvelope
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+  }
+
+  export type IntegratedSessionSourceUncheckedCreateNestedManyWithoutSourceInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput> | IntegratedSessionSourceCreateWithoutSourceInput[] | IntegratedSessionSourceUncheckedCreateWithoutSourceInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSourceInput | IntegratedSessionSourceCreateOrConnectWithoutSourceInput[]
+    createMany?: IntegratedSessionSourceCreateManySourceInputEnvelope
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+  }
+
+  export type UnifiedContentSourceUpdatekeywordsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegratedSessionSourceUpdateManyWithoutSourceNestedInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput> | IntegratedSessionSourceCreateWithoutSourceInput[] | IntegratedSessionSourceUncheckedCreateWithoutSourceInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSourceInput | IntegratedSessionSourceCreateOrConnectWithoutSourceInput[]
+    upsert?: IntegratedSessionSourceUpsertWithWhereUniqueWithoutSourceInput | IntegratedSessionSourceUpsertWithWhereUniqueWithoutSourceInput[]
+    createMany?: IntegratedSessionSourceCreateManySourceInputEnvelope
+    set?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    disconnect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    delete?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    update?: IntegratedSessionSourceUpdateWithWhereUniqueWithoutSourceInput | IntegratedSessionSourceUpdateWithWhereUniqueWithoutSourceInput[]
+    updateMany?: IntegratedSessionSourceUpdateManyWithWhereWithoutSourceInput | IntegratedSessionSourceUpdateManyWithWhereWithoutSourceInput[]
+    deleteMany?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateManyWithoutSourceNestedInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput> | IntegratedSessionSourceCreateWithoutSourceInput[] | IntegratedSessionSourceUncheckedCreateWithoutSourceInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSourceInput | IntegratedSessionSourceCreateOrConnectWithoutSourceInput[]
+    upsert?: IntegratedSessionSourceUpsertWithWhereUniqueWithoutSourceInput | IntegratedSessionSourceUpsertWithWhereUniqueWithoutSourceInput[]
+    createMany?: IntegratedSessionSourceCreateManySourceInputEnvelope
+    set?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    disconnect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    delete?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    update?: IntegratedSessionSourceUpdateWithWhereUniqueWithoutSourceInput | IntegratedSessionSourceUpdateWithWhereUniqueWithoutSourceInput[]
+    updateMany?: IntegratedSessionSourceUpdateManyWithWhereWithoutSourceInput | IntegratedSessionSourceUpdateManyWithWhereWithoutSourceInput[]
+    deleteMany?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+  }
+
+  export type IntegratedSessionCreatenewsArticleIdsInput = {
+    set: string[]
+  }
+
+  export type IntegratedSessionCreatebuzzPostIdsInput = {
+    set: string[]
+  }
+
+  export type ViralSessionCreateNestedOneWithoutIntegratedSessionsInput = {
+    create?: XOR<ViralSessionCreateWithoutIntegratedSessionsInput, ViralSessionUncheckedCreateWithoutIntegratedSessionsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutIntegratedSessionsInput
+    connect?: ViralSessionWhereUniqueInput
+  }
+
+  export type IntegratedSessionSourceCreateNestedManyWithoutSessionInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput> | IntegratedSessionSourceCreateWithoutSessionInput[] | IntegratedSessionSourceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSessionInput | IntegratedSessionSourceCreateOrConnectWithoutSessionInput[]
+    createMany?: IntegratedSessionSourceCreateManySessionInputEnvelope
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+  }
+
+  export type IntegratedDraftCreateNestedManyWithoutSessionInput = {
+    create?: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput> | IntegratedDraftCreateWithoutSessionInput[] | IntegratedDraftUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutSessionInput | IntegratedDraftCreateOrConnectWithoutSessionInput[]
+    createMany?: IntegratedDraftCreateManySessionInputEnvelope
+    connect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+  }
+
+  export type IntegratedSessionSourceUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput> | IntegratedSessionSourceCreateWithoutSessionInput[] | IntegratedSessionSourceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSessionInput | IntegratedSessionSourceCreateOrConnectWithoutSessionInput[]
+    createMany?: IntegratedSessionSourceCreateManySessionInputEnvelope
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+  }
+
+  export type IntegratedDraftUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput> | IntegratedDraftCreateWithoutSessionInput[] | IntegratedDraftUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutSessionInput | IntegratedDraftCreateOrConnectWithoutSessionInput[]
+    createMany?: IntegratedDraftCreateManySessionInputEnvelope
+    connect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+  }
+
+  export type IntegratedSessionUpdatenewsArticleIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegratedSessionUpdatebuzzPostIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type ViralSessionUpdateOneWithoutIntegratedSessionsNestedInput = {
+    create?: XOR<ViralSessionCreateWithoutIntegratedSessionsInput, ViralSessionUncheckedCreateWithoutIntegratedSessionsInput>
+    connectOrCreate?: ViralSessionCreateOrConnectWithoutIntegratedSessionsInput
+    upsert?: ViralSessionUpsertWithoutIntegratedSessionsInput
+    disconnect?: ViralSessionWhereInput | boolean
+    delete?: ViralSessionWhereInput | boolean
+    connect?: ViralSessionWhereUniqueInput
+    update?: XOR<XOR<ViralSessionUpdateToOneWithWhereWithoutIntegratedSessionsInput, ViralSessionUpdateWithoutIntegratedSessionsInput>, ViralSessionUncheckedUpdateWithoutIntegratedSessionsInput>
+  }
+
+  export type IntegratedSessionSourceUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput> | IntegratedSessionSourceCreateWithoutSessionInput[] | IntegratedSessionSourceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSessionInput | IntegratedSessionSourceCreateOrConnectWithoutSessionInput[]
+    upsert?: IntegratedSessionSourceUpsertWithWhereUniqueWithoutSessionInput | IntegratedSessionSourceUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: IntegratedSessionSourceCreateManySessionInputEnvelope
+    set?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    disconnect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    delete?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    update?: IntegratedSessionSourceUpdateWithWhereUniqueWithoutSessionInput | IntegratedSessionSourceUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: IntegratedSessionSourceUpdateManyWithWhereWithoutSessionInput | IntegratedSessionSourceUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+  }
+
+  export type IntegratedDraftUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput> | IntegratedDraftCreateWithoutSessionInput[] | IntegratedDraftUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutSessionInput | IntegratedDraftCreateOrConnectWithoutSessionInput[]
+    upsert?: IntegratedDraftUpsertWithWhereUniqueWithoutSessionInput | IntegratedDraftUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: IntegratedDraftCreateManySessionInputEnvelope
+    set?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    disconnect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    delete?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    connect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    update?: IntegratedDraftUpdateWithWhereUniqueWithoutSessionInput | IntegratedDraftUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: IntegratedDraftUpdateManyWithWhereWithoutSessionInput | IntegratedDraftUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: IntegratedDraftScalarWhereInput | IntegratedDraftScalarWhereInput[]
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput> | IntegratedSessionSourceCreateWithoutSessionInput[] | IntegratedSessionSourceUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedSessionSourceCreateOrConnectWithoutSessionInput | IntegratedSessionSourceCreateOrConnectWithoutSessionInput[]
+    upsert?: IntegratedSessionSourceUpsertWithWhereUniqueWithoutSessionInput | IntegratedSessionSourceUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: IntegratedSessionSourceCreateManySessionInputEnvelope
+    set?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    disconnect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    delete?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    connect?: IntegratedSessionSourceWhereUniqueInput | IntegratedSessionSourceWhereUniqueInput[]
+    update?: IntegratedSessionSourceUpdateWithWhereUniqueWithoutSessionInput | IntegratedSessionSourceUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: IntegratedSessionSourceUpdateManyWithWhereWithoutSessionInput | IntegratedSessionSourceUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+  }
+
+  export type IntegratedDraftUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput> | IntegratedDraftCreateWithoutSessionInput[] | IntegratedDraftUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutSessionInput | IntegratedDraftCreateOrConnectWithoutSessionInput[]
+    upsert?: IntegratedDraftUpsertWithWhereUniqueWithoutSessionInput | IntegratedDraftUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: IntegratedDraftCreateManySessionInputEnvelope
+    set?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    disconnect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    delete?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    connect?: IntegratedDraftWhereUniqueInput | IntegratedDraftWhereUniqueInput[]
+    update?: IntegratedDraftUpdateWithWhereUniqueWithoutSessionInput | IntegratedDraftUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: IntegratedDraftUpdateManyWithWhereWithoutSessionInput | IntegratedDraftUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: IntegratedDraftScalarWhereInput | IntegratedDraftScalarWhereInput[]
+  }
+
+  export type IntegratedSessionCreateNestedOneWithoutSourcesInput = {
+    create?: XOR<IntegratedSessionCreateWithoutSourcesInput, IntegratedSessionUncheckedCreateWithoutSourcesInput>
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutSourcesInput
+    connect?: IntegratedSessionWhereUniqueInput
+  }
+
+  export type UnifiedContentSourceCreateNestedOneWithoutIntegratedSessionsInput = {
+    create?: XOR<UnifiedContentSourceCreateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedCreateWithoutIntegratedSessionsInput>
+    connectOrCreate?: UnifiedContentSourceCreateOrConnectWithoutIntegratedSessionsInput
+    connect?: UnifiedContentSourceWhereUniqueInput
+  }
+
+  export type IntegratedSessionUpdateOneRequiredWithoutSourcesNestedInput = {
+    create?: XOR<IntegratedSessionCreateWithoutSourcesInput, IntegratedSessionUncheckedCreateWithoutSourcesInput>
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutSourcesInput
+    upsert?: IntegratedSessionUpsertWithoutSourcesInput
+    connect?: IntegratedSessionWhereUniqueInput
+    update?: XOR<XOR<IntegratedSessionUpdateToOneWithWhereWithoutSourcesInput, IntegratedSessionUpdateWithoutSourcesInput>, IntegratedSessionUncheckedUpdateWithoutSourcesInput>
+  }
+
+  export type UnifiedContentSourceUpdateOneRequiredWithoutIntegratedSessionsNestedInput = {
+    create?: XOR<UnifiedContentSourceCreateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedCreateWithoutIntegratedSessionsInput>
+    connectOrCreate?: UnifiedContentSourceCreateOrConnectWithoutIntegratedSessionsInput
+    upsert?: UnifiedContentSourceUpsertWithoutIntegratedSessionsInput
+    connect?: UnifiedContentSourceWhereUniqueInput
+    update?: XOR<XOR<UnifiedContentSourceUpdateToOneWithWhereWithoutIntegratedSessionsInput, UnifiedContentSourceUpdateWithoutIntegratedSessionsInput>, UnifiedContentSourceUncheckedUpdateWithoutIntegratedSessionsInput>
+  }
+
+  export type IntegratedDraftCreatesourceNewsIdsInput = {
+    set: string[]
+  }
+
+  export type IntegratedDraftCreatesourceBuzzIdsInput = {
+    set: string[]
+  }
+
+  export type IntegratedDraftCreatehashtagsInput = {
+    set: string[]
+  }
+
+  export type IntegratedSessionCreateNestedOneWithoutDraftsInput = {
+    create?: XOR<IntegratedSessionCreateWithoutDraftsInput, IntegratedSessionUncheckedCreateWithoutDraftsInput>
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutDraftsInput
+    connect?: IntegratedSessionWhereUniqueInput
+  }
+
+  export type IntegratedDraftPerformanceCreateNestedOneWithoutDraftInput = {
+    create?: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: IntegratedDraftPerformanceCreateOrConnectWithoutDraftInput
+    connect?: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  export type IntegratedDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput = {
+    create?: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: IntegratedDraftPerformanceCreateOrConnectWithoutDraftInput
+    connect?: IntegratedDraftPerformanceWhereUniqueInput
+  }
+
+  export type IntegratedDraftUpdatesourceNewsIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegratedDraftUpdatesourceBuzzIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegratedDraftUpdatehashtagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegratedSessionUpdateOneRequiredWithoutDraftsNestedInput = {
+    create?: XOR<IntegratedSessionCreateWithoutDraftsInput, IntegratedSessionUncheckedCreateWithoutDraftsInput>
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutDraftsInput
+    upsert?: IntegratedSessionUpsertWithoutDraftsInput
+    connect?: IntegratedSessionWhereUniqueInput
+    update?: XOR<XOR<IntegratedSessionUpdateToOneWithWhereWithoutDraftsInput, IntegratedSessionUpdateWithoutDraftsInput>, IntegratedSessionUncheckedUpdateWithoutDraftsInput>
+  }
+
+  export type IntegratedDraftPerformanceUpdateOneWithoutDraftNestedInput = {
+    create?: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: IntegratedDraftPerformanceCreateOrConnectWithoutDraftInput
+    upsert?: IntegratedDraftPerformanceUpsertWithoutDraftInput
+    disconnect?: IntegratedDraftPerformanceWhereInput | boolean
+    delete?: IntegratedDraftPerformanceWhereInput | boolean
+    connect?: IntegratedDraftPerformanceWhereUniqueInput
+    update?: XOR<XOR<IntegratedDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, IntegratedDraftPerformanceUpdateWithoutDraftInput>, IntegratedDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type IntegratedDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput = {
+    create?: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+    connectOrCreate?: IntegratedDraftPerformanceCreateOrConnectWithoutDraftInput
+    upsert?: IntegratedDraftPerformanceUpsertWithoutDraftInput
+    disconnect?: IntegratedDraftPerformanceWhereInput | boolean
+    delete?: IntegratedDraftPerformanceWhereInput | boolean
+    connect?: IntegratedDraftPerformanceWhereUniqueInput
+    update?: XOR<XOR<IntegratedDraftPerformanceUpdateToOneWithWhereWithoutDraftInput, IntegratedDraftPerformanceUpdateWithoutDraftInput>, IntegratedDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type IntegratedDraftCreateNestedOneWithoutPerformanceInput = {
+    create?: XOR<IntegratedDraftCreateWithoutPerformanceInput, IntegratedDraftUncheckedCreateWithoutPerformanceInput>
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutPerformanceInput
+    connect?: IntegratedDraftWhereUniqueInput
+  }
+
+  export type IntegratedDraftUpdateOneRequiredWithoutPerformanceNestedInput = {
+    create?: XOR<IntegratedDraftCreateWithoutPerformanceInput, IntegratedDraftUncheckedCreateWithoutPerformanceInput>
+    connectOrCreate?: IntegratedDraftCreateOrConnectWithoutPerformanceInput
+    upsert?: IntegratedDraftUpsertWithoutPerformanceInput
+    connect?: IntegratedDraftWhereUniqueInput
+    update?: XOR<XOR<IntegratedDraftUpdateToOneWithWhereWithoutPerformanceInput, IntegratedDraftUpdateWithoutPerformanceInput>, IntegratedDraftUncheckedUpdateWithoutPerformanceInput>
+  }
+
   export type ViralDraftV2CreateNestedOneWithoutScheduledRTsInput = {
     create?: XOR<ViralDraftV2CreateWithoutScheduledRTsInput, ViralDraftV2UncheckedCreateWithoutScheduledRTsInput>
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutScheduledRTsInput
@@ -43481,6 +54364,13 @@ export namespace Prisma {
     connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
   }
 
+  export type IntegratedSessionCreateNestedManyWithoutV2SessionInput = {
+    create?: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput> | IntegratedSessionCreateWithoutV2SessionInput[] | IntegratedSessionUncheckedCreateWithoutV2SessionInput[]
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutV2SessionInput | IntegratedSessionCreateOrConnectWithoutV2SessionInput[]
+    createMany?: IntegratedSessionCreateManyV2SessionInputEnvelope
+    connect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+  }
+
   export type ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
@@ -43493,6 +54383,13 @@ export namespace Prisma {
     connectOrCreate?: NewsViralRelationCreateOrConnectWithoutSessionInput | NewsViralRelationCreateOrConnectWithoutSessionInput[]
     createMany?: NewsViralRelationCreateManySessionInputEnvelope
     connect?: NewsViralRelationWhereUniqueInput | NewsViralRelationWhereUniqueInput[]
+  }
+
+  export type IntegratedSessionUncheckedCreateNestedManyWithoutV2SessionInput = {
+    create?: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput> | IntegratedSessionCreateWithoutV2SessionInput[] | IntegratedSessionUncheckedCreateWithoutV2SessionInput[]
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutV2SessionInput | IntegratedSessionCreateOrConnectWithoutV2SessionInput[]
+    createMany?: IntegratedSessionCreateManyV2SessionInputEnvelope
+    connect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
   }
 
   export type ViralSessionUpdateselectedIdsInput = {
@@ -43538,6 +54435,20 @@ export namespace Prisma {
     deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
   }
 
+  export type IntegratedSessionUpdateManyWithoutV2SessionNestedInput = {
+    create?: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput> | IntegratedSessionCreateWithoutV2SessionInput[] | IntegratedSessionUncheckedCreateWithoutV2SessionInput[]
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutV2SessionInput | IntegratedSessionCreateOrConnectWithoutV2SessionInput[]
+    upsert?: IntegratedSessionUpsertWithWhereUniqueWithoutV2SessionInput | IntegratedSessionUpsertWithWhereUniqueWithoutV2SessionInput[]
+    createMany?: IntegratedSessionCreateManyV2SessionInputEnvelope
+    set?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    disconnect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    delete?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    connect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    update?: IntegratedSessionUpdateWithWhereUniqueWithoutV2SessionInput | IntegratedSessionUpdateWithWhereUniqueWithoutV2SessionInput[]
+    updateMany?: IntegratedSessionUpdateManyWithWhereWithoutV2SessionInput | IntegratedSessionUpdateManyWithWhereWithoutV2SessionInput[]
+    deleteMany?: IntegratedSessionScalarWhereInput | IntegratedSessionScalarWhereInput[]
+  }
+
   export type ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<ViralDraftV2CreateWithoutSessionInput, ViralDraftV2UncheckedCreateWithoutSessionInput> | ViralDraftV2CreateWithoutSessionInput[] | ViralDraftV2UncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ViralDraftV2CreateOrConnectWithoutSessionInput | ViralDraftV2CreateOrConnectWithoutSessionInput[]
@@ -43564,6 +54475,20 @@ export namespace Prisma {
     update?: NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput | NewsViralRelationUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: NewsViralRelationUpdateManyWithWhereWithoutSessionInput | NewsViralRelationUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: NewsViralRelationScalarWhereInput | NewsViralRelationScalarWhereInput[]
+  }
+
+  export type IntegratedSessionUncheckedUpdateManyWithoutV2SessionNestedInput = {
+    create?: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput> | IntegratedSessionCreateWithoutV2SessionInput[] | IntegratedSessionUncheckedCreateWithoutV2SessionInput[]
+    connectOrCreate?: IntegratedSessionCreateOrConnectWithoutV2SessionInput | IntegratedSessionCreateOrConnectWithoutV2SessionInput[]
+    upsert?: IntegratedSessionUpsertWithWhereUniqueWithoutV2SessionInput | IntegratedSessionUpsertWithWhereUniqueWithoutV2SessionInput[]
+    createMany?: IntegratedSessionCreateManyV2SessionInputEnvelope
+    set?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    disconnect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    delete?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    connect?: IntegratedSessionWhereUniqueInput | IntegratedSessionWhereUniqueInput[]
+    update?: IntegratedSessionUpdateWithWhereUniqueWithoutV2SessionInput | IntegratedSessionUpdateWithWhereUniqueWithoutV2SessionInput[]
+    updateMany?: IntegratedSessionUpdateManyWithWhereWithoutV2SessionInput | IntegratedSessionUpdateManyWithWhereWithoutV2SessionInput[]
+    deleteMany?: IntegratedSessionScalarWhereInput | IntegratedSessionScalarWhereInput[]
   }
 
   export type ViralDraftV2CreatehashtagsInput = {
@@ -43942,6 +54867,19 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedEnumPostStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PostStatus | EnumPostStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PostStatus[] | ListEnumPostStatusFieldRefInput<$PrismaModel>
@@ -43954,11 +54892,6 @@ export namespace Prisma {
     in?: $Enums.PostType[] | ListEnumPostTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.PostType[] | ListEnumPostTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumPostTypeFilter<$PrismaModel> | $Enums.PostType
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -43990,14 +54923,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPostTypeFilter<$PrismaModel>
     _max?: NestedEnumPostTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -46223,6 +57148,775 @@ export namespace Prisma {
     scheduledRTs?: ScheduledRetweetUncheckedUpdateManyWithoutCotDraftNestedInput
   }
 
+  export type IntegratedSessionSourceCreateWithoutSourceInput = {
+    id?: string
+    relevanceScore?: number | null
+    usageType: string
+    session: IntegratedSessionCreateNestedOneWithoutSourcesInput
+  }
+
+  export type IntegratedSessionSourceUncheckedCreateWithoutSourceInput = {
+    id?: string
+    sessionId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedSessionSourceCreateOrConnectWithoutSourceInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    create: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput>
+  }
+
+  export type IntegratedSessionSourceCreateManySourceInputEnvelope = {
+    data: IntegratedSessionSourceCreateManySourceInput | IntegratedSessionSourceCreateManySourceInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IntegratedSessionSourceUpsertWithWhereUniqueWithoutSourceInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    update: XOR<IntegratedSessionSourceUpdateWithoutSourceInput, IntegratedSessionSourceUncheckedUpdateWithoutSourceInput>
+    create: XOR<IntegratedSessionSourceCreateWithoutSourceInput, IntegratedSessionSourceUncheckedCreateWithoutSourceInput>
+  }
+
+  export type IntegratedSessionSourceUpdateWithWhereUniqueWithoutSourceInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    data: XOR<IntegratedSessionSourceUpdateWithoutSourceInput, IntegratedSessionSourceUncheckedUpdateWithoutSourceInput>
+  }
+
+  export type IntegratedSessionSourceUpdateManyWithWhereWithoutSourceInput = {
+    where: IntegratedSessionSourceScalarWhereInput
+    data: XOR<IntegratedSessionSourceUpdateManyMutationInput, IntegratedSessionSourceUncheckedUpdateManyWithoutSourceInput>
+  }
+
+  export type IntegratedSessionSourceScalarWhereInput = {
+    AND?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+    OR?: IntegratedSessionSourceScalarWhereInput[]
+    NOT?: IntegratedSessionSourceScalarWhereInput | IntegratedSessionSourceScalarWhereInput[]
+    id?: StringFilter<"IntegratedSessionSource"> | string
+    sessionId?: StringFilter<"IntegratedSessionSource"> | string
+    sourceId?: StringFilter<"IntegratedSessionSource"> | string
+    relevanceScore?: FloatNullableFilter<"IntegratedSessionSource"> | number | null
+    usageType?: StringFilter<"IntegratedSessionSource"> | string
+  }
+
+  export type ViralSessionCreateWithoutIntegratedSessionsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
+    characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
+    newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionUncheckedCreateWithoutIntegratedSessionsInput = {
+    id?: string
+    theme: string
+    platform: string
+    style: string
+    status?: string
+    createdAt?: Date | string
+    characterProfileId?: string | null
+    voiceStyleMode?: string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionCreateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+    newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ViralSessionCreateOrConnectWithoutIntegratedSessionsInput = {
+    where: ViralSessionWhereUniqueInput
+    create: XOR<ViralSessionCreateWithoutIntegratedSessionsInput, ViralSessionUncheckedCreateWithoutIntegratedSessionsInput>
+  }
+
+  export type IntegratedSessionSourceCreateWithoutSessionInput = {
+    id?: string
+    relevanceScore?: number | null
+    usageType: string
+    source: UnifiedContentSourceCreateNestedOneWithoutIntegratedSessionsInput
+  }
+
+  export type IntegratedSessionSourceUncheckedCreateWithoutSessionInput = {
+    id?: string
+    sourceId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedSessionSourceCreateOrConnectWithoutSessionInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    create: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput>
+  }
+
+  export type IntegratedSessionSourceCreateManySessionInputEnvelope = {
+    data: IntegratedSessionSourceCreateManySessionInput | IntegratedSessionSourceCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IntegratedDraftCreateWithoutSessionInput = {
+    id?: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: IntegratedDraftPerformanceCreateNestedOneWithoutDraftInput
+  }
+
+  export type IntegratedDraftUncheckedCreateWithoutSessionInput = {
+    id?: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    performance?: IntegratedDraftPerformanceUncheckedCreateNestedOneWithoutDraftInput
+  }
+
+  export type IntegratedDraftCreateOrConnectWithoutSessionInput = {
+    where: IntegratedDraftWhereUniqueInput
+    create: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput>
+  }
+
+  export type IntegratedDraftCreateManySessionInputEnvelope = {
+    data: IntegratedDraftCreateManySessionInput | IntegratedDraftCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ViralSessionUpsertWithoutIntegratedSessionsInput = {
+    update: XOR<ViralSessionUpdateWithoutIntegratedSessionsInput, ViralSessionUncheckedUpdateWithoutIntegratedSessionsInput>
+    create: XOR<ViralSessionCreateWithoutIntegratedSessionsInput, ViralSessionUncheckedCreateWithoutIntegratedSessionsInput>
+    where?: ViralSessionWhereInput
+  }
+
+  export type ViralSessionUpdateToOneWithWhereWithoutIntegratedSessionsInput = {
+    where?: ViralSessionWhereInput
+    data: XOR<ViralSessionUpdateWithoutIntegratedSessionsInput, ViralSessionUncheckedUpdateWithoutIntegratedSessionsInput>
+  }
+
+  export type ViralSessionUpdateWithoutIntegratedSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
+    characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
+    newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ViralSessionUncheckedUpdateWithoutIntegratedSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    theme?: StringFieldUpdateOperationsInput | string
+    platform?: StringFieldUpdateOperationsInput | string
+    style?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    characterProfileId?: NullableStringFieldUpdateOperationsInput | string | null
+    voiceStyleMode?: NullableStringFieldUpdateOperationsInput | string | null
+    topics?: NullableJsonNullValueInput | InputJsonValue
+    concepts?: NullableJsonNullValueInput | InputJsonValue
+    selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
+    contents?: NullableJsonNullValueInput | InputJsonValue
+    drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+    newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionSourceUpsertWithWhereUniqueWithoutSessionInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    update: XOR<IntegratedSessionSourceUpdateWithoutSessionInput, IntegratedSessionSourceUncheckedUpdateWithoutSessionInput>
+    create: XOR<IntegratedSessionSourceCreateWithoutSessionInput, IntegratedSessionSourceUncheckedCreateWithoutSessionInput>
+  }
+
+  export type IntegratedSessionSourceUpdateWithWhereUniqueWithoutSessionInput = {
+    where: IntegratedSessionSourceWhereUniqueInput
+    data: XOR<IntegratedSessionSourceUpdateWithoutSessionInput, IntegratedSessionSourceUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type IntegratedSessionSourceUpdateManyWithWhereWithoutSessionInput = {
+    where: IntegratedSessionSourceScalarWhereInput
+    data: XOR<IntegratedSessionSourceUpdateManyMutationInput, IntegratedSessionSourceUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type IntegratedDraftUpsertWithWhereUniqueWithoutSessionInput = {
+    where: IntegratedDraftWhereUniqueInput
+    update: XOR<IntegratedDraftUpdateWithoutSessionInput, IntegratedDraftUncheckedUpdateWithoutSessionInput>
+    create: XOR<IntegratedDraftCreateWithoutSessionInput, IntegratedDraftUncheckedCreateWithoutSessionInput>
+  }
+
+  export type IntegratedDraftUpdateWithWhereUniqueWithoutSessionInput = {
+    where: IntegratedDraftWhereUniqueInput
+    data: XOR<IntegratedDraftUpdateWithoutSessionInput, IntegratedDraftUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type IntegratedDraftUpdateManyWithWhereWithoutSessionInput = {
+    where: IntegratedDraftScalarWhereInput
+    data: XOR<IntegratedDraftUpdateManyMutationInput, IntegratedDraftUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type IntegratedDraftScalarWhereInput = {
+    AND?: IntegratedDraftScalarWhereInput | IntegratedDraftScalarWhereInput[]
+    OR?: IntegratedDraftScalarWhereInput[]
+    NOT?: IntegratedDraftScalarWhereInput | IntegratedDraftScalarWhereInput[]
+    id?: StringFilter<"IntegratedDraft"> | string
+    sessionId?: StringFilter<"IntegratedDraft"> | string
+    title?: StringFilter<"IntegratedDraft"> | string
+    content?: StringFilter<"IntegratedDraft"> | string
+    contentType?: StringFilter<"IntegratedDraft"> | string
+    sourcesSummary?: StringNullableFilter<"IntegratedDraft"> | string | null
+    newsContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    buzzContext?: StringNullableFilter<"IntegratedDraft"> | string | null
+    conceptId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    hook?: StringNullableFilter<"IntegratedDraft"> | string | null
+    angle?: StringNullableFilter<"IntegratedDraft"> | string | null
+    sourceNewsIds?: StringNullableListFilter<"IntegratedDraft">
+    sourceBuzzIds?: StringNullableListFilter<"IntegratedDraft">
+    generationStrategy?: StringNullableFilter<"IntegratedDraft"> | string | null
+    generationData?: JsonNullableFilter<"IntegratedDraft">
+    hashtags?: StringNullableListFilter<"IntegratedDraft">
+    visualGuide?: StringNullableFilter<"IntegratedDraft"> | string | null
+    status?: StringFilter<"IntegratedDraft"> | string
+    scheduledAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postedAt?: DateTimeNullableFilter<"IntegratedDraft"> | Date | string | null
+    postId?: StringNullableFilter<"IntegratedDraft"> | string | null
+    viralScore?: FloatNullableFilter<"IntegratedDraft"> | number | null
+    createdAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedDraft"> | Date | string
+  }
+
+  export type IntegratedSessionCreateWithoutSourcesInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    v2Session?: ViralSessionCreateNestedOneWithoutIntegratedSessionsInput
+    drafts?: IntegratedDraftCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionUncheckedCreateWithoutSourcesInput = {
+    id?: string
+    sessionType: string
+    v2SessionId?: string | null
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    drafts?: IntegratedDraftUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionCreateOrConnectWithoutSourcesInput = {
+    where: IntegratedSessionWhereUniqueInput
+    create: XOR<IntegratedSessionCreateWithoutSourcesInput, IntegratedSessionUncheckedCreateWithoutSourcesInput>
+  }
+
+  export type UnifiedContentSourceCreateWithoutIntegratedSessionsInput = {
+    id?: string
+    sourceType: string
+    sourceId: string
+    contentSummary?: string | null
+    importanceScore?: number | null
+    viralPotential?: number | null
+    keywords?: UnifiedContentSourceCreatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedContentSourceUncheckedCreateWithoutIntegratedSessionsInput = {
+    id?: string
+    sourceType: string
+    sourceId: string
+    contentSummary?: string | null
+    importanceScore?: number | null
+    viralPotential?: number | null
+    keywords?: UnifiedContentSourceCreatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UnifiedContentSourceCreateOrConnectWithoutIntegratedSessionsInput = {
+    where: UnifiedContentSourceWhereUniqueInput
+    create: XOR<UnifiedContentSourceCreateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedCreateWithoutIntegratedSessionsInput>
+  }
+
+  export type IntegratedSessionUpsertWithoutSourcesInput = {
+    update: XOR<IntegratedSessionUpdateWithoutSourcesInput, IntegratedSessionUncheckedUpdateWithoutSourcesInput>
+    create: XOR<IntegratedSessionCreateWithoutSourcesInput, IntegratedSessionUncheckedCreateWithoutSourcesInput>
+    where?: IntegratedSessionWhereInput
+  }
+
+  export type IntegratedSessionUpdateToOneWithWhereWithoutSourcesInput = {
+    where?: IntegratedSessionWhereInput
+    data: XOR<IntegratedSessionUpdateWithoutSourcesInput, IntegratedSessionUncheckedUpdateWithoutSourcesInput>
+  }
+
+  export type IntegratedSessionUpdateWithoutSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    v2Session?: ViralSessionUpdateOneWithoutIntegratedSessionsNestedInput
+    drafts?: IntegratedDraftUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionUncheckedUpdateWithoutSourcesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    v2SessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    drafts?: IntegratedDraftUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type UnifiedContentSourceUpsertWithoutIntegratedSessionsInput = {
+    update: XOR<UnifiedContentSourceUpdateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedUpdateWithoutIntegratedSessionsInput>
+    create: XOR<UnifiedContentSourceCreateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedCreateWithoutIntegratedSessionsInput>
+    where?: UnifiedContentSourceWhereInput
+  }
+
+  export type UnifiedContentSourceUpdateToOneWithWhereWithoutIntegratedSessionsInput = {
+    where?: UnifiedContentSourceWhereInput
+    data: XOR<UnifiedContentSourceUpdateWithoutIntegratedSessionsInput, UnifiedContentSourceUncheckedUpdateWithoutIntegratedSessionsInput>
+  }
+
+  export type UnifiedContentSourceUpdateWithoutIntegratedSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UnifiedContentSourceUncheckedUpdateWithoutIntegratedSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceType?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    contentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    importanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralPotential?: NullableFloatFieldUpdateOperationsInput | number | null
+    keywords?: UnifiedContentSourceUpdatekeywordsInput | string[]
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedSessionCreateWithoutDraftsInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    v2Session?: ViralSessionCreateNestedOneWithoutIntegratedSessionsInput
+    sources?: IntegratedSessionSourceCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionUncheckedCreateWithoutDraftsInput = {
+    id?: string
+    sessionType: string
+    v2SessionId?: string | null
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sources?: IntegratedSessionSourceUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionCreateOrConnectWithoutDraftsInput = {
+    where: IntegratedSessionWhereUniqueInput
+    create: XOR<IntegratedSessionCreateWithoutDraftsInput, IntegratedSessionUncheckedCreateWithoutDraftsInput>
+  }
+
+  export type IntegratedDraftPerformanceCreateWithoutDraftInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    predictionAccuracy?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput = {
+    id?: string
+    likes30m?: number | null
+    retweets30m?: number | null
+    replies30m?: number | null
+    impressions30m?: number | null
+    likes1h?: number | null
+    retweets1h?: number | null
+    replies1h?: number | null
+    impressions1h?: number | null
+    likes24h?: number | null
+    retweets24h?: number | null
+    replies24h?: number | null
+    impressions24h?: number | null
+    engagementRate?: number | null
+    viralCoefficient?: number | null
+    predictionAccuracy?: number | null
+    collectedAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftPerformanceCreateOrConnectWithoutDraftInput = {
+    where: IntegratedDraftPerformanceWhereUniqueInput
+    create: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+  }
+
+  export type IntegratedSessionUpsertWithoutDraftsInput = {
+    update: XOR<IntegratedSessionUpdateWithoutDraftsInput, IntegratedSessionUncheckedUpdateWithoutDraftsInput>
+    create: XOR<IntegratedSessionCreateWithoutDraftsInput, IntegratedSessionUncheckedCreateWithoutDraftsInput>
+    where?: IntegratedSessionWhereInput
+  }
+
+  export type IntegratedSessionUpdateToOneWithWhereWithoutDraftsInput = {
+    where?: IntegratedSessionWhereInput
+    data: XOR<IntegratedSessionUpdateWithoutDraftsInput, IntegratedSessionUncheckedUpdateWithoutDraftsInput>
+  }
+
+  export type IntegratedSessionUpdateWithoutDraftsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    v2Session?: ViralSessionUpdateOneWithoutIntegratedSessionsNestedInput
+    sources?: IntegratedSessionSourceUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionUncheckedUpdateWithoutDraftsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    v2SessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: IntegratedSessionSourceUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedDraftPerformanceUpsertWithoutDraftInput = {
+    update: XOR<IntegratedDraftPerformanceUpdateWithoutDraftInput, IntegratedDraftPerformanceUncheckedUpdateWithoutDraftInput>
+    create: XOR<IntegratedDraftPerformanceCreateWithoutDraftInput, IntegratedDraftPerformanceUncheckedCreateWithoutDraftInput>
+    where?: IntegratedDraftPerformanceWhereInput
+  }
+
+  export type IntegratedDraftPerformanceUpdateToOneWithWhereWithoutDraftInput = {
+    where?: IntegratedDraftPerformanceWhereInput
+    data: XOR<IntegratedDraftPerformanceUpdateWithoutDraftInput, IntegratedDraftPerformanceUncheckedUpdateWithoutDraftInput>
+  }
+
+  export type IntegratedDraftPerformanceUpdateWithoutDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftPerformanceUncheckedUpdateWithoutDraftInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    likes30m?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets30m?: NullableIntFieldUpdateOperationsInput | number | null
+    replies30m?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions30m?: NullableIntFieldUpdateOperationsInput | number | null
+    likes1h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets1h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies1h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions1h?: NullableIntFieldUpdateOperationsInput | number | null
+    likes24h?: NullableIntFieldUpdateOperationsInput | number | null
+    retweets24h?: NullableIntFieldUpdateOperationsInput | number | null
+    replies24h?: NullableIntFieldUpdateOperationsInput | number | null
+    impressions24h?: NullableIntFieldUpdateOperationsInput | number | null
+    engagementRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    viralCoefficient?: NullableFloatFieldUpdateOperationsInput | number | null
+    predictionAccuracy?: NullableFloatFieldUpdateOperationsInput | number | null
+    collectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedDraftCreateWithoutPerformanceInput = {
+    id?: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: IntegratedSessionCreateNestedOneWithoutDraftsInput
+  }
+
+  export type IntegratedDraftUncheckedCreateWithoutPerformanceInput = {
+    id?: string
+    sessionId: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedDraftCreateOrConnectWithoutPerformanceInput = {
+    where: IntegratedDraftWhereUniqueInput
+    create: XOR<IntegratedDraftCreateWithoutPerformanceInput, IntegratedDraftUncheckedCreateWithoutPerformanceInput>
+  }
+
+  export type IntegratedDraftUpsertWithoutPerformanceInput = {
+    update: XOR<IntegratedDraftUpdateWithoutPerformanceInput, IntegratedDraftUncheckedUpdateWithoutPerformanceInput>
+    create: XOR<IntegratedDraftCreateWithoutPerformanceInput, IntegratedDraftUncheckedCreateWithoutPerformanceInput>
+    where?: IntegratedDraftWhereInput
+  }
+
+  export type IntegratedDraftUpdateToOneWithWhereWithoutPerformanceInput = {
+    where?: IntegratedDraftWhereInput
+    data: XOR<IntegratedDraftUpdateWithoutPerformanceInput, IntegratedDraftUncheckedUpdateWithoutPerformanceInput>
+  }
+
+  export type IntegratedDraftUpdateWithoutPerformanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: IntegratedSessionUpdateOneRequiredWithoutDraftsNestedInput
+  }
+
+  export type IntegratedDraftUncheckedUpdateWithoutPerformanceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ViralDraftV2CreateWithoutScheduledRTsInput = {
     id?: string
     conceptId: string
@@ -46496,6 +58190,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
     characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
+    integratedSessions?: IntegratedSessionCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionUncheckedCreateWithoutNewsRelationsInput = {
@@ -46512,6 +58207,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionUncheckedCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionCreateOrConnectWithoutNewsRelationsInput = {
@@ -46589,6 +58285,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
     characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
+    integratedSessions?: IntegratedSessionUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutNewsRelationsInput = {
@@ -46605,6 +58302,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUncheckedUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralDraftV2CreateWithoutSessionInput = {
@@ -46726,6 +58424,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntegratedSessionCreateWithoutV2SessionInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sources?: IntegratedSessionSourceCreateNestedManyWithoutSessionInput
+    drafts?: IntegratedDraftCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionUncheckedCreateWithoutV2SessionInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sources?: IntegratedSessionSourceUncheckedCreateNestedManyWithoutSessionInput
+    drafts?: IntegratedDraftUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type IntegratedSessionCreateOrConnectWithoutV2SessionInput = {
+    where: IntegratedSessionWhereUniqueInput
+    create: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput>
+  }
+
+  export type IntegratedSessionCreateManyV2SessionInputEnvelope = {
+    data: IntegratedSessionCreateManyV2SessionInput | IntegratedSessionCreateManyV2SessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ViralDraftV2UpsertWithWhereUniqueWithoutSessionInput = {
     where: ViralDraftV2WhereUniqueInput
     update: XOR<ViralDraftV2UpdateWithoutSessionInput, ViralDraftV2UncheckedUpdateWithoutSessionInput>
@@ -46830,6 +58578,44 @@ export namespace Prisma {
     data: XOR<NewsViralRelationUpdateManyMutationInput, NewsViralRelationUncheckedUpdateManyWithoutSessionInput>
   }
 
+  export type IntegratedSessionUpsertWithWhereUniqueWithoutV2SessionInput = {
+    where: IntegratedSessionWhereUniqueInput
+    update: XOR<IntegratedSessionUpdateWithoutV2SessionInput, IntegratedSessionUncheckedUpdateWithoutV2SessionInput>
+    create: XOR<IntegratedSessionCreateWithoutV2SessionInput, IntegratedSessionUncheckedCreateWithoutV2SessionInput>
+  }
+
+  export type IntegratedSessionUpdateWithWhereUniqueWithoutV2SessionInput = {
+    where: IntegratedSessionWhereUniqueInput
+    data: XOR<IntegratedSessionUpdateWithoutV2SessionInput, IntegratedSessionUncheckedUpdateWithoutV2SessionInput>
+  }
+
+  export type IntegratedSessionUpdateManyWithWhereWithoutV2SessionInput = {
+    where: IntegratedSessionScalarWhereInput
+    data: XOR<IntegratedSessionUpdateManyMutationInput, IntegratedSessionUncheckedUpdateManyWithoutV2SessionInput>
+  }
+
+  export type IntegratedSessionScalarWhereInput = {
+    AND?: IntegratedSessionScalarWhereInput | IntegratedSessionScalarWhereInput[]
+    OR?: IntegratedSessionScalarWhereInput[]
+    NOT?: IntegratedSessionScalarWhereInput | IntegratedSessionScalarWhereInput[]
+    id?: StringFilter<"IntegratedSession"> | string
+    sessionType?: StringFilter<"IntegratedSession"> | string
+    v2SessionId?: StringNullableFilter<"IntegratedSession"> | string | null
+    newsArticleIds?: StringNullableListFilter<"IntegratedSession">
+    buzzPostIds?: StringNullableListFilter<"IntegratedSession">
+    generationContext?: JsonNullableFilter<"IntegratedSession">
+    performanceMetrics?: JsonNullableFilter<"IntegratedSession">
+    status?: StringFilter<"IntegratedSession"> | string
+    currentStep?: StringNullableFilter<"IntegratedSession"> | string | null
+    theme?: StringNullableFilter<"IntegratedSession"> | string | null
+    character?: StringNullableFilter<"IntegratedSession"> | string | null
+    platform?: StringNullableFilter<"IntegratedSession"> | string | null
+    strategy?: StringNullableFilter<"IntegratedSession"> | string | null
+    createdAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegratedSession"> | Date | string
+    completedAt?: DateTimeNullableFilter<"IntegratedSession"> | Date | string | null
+  }
+
   export type ViralSessionCreateWithoutDraftsInput = {
     id?: string
     theme: string
@@ -46844,6 +58630,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     characterProfile?: CharacterProfileCreateNestedOneWithoutSessionsInput
     newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionUncheckedCreateWithoutDraftsInput = {
@@ -46860,6 +58647,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionCreateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionUncheckedCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionCreateOrConnectWithoutDraftsInput = {
@@ -46981,6 +58769,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     characterProfile?: CharacterProfileUpdateOneWithoutSessionsNestedInput
     newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutDraftsInput = {
@@ -46997,6 +58786,7 @@ export namespace Prisma {
     selectedIds?: ViralSessionUpdateselectedIdsInput | string[]
     contents?: NullableJsonNullValueInput | InputJsonValue
     newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUncheckedUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralDraftPerformanceUpsertWithoutDraftInput = {
@@ -47209,6 +58999,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2CreateNestedManyWithoutSessionInput
     newsRelations?: NewsViralRelationCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionUncheckedCreateWithoutCharacterProfileInput = {
@@ -47225,6 +59016,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedCreateNestedManyWithoutSessionInput
     newsRelations?: NewsViralRelationUncheckedCreateNestedManyWithoutSessionInput
+    integratedSessions?: IntegratedSessionUncheckedCreateNestedManyWithoutV2SessionInput
   }
 
   export type ViralSessionCreateOrConnectWithoutCharacterProfileInput = {
@@ -48018,6 +59810,168 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntegratedSessionSourceCreateManySourceInput = {
+    id?: string
+    sessionId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedSessionSourceUpdateWithoutSourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+    session?: IntegratedSessionUpdateOneRequiredWithoutSourcesNestedInput
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateWithoutSourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateManyWithoutSourceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedSessionSourceCreateManySessionInput = {
+    id?: string
+    sourceId: string
+    relevanceScore?: number | null
+    usageType: string
+  }
+
+  export type IntegratedDraftCreateManySessionInput = {
+    id?: string
+    title: string
+    content: string
+    contentType: string
+    sourcesSummary?: string | null
+    newsContext?: string | null
+    buzzContext?: string | null
+    conceptId?: string | null
+    hook?: string | null
+    angle?: string | null
+    sourceNewsIds?: IntegratedDraftCreatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftCreatesourceBuzzIdsInput | string[]
+    generationStrategy?: string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftCreatehashtagsInput | string[]
+    visualGuide?: string | null
+    status?: string
+    scheduledAt?: Date | string | null
+    postedAt?: Date | string | null
+    postId?: string | null
+    viralScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegratedSessionSourceUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+    source?: UnifiedContentSourceUpdateOneRequiredWithoutIntegratedSessionsNestedInput
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedSessionSourceUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sourceId?: StringFieldUpdateOperationsInput | string
+    relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageType?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type IntegratedDraftUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: IntegratedDraftPerformanceUpdateOneWithoutDraftNestedInput
+  }
+
+  export type IntegratedDraftUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    performance?: IntegratedDraftPerformanceUncheckedUpdateOneWithoutDraftNestedInput
+  }
+
+  export type IntegratedDraftUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    contentType?: StringFieldUpdateOperationsInput | string
+    sourcesSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    newsContext?: NullableStringFieldUpdateOperationsInput | string | null
+    buzzContext?: NullableStringFieldUpdateOperationsInput | string | null
+    conceptId?: NullableStringFieldUpdateOperationsInput | string | null
+    hook?: NullableStringFieldUpdateOperationsInput | string | null
+    angle?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceNewsIds?: IntegratedDraftUpdatesourceNewsIdsInput | string[]
+    sourceBuzzIds?: IntegratedDraftUpdatesourceBuzzIdsInput | string[]
+    generationStrategy?: NullableStringFieldUpdateOperationsInput | string | null
+    generationData?: NullableJsonNullValueInput | InputJsonValue
+    hashtags?: IntegratedDraftUpdatehashtagsInput | string[]
+    visualGuide?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    postId?: NullableStringFieldUpdateOperationsInput | string | null
+    viralScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ViralDraftV2CreateManySessionInput = {
     id?: string
     conceptId: string
@@ -48041,6 +59995,24 @@ export namespace Prisma {
     relevanceScore?: number | null
     usedInContent?: boolean
     createdAt?: Date | string
+  }
+
+  export type IntegratedSessionCreateManyV2SessionInput = {
+    id?: string
+    sessionType: string
+    newsArticleIds?: IntegratedSessionCreatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionCreatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: string
+    currentStep?: string | null
+    theme?: string | null
+    character?: string | null
+    platform?: string | null
+    strategy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
   }
 
   export type ViralDraftV2UpdateWithoutSessionInput = {
@@ -48120,6 +60092,64 @@ export namespace Prisma {
     relevanceScore?: NullableFloatFieldUpdateOperationsInput | number | null
     usedInContent?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegratedSessionUpdateWithoutV2SessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: IntegratedSessionSourceUpdateManyWithoutSessionNestedInput
+    drafts?: IntegratedDraftUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionUncheckedUpdateWithoutV2SessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sources?: IntegratedSessionSourceUncheckedUpdateManyWithoutSessionNestedInput
+    drafts?: IntegratedDraftUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type IntegratedSessionUncheckedUpdateManyWithoutV2SessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionType?: StringFieldUpdateOperationsInput | string
+    newsArticleIds?: IntegratedSessionUpdatenewsArticleIdsInput | string[]
+    buzzPostIds?: IntegratedSessionUpdatebuzzPostIdsInput | string[]
+    generationContext?: NullableJsonNullValueInput | InputJsonValue
+    performanceMetrics?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    currentStep?: NullableStringFieldUpdateOperationsInput | string | null
+    theme?: NullableStringFieldUpdateOperationsInput | string | null
+    character?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: NullableStringFieldUpdateOperationsInput | string | null
+    strategy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ScheduledRetweetCreateManyViralDraftInput = {
@@ -48218,6 +60248,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UpdateManyWithoutSessionNestedInput
     newsRelations?: NewsViralRelationUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateWithoutCharacterProfileInput = {
@@ -48234,6 +60265,7 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     drafts?: ViralDraftV2UncheckedUpdateManyWithoutSessionNestedInput
     newsRelations?: NewsViralRelationUncheckedUpdateManyWithoutSessionNestedInput
+    integratedSessions?: IntegratedSessionUncheckedUpdateManyWithoutV2SessionNestedInput
   }
 
   export type ViralSessionUncheckedUpdateManyWithoutCharacterProfileInput = {
@@ -48288,6 +60320,14 @@ export namespace Prisma {
      */
     export type CotDraftCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotDraftCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use UnifiedContentSourceCountOutputTypeDefaultArgs instead
+     */
+    export type UnifiedContentSourceCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UnifiedContentSourceCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegratedSessionCountOutputTypeDefaultArgs instead
+     */
+    export type IntegratedSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegratedSessionCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ViralSessionCountOutputTypeDefaultArgs instead
      */
     export type ViralSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ViralSessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -48303,6 +60343,10 @@ export namespace Prisma {
      * @deprecated Use BuzzPostDefaultArgs instead
      */
     export type BuzzPostArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BuzzPostDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BuzzConfigDefaultArgs instead
+     */
+    export type BuzzConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BuzzConfigDefaultArgs<ExtArgs>
     /**
      * @deprecated Use ScheduledPostDefaultArgs instead
      */
@@ -48380,6 +60424,26 @@ export namespace Prisma {
      */
     export type CotDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CotDraftPerformanceDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use UnifiedContentSourceDefaultArgs instead
+     */
+    export type UnifiedContentSourceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UnifiedContentSourceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegratedSessionDefaultArgs instead
+     */
+    export type IntegratedSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegratedSessionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegratedSessionSourceDefaultArgs instead
+     */
+    export type IntegratedSessionSourceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegratedSessionSourceDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegratedDraftDefaultArgs instead
+     */
+    export type IntegratedDraftArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegratedDraftDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegratedDraftPerformanceDefaultArgs instead
+     */
+    export type IntegratedDraftPerformanceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegratedDraftPerformanceDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ScheduledRetweetDefaultArgs instead
      */
     export type ScheduledRetweetArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ScheduledRetweetDefaultArgs<ExtArgs>
@@ -48415,6 +60479,10 @@ export namespace Prisma {
      * @deprecated Use CharacterProfileDefaultArgs instead
      */
     export type CharacterProfileArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CharacterProfileDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use BuzzInfluencerDefaultArgs instead
+     */
+    export type BuzzInfluencerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BuzzInfluencerDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany
