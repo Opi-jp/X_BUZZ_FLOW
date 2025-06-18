@@ -36,6 +36,11 @@ node scripts/dev-tools/find-error.js "エラー内容"
 # プロンプトを編集する（NEW）
 node scripts/dev-tools/prompt-editor.js list
 node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
+
+# ⚠️ 重要：プロンプトエディターの使い方
+# 1. 変数プレビュー（メニュー4）で使用される変数を確認
+# 2. JSON検証（メニュー5）で問題のある記述を確認
+# 3. 問題がある場合は修正してから使用すること
 ```
 
 ### 使うAPI（2025年6月18日更新）

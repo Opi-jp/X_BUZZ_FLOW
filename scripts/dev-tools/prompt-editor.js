@@ -25,6 +25,7 @@ const PromptImpactAnalyzer = require('./lib/prompt-impact-analyzer')
 class PromptEditor {
   constructor() {
     this.promptsDir = path.join(process.cwd(), 'lib', 'prompts')
+    this.charactersFile = path.join(process.cwd(), 'types', 'character.ts')
     this.storage = new PromptStorage()
     this.impactAnalyzer = new PromptImpactAnalyzer()
     this.rl = readline.createInterface({
@@ -96,9 +97,11 @@ class PromptEditor {
       // 現在のプロンプトを表示
       const content = await fs.readFile(filepath, 'utf-8')
       
-      // プロンプトタイプの判定とデフォルト値表示
+      // プロンプトタイプの判定
       const promptType = this.detectPromptType(filename)
-      this.showDefaultValues(promptType, filename)
+      
+      // 使用されている変数を表示
+      this.showVariables(content)
       
       console.log('\n📄 現在のプロンプト:')
       console.log('─'.repeat(80))
@@ -116,9 +119,10 @@ class PromptEditor {
       console.log('4. プレビュー（完全な展開を確認）')
       console.log('5. 影響範囲を確認')
       console.log('6. DB互換性チェック')
-      console.log('7. キャンセル')
+      console.log('7. キャラクター設定を表示')
+      console.log('8. キャンセル')
       
-      const choice = await this.prompt('\n選択 (1-7): ')
+      const choice = await this.prompt('\n選択 (1-8): ')
       
       switch (choice) {
         case '1':
@@ -139,6 +143,10 @@ class PromptEditor {
           break
         case '6':
           await this.showDataCompatibility(filename)
+          await this.edit(filename) // 編集画面に戻る
+          break
+        case '7':
+          await this.showCharacterSettings(filename)
           await this.edit(filename) // 編集画面に戻る
           break
         default:
@@ -297,16 +305,48 @@ class PromptEditor {
     }
 
     // JSON出力チェック
-    if (content.includes('```json')) {
+    if (content.includes('```json') || content.includes('JSON形式') || content.includes('{')) {
       analysis.scores.coherence += 20
       
-      // JSON内の例示チェック
-      const jsonMatch = content.match(/```json([\s\S]*?)```/);
-      if (jsonMatch && jsonMatch[1].includes('"')) {
-        const jsonContent = jsonMatch[1];
-        if (jsonContent.match(/"[^"]+"\s*:\s*"[^"]+"/)) {
-          analysis.warnings.push('⚠️  JSON例に具体的な値が含まれている（LLMが制約として解釈する可能性）')
-          analysis.scores.creativity -= 10
+      // JSON内の例示チェック（複数のパターンに対応）
+      const jsonPatterns = [
+        /```json([\s\S]*?)```/,
+        /\{[\s\S]*?\}/,
+        /JSON形式[^{]*(\{[\s\S]*?\})/
+      ];
+      
+      let jsonContent = null;
+      for (const pattern of jsonPatterns) {
+        const match = content.match(pattern);
+        if (match) {
+          jsonContent = match[1] || match[0];
+          break;
+        }
+      }
+      
+      if (jsonContent) {
+        // JSON内の指示語句検出（CLAUDE.mdの原則違反）
+        const instructionPatterns = [
+          { pattern: /の投稿文/, message: 'JSON内に「〜の投稿文」という指示が含まれている' },
+          { pattern: /を記載/, message: 'JSON内に「〜を記載」という指示が含まれている' },
+          { pattern: /してください/, message: 'JSON内に「〜してください」という指示が含まれている' },
+          { pattern: /（[^）]+）/, message: 'JSON内に括弧での説明が含まれている' },
+          { pattern: /導入|背景|核心|内省|締め/, message: 'JSON内に投稿の役割説明が含まれている' }
+        ];
+        
+        for (const { pattern, message } of instructionPatterns) {
+          if (jsonContent.match(pattern)) {
+            analysis.issues.push(`❌ ${message}（LLMが指示として解釈）`);
+            analysis.scores.creativity -= 15;
+            analysis.scores.coherence -= 20;
+          }
+        }
+        
+        // 具体的な値チェック（既存の機能を維持）
+        if (jsonContent.match(/"[^"]+"\s*:\s*"[^"]+"/) && 
+            !jsonContent.match(/"[^"]+"\s*:\s*""/)) {
+          analysis.warnings.push('⚠️  JSON例に具体的な値が含まれている（空文字列を推奨）');
+          analysis.scores.specificity -= 10;
         }
       }
     }
@@ -336,16 +376,25 @@ class PromptEditor {
       console.log(`  一貫性: ${this.getScoreBar(result.scores.coherence)}`)
       console.log(`  総合:   ${this.getScoreBar(result.scores.overall)}`)
       
-      // 問題点
+      // 問題点（CLAUDE.md原則違反を強調）
       if (result.issues.length > 0) {
-        console.log('\n問題点:')
+        console.log('\n🚨 重大な問題（CLAUDE.md原則違反）:')
         result.issues.forEach(issue => console.log(`  ${issue}`))
       }
       
       // 警告
       if (result.warnings.length > 0) {
-        console.log('\n警告:')
+        console.log('\n⚠️  警告:')
         result.warnings.forEach(warning => console.log(`  ${warning}`))
+      }
+      
+      // 改善提案
+      if (result.issues.length > 0) {
+        console.log('\n💡 改善提案:')
+        if (result.issues.some(issue => issue.includes('JSON内'))) {
+          console.log('  - JSON内の説明文を削除し、空文字列にする')
+          console.log('  - 投稿の役割は自然文で完全に説明する')
+        }
       }
     }
     
@@ -431,7 +480,9 @@ class PromptEditor {
       // ファイル監視
       console.log('\n👀 ファイルの変更を監視中... (Ctrl+Cで終了)')
       
-      const watcher = fs.watch(filepath)
+      const watcher = require('fs').watch(filepath)
+      
+      // ファイル変更時の処理
       watcher.on('change', async () => {
         console.log('\n📝 ファイルが変更されました')
         const content = await fs.readFile(filepath, 'utf-8')
@@ -442,6 +493,15 @@ class PromptEditor {
           console.log('⚠️  新しい警告:')
           analysis.warnings.slice(0, 3).forEach(w => console.log(`  ${w}`))
         }
+      })
+      
+      // Ctrl+Cで監視を終了できるようにする
+      await new Promise((resolve) => {
+        process.on('SIGINT', () => {
+          watcher.close()
+          console.log('\n\n✅ ファイル監視を終了しました')
+          resolve()
+        })
       })
     } catch (error) {
       console.log('❌ エディターを開けませんでした')
@@ -455,6 +515,165 @@ class PromptEditor {
     return 'unknown'
   }
 
+  showVariables(content) {
+    // プロンプト内の変数を抽出
+    const variablePattern = /\$\{([^}]+)\}/g
+    const variables = new Set()
+    let match
+    
+    while ((match = variablePattern.exec(content)) !== null) {
+      variables.add(match[1])
+    }
+    
+    if (variables.size > 0) {
+      console.log('\n📋 使用されている変数:')
+      console.log('─'.repeat(50))
+      
+      const sortedVars = Array.from(variables).sort()
+      sortedVars.forEach(varName => {
+        console.log(`  ${varName}`)
+      })
+      
+      console.log('─'.repeat(50))
+      console.log(`合計: ${variables.size}個の変数`)
+    }
+  }
+  
+  async showCharacterSettings(filename) {
+    console.log('\n🎭 キャラクター設定')
+    console.log('─'.repeat(80))
+    
+    try {
+      // キャラクターIDを特定
+      let characterId = null
+      if (filename.includes('cardi-dare')) {
+        characterId = 'cardi-dare'
+      }
+      
+      if (!characterId) {
+        console.log('⚠️  このプロンプトに関連するキャラクターが見つかりません')
+        return
+      }
+      
+      // character.tsファイルを読み込む
+      const characterFileContent = await fs.readFile(this.charactersFile, 'utf-8')
+      
+      // カーディ・ダーレの設定を抽出
+      const cardiStart = characterFileContent.indexOf('id: \'cardi-dare\'')
+      if (cardiStart === -1) {
+        console.log('❌ キャラクター設定が見つかりません')
+        return
+      }
+      
+      // 設定の終わりを見つける（isDefaultフィールドまで含める）
+      const isDefaultIndex = characterFileContent.indexOf('isDefault', cardiStart)
+      const cardiEnd = characterFileContent.indexOf('}', isDefaultIndex)
+      const cardiSection = characterFileContent.substring(
+        characterFileContent.lastIndexOf('{', cardiStart),
+        cardiEnd + 1
+      )
+      
+      // 各フィールドを抽出して表示
+      console.log('📝 キャラクター: カーディ・ダーレ')
+      console.log('─'.repeat(80))
+      
+      // 各設定を解析
+      const fields = [
+        { key: 'name', label: '名前' },
+        { key: 'age', label: '年齢' },
+        { key: 'gender', label: '性別' },
+        { key: 'tone', label: 'トーン' },
+        { key: 'catchphrase', label: 'キャッチフレーズ' },
+        { key: 'philosophy', label: '哲学' }
+      ]
+      
+      fields.forEach(({ key, label }) => {
+        const pattern = new RegExp(`${key}:\\s*['"]([^'"]+)['"]|${key}:\\s*(\\d+)`)
+        const match = cardiSection.match(pattern)
+        if (match) {
+          const value = match[1] || match[2]
+          console.log(`\n${label}: ${value}`)
+        }
+      })
+      
+      // voice_styleの表示
+      const voiceMatch = cardiSection.match(/voice_style:\s*\{([^}]+)\}/s)
+      if (voiceMatch) {
+        console.log('\n音声スタイル:')
+        const voiceContent = voiceMatch[1]
+        const styles = ['normal', 'emotional', 'humorous']
+        styles.forEach(style => {
+          const stylePattern = new RegExp(`${style}:\\s*['"]([^'"]+)['"]`)
+          const styleMatch = voiceContent.match(stylePattern)
+          if (styleMatch) {
+            console.log(`  ${style}: ${styleMatch[1]}`)
+          }
+        })
+      }
+      
+      // topicsの表示
+      const topicsMatch = cardiSection.match(/topics:\s*\[([\s\S]*?)\]/m)
+      if (topicsMatch) {
+        console.log('\nトピック:')
+        const topicsContent = topicsMatch[1]
+        const topics = topicsContent.match(/'([^']+)'/g)
+        if (topics) {
+          topics.forEach((topic, index) => {
+            console.log(`  ${index + 1}. ${topic.replace(/'/g, '')}`)
+          })
+        }
+      }
+      
+      // visualの表示
+      const visualMatch = cardiSection.match(/visual:\s*\{([^}]+)\}/s)
+      if (visualMatch) {
+        console.log('\nビジュアル設定:')
+        const visualContent = visualMatch[1]
+        
+        // style
+        const styleMatch = visualContent.match(/style:\s*['"]([^'"]+)['"]/)
+        if (styleMatch) {
+          console.log(`  スタイル: ${styleMatch[1]}`)
+        }
+        
+        // elements
+        const elementsMatch = visualContent.match(/elements:\s*\[([\s\S]*?)\]/)
+        if (elementsMatch) {
+          console.log(`  要素:`)
+          const elements = elementsMatch[1].match(/'([^']+)'/g)
+          if (elements) {
+            elements.forEach(element => {
+              console.log(`    - ${element.replace(/'/g, '')}`)
+            })
+          }
+        }
+        
+        // setting
+        const settingMatch = visualContent.match(/setting:\s*['"]([^'"]+)['"]/)
+        if (settingMatch) {
+          console.log(`  設定: ${settingMatch[1]}`)
+        }
+      }
+      
+      console.log('\n' + '─'.repeat(80))
+      
+      // 編集オプション
+      console.log('\nキャラクター設定の編集:')
+      console.log('1. VSCodeで開く')
+      console.log('2. 戻る')
+      
+      const choice = await this.prompt('\n選択 (1-2): ')
+      
+      if (choice === '1') {
+        await execAsync(`code "${this.charactersFile}"`)
+        console.log('✅ character.tsをVSCodeで開きました')
+      }
+      
+    } catch (error) {
+      console.log(`❌ エラー: ${error.message}`)
+    }
+  }
+  
   showDefaultValues(promptType, filename) {
     console.log('\n📋 実際に使用される変数の例:')
     console.log('─'.repeat(50))
@@ -715,35 +934,80 @@ class PromptEditor {
   }
 
   async showSampleExpansion(content, promptType, filename) {
-    console.log('\n🔍 サンプル展開（最初の300文字）:')
-    console.log('─'.repeat(80))
-    
-    // サンプル変数を取得
-    const sampleVars = this.getSampleVariables(promptType, filename)
-    const expanded = this.expandVariables(content, sampleVars)
-    
-    console.log(expanded.substring(0, 300) + '...')
-    console.log('─'.repeat(80))
+    // JSON出力指示の検出
+    if (content.includes('JSON形式で出力') || content.includes('以下のJSON')) {
+      console.log('\n📊 JSON出力形式の分析:')
+      console.log('─'.repeat(80))
+      
+      // JSONブロックの検出（改行を含む）
+      const jsonStart = content.indexOf('{')
+      const jsonEnd = content.lastIndexOf('}')
+      
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        const jsonBlock = content.substring(jsonStart, jsonEnd + 1)
+        const lines = jsonBlock.split('\n')
+        
+        let hasIssues = false
+        
+        lines.forEach((line, index) => {
+          // "key": "value" パターンを検出
+          const match = line.match(/"([^"]+)"\s*:\s*"([^"]*)"/);
+          
+          if (match) {
+            const key = match[1]
+            const value = match[2]
+            
+            if (value && value !== '') {
+              console.log(`  ⚠️  "${key}": "${value}"`)
+              console.log(`     → この説明文がそのまま出力される可能性があります`)
+              hasIssues = true
+            }
+          }
+        })
+        
+        if (hasIssues) {
+          console.log('\n  💡 推奨対応:')
+          console.log('  1. JSON内の説明文を削除（空文字列にする）')
+          console.log('  2. 各投稿の役割は自然文で説明する')
+          console.log('  3. 例: "post1": "" のように値を空にする')
+        } else {
+          console.log('  ✅ JSON形式に問題は見つかりませんでした')
+        }
+      }
+      
+      console.log('─'.repeat(80))
+    }
   }
   
   async previewExpanded(content, promptType, filename) {
-    console.log('\n🔍 完全な展開プレビュー')
+    console.log('\n🔍 プレビューモード選択')
+    console.log('1. 構造プレビュー（変数を展開しない）')
+    console.log('2. 展開プレビュー（変数を展開する）')
     
-    const useDefault = await this.prompt('デフォルト値を使用しますか？ (Y/n): ')
+    const mode = await this.prompt('\n選択 (1-2): ')
     
-    let variables
-    if (useDefault.toLowerCase() === 'n') {
-      variables = await this.collectTestVariables(promptType)
-    } else {
-      variables = this.getSampleVariables(promptType, filename)
+    if (mode === '1') {
+      // 構造プレビュー
+      console.log('\n📤 プロンプト構造（変数未展開）:')
+      console.log('═'.repeat(80))
+      console.log(content)
+      console.log('═'.repeat(80))
+      
+      // 変数一覧を再表示
+      this.showVariables(content)
+      
+      // JSON構造の問題を指摘
+      this.showSampleExpansion(content, promptType, filename)
+    } else if (mode === '2') {
+      // 展開プレビュー
+      const variables = this.getSampleVariables(promptType, filename)
+      const expanded = this.expandVariables(content, variables)
+      
+      console.log('\n📤 展開後のプロンプト:')
+      console.log('═'.repeat(80))
+      console.log(expanded)
+      console.log('═'.repeat(80))
     }
-    
-    const expanded = this.expandVariables(content, variables)
-    
-    console.log('\n📤 展開後のプロンプト:')
-    console.log('═'.repeat(80))
-    console.log(expanded)
-    console.log('═'.repeat(80))
     
     await this.prompt('\nEnterキーで編集画面に戻る...')
     await this.edit(filename)
@@ -874,6 +1138,13 @@ class PromptEditor {
 
   prompt(question) {
     return new Promise(resolve => {
+      // readlineがクローズされていた場合は再作成
+      if (!this.rl || this.rl.closed) {
+        this.rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout
+        })
+      }
       this.rl.question(question, resolve)
     })
   }
@@ -1289,7 +1560,9 @@ if (require.main === module) {
   }
 
   close() {
-    this.rl.close()
+    if (this.rl && !this.rl.closed) {
+      this.rl.close()
+    }
   }
 }
 
