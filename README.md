@@ -1,6 +1,46 @@
-# BuzzFlow - SNS投稿支援システム
+# X_BUZZ_FLOW - AIバイラルコンテンツシステム
 
-X（旧Twitter）のバズ投稿を収集・分析し、AIを活用した投稿戦略を支援するシステム
+## 🚨 重要：最初にこれを読め！
+
+### 🛑 最軽量版（NEW）
+```bash
+# Claudeの自動読み込みを止める
+cat START_HERE.md
+```
+
+### 🚀 軽量版
+```bash
+# 最小限の情報
+cat QUICK_START.md
+```
+
+### 📚 詳細版（必要に応じて）
+```bash
+cat CLAUDE.md      # 詳細な手順
+cat MASTER_DOC.md  # システムの現状
+cat ERRORS.md      # エラー解決集
+```
+
+**軽量版で十分。詳細は必要になってから。**
+
+## 🎯 クイックリファレンス
+
+### 開発を始める
+```bash
+# 永続サーバーの起動（必須）
+./scripts/dev-persistent.sh
+
+# エラーが出たら
+node scripts/dev-tools/find-error.js "エラー内容"
+```
+
+### 使うAPI（2025年6月18日更新）
+```
+セッション: /api/generation/content/sessions/[id]
+下書き:     /api/generation/drafts/[id]
+ニュース:   /api/intelligence/news/*
+バズ分析:   /api/intelligence/buzz/*
+```
 
 ## 技術スタック
 
