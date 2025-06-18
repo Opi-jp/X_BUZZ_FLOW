@@ -37,10 +37,15 @@ node scripts/dev-tools/find-error.js "エラー内容"
 node scripts/dev-tools/prompt-editor.js list
 node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
 
+# プロンプトを直接実行（非インタラクティブ）
+node scripts/dev-tools/prompt-editor.js test-direct perplexity/collect-topics.txt \
+  theme="AIと働き方" platform=Twitter style=エンターテイメント --non-interactive
+
 # ⚠️ 重要：プロンプトエディターの使い方
 # 1. 変数プレビュー（メニュー4）で使用される変数を確認
 # 2. JSON検証（メニュー5）で問題のある記述を確認
 # 3. 問題がある場合は修正してから使用すること
+# 4. test-directコマンドで非インタラクティブ実行が可能
 ```
 
 ### 使うAPI（2025年6月18日更新）

@@ -105,8 +105,12 @@ node scripts/dev-tools/prompt-editor.js list
 # プロンプトの編集（変数の説明付き）
 node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
 
-# プロンプトのテスト実行
+# プロンプトのテスト実行（インタラクティブ）
 node scripts/dev-tools/prompt-editor.js test perplexity/collect-topics.txt
+
+# プロンプトの直接実行（非インタラクティブ） ← NEW!
+node scripts/dev-tools/prompt-editor.js test-direct perplexity/collect-topics.txt \
+  theme="AIと働き方" platform=Twitter style=エンターテイメント --non-interactive
 
 # 変数展開のプレビュー（実行せずに確認）
 node scripts/dev-tools/prompt-editor.js preview claude/character-profiles/cardi-dare.txt
@@ -454,6 +458,12 @@ node check-session-status.js [セッションID]
 - **エラーが発生したら必ず原因を特定して解決する**
 - **「とりあえず動かす」ではなく「正しく動かす」ことが重要**
 
+### プロンプト設計の実装原則（2025年6月19日追加）
+- **データの構造化**: wrapCharacterProfile/wrapConceptData関数で自然文に変換
+- **物語構造の明示**: GPTの出力（フック→背景→メイン→内省→CTA）を次工程で活用
+- **責任の分離**: GPT=コンセプト生成、Claude=投稿文生成、システム=ハッシュタグ追加
+- **重複の排除**: プロンプトに同じ指示を繰り返さない
+
 ## 環境変数設定メモ
 
 ### 必須環境変数
@@ -591,5 +601,30 @@ GOOGLE_SEARCH_ENGINE_ID=
    - 自然文で思考を導き、JSONは出力の容器
    - 入力と出力は1:1ではなく1:N（創造的生成）
 
+## 2025年6月19日の作業記録（キャラクター設定とプロンプトシステム改善）
+
+### 実施した作業
+
+#### 1. カーディ・ダーレのキャラクター再定義
+- 年齢を53歳に、背景を「元詐欺師／元王様（いまはただの飲んだくれ）」に設定
+- 哲学：「人間は最適化できない。それが救いだ。」
+
+#### 2. プロンプトシステムの大幅改善
+- **wrapCharacterProfile関数**: キャラクターデータを自然文に変換
+- **wrapConceptData関数**: 物語構造を明示的に表示
+- **プロンプトファイルの簡略化**: 重複指示を削除
+
+#### 3. プロンプトエディターの非インタラクティブ実行
+```bash
+node scripts/dev-tools/prompt-editor.js test-direct <file> [key=value ...] --non-interactive
+```
+- Claudeから直接実行可能に
+- 結果とモックデータを自動保存
+
+### 重要な学び
+- **物語構造の重要性**: GPTの5段階構造（フック→背景→メイン→内省→CTA）を維持
+- **データフローの明確化**: 各フェーズの責任を明確に分離
+- **プロンプトの簡潔性**: 必要最小限の指示で最大の効果
+
 ---
-*最終更新: 2025/06/18 18:00*
+*最終更新: 2025/06/19 04:30*
