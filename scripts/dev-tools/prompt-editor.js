@@ -205,6 +205,72 @@ class PromptEditor {
   }
 
   /**
+   * 直接実行モード（非インタラクティブ）
+   */
+  async testDirect(filename, params = []) {
+    if (!filename) {
+      console.log('❌ ファイル名を指定してください')
+      console.log('使用方法: prompt-editor.js test-direct <file> [key=value ...]')
+      console.log('例: prompt-editor.js test-direct perplexity/collect-topics.txt theme="AIと働き方" platform=Twitter style=エンターテイメント')
+      return
+    }
+
+    const filepath = path.join(this.promptsDir, filename)
+    this.currentPromptFile = filename
+    
+    try {
+      const content = await fs.readFile(filepath, 'utf-8')
+      
+      console.log('\n🧪 プロンプト直接実行\n')
+      console.log(`ファイル: ${filename}`)
+      
+      // プロンプトタイプの判定
+      const promptType = this.detectPromptType(filename)
+      console.log(`プロンプトタイプ: ${promptType}`)
+      
+      // パラメータから変数を構築
+      const variables = {}
+      params.forEach(param => {
+        const [key, ...valueParts] = param.split('=')
+        const value = valueParts.join('=').replace(/^["']|["']$/g, '') // クォートを除去
+        variables[key] = value
+      })
+      
+      // デフォルト変数を追加（指定されていない場合）
+      const defaultVars = this.getSampleVariables(promptType, filename)
+      Object.keys(defaultVars).forEach(key => {
+        if (!variables[key]) {
+          variables[key] = defaultVars[key]
+        }
+      })
+      
+      console.log('\n📋 使用する変数:')
+      console.log('─'.repeat(50))
+      Object.entries(variables).forEach(([key, value]) => {
+        if (typeof value === 'string' && value.length > 100) {
+          console.log(`${key}: ${value.substring(0, 100)}...`)
+        } else if (typeof value === 'object') {
+          console.log(`${key}: [Object]`)
+        } else {
+          console.log(`${key}: ${value}`)
+        }
+      })
+      console.log('─'.repeat(50))
+      
+      // プロンプトの変数展開
+      const expandedPrompt = this.expandVariables(content, variables)
+      
+      console.log('\n🚀 API実行中...\n')
+      
+      // 直接実行
+      await this.executeTest(promptType, expandedPrompt, variables)
+      
+    } catch (error) {
+      console.log(`❌ エラー: ${error.message}`)
+    }
+  }
+
+  /**
    * プロンプト分析
    */
   async analyze() {
@@ -573,98 +639,53 @@ class PromptEditor {
         cardiEnd + 1
       )
       
-      // 各フィールドを抽出して表示
+      // 現在の設定を解析して構造化
+      const currentSettings = this.parseCharacterSettings(cardiSection)
+      
+      // 各フィールドを表示
       console.log('📝 キャラクター: カーディ・ダーレ')
       console.log('─'.repeat(80))
       
-      // 各設定を解析
-      const fields = [
-        { key: 'name', label: '名前' },
-        { key: 'age', label: '年齢' },
-        { key: 'gender', label: '性別' },
-        { key: 'tone', label: 'トーン' },
-        { key: 'catchphrase', label: 'キャッチフレーズ' },
-        { key: 'philosophy', label: '哲学' }
-      ]
+      console.log(`\n名前: ${currentSettings.name}`)
+      console.log(`年齢: ${currentSettings.age}`)
+      console.log(`性別: ${currentSettings.gender}`)
+      console.log(`トーン: ${currentSettings.tone}`)
+      console.log(`キャッチフレーズ: ${currentSettings.catchphrase}`)
+      console.log(`哲学: ${currentSettings.philosophy}`)
       
-      fields.forEach(({ key, label }) => {
-        const pattern = new RegExp(`${key}:\\s*['"]([^'"]+)['"]|${key}:\\s*(\\d+)`)
-        const match = cardiSection.match(pattern)
-        if (match) {
-          const value = match[1] || match[2]
-          console.log(`\n${label}: ${value}`)
-        }
+      console.log('\n音声スタイル:')
+      console.log(`  normal: ${currentSettings.voice_style.normal}`)
+      console.log(`  emotional: ${currentSettings.voice_style.emotional}`)
+      console.log(`  humorous: ${currentSettings.voice_style.humorous}`)
+      
+      console.log('\nトピック:')
+      currentSettings.topics.forEach((topic, index) => {
+        console.log(`  ${index + 1}. ${topic}`)
       })
       
-      // voice_styleの表示
-      const voiceMatch = cardiSection.match(/voice_style:\s*\{([^}]+)\}/s)
-      if (voiceMatch) {
-        console.log('\n音声スタイル:')
-        const voiceContent = voiceMatch[1]
-        const styles = ['normal', 'emotional', 'humorous']
-        styles.forEach(style => {
-          const stylePattern = new RegExp(`${style}:\\s*['"]([^'"]+)['"]`)
-          const styleMatch = voiceContent.match(stylePattern)
-          if (styleMatch) {
-            console.log(`  ${style}: ${styleMatch[1]}`)
-          }
-        })
-      }
-      
-      // topicsの表示
-      const topicsMatch = cardiSection.match(/topics:\s*\[([\s\S]*?)\]/m)
-      if (topicsMatch) {
-        console.log('\nトピック:')
-        const topicsContent = topicsMatch[1]
-        const topics = topicsContent.match(/'([^']+)'/g)
-        if (topics) {
-          topics.forEach((topic, index) => {
-            console.log(`  ${index + 1}. ${topic.replace(/'/g, '')}`)
-          })
-        }
-      }
-      
-      // visualの表示
-      const visualMatch = cardiSection.match(/visual:\s*\{([^}]+)\}/s)
-      if (visualMatch) {
+      if (currentSettings.visual) {
         console.log('\nビジュアル設定:')
-        const visualContent = visualMatch[1]
-        
-        // style
-        const styleMatch = visualContent.match(/style:\s*['"]([^'"]+)['"]/)
-        if (styleMatch) {
-          console.log(`  スタイル: ${styleMatch[1]}`)
-        }
-        
-        // elements
-        const elementsMatch = visualContent.match(/elements:\s*\[([\s\S]*?)\]/)
-        if (elementsMatch) {
-          console.log(`  要素:`)
-          const elements = elementsMatch[1].match(/'([^']+)'/g)
-          if (elements) {
-            elements.forEach(element => {
-              console.log(`    - ${element.replace(/'/g, '')}`)
-            })
-          }
-        }
-        
-        // setting
-        const settingMatch = visualContent.match(/setting:\s*['"]([^'"]+)['"]/)
-        if (settingMatch) {
-          console.log(`  設定: ${settingMatch[1]}`)
-        }
+        console.log(`  スタイル: ${currentSettings.visual.style}`)
+        console.log(`  要素:`)
+        currentSettings.visual.elements.forEach(element => {
+          console.log(`    - ${element}`)
+        })
+        console.log(`  設定: ${currentSettings.visual.setting}`)
       }
       
       console.log('\n' + '─'.repeat(80))
       
       // 編集オプション
       console.log('\nキャラクター設定の編集:')
-      console.log('1. VSCodeで開く')
-      console.log('2. 戻る')
+      console.log('1. 設定を編集する')
+      console.log('2. VSCodeで開く')
+      console.log('3. 戻る')
       
-      const choice = await this.prompt('\n選択 (1-2): ')
+      const choice = await this.prompt('\n選択 (1-3): ')
       
       if (choice === '1') {
+        await this.editCharacterSettings(currentSettings, characterFileContent, cardiStart, cardiEnd)
+      } else if (choice === '2') {
         await execAsync(`code "${this.charactersFile}"`)
         console.log('✅ character.tsをVSCodeで開きました')
       }
@@ -672,6 +693,352 @@ class PromptEditor {
     } catch (error) {
       console.log(`❌ エラー: ${error.message}`)
     }
+  }
+
+  parseCharacterSettings(cardiSection) {
+    const settings = {
+      name: '',
+      age: 0,
+      gender: '',
+      tone: '',
+      catchphrase: '',
+      philosophy: '',
+      voice_style: {
+        normal: '',
+        emotional: '',
+        humorous: ''
+      },
+      topics: [],
+      visual: {
+        style: '',
+        elements: [],
+        setting: ''
+      }
+    }
+    
+    // 基本フィールドの抽出
+    const fields = [
+      { key: 'name', label: '名前' },
+      { key: 'age', label: '年齢' },
+      { key: 'gender', label: '性別' },
+      { key: 'tone', label: 'トーン' },
+      { key: 'catchphrase', label: 'キャッチフレーズ' },
+      { key: 'philosophy', label: '哲学' }
+    ]
+    
+    fields.forEach(({ key }) => {
+      const pattern = new RegExp(`${key}:\\s*['"]([^'"]+)['"]|${key}:\\s*(\\d+)`)
+      const match = cardiSection.match(pattern)
+      if (match) {
+        settings[key] = match[1] || match[2]
+      }
+    })
+    
+    // voice_styleの解析
+    const voiceMatch = cardiSection.match(/voice_style:\s*\{([^}]+)\}/s)
+    if (voiceMatch) {
+      const voiceContent = voiceMatch[1]
+      const styles = ['normal', 'emotional', 'humorous']
+      styles.forEach(style => {
+        const stylePattern = new RegExp(`${style}:\\s*['"]([^'"]+)['"]`)
+        const styleMatch = voiceContent.match(stylePattern)
+        if (styleMatch) {
+          settings.voice_style[style] = styleMatch[1]
+        }
+      })
+    }
+    
+    // topicsの解析
+    const topicsMatch = cardiSection.match(/topics:\s*\[([\s\S]*?)\]/m)
+    if (topicsMatch) {
+      const topicsContent = topicsMatch[1]
+      const topics = topicsContent.match(/'([^']+)'/g)
+      if (topics) {
+        settings.topics = topics.map(topic => topic.replace(/'/g, ''))
+      }
+    }
+    
+    // visualの解析
+    const visualMatch = cardiSection.match(/visual:\s*\{([^}]+)\}/s)
+    if (visualMatch) {
+      const visualContent = visualMatch[1]
+      
+      const styleMatch = visualContent.match(/style:\s*['"]([^'"]+)['"]/)
+      if (styleMatch) {
+        settings.visual.style = styleMatch[1]
+      }
+      
+      const elementsMatch = visualContent.match(/elements:\s*\[([\s\S]*?)\]/)
+      if (elementsMatch) {
+        const elements = elementsMatch[1].match(/'([^']+)'/g)
+        if (elements) {
+          settings.visual.elements = elements.map(el => el.replace(/'/g, ''))
+        }
+      }
+      
+      const settingMatch = visualContent.match(/setting:\s*['"]([^'"]+)['"]/)
+      if (settingMatch) {
+        settings.visual.setting = settingMatch[1]
+      }
+    }
+    
+    return settings
+  }
+
+  async editCharacterSettings(currentSettings, fullContent, startIndex, endIndex) {
+    console.log('\n✏️  キャラクター設定の編集')
+    console.log('─'.repeat(80))
+    console.log('各項目を編集できます。変更しない場合はEnterキーを押してください。')
+    console.log('─'.repeat(80))
+    
+    const newSettings = { ...currentSettings }
+    
+    // 基本設定の編集
+    console.log('\n【基本設定】')
+    newSettings.name = await this.promptWithDefault('名前', currentSettings.name)
+    newSettings.age = await this.promptWithDefault('年齢', currentSettings.age)
+    newSettings.gender = await this.promptWithDefault('性別', currentSettings.gender)
+    newSettings.tone = await this.promptWithDefault('トーン', currentSettings.tone)
+    newSettings.catchphrase = await this.promptWithDefault('キャッチフレーズ', currentSettings.catchphrase)
+    newSettings.philosophy = await this.promptWithDefault('哲学', currentSettings.philosophy)
+    
+    // 音声スタイルの編集
+    console.log('\n【音声スタイル】')
+    newSettings.voice_style.normal = await this.promptWithDefault('通常', currentSettings.voice_style.normal)
+    newSettings.voice_style.emotional = await this.promptWithDefault('感情的', currentSettings.voice_style.emotional)
+    newSettings.voice_style.humorous = await this.promptWithDefault('ユーモラス', currentSettings.voice_style.humorous)
+    
+    // トピックの編集
+    console.log('\n【トピック】')
+    console.log('現在のトピック:')
+    currentSettings.topics.forEach((topic, index) => {
+      console.log(`  ${index + 1}. ${topic}`)
+    })
+    
+    const editTopics = await this.prompt('\nトピックを編集しますか？ (y/N): ')
+    if (editTopics.toLowerCase() === 'y') {
+      newSettings.topics = await this.editTopicsList(currentSettings.topics)
+    }
+    
+    // ビジュアル設定の編集
+    console.log('\n【ビジュアル設定】')
+    const editVisual = await this.prompt('ビジュアル設定を編集しますか？ (y/N): ')
+    if (editVisual.toLowerCase() === 'y') {
+      newSettings.visual.style = await this.promptWithDefault('スタイル', currentSettings.visual.style)
+      newSettings.visual.setting = await this.promptWithDefault('設定', currentSettings.visual.setting)
+      
+      console.log('\n現在の要素:')
+      currentSettings.visual.elements.forEach((element, index) => {
+        console.log(`  ${index + 1}. ${element}`)
+      })
+      
+      const editElements = await this.prompt('\n要素を編集しますか？ (y/N): ')
+      if (editElements.toLowerCase() === 'y') {
+        newSettings.visual.elements = await this.editElementsList(currentSettings.visual.elements)
+      }
+    }
+    
+    // 変更の確認
+    console.log('\n' + '─'.repeat(80))
+    console.log('変更内容の確認:')
+    console.log('─'.repeat(80))
+    
+    const hasChanges = this.showChanges(currentSettings, newSettings)
+    
+    if (!hasChanges) {
+      console.log('変更はありません。')
+      return
+    }
+    
+    const confirm = await this.prompt('\nこの変更を保存しますか？ (y/N): ')
+    if (confirm.toLowerCase() === 'y') {
+      // 新しい設定でcardiSectionを再構築
+      const newCardiSection = this.buildCharacterSection(newSettings)
+      
+      // ファイル全体を更新
+      const beforeSection = fullContent.substring(0, fullContent.lastIndexOf('{', startIndex))
+      const afterSection = fullContent.substring(endIndex + 1)
+      const newContent = beforeSection + newCardiSection + afterSection
+      
+      // ファイルに書き込み
+      await fs.writeFile(this.charactersFile, newContent, 'utf-8')
+      console.log('\n✅ キャラクター設定を更新しました！')
+      
+      // 更新履歴を保存
+      await this.storage.saveCharacterUpdate('cardi-dare', currentSettings, newSettings)
+    } else {
+      console.log('\n変更をキャンセルしました。')
+    }
+  }
+
+  async promptWithDefault(label, defaultValue) {
+    const value = await this.prompt(`${label} [${defaultValue}]: `)
+    return value.trim() || defaultValue
+  }
+
+  async editTopicsList(topics) {
+    const newTopics = [...topics]
+    
+    while (true) {
+      console.log('\n現在のトピック:')
+      newTopics.forEach((topic, index) => {
+        console.log(`  ${index + 1}. ${topic}`)
+      })
+      
+      console.log('\n操作:')
+      console.log('1. トピックを追加')
+      console.log('2. トピックを編集')
+      console.log('3. トピックを削除')
+      console.log('4. 完了')
+      
+      const choice = await this.prompt('\n選択 (1-4): ')
+      
+      if (choice === '1') {
+        const newTopic = await this.prompt('新しいトピック: ')
+        if (newTopic) newTopics.push(newTopic)
+      } else if (choice === '2') {
+        const index = await this.prompt('編集するトピック番号: ')
+        const idx = parseInt(index) - 1
+        if (idx >= 0 && idx < newTopics.length) {
+          const edited = await this.promptWithDefault(`トピック${index}`, newTopics[idx])
+          newTopics[idx] = edited
+        }
+      } else if (choice === '3') {
+        const index = await this.prompt('削除するトピック番号: ')
+        const idx = parseInt(index) - 1
+        if (idx >= 0 && idx < newTopics.length) {
+          newTopics.splice(idx, 1)
+        }
+      } else if (choice === '4') {
+        break
+      }
+    }
+    
+    return newTopics
+  }
+
+  async editElementsList(elements) {
+    const newElements = [...elements]
+    
+    while (true) {
+      console.log('\n現在の要素:')
+      newElements.forEach((element, index) => {
+        console.log(`  ${index + 1}. ${element}`)
+      })
+      
+      console.log('\n操作:')
+      console.log('1. 要素を追加')
+      console.log('2. 要素を編集')
+      console.log('3. 要素を削除')
+      console.log('4. 完了')
+      
+      const choice = await this.prompt('\n選択 (1-4): ')
+      
+      if (choice === '1') {
+        const newElement = await this.prompt('新しい要素: ')
+        if (newElement) newElements.push(newElement)
+      } else if (choice === '2') {
+        const index = await this.prompt('編集する要素番号: ')
+        const idx = parseInt(index) - 1
+        if (idx >= 0 && idx < newElements.length) {
+          const edited = await this.promptWithDefault(`要素${index}`, newElements[idx])
+          newElements[idx] = edited
+        }
+      } else if (choice === '3') {
+        const index = await this.prompt('削除する要素番号: ')
+        const idx = parseInt(index) - 1
+        if (idx >= 0 && idx < newElements.length) {
+          newElements.splice(idx, 1)
+        }
+      } else if (choice === '4') {
+        break
+      }
+    }
+    
+    return newElements
+  }
+
+  showChanges(oldSettings, newSettings) {
+    let hasChanges = false
+    
+    // 基本設定の変更確認
+    const basicFields = ['name', 'age', 'gender', 'tone', 'catchphrase', 'philosophy']
+    basicFields.forEach(field => {
+      if (oldSettings[field] !== newSettings[field]) {
+        console.log(`\n${field}: "${oldSettings[field]}" → "${newSettings[field]}"`)
+        hasChanges = true
+      }
+    })
+    
+    // 音声スタイルの変更確認
+    const voiceStyles = ['normal', 'emotional', 'humorous']
+    voiceStyles.forEach(style => {
+      if (oldSettings.voice_style[style] !== newSettings.voice_style[style]) {
+        console.log(`\nvoice_style.${style}: "${oldSettings.voice_style[style]}" → "${newSettings.voice_style[style]}"`)
+        hasChanges = true
+      }
+    })
+    
+    // トピックの変更確認
+    if (JSON.stringify(oldSettings.topics) !== JSON.stringify(newSettings.topics)) {
+      console.log('\ntopics: 変更あり')
+      hasChanges = true
+    }
+    
+    // ビジュアル設定の変更確認
+    if (oldSettings.visual.style !== newSettings.visual.style ||
+        oldSettings.visual.setting !== newSettings.visual.setting ||
+        JSON.stringify(oldSettings.visual.elements) !== JSON.stringify(newSettings.visual.elements)) {
+      console.log('\nvisual: 変更あり')
+      hasChanges = true
+    }
+    
+    return hasChanges
+  }
+
+  buildCharacterSection(settings) {
+    const indent = '  '
+    let section = '{\n'
+    
+    // 基本設定
+    section += `${indent}${indent}id: 'cardi-dare',\n`
+    section += `${indent}${indent}name: '${settings.name}',\n`
+    section += `${indent}${indent}age: ${settings.age},\n`
+    section += `${indent}${indent}gender: '${settings.gender}',\n`
+    section += `${indent}${indent}tone: '${settings.tone}',\n`
+    section += `${indent}${indent}catchphrase: '${settings.catchphrase}',\n`
+    section += `${indent}${indent}philosophy: '${settings.philosophy}',\n`
+    
+    // voice_style
+    section += `${indent}${indent}voice_style: {\n`
+    section += `${indent}${indent}${indent}normal: '${settings.voice_style.normal}',\n`
+    section += `${indent}${indent}${indent}emotional: '${settings.voice_style.emotional}',\n`
+    section += `${indent}${indent}${indent}humorous: '${settings.voice_style.humorous}'\n`
+    section += `${indent}${indent}},\n`
+    
+    // topics
+    section += `${indent}${indent}topics: [\n`
+    settings.topics.forEach((topic, index) => {
+      const comma = index < settings.topics.length - 1 ? ',' : ''
+      section += `${indent}${indent}${indent}'${topic}'${comma}\n`
+    })
+    section += `${indent}${indent}],\n`
+    
+    // visual
+    section += `${indent}${indent}visual: {\n`
+    section += `${indent}${indent}${indent}style: '${settings.visual.style}',\n`
+    section += `${indent}${indent}${indent}elements: [\n`
+    settings.visual.elements.forEach((element, index) => {
+      const comma = index < settings.visual.elements.length - 1 ? ',' : ''
+      section += `${indent}${indent}${indent}${indent}'${element}'${comma}\n`
+    })
+    section += `${indent}${indent}${indent}],\n`
+    section += `${indent}${indent}${indent}setting: '${settings.visual.setting}'\n`
+    section += `${indent}${indent}},\n`
+    section += `${indent}${indent}isDefault: true\n`
+    section += `${indent}}`
+    
+    return section
   }
   
   showDefaultValues(promptType, filename) {
@@ -890,10 +1257,17 @@ class PromptEditor {
       executor.displayResult(result)
       
       if (result.success) {
-        const save = await this.prompt('\n結果を保存しますか？ (y/N): ')
-        if (save.toLowerCase() === 'y') {
+        // 非インタラクティブモードでは自動保存
+        if (this.nonInteractive) {
+          console.log('\n💾 結果を自動保存中...')
           const filename = `${promptType}-${provider}`
           await executor.saveResult(result, filename)
+        } else {
+          const save = await this.prompt('\n結果を保存しますか？ (y/N): ')
+          if (save.toLowerCase() === 'y') {
+            const filename = `${promptType}-${provider}`
+            await executor.saveResult(result, filename)
+          }
         }
         
         // テスト結果を履歴に記録
@@ -923,9 +1297,14 @@ class PromptEditor {
         })
         
         // モックとして保存するか確認
-        const saveMock = await this.prompt('この結果をモックデータとして保存しますか？ (y/N): ')
-        if (saveMock.toLowerCase() === 'y') {
+        if (this.nonInteractive) {
+          console.log('📦 モックデータとして自動保存中...')
           await this.saveAsMockData(promptType, result, provider)
+        } else {
+          const saveMock = await this.prompt('この結果をモックデータとして保存しますか？ (y/N): ')
+          if (saveMock.toLowerCase() === 'y') {
+            await this.saveAsMockData(promptType, result, provider)
+          }
         }
       }
     } catch (error) {
@@ -1107,7 +1486,14 @@ class PromptEditor {
     const MockDataManager = require('./mock-data-manager')
     const mockManager = new MockDataManager()
     
-    const name = await this.prompt('モック名 (例: 成功例_AIと働き方): ')
+    // 非インタラクティブモードではデフォルト名を使用
+    let name
+    if (this.nonInteractive) {
+      const timestamp = new Date().toISOString().slice(0, 10)
+      name = `auto_${promptType}_${timestamp}`
+    } else {
+      name = await this.prompt('モック名 (例: 成功例_AIと働き方): ')
+    }
     
     if (name) {
       try {
@@ -1122,6 +1508,7 @@ class PromptEditor {
         }
         
         await mockManager.saveMockData(provider, name, dataToSave)
+        console.log(`✅ モックデータ保存完了: ${name}`)
       } catch (error) {
         console.log(`❌ モック保存エラー: ${error.message}`)
       }
@@ -1571,6 +1958,17 @@ async function main() {
   const [,, command, ...args] = process.argv
   const editor = new PromptEditor()
   
+  // 非インタラクティブモードのチェック
+  const nonInteractive = args.includes('--non-interactive') || args.includes('-n')
+  if (nonInteractive) {
+    editor.nonInteractive = true
+    // フラグを削除
+    const index = args.indexOf('--non-interactive')
+    if (index > -1) args.splice(index, 1)
+    const index2 = args.indexOf('-n')
+    if (index2 > -1) args.splice(index2, 1)
+  }
+  
   try {
     switch (command) {
       case 'list':
@@ -1583,6 +1981,11 @@ async function main() {
         
       case 'test':
         await editor.test(args[0])
+        break
+        
+      case 'test-direct':
+        // 直接実行モード（変数を引数で渡す）
+        await editor.testDirect(args[0], args.slice(1))
         break
         
       case 'analyze':

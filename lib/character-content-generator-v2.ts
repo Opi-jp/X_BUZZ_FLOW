@@ -17,6 +17,97 @@ interface GenerateContentParams {
   format?: 'simple' | 'thread' // simple=2連投稿、thread=スレッド形式
 }
 
+// キャラクター設定をラップする関数
+function wrapCharacterProfile(character: CharacterProfile): string {
+  const parts: string[] = []
+  
+  // 基本情報
+  parts.push(`${character.name}、${character.age}歳の${character.gender === 'male' ? '男性' : character.gender === 'female' ? '女性' : '人物'}。`)
+  
+  // 背景
+  if (character.background) {
+    parts.push(character.background + '。')
+  }
+  
+  // 特徴
+  if (character.features && character.features.length > 0) {
+    parts.push(character.features.join('。') + '。')
+  }
+  
+  // トーン
+  if (character.tone) {
+    parts.push(character.tone + '。')
+  }
+  
+  // 語り口
+  if (character.voice_style) {
+    if (character.voice_style.normal) {
+      parts.push(character.voice_style.normal)
+    }
+    if (character.voice_style.humorous) {
+      parts.push(character.voice_style.humorous)
+    }
+  }
+  
+  // 哲学
+  if (character.philosophy) {
+    parts.push(`信条：「${character.philosophy}」`)
+  }
+  
+  return parts.join('\n\n')
+}
+
+// コンセプトデータをラップする関数
+function wrapConceptData(concept: any, topicInfo?: any): string {
+  const parts: string[] = []
+  
+  // トピック
+  parts.push(`●トピック: ${topicInfo?.title || concept.topicTitle || concept.conceptTitle}`)
+  
+  // フックタイプとアングル（重要な創作指示）
+  if (concept.hookType) {
+    parts.push(`\n●フックタイプ: ${concept.hookType}`)
+  }
+  if (concept.angle) {
+    parts.push(`●アングル: ${concept.angle}`)
+  }
+  if (concept.angleRationale) {
+    parts.push(`●アングルの理由: ${concept.angleRationale}`)
+  }
+  
+  // フック
+  if (concept.structure?.openingHook || concept.hook) {
+    parts.push(`\n●フック: ${concept.structure?.openingHook || concept.hook}`)
+  }
+  
+  // 物語構造
+  if (concept.structure) {
+    parts.push('\n投稿案の構成には、下記の物語構造を使ってください：')
+    
+    if (concept.structure.background) {
+      parts.push(`1. 背景: ${concept.structure.background}`)
+    }
+    if (concept.structure.mainContent) {
+      parts.push(`2. メインコンテンツ: ${concept.structure.mainContent}`)
+    }
+    if (concept.structure.reflection) {
+      parts.push(`3. 内省: ${concept.structure.reflection}`)
+    }
+    if (concept.structure.cta) {
+      parts.push(`4. CTA: ${concept.structure.cta}`)
+    }
+  }
+  
+  // バイラル要因は参考情報として（オプション）
+  if (concept.viralFactors && concept.viralFactors.length > 0) {
+    parts.push(`\n参考：バイラル要因 - ${concept.viralFactors.join('、')}`)
+  }
+  
+  // ハッシュタグはClaudeには渡さない（投稿システム側で追加するため）
+  
+  return parts.join('\n')
+}
+
 export async function generateCharacterContentV2({
   character,
   concept,
@@ -30,9 +121,8 @@ export async function generateCharacterContentV2({
     if (format === 'simple') {
       // シンプルな2連投稿
       const mainPostPrompt = loadPrompt('claude/character-profiles/cardi-dare-simple.txt', {
-        philosophy: character.philosophy || character.tone,
-        topicTitle: topicInfo?.title || concept.topicTitle,
-        openingHook: concept.structure?.openingHook || concept.hook
+        character: wrapCharacterProfile(character),
+        concept: wrapConceptData(concept, topicInfo)
       })
 
       try {
@@ -77,13 +167,8 @@ export async function generateCharacterContentV2({
     } else {
       // スレッド形式（5段階の物語構造）
       const threadPrompt = loadPrompt('claude/character-profiles/cardi-dare-thread.txt', {
-        philosophy: character.philosophy || character.tone,
-        topicTitle: topicInfo?.title || concept.topicTitle,
-        openingHook: concept.structure?.openingHook || concept.hook,
-        background: concept.structure?.background || '',
-        mainContent: concept.structure?.mainContent || '',
-        reflection: concept.structure?.reflection || '',
-        cta: concept.structure?.cta || ''
+        character: wrapCharacterProfile(character),
+        concept: wrapConceptData(concept, topicInfo)
       })
 
       try {

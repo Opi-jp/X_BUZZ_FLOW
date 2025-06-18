@@ -291,6 +291,111 @@ class PromptStorage {
     
     return improvements
   }
+
+  /**
+   * キャラクター設定の更新履歴を保存
+   */
+  async saveCharacterUpdate(characterId, oldSettings, newSettings) {
+    await this.init()
+    
+    const updateId = this.generateVersionId()
+    const timestamp = new Date()
+    
+    const update = {
+      id: updateId,
+      characterId,
+      timestamp: timestamp.toISOString(),
+      changes: this.compareCharacterSettings(oldSettings, newSettings),
+      oldSettings,
+      newSettings
+    }
+    
+    // キャラクター更新履歴ファイル
+    const characterHistoryFile = path.join(this.storageDir, `character-${characterId}-history.json`)
+    
+    let history
+    try {
+      const content = await fs.readFile(characterHistoryFile, 'utf-8')
+      history = JSON.parse(content)
+    } catch {
+      history = { updates: [] }
+    }
+    
+    history.updates.push(update)
+    history.lastUpdated = timestamp.toISOString()
+    
+    await fs.writeFile(characterHistoryFile, JSON.stringify(history, null, 2))
+    
+    return updateId
+  }
+
+  /**
+   * キャラクター設定の差分を比較
+   */
+  compareCharacterSettings(oldSettings, newSettings) {
+    const changes = []
+    
+    // 基本フィールドの比較
+    const basicFields = ['name', 'age', 'gender', 'tone', 'catchphrase', 'philosophy']
+    basicFields.forEach(field => {
+      if (oldSettings[field] !== newSettings[field]) {
+        changes.push({
+          field,
+          old: oldSettings[field],
+          new: newSettings[field]
+        })
+      }
+    })
+    
+    // voice_styleの比較
+    if (oldSettings.voice_style && newSettings.voice_style) {
+      ['normal', 'emotional', 'humorous'].forEach(style => {
+        if (oldSettings.voice_style[style] !== newSettings.voice_style[style]) {
+          changes.push({
+            field: `voice_style.${style}`,
+            old: oldSettings.voice_style[style],
+            new: newSettings.voice_style[style]
+          })
+        }
+      })
+    }
+    
+    // topicsの比較
+    if (JSON.stringify(oldSettings.topics) !== JSON.stringify(newSettings.topics)) {
+      changes.push({
+        field: 'topics',
+        old: oldSettings.topics,
+        new: newSettings.topics
+      })
+    }
+    
+    // visualの比較
+    if (oldSettings.visual && newSettings.visual) {
+      if (oldSettings.visual.style !== newSettings.visual.style) {
+        changes.push({
+          field: 'visual.style',
+          old: oldSettings.visual.style,
+          new: newSettings.visual.style
+        })
+      }
+      if (oldSettings.visual.setting !== newSettings.visual.setting) {
+        changes.push({
+          field: 'visual.setting',
+          old: oldSettings.visual.setting,
+          new: newSettings.visual.setting
+        })
+      }
+      if (JSON.stringify(oldSettings.visual.elements) !== JSON.stringify(newSettings.visual.elements)) {
+        changes.push({
+          field: 'visual.elements',
+          old: oldSettings.visual.elements,
+          new: newSettings.visual.elements
+        })
+      }
+    }
+    
+    return changes
+  }
 }
 
 module.exports = PromptStorage

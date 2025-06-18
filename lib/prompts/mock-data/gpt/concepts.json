@@ -69,5 +69,45 @@
       "#働き方改革"
     ]
   },
-  "samples": []
+  "samples": [
+    {
+      "name": "auto_generate-concepts_2025-06-18",
+      "timestamp": "2025-06-18T18:37:47.652Z",
+      "data": {
+        "conceptId": "topic0_conceptA",
+        "conceptTitle": "AI時代の生存戦略",
+        "format": "thread",
+        "hookType": "問い・未完性",
+        "hookCombination": [
+          "問い・未完性",
+          "緊急性"
+        ],
+        "angle": "ライフハック型",
+        "angleCombination": [
+          "ライフハック型",
+          "問題提起型"
+        ],
+        "angleRationale": "AIの台頭による職業消滅の不安を解消するための実用的なヒントを提供する。",
+        "viralScore": 8,
+        "viralFactors": [
+          "実用性",
+          "緊急性"
+        ],
+        "structure": {
+          "openingHook": "AIがあなたの仕事を奪う前に、何をすべきか知っていますか？",
+          "background": "AIはホワイトカラー職を急速に代替し始めており、失業率も上昇する見込みです。",
+          "mainContent": "AI時代において生き残るための3つのスキル。\n- 新しい技術の基本的な理解\n- 創造的思考の強化\n- 人間関係の構築能力",
+          "reflection": "今こそ、自分のスキルセットを見直すときです。AIが変えるのは、あなたの仕事だけではありません。",
+          "cta": "あなたのAI時代の生存戦略は何ですか？コメントで教えてください！"
+        },
+        "visual": "インフォグラフィック：AI時代に必要なスキル3つ",
+        "timing": "平日夜（21時〜23時）",
+        "hashtags": [
+          "#AI時代",
+          "#職業スキル",
+          "#生存戦略"
+        ]
+      }
+    }
+  ]
 }
