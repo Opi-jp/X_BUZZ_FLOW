@@ -1,0 +1,56 @@
+// フォローリスト管理（追加分）
+// 既存のschema.prismaに追加する内容
+
+model FollowList {
+  id               String           @id @default(uuid())
+  name             String
+  description      String?
+  userId           String           @map("user_id")
+  
+  // リスト設定
+  categories       String[]         // ['ai', 'work', 'meme']
+  excludeInfoProduct Boolean        @default(true) @map("exclude_info_product")
+  minEngagement    Float            @default(0.01) @map("min_engagement")
+  minFollowers     Int              @default(1000) @map("min_followers")
+  
+  // 自動更新設定
+  autoUpdate       Boolean          @default(true) @map("auto_update")
+  updateFrequency  String           @default("daily") @map("update_frequency") // daily, weekly
+  
+  // メタデータ
+  lastUpdated      DateTime         @default(now()) @map("last_updated")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+  
+  // リレーション
+  items            FollowListItem[]
+  
+  @@map("follow_lists")
+}
+
+// フォローリストアイテム（多対多の中間テーブル）
+model FollowListItem {
+  id               String         @id @default(uuid())
+  listId           String         @map("list_id")
+  influencerUsername String       @map("influencer_username") // BuzzInfluencerのusernameを参照
+  
+  // ステータス
+  followStatus     String         @default("pending") @map("follow_status") // pending, following, unfollowed
+  followedAt       DateTime?      @map("followed_at")
+  unfollowedAt     DateTime?      @map("unfollowed_at")
+  
+  // パフォーマンス追跡
+  followScore      Float          @default(0) @map("follow_score")
+  category         String?        // ai, work, meme
+  isInfoProduct    Boolean        @default(false) @map("is_info_product")
+  notes            String?
+  
+  // メタデータ
+  addedAt          DateTime       @default(now()) @map("added_at")
+  
+  // リレーション
+  list             FollowList     @relation(fields: [listId], references: [id], onDelete: Cascade)
+  
+  @@unique([listId, influencerUsername])
+  @@map("follow_list_items")
+}
