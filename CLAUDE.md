@@ -317,9 +317,10 @@ Step 2が必要とする情報 → Step 1の出力を設計
 
 ### 技術的注意点
 - expertiseはすべてthemeに変更済み
-- V2システムは`/viral/v2/`配下に実装
+- 新API構造：`/api/generation/content/sessions/*`（旧viral/v2は削除）
 - 非同期処理は`continue-async`を使用
 - プロンプトのロール定義は一貫性を保つ
+- ポート3000必須（Twitter OAuth認証の制約）
 
 ## 🔧 技術スタック
 
