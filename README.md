@@ -32,6 +32,10 @@ cat ERRORS.md      # エラー解決集
 
 # エラーが出たら
 node scripts/dev-tools/find-error.js "エラー内容"
+
+# プロンプトを編集する（NEW）
+node scripts/dev-tools/prompt-editor.js list
+node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
 ```
 
 ### 使うAPI（2025年6月18日更新）

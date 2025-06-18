@@ -97,6 +97,39 @@ node scripts/dev-tools/api-dependency-scanner.js --json
 
 **重要**: APIエンドポイントの重複や先祖返りを防ぐため、新規API追加前に必ずスキャンを実行すること
 
+### プロンプトエディター（Chain of Thought管理）
+```bash
+# プロンプト一覧表示（再帰的にサブディレクトリも表示）
+node scripts/dev-tools/prompt-editor.js list
+
+# プロンプトの編集（変数の説明付き）
+node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
+
+# プロンプトのテスト実行
+node scripts/dev-tools/prompt-editor.js test perplexity/collect-topics.txt
+
+# 変数展開のプレビュー（実行せずに確認）
+node scripts/dev-tools/prompt-editor.js preview claude/character-profiles/cardi-dare.txt
+
+# プロンプト変更の影響分析（DB影響あり/なし判定）
+node scripts/dev-tools/prompt-editor.js impact gpt/generate-concepts.txt
+
+# DB互換性チェック＆マイグレーション生成
+node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt
+
+# 編集履歴とバージョン管理
+node scripts/dev-tools/prompt-editor.js history
+node scripts/dev-tools/prompt-editor.js rollback gpt/generate-concepts.txt v1.0.2
+
+# 統計情報（編集回数、スコア改善等）
+node scripts/dev-tools/prompt-editor.js stats
+```
+
+**プロンプト変更時の注意**: 
+- impactで影響範囲を確認
+- compatでDB互換性をチェック
+- 問題があればマイグレーションを生成して実行
+
 ## 📝 テストスクリプトの管理ルール
 
 ### テストスクリプトの命名規則と配置
