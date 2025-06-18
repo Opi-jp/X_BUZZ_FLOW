@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { loadPrompt } from '@/lib/prompt-loader'
 
 type RouteParams = {
   params: Promise<{
@@ -89,68 +90,11 @@ export async function POST(
     })
 
     // Perplexityプロンプトを構築
-    const prompt = `あなたは、新たなトレンドを特定し、流行の波がピークに達する前にその波に乗るコンテンツのコンセプトを作成するバズるコンテンツ戦略家です。
-
-【${session.theme}】について【${session.platform}】において【${session.style}】で発信するためのバズるコンテンツを作成したいです。
-
-以下の視点でトレンド情報を収集・分析し、直近でバズリそうなトピックを2つ特定してください。
-
-重要な要件：
-- 必ず最低でも1つは48時間以内のニュースソースを含めてください
-- 判断の元となったニュースソースのURLを全て明記してください（複数可）
-- 各トピックごとに複数のソースがある場合は、additionalSourcesフィールドに含めてください
-
-A：現在の出来事の分析
-- ${session.theme}に関する最新ニュース（特に感情的な反応を引き起こしているもの）
-- この分野での有名人の発言や事件と、それに対する世間の強い反応
-- ${session.theme.split('と')[0]}と${session.theme.split('と')[1] || '社会'}に関する政治的議論で意見が分かれているもの
-
-B：テクノロジーの発表とテクノロジードラマ
-- ${session.theme.split('と')[0]}導入を巡る企業の対立や論争
-- ${session.theme}の変化に関する文化的な衝突や社会運動
-- 予想外の展開や驚きを生んだ事例
-- インターネット上で話題になっているドラマチックな出来事
-
-C：ソーシャルリスニング研究
-- ${session.platform}で急速に広がっている${session.theme}のトレンドやハッシュタグ
-- TikTokで話題の${session.theme.split('と')[0]}関連のサウンドやチャレンジ
-- Redditで感情的な議論が起きている投稿
-- 急上昇しているGoogleトレンド
-- バズっているYouTube動画
-- ニュース記事のコメント欄で熱い議論になっているトピック
-
-D：バイラルパターン認識
-特に以下の要素を含むトピックを重点的に探してください：
-- 強い意見の対立がある（賛成派vs反対派）
-- 感情を強く刺激する（怒り、喜び、驚き、憤慨）
-- 多くの人が共感できる体験談
-- 思わずシェアしたくなる驚きの事実
-- 今すぐ知らないと損するタイムリーな話題
-- ${session.platform}文化に合った面白さやミーム性
-
-なお、出力は下記のJSON形式で出力してください。
-
-{
-  "TOPIC": "トピックのタイトル",
-  "url": "メインの記事URL",
-  "date": "公開日（YYYY-MM-DD形式）",
-  "summary": "記事の詳細な要約（400文字）",
-  "keyPoints": [
-    "重要ポイント1",
-    "重要ポイント2",
-    "重要ポイント3",
-    "重要ポイント4",
-    "重要ポイント5"
-  ],
-  "perplexityAnalysis": "なぜこれがバズる可能性があるのか、感情的な要素や対立構造を含めて分析（200文字）",
-  "additionalSources": [
-    {
-      "url": "追加ソースURL1",
-      "title": "記事タイトル",
-      "date": "公開日"
-    }
-  ]
-}`
+    const prompt = loadPrompt('perplexity/collect-topics.txt', {
+      theme: session.theme,
+      platform: session.platform,
+      style: session.style
+    })
 
     console.log('Calling Perplexity API...')
     

@@ -264,6 +264,51 @@ class DevTools {
   }
   
   /**
+   * プロンプトエディター
+   */
+  async promptEditor() {
+    console.log('🎯 プロンプトエディターを起動します...\n')
+    
+    console.log('機能を選択してください:')
+    console.log('  1. プロンプト一覧')
+    console.log('  2. プロンプト編集')
+    console.log('  3. プロンプトテスト')
+    console.log('  4. プロンプト分析')
+    console.log('  5. 全体分析')
+    
+    const choice = await this.prompt('\n選択 (1-5): ')
+    
+    switch (choice) {
+      case '1':
+        spawn('node', ['scripts/dev-tools/prompt-editor.js', 'list'], { stdio: 'inherit' })
+        break
+      case '2':
+        const editFile = await this.prompt('編集するファイル (例: perplexity/collect-topics.txt): ')
+        if (editFile) {
+          spawn('node', ['scripts/dev-tools/prompt-editor.js', 'edit', editFile], { stdio: 'inherit' })
+        }
+        break
+      case '3':
+        const testFile = await this.prompt('テストするファイル: ')
+        if (testFile) {
+          spawn('node', ['scripts/dev-tools/prompt-editor.js', 'test', testFile], { stdio: 'inherit' })
+        }
+        break
+      case '4':
+        const analyzeFile = await this.prompt('分析するファイル: ')
+        if (analyzeFile) {
+          spawn('node', ['scripts/dev-tools/prompt-analyzer.js', analyzeFile], { stdio: 'inherit' })
+        }
+        break
+      case '5':
+        spawn('node', ['scripts/dev-tools/prompt-analyzer.js', '--all'], { stdio: 'inherit' })
+        break
+      default:
+        console.log('キャンセルしました')
+    }
+  }
+  
+  /**
    * キャッシュクリーン
    */
   async clean() {
@@ -450,6 +495,10 @@ async function main() {
         await tools.clean()
         break
         
+      case 'prompt':
+        await tools.promptEditor()
+        break
+        
       default:
         console.log(`
 🛠️  X_BUZZ_FLOW 開発ツール
@@ -463,16 +512,19 @@ async function main() {
   fix        一般的な問題を自動修正
   test       特定の機能をテスト
   clean      キャッシュクリーン
+  prompt     プロンプトエディター
 
 例:
   node scripts/dev-tools.js start
   node scripts/dev-tools.js check
   node scripts/dev-tools.js test viral
+  node scripts/dev-tools.js prompt
 
 💡 ヒント:
   - 問題が発生したらまず 'check' を実行
   - 'fix' で多くの問題は自動解決
   - 'start' でインタラクティブに起動モードを選択
+  - 'prompt' でChain of Thoughtプロンプトを管理
         `)
     }
   } catch (error) {

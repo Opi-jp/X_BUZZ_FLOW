@@ -1,0 +1,73 @@
+{
+  "default": {
+    "conceptId": "topic1_concept1",
+    "conceptTitle": "AIが変える意外な働き方の真実",
+    "format": "single",
+    "hookType": "意外性",
+    "hookCombination": [
+      "意外性",
+      "問い・未完性"
+    ],
+    "angle": "逆張りする視点",
+    "angleCombination": [
+      "逆張りする視点",
+      "舞台裏や裏話的視点"
+    ],
+    "angleRationale": "常識と真実のギャップが関心を引く。インパクトある事実は単独投稿で十分伝わる",
+    "viralScore": 85,
+    "viralFactors": [
+      "感情的反応を引き起こす",
+      "シェアしたくなる新情報"
+    ],
+    "structure": {
+      "openingHook": "『AIで仕事がなくなる』と騒ぐ人ほど、実はAIを使っていない衝撃の事実",
+      "background": "メディアは『AIが雇用を奪う』と煽るが、現場で起きているのは真逆の現象",
+      "mainContent": "実際にAIを導入した企業では、人間の仕事が『増えている』。なぜか？AIが処理した膨大なデータを『解釈』し『判断』する高度な仕事が生まれたから",
+      "reflection": "結局、AIは人間の仕事を奪うのではなく、仕事の質を変えているだけ",
+      "cta": "あなたの職場でも似たような変化はありませんか？"
+    },
+    "visual": "インフォグラフィック（数字を強調）",
+    "timing": "平日夜21時（仕事終わりの振り返りタイム）",
+    "hashtags": [
+      "#AI時代の働き方",
+      "#未来の仕事",
+      "#テクノロジーと人間"
+    ]
+  },
+  "threadExample": {
+    "conceptId": "topic1_concept2",
+    "conceptTitle": "現場から見たAI導入の本音",
+    "format": "thread",
+    "hookType": "緊急性",
+    "hookCombination": [
+      "緊急性",
+      "自己投影"
+    ],
+    "angle": "当事者や専門家のリアルな声",
+    "angleCombination": [
+      "リアルな声",
+      "予測・考察型"
+    ],
+    "angleRationale": "現場の生の声と将来予測の組み合わせが説得力を生む。複数の視点や体験談を展開するにはスレッド形式が最適",
+    "viralScore": 82,
+    "viralFactors": [
+      "今すぐ知るべき情報",
+      "自分ごととして捉えられる"
+    ],
+    "structure": {
+      "openingHook": "今、あなたの会社でも起きているかもしれない『AI導入の落とし穴』",
+      "background": "多くの企業がAI導入に失敗している本当の理由",
+      "mainContent": "1. ツールだけ導入して使い方を教えない\n2. 現場の声を聞かずにトップダウンで決定\n3. 成果を急ぎすぎて長期視点が欠如",
+      "reflection": "成功の鍵は『人間とAIの協働』を真剣に考えること",
+      "cta": "あなたの会社のAI導入、うまくいってますか？"
+    },
+    "visual": "before→afterの比較画像",
+    "timing": "月曜朝7時（週始めのモチベーション）",
+    "hashtags": [
+      "#キャリアチェンジ",
+      "#スキルアップ",
+      "#働き方改革"
+    ]
+  },
+  "samples": []
+}

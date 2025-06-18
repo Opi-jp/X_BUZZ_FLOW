@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { CharacterProfile, VoiceStyleMode } from '../types/character'
+import { loadPrompt } from './prompt-loader'
 
 const anthropic = new Anthropic({
   apiKey: process.env.CLAUDE_API_KEY!,
@@ -28,19 +29,11 @@ export async function generateCharacterContentV2({
   if (isCardiDare) {
     if (format === 'simple') {
       // シンプルな2連投稿
-      const mainPostPrompt = `あなたはカーディ・ダーレという53歳の男性です。
-
-${character.philosophy || character.tone}
-
-【今日のトピック】
-${topicInfo?.title || concept.topicTitle}
-
-【注目ポイント】
-${concept.structure?.openingHook || concept.hook}
-
-このトピックについて、120-135文字で印象的な一言を。
-（ハッシュタグは不要、本文のみ）
-皮肉と哲学を込めて、カーディらしく。`
+      const mainPostPrompt = loadPrompt('claude/character-profiles/cardi-dare-simple.txt', {
+        philosophy: character.philosophy || character.tone,
+        topicTitle: topicInfo?.title || concept.topicTitle,
+        openingHook: concept.structure?.openingHook || concept.hook
+      })
 
       try {
         const mainResponse = await anthropic.messages.create({
@@ -82,34 +75,15 @@ ${concept.structure?.openingHook || concept.hook}
       }
     } else {
       // スレッド形式（5段階の物語構造）
-      const threadPrompt = `あなたはカーディ・ダーレという53歳の男性です。
-
-${character.philosophy || character.tone}
-
-【今日のトピック】
-${topicInfo?.title || concept.topicTitle}
-
-【コンセプトの構造】
-1. ${concept.structure?.openingHook || concept.hook}
-2. ${concept.structure?.background || ''}
-3. ${concept.structure?.mainContent || ''}
-4. ${concept.structure?.reflection || ''}
-5. ${concept.structure?.cta || ''}
-
-このトピックについて、5つの投稿からなるスレッドを作成してください。
-
-【重要】各投稿は必ず140文字以内に収めてください。
-
-【形式】
-1. 導入（フックで引き込む）- 140文字以内
-2. 背景（問題提起、状況説明）- 140文字以内
-3. 核心（本質的な洞察）- 140文字以内
-4. 内省（個人的な視点、転換）- 140文字以内
-5. 締め（余韻を残す結論）- 140文字以内
-
-動作描写（*グラスを回す*など）も含めてOK。
-各段階で異なる感情・トーンを表現してください。
-各投稿は番号を付けて、改行2つで区切ってください。`
+      const threadPrompt = loadPrompt('claude/character-profiles/cardi-dare-thread.txt', {
+        philosophy: character.philosophy || character.tone,
+        topicTitle: topicInfo?.title || concept.topicTitle,
+        openingHook: concept.structure?.openingHook || concept.hook,
+        background: concept.structure?.background || '',
+        mainContent: concept.structure?.mainContent || '',
+        reflection: concept.structure?.reflection || '',
+        cta: concept.structure?.cta || ''
+      })
 
       try {
         const threadResponse = await anthropic.messages.create({
@@ -154,22 +128,24 @@ ${topicInfo?.title || concept.topicTitle}
     
   
   // 他のキャラクターは従来通り
-  const systemPrompt = `あなたは${character.name}という${character.age}歳の${character.gender === 'male' ? '男性' : character.gender === 'female' ? '女性' : '人物'}です。
+  let voiceModeInstruction = ''
+  if (voiceMode === 'humorous') {
+    voiceModeInstruction = '今日は少しユーモラスに、自虐的なジョークも交えて語ってください。'
+  } else if (voiceMode === 'emotional') {
+    voiceModeInstruction = '今日は感情的に、熱く語ってください。'
+  }
 
-${character.philosophy || character.tone}
+  const systemPrompt = loadPrompt('claude/character-default.txt', {
+    characterName: character.name,
+    characterAge: character.age,
+    characterGender: character.gender === 'male' ? '男性' : character.gender === 'female' ? '女性' : '人物',
+    characterPhilosophy: character.philosophy || character.tone,
+    voiceModeInstruction,
+    topicTitle: topicInfo?.title || concept.topicTitle,
+    conceptStructure: JSON.stringify(concept.structure || concept, null, 2)
+  })
 
-${voiceMode === 'humorous' ? '今日は少しユーモラスに、自虐的なジョークも交えて語ってください。' : ''}
-${voiceMode === 'emotional' ? '今日は感情的に、熱く語ってください。' : ''}`
-
-  const userPrompt = `以下のコンセプトを、${character.name}として投稿文に変換してください。
-
-【トピック】
-${topicInfo?.title || concept.topicTitle}
-
-【コンセプト構造】
-${JSON.stringify(concept.structure || concept, null, 2)}
-
-140文字程度でTwitterに投稿してください。`
+  const userPrompt = '上記の指示に従って投稿を作成してください。'
 
   try {
     const response = await anthropic.messages.create({
