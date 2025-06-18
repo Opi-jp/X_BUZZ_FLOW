@@ -860,6 +860,7 @@ class PromptImpactAnalyzer {
       if (filename.includes('collect-topics')) {
         migrations.push({
           name: 'fix-topic-length-constraints',
+          functionName: 'migrateTopicLengths',
           description: 'Perplexityトピックの文字数制限を修正',
           script: `
 // Perplexityトピックの文字数制限修正
@@ -869,7 +870,7 @@ async function migrateTopicLengths() {
   })
   
   for (const session of sessions) {
-    if (session.topics?.collectTopics) {
+    if (session.topics && Array.isArray(session.topics)) {
       let updated = false
       const updatedTopics = session.topics.map(topic => {
         const newTopic = { ...topic }
@@ -917,6 +918,7 @@ async function migrateTopicLengths() {
       if (filename.includes('character')) {
         migrations.push({
           name: 'fix-thread-post-lengths',
+          functionName: 'migrateThreadPostLengths',
           description: 'スレッド投稿の文字数制限を修正',
           script: `
 // スレッド投稿の文字数制限修正（130-140文字）
@@ -926,39 +928,60 @@ async function migrateThreadPostLengths() {
   })
   
   for (const session of sessions) {
-    if (session.contents && Array.isArray(session.contents)) {
-      const content = session.contents[0]
+    if (session.contents) {
       let updated = false
+      let updatedContents = session.contents
       
-      // スレッド形式の場合
-      if (content.post1) {
+      // contentsがオブジェクトの場合（generateContents形式）
+      if (session.contents.generateContents) {
+        const content = session.contents.generateContents
         const updatedContent = { ...content }
-        const posts = ['post1', 'post2', 'post3', 'post4', 'post5']
         
-        posts.forEach(postKey => {
-          if (content[postKey]) {
-            const length = content[postKey].length
-            if (length < 130) {
-              // 短すぎる場合は句読点や感嘆符を追加
-              updatedContent[postKey] = content[postKey] + '！'
-              updated = true
-            } else if (length > 140) {
-              // 長すぎる場合は省略
-              updatedContent[postKey] = content[postKey].substring(0, 137) + '...'
-              updated = true
-            }
-          }
-        })
-        
-        if (updated) {
-          await prisma.viralSession.update({
-            where: { id: session.id },
-            data: {
-              contents: [updatedContent]
+        // スレッド形式の場合
+        if (content.post1) {
+          const posts = ['post1', 'post2', 'post3', 'post4', 'post5']
+          
+          posts.forEach(postKey => {
+            if (content[postKey]) {
+              const length = content[postKey].length
+              if (length < 130) {
+                // 短すぎる場合は句読点や感嘆符を追加
+                updatedContent[postKey] = content[postKey] + '！'
+                updated = true
+              } else if (length > 140) {
+                // 長すぎる場合は省略
+                updatedContent[postKey] = content[postKey].substring(0, 137) + '...'
+                updated = true
+              }
             }
           })
-          console.log(\`Updated session \${session.id}\`)
+          
+          if (updated) {
+            updatedContents = {
+              ...session.contents,
+              generateContents: updatedContent
+            }
+          }
         }
+        // 単独投稿の場合
+        else if (content.content && content.content.length > 140) {
+          updatedContent.content = content.content.substring(0, 137) + '...'
+          updatedContents = {
+            ...session.contents,
+            generateContents: updatedContent
+          }
+          updated = true
+        }
+      }
+      
+      if (updated) {
+        await prisma.viralSession.update({
+          where: { id: session.id },
+          data: {
+            contents: updatedContents
+          }
+        })
+        console.log(\`Updated session \${session.id}\`)
       }
     }
   }
@@ -972,6 +995,7 @@ async function migrateThreadPostLengths() {
     if (missingFieldIssues.length > 0) {
       migrations.push({
         name: 'add-missing-fields',
+        functionName: 'addMissingFields',
         description: '不足フィールドを追加',
         script: `
 // 不足フィールドの追加
@@ -991,25 +1015,34 @@ async function addMissingFields() {
     const updates = {}
     
     // Phase1の不足フィールド補完
-    if (session.topics?.collectTopics) {
+    if (session.topics && Array.isArray(session.topics)) {
       updates.topics = session.topics.map(topic => ({
-          ...topic,
-          TOPIC: topic.TOPIC || topic.title || 'トピック',
-          additionalSources: topic.additionalSources || []
-        }))
-      }
+        ...topic,
+        TOPIC: topic.TOPIC || topic.title || 'トピック',
+        additionalSources: topic.additionalSources || []
+      }))
       updated = true
     }
     
     // Phase2の不足フィールド補完
-    if (session.concepts?.generateConcepts) {
+    if (session.concepts && Array.isArray(session.concepts)) {
       updates.concepts = session.concepts.map(concept => ({
-          ...concept,
-          viralScore: concept.viralScore ?? 75,
-          viralFactors: concept.viralFactors || [],
-          angleRationale: concept.angleRationale || '効果的な角度です'
-        }))
-      }
+        ...concept,
+        // 必須フィールドの補完
+        conceptId: concept.conceptId || \`concept_\${Math.random().toString(36).substr(2, 9)}\`,
+        conceptTitle: concept.conceptTitle || concept.topicTitle || 'コンセプトタイトル',
+        format: concept.format || 'single',
+        hookType: concept.hookType || '意外性',
+        hookCombination: concept.hookCombination || ['意外性'],
+        angle: concept.angle || 'データ駆動型',
+        angleCombination: concept.angleCombination || ['データ駆動型'],
+        angleRationale: concept.angleRationale || '効果的な角度です',
+        viralScore: concept.viralScore ?? 75,
+        viralFactors: concept.viralFactors || ['話題性', '共感性'],
+        visual: concept.visual || 'インフォグラフィック',
+        timing: concept.timing || '平日夜（21時〜23時）',
+        hashtags: concept.hashtags || []
+      }))
       updated = true
     }
     
@@ -1031,6 +1064,7 @@ async function addMissingFields() {
       
       migrations.push({
         name: 'unify-field-names',
+        functionName: 'unifyFieldNames',
         description: 'フィールド名を統一',
         script: `
 // フィールド名の統一
@@ -1080,6 +1114,122 @@ async function unifyFieldNames() {
       console.log(\`Unified field names in session \${session.id}\`)
     }
   }
+}`
+      })
+    }
+
+    // 予期しないフィールドを削除するマイグレーション
+    const unexpectedFieldIssues = consistency.inconsistencies.filter(i => i.type === 'unexpected_fields')
+    if (unexpectedFieldIssues.length > 0) {
+      const unexpectedFields = unexpectedFieldIssues.flatMap(issue => issue.fields)
+      
+      migrations.push({
+        name: 'cleanup-unexpected-fields',
+        functionName: 'cleanupUnexpectedFields',
+        description: '予期しないフィールドを削除',
+        script: `
+// 予期しないフィールドのクリーンアップ
+async function cleanupUnexpectedFields() {
+  const sessions = await prisma.viralSession.findMany({
+    where: { 
+      OR: [
+        { topics: { not: null } },
+        { concepts: { not: null } },
+        { contents: { not: null } }
+      ]
+    }
+  })
+  
+  const unexpectedFields = ${JSON.stringify(unexpectedFields, null, 2)}
+  const expectedFieldsByPhase = {
+    topics: [
+      'TOPIC', 'title', 'source', 'url', 'date', 
+      'summary', 'keyPoints', 'perplexityAnalysis',
+      'additionalSources'
+    ],
+    concepts: [
+      'conceptId', 'conceptTitle', 'format', 'hookType', 
+      'hookCombination', 'angle', 'angleCombination',
+      'angleRationale', 'viralScore', 'viralFactors',
+      'structure', 'visual', 'timing', 'hashtags'
+    ],
+    contents: [
+      'content', 'format', 'post1', 'post2', 'post3', 
+      'post4', 'post5', 'generateContents'
+    ]
+  }
+  
+  // structure内の期待されるフィールド
+  const expectedStructureFields = [
+    'openingHook', 'background', 'mainContent', 
+    'reflection', 'cta'
+  ]
+  
+  for (const session of sessions) {
+    let updated = false
+    const updates = {}
+    
+    // 各フェーズのデータをチェック
+    const phases = ['topics', 'concepts', 'contents']
+    for (const phase of phases) {
+      if (session[phase]) {
+        const expectedFields = expectedFieldsByPhase[phase]
+        
+        // クリーンアップ関数
+        function cleanupFields(obj, isStructure = false) {
+          if (Array.isArray(obj)) {
+            return obj.map(item => cleanupFields(item, false))
+          }
+          if (obj && typeof obj === 'object') {
+            const newObj = {}
+            const fieldsToCheck = isStructure ? expectedStructureFields : expectedFields
+            
+            for (const [key, value] of Object.entries(obj)) {
+              // 特別なケース: structureフィールドは保持し、その中身をクリーンアップ
+              if (key === 'structure' && phase === 'concepts') {
+                newObj[key] = cleanupFields(value, true)
+              }
+              // 特別なケース: generateContentsフィールドは保持
+              else if (key === 'generateContents' && phase === 'contents') {
+                newObj[key] = value
+              }
+              // 期待されるフィールドのみ保持
+              else if (fieldsToCheck.includes(key)) {
+                newObj[key] = value
+              }
+              // structure.field形式のチェック（ドット記法）
+              else if (!isStructure && key.startsWith('structure.')) {
+                // structure.fieldはトップレベルでは削除
+                console.log(\`  Removing unexpected field: \${key} from \${phase}\`)
+              } else {
+                // 予期しないフィールドは削除
+                console.log(\`  Removing unexpected field: \${key} from \${phase}\`)
+              }
+            }
+            return newObj
+          }
+          return obj
+        }
+        
+        const cleanedPhase = cleanupFields(session[phase])
+        if (JSON.stringify(cleanedPhase) !== JSON.stringify(session[phase])) {
+          updates[phase] = cleanedPhase
+          updated = true
+        }
+      }
+    }
+    
+    if (updated) {
+      await prisma.viralSession.update({
+        where: { id: session.id },
+        data: updates
+      })
+      console.log(\`Cleaned up unexpected fields in session \${session.id}\`)
+    }
+  }
+  
+  console.log('\\nCleanup complete!')
+  console.log('Removed fields:', unexpectedFields)
 }`
       })
     }

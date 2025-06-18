@@ -23,11 +23,14 @@ const PromptStorage = require('./lib/prompt-storage')
 const PromptImpactAnalyzer = require('./lib/prompt-impact-analyzer')
 
 class PromptEditor {
-  constructor() {
+  constructor(options = {}) {
     this.promptsDir = path.join(process.cwd(), 'lib', 'prompts')
     this.charactersFile = path.join(process.cwd(), 'types', 'character.ts')
     this.storage = new PromptStorage()
     this.impactAnalyzer = new PromptImpactAnalyzer()
+    this.nonInteractive = options.nonInteractive || false
+    this.autoMigrate = options.autoMigrate || false
+    this.cleanup = options.cleanup || false
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -1797,10 +1800,18 @@ class PromptEditor {
       console.log('─'.repeat(80))
       
       // マイグレーション生成の提案
-      if (!compatibility.compatible || consistency.variations.length > 0) {
-        const generate = await this.prompt('\nマイグレーションスクリプトを生成しますか？ (y/N): ')
-        if (generate.toLowerCase() === 'y') {
+      const hasIssues = !compatibility.compatible || consistency.variations.length > 0
+      const hasUnexpectedFields = consistency.inconsistencies.some(i => i.type === 'unexpected_fields')
+      
+      if (hasIssues || (this.cleanup && hasUnexpectedFields)) {
+        if (this.nonInteractive && (this.autoMigrate || this.cleanup)) {
+          console.log('\n🔄 自動マイグレーションモードでスクリプトを生成します...')
           await this.generateMigrationScripts(filename, compatibility, consistency)
+        } else if (!this.nonInteractive) {
+          const generate = await this.prompt('\nマイグレーションスクリプトを生成しますか？ (y/N): ')
+          if (generate.toLowerCase() === 'y') {
+            await this.generateMigrationScripts(filename, compatibility, consistency)
+          }
         }
       }
       
@@ -1811,7 +1822,9 @@ class PromptEditor {
       await this.impactAnalyzer.cleanup()
     }
     
-    await this.prompt('\nEnterキーで編集画面に戻る...')
+    if (!this.nonInteractive) {
+      await this.prompt('\nEnterキーで編集画面に戻る...')
+    }
   }
 
   /**
@@ -1848,7 +1861,7 @@ class PromptEditor {
  * プロンプトファイル: ${filename}
  */
 
-const { PrismaClient } = require('../../lib/generated/prisma')
+const { PrismaClient } = require('../../../lib/generated/prisma')
 const prisma = new PrismaClient()
 
 ${migration.script}
@@ -1858,7 +1871,7 @@ async function main() {
   console.log('🚀 マイグレーション開始: ${migration.description}')
   
   try {
-    await ${migration.name.replace(/-/g, '_')}()
+    await ${migration.functionName || migration.name.replace(/-/g, '_')}()
     console.log('✅ マイグレーション完了')
   } catch (error) {
     console.error('❌ マイグレーションエラー:', error)
@@ -1956,18 +1969,24 @@ if (require.main === module) {
 // メイン実行
 async function main() {
   const [,, command, ...args] = process.argv
-  const editor = new PromptEditor()
   
-  // 非インタラクティブモードのチェック
-  const nonInteractive = args.includes('--non-interactive') || args.includes('-n')
-  if (nonInteractive) {
-    editor.nonInteractive = true
-    // フラグを削除
-    const index = args.indexOf('--non-interactive')
-    if (index > -1) args.splice(index, 1)
-    const index2 = args.indexOf('-n')
-    if (index2 > -1) args.splice(index2, 1)
+  // オプション解析
+  const options = {}
+  const filteredArgs = []
+  
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--non-interactive' || args[i] === '-n') {
+      options.nonInteractive = true
+    } else if (args[i] === '--auto-migrate') {
+      options.autoMigrate = true
+    } else if (args[i] === '--cleanup') {
+      options.cleanup = true
+    } else {
+      filteredArgs.push(args[i])
+    }
   }
+  
+  const editor = new PromptEditor(options)
   
   try {
     switch (command) {
@@ -1976,16 +1995,16 @@ async function main() {
         break
         
       case 'edit':
-        await editor.edit(args[0])
+        await editor.edit(filteredArgs[0])
         break
         
       case 'test':
-        await editor.test(args[0])
+        await editor.test(filteredArgs[0])
         break
         
       case 'test-direct':
         // 直接実行モード（変数を引数で渡す）
-        await editor.testDirect(args[0], args.slice(1))
+        await editor.testDirect(filteredArgs[0], filteredArgs.slice(1))
         break
         
       case 'analyze':
@@ -1997,11 +2016,11 @@ async function main() {
         break
         
       case 'history':
-        await editor.showHistory(args[0])
+        await editor.showHistory(filteredArgs[0])
         break
         
       case 'rollback':
-        await editor.rollback(args[0], args[1])
+        await editor.rollback(filteredArgs[0], filteredArgs[1])
         break
         
       case 'stats':
@@ -2009,32 +2028,32 @@ async function main() {
         break
         
       case 'impact':
-        if (!args[0]) {
+        if (!filteredArgs[0]) {
           console.log('❌ ファイル名を指定してください')
           break
         }
-        await editor.showImpactAnalysis(args[0])
+        await editor.showImpactAnalysis(filteredArgs[0])
         break
         
       case 'compat':
       case 'compatibility':
-        if (!args[0]) {
+        if (!filteredArgs[0]) {
           console.log('❌ ファイル名を指定してください')
           break
         }
-        await editor.showDataCompatibility(args[0])
+        await editor.showDataCompatibility(filteredArgs[0])
         break
         
       case 'preview':
-        if (!args[0]) {
+        if (!filteredArgs[0]) {
           console.log('❌ ファイル名を指定してください')
           break
         }
-        const previewFilepath = path.join(editor.promptsDir, args[0])
+        const previewFilepath = path.join(editor.promptsDir, filteredArgs[0])
         try {
           const previewContent = await fs.readFile(previewFilepath, 'utf-8')
-          const previewType = editor.detectPromptType(args[0])
-          const previewVars = editor.getSampleVariables(previewType, args[0])
+          const previewType = editor.detectPromptType(filteredArgs[0])
+          const previewVars = editor.getSampleVariables(previewType, filteredArgs[0])
           const previewExpanded = editor.expandVariables(previewContent, previewVars)
           console.log('\n📤 プロンプトプレビュー（デフォルト値で展開）:')
           console.log('═'.repeat(80))
@@ -2050,7 +2069,7 @@ async function main() {
 🎯 プロンプトエディター
 
 使い方:
-  node scripts/dev-tools/prompt-editor.js <command> [args]
+  node scripts/dev-tools/prompt-editor.js <command> [args] [options]
 
 コマンド:
   list                プロンプト一覧を表示
@@ -2065,12 +2084,18 @@ async function main() {
   rollback <file> <version>  過去バージョンに戻す
   stats              統計情報を表示
 
+オプション:
+  --non-interactive, -n    対話的プロンプトをスキップ
+  --auto-migrate          互換性問題がある場合自動的にマイグレーションを生成
+  --cleanup               予期しないフィールドを削除するマイグレーションを生成
+
 例:
   node scripts/dev-tools/prompt-editor.js list
   node scripts/dev-tools/prompt-editor.js edit perplexity/collect-topics.txt
   node scripts/dev-tools/prompt-editor.js test gpt/generate-concepts.txt
   node scripts/dev-tools/prompt-editor.js impact gpt/generate-concepts.txt
-  node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt
+  node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-interactive --auto-migrate
+  node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-interactive --cleanup
   node scripts/dev-tools/prompt-editor.js analyze
 
 💡 ヒント:

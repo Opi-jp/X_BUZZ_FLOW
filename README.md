@@ -41,11 +41,17 @@ node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
 node scripts/dev-tools/prompt-editor.js test-direct perplexity/collect-topics.txt \
   theme="AIと働き方" platform=Twitter style=エンターテイメント --non-interactive
 
+# DB整合性チェック＆マイグレーション（NEW!）
+node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt
+node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-interactive --auto-migrate
+node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-interactive --cleanup
+
 # ⚠️ 重要：プロンプトエディターの使い方
 # 1. 変数プレビュー（メニュー4）で使用される変数を確認
 # 2. JSON検証（メニュー5）で問題のある記述を確認
-# 3. 問題がある場合は修正してから使用すること
-# 4. test-directコマンドで非インタラクティブ実行が可能
+# 3. DB互換性チェック（compatコマンド）でデータ整合性を確認
+# 4. 問題がある場合はマイグレーションで自動修正
+# 5. test-directコマンドで非インタラクティブ実行が可能
 ```
 
 ### 使うAPI（2025年6月18日更新）
