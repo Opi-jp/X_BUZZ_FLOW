@@ -37689,6 +37689,7 @@ export namespace Prisma {
     title: string | null
     content: string | null
     visualNote: string | null
+    sourceUrl: string | null
     characterId: string | null
     characterNote: string | null
     status: string | null
@@ -37706,6 +37707,7 @@ export namespace Prisma {
     title: string | null
     content: string | null
     visualNote: string | null
+    sourceUrl: string | null
     characterId: string | null
     characterNote: string | null
     status: string | null
@@ -37724,6 +37726,7 @@ export namespace Prisma {
     content: number
     hashtags: number
     visualNote: number
+    sourceUrl: number
     characterId: number
     characterNote: number
     status: number
@@ -37743,6 +37746,7 @@ export namespace Prisma {
     title?: true
     content?: true
     visualNote?: true
+    sourceUrl?: true
     characterId?: true
     characterNote?: true
     status?: true
@@ -37760,6 +37764,7 @@ export namespace Prisma {
     title?: true
     content?: true
     visualNote?: true
+    sourceUrl?: true
     characterId?: true
     characterNote?: true
     status?: true
@@ -37778,6 +37783,7 @@ export namespace Prisma {
     content?: true
     hashtags?: true
     visualNote?: true
+    sourceUrl?: true
     characterId?: true
     characterNote?: true
     status?: true
@@ -37869,6 +37875,7 @@ export namespace Prisma {
     content: string
     hashtags: string[]
     visualNote: string | null
+    sourceUrl: string | null
     characterId: string | null
     characterNote: string | null
     status: string
@@ -37904,6 +37911,7 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    sourceUrl?: boolean
     characterId?: boolean
     characterNote?: boolean
     status?: boolean
@@ -37926,6 +37934,7 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    sourceUrl?: boolean
     characterId?: boolean
     characterNote?: boolean
     status?: boolean
@@ -37945,6 +37954,7 @@ export namespace Prisma {
     content?: boolean
     hashtags?: boolean
     visualNote?: boolean
+    sourceUrl?: boolean
     characterId?: boolean
     characterNote?: boolean
     status?: boolean
@@ -37980,6 +37990,7 @@ export namespace Prisma {
       content: string
       hashtags: string[]
       visualNote: string | null
+      sourceUrl: string | null
       characterId: string | null
       characterNote: string | null
       status: string
@@ -38391,6 +38402,7 @@ export namespace Prisma {
     readonly content: FieldRef<"ViralDraftV2", 'String'>
     readonly hashtags: FieldRef<"ViralDraftV2", 'String[]'>
     readonly visualNote: FieldRef<"ViralDraftV2", 'String'>
+    readonly sourceUrl: FieldRef<"ViralDraftV2", 'String'>
     readonly characterId: FieldRef<"ViralDraftV2", 'String'>
     readonly characterNote: FieldRef<"ViralDraftV2", 'String'>
     readonly status: FieldRef<"ViralDraftV2", 'String'>
@@ -42765,6 +42777,7 @@ export namespace Prisma {
     content: 'content',
     hashtags: 'hashtags',
     visualNote: 'visualNote',
+    sourceUrl: 'sourceUrl',
     characterId: 'characterId',
     characterNote: 'characterNote',
     status: 'status',
@@ -45997,6 +46010,7 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    sourceUrl?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
@@ -46018,6 +46032,7 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrderInput | SortOrder
+    sourceUrl?: SortOrderInput | SortOrder
     characterId?: SortOrderInput | SortOrder
     characterNote?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -46042,6 +46057,7 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    sourceUrl?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
@@ -46063,6 +46079,7 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrderInput | SortOrder
+    sourceUrl?: SortOrderInput | SortOrder
     characterId?: SortOrderInput | SortOrder
     characterNote?: SortOrderInput | SortOrder
     status?: SortOrder
@@ -46087,6 +46104,7 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
+    sourceUrl?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
     characterId?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
     characterNote?: StringNullableWithAggregatesFilter<"ViralDraftV2"> | string | null
     status?: StringWithAggregatesFilter<"ViralDraftV2"> | string
@@ -49841,6 +49859,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -49862,6 +49881,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -49881,6 +49901,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -49902,6 +49923,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -49922,6 +49944,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -49939,6 +49962,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -49957,6 +49981,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -52782,6 +52807,7 @@ export namespace Prisma {
     content?: SortOrder
     hashtags?: SortOrder
     visualNote?: SortOrder
+    sourceUrl?: SortOrder
     characterId?: SortOrder
     characterNote?: SortOrder
     status?: SortOrder
@@ -52799,6 +52825,7 @@ export namespace Prisma {
     title?: SortOrder
     content?: SortOrder
     visualNote?: SortOrder
+    sourceUrl?: SortOrder
     characterId?: SortOrder
     characterNote?: SortOrder
     status?: SortOrder
@@ -52816,6 +52843,7 @@ export namespace Prisma {
     title?: SortOrder
     content?: SortOrder
     visualNote?: SortOrder
+    sourceUrl?: SortOrder
     characterId?: SortOrder
     characterNote?: SortOrder
     status?: SortOrder
@@ -57924,6 +57952,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -57944,6 +57973,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -58039,6 +58069,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -58059,6 +58090,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -58312,6 +58344,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -58331,6 +58364,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -58501,6 +58535,7 @@ export namespace Prisma {
     content?: StringFilter<"ViralDraftV2"> | string
     hashtags?: StringNullableListFilter<"ViralDraftV2">
     visualNote?: StringNullableFilter<"ViralDraftV2"> | string | null
+    sourceUrl?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterId?: StringNullableFilter<"ViralDraftV2"> | string | null
     characterNote?: StringNullableFilter<"ViralDraftV2"> | string | null
     status?: StringFilter<"ViralDraftV2"> | string
@@ -58863,6 +58898,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -58883,6 +58919,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -58917,6 +58954,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -58937,6 +58975,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -59979,6 +60018,7 @@ export namespace Prisma {
     content: string
     hashtags?: ViralDraftV2CreatehashtagsInput | string[]
     visualNote?: string | null
+    sourceUrl?: string | null
     characterId?: string | null
     characterNote?: string | null
     status?: string
@@ -60022,6 +60062,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -60041,6 +60082,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
@@ -60060,6 +60102,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     hashtags?: ViralDraftV2UpdatehashtagsInput | string[]
     visualNote?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceUrl?: NullableStringFieldUpdateOperationsInput | string | null
     characterId?: NullableStringFieldUpdateOperationsInput | string | null
     characterNote?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string

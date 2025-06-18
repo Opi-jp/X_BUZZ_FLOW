@@ -827,6 +827,7 @@ model ViralDraftV2 {
   content    String   @db.Text
   hashtags   String[]
   visualNote String?  @map("visual_note")
+  sourceUrl  String?  @map("source_url") // 引用元URL
 
   // キャラクター情報
   characterId   String? @map("character_id")

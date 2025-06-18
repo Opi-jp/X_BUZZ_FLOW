@@ -68,8 +68,12 @@ export async function POST(
         platform: session.platform,
         style: session.style,
         topicTitle: topic.TOPIC,
-        topicAnalysis: topic.perplexityAnalysis,
+        topicSource: topic.source || 'Unknown',
+        topicDate: topic.date || new Date().toISOString().split('T')[0],
         topicUrl: topic.url,
+        topicSummary: topic.summary || '',
+        topicKeyPoints: topic.keyPoints ? topic.keyPoints.map((point: string, i: number) => `${i + 1}. ${point}`).join('\n') : '',
+        topicAnalysis: topic.perplexityAnalysis,
         topicIndex: topicIndex + 1
       })
 
@@ -89,20 +93,50 @@ export async function POST(
         max_tokens: 3500
       })
 
-      const content = response.choices[0].message.content || '[]'
+      const content = response.choices[0].message.content || ''
       let concepts = []
       
-      try {
-        concepts = JSON.parse(content)
-      } catch (e) {
-        console.error('Failed to parse concepts:', e)
-        // JSONブロックを探す
-        const jsonMatch = content.match(/\[[\s\S]*\]/);
-        if (jsonMatch) {
-          try {
-            concepts = JSON.parse(jsonMatch[0])
-          } catch (e2) {
-            console.error('Failed to parse extracted JSON:', e2)
+      // 新しい形式：個別のコンセプトA、B、Cを抽出
+      const conceptAMatch = content.match(/【コンセプトA】\s*(?:```json\s*)?(\{[\s\S]*?\})\s*(?:```\s*)?(?=【コンセプトB】|$)/);
+      const conceptBMatch = content.match(/【コンセプトB】\s*(?:```json\s*)?(\{[\s\S]*?\})\s*(?:```\s*)?(?=【コンセプトC】|$)/);
+      const conceptCMatch = content.match(/【コンセプトC】\s*(?:```json\s*)?(\{[\s\S]*?\})\s*(?:```\s*)?$/m);
+      
+      if (conceptAMatch) {
+        try {
+          concepts.push(JSON.parse(conceptAMatch[1]))
+        } catch (e) {
+          console.error('Failed to parse concept A:', e)
+        }
+      }
+      
+      if (conceptBMatch) {
+        try {
+          concepts.push(JSON.parse(conceptBMatch[1]))
+        } catch (e) {
+          console.error('Failed to parse concept B:', e)
+        }
+      }
+      
+      if (conceptCMatch) {
+        try {
+          concepts.push(JSON.parse(conceptCMatch[1]))
+        } catch (e) {
+          console.error('Failed to parse concept C:', e)
+        }
+      }
+      
+      // フォールバック: 旧形式の配列JSONを探す
+      if (concepts.length === 0) {
+        try {
+          concepts = JSON.parse(content)
+        } catch (e) {
+          const jsonMatch = content.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
+            try {
+              concepts = JSON.parse(jsonMatch[0])
+            } catch (e2) {
+              console.error('Failed to parse any concepts:', e2)
+            }
           }
         }
       }

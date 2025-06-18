@@ -72,16 +72,15 @@ export async function POST(
     const drafts = []
     for (const result of results) {
       if (!result.error) {
-        if (format === 'simple' && result.mainPost) {
+        if (format === 'simple' && result.posts) {
           // シンプルな2連投稿の場合
           const draft = await prisma.viralDraftV2.create({
             data: {
               sessionId: id,
               conceptId: result.conceptId,
-              title: result.mainPost.substring(0, 50) + '...',
+              title: result.posts[0].substring(0, 50) + '...',
               content: JSON.stringify({
-                mainPost: result.mainPost,
-                replyPost: result.replyPost
+                posts: result.posts
               }),
               hashtags: result.hashtags,
               characterId: character.id,
@@ -91,16 +90,15 @@ export async function POST(
             }
           })
           drafts.push(draft)
-        } else if (format === 'thread' && result.threadPosts) {
+        } else if (format === 'thread' && result.posts) {
           // スレッド形式の場合
           const draft = await prisma.viralDraftV2.create({
             data: {
               sessionId: id,
               conceptId: result.conceptId,
-              title: result.threadPosts[0].substring(0, 50) + '...',
+              title: result.posts[0].substring(0, 50) + '...',
               content: JSON.stringify({
-                threadPosts: result.threadPosts,
-                sourcePost: result.sourcePost
+                posts: result.posts
               }),
               hashtags: result.hashtags,
               characterId: character.id,

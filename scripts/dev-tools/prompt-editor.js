@@ -19,10 +19,14 @@ const readline = require('readline')
 const { exec } = require('child_process')
 const { promisify } = require('util')
 const execAsync = promisify(exec)
+const PromptStorage = require('./lib/prompt-storage')
+const PromptImpactAnalyzer = require('./lib/prompt-impact-analyzer')
 
 class PromptEditor {
   constructor() {
     this.promptsDir = path.join(process.cwd(), 'lib', 'prompts')
+    this.storage = new PromptStorage()
+    this.impactAnalyzer = new PromptImpactAnalyzer()
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -41,22 +45,37 @@ class PromptEditor {
       const providerDir = path.join(this.promptsDir, provider)
       
       try {
-        const files = await fs.readdir(providerDir)
         console.log(`\n${this.getProviderEmoji(provider)} ${provider.toUpperCase()}:`)
-        
-        for (const file of files) {
-          if (file.endsWith('.txt')) {
-            const stats = await fs.stat(path.join(providerDir, file))
-            const content = await fs.readFile(path.join(providerDir, file), 'utf-8')
-            const lines = content.split('\n').length
-            
-            console.log(`  - ${file}`)
-            console.log(`    サイズ: ${this.formatBytes(stats.size)} | 行数: ${lines}`)
-            console.log(`    更新: ${stats.mtime.toLocaleString('ja-JP')}`)
-          }
-        }
+        await this.listFilesRecursive(providerDir, providerDir, '  ')
       } catch (error) {
         console.log(`  (ディレクトリなし)`)
+      }
+    }
+  }
+
+  /**
+   * ディレクトリ内のファイルを再帰的に表示
+   */
+  async listFilesRecursive(dir, baseDir, indent = '') {
+    const entries = await fs.readdir(dir, { withFileTypes: true })
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name)
+      
+      if (entry.isDirectory()) {
+        // サブディレクトリの場合
+        console.log(`${indent}📁 ${entry.name}/`)
+        await this.listFilesRecursive(fullPath, baseDir, indent + '  ')
+      } else if (entry.name.endsWith('.txt')) {
+        // テキストファイルの場合
+        const stats = await fs.stat(fullPath)
+        const content = await fs.readFile(fullPath, 'utf-8')
+        const lines = content.split('\n').length
+        const relativePath = path.relative(baseDir, fullPath)
+        
+        console.log(`${indent}- ${relativePath}`)
+        console.log(`${indent}  サイズ: ${this.formatBytes(stats.size)} | 行数: ${lines}`)
+        console.log(`${indent}  更新: ${stats.mtime.toLocaleString('ja-JP')}`)
       }
     }
   }
@@ -95,9 +114,11 @@ class PromptEditor {
       console.log('2. インライン編集')
       console.log('3. 分析してから編集')
       console.log('4. プレビュー（完全な展開を確認）')
-      console.log('5. キャンセル')
+      console.log('5. 影響範囲を確認')
+      console.log('6. DB互換性チェック')
+      console.log('7. キャンセル')
       
-      const choice = await this.prompt('\n選択 (1-5): ')
+      const choice = await this.prompt('\n選択 (1-7): ')
       
       switch (choice) {
         case '1':
@@ -112,11 +133,20 @@ class PromptEditor {
         case '4':
           await this.previewExpanded(content, promptType, filename)
           break
+        case '5':
+          await this.showImpactAnalysis(filename)
+          await this.edit(filename) // 編集画面に戻る
+          break
+        case '6':
+          await this.showDataCompatibility(filename)
+          await this.edit(filename) // 編集画面に戻る
+          break
         default:
           console.log('キャンセルしました')
       }
     } catch (error) {
-      console.log(`❌ ファイルが見つかりません: ${filename}`)
+      console.log(`❌ エラー: ${error.message}`)
+      console.log(`  ファイルパス: ${filepath}`)
     }
   }
 
@@ -130,6 +160,7 @@ class PromptEditor {
     }
 
     const filepath = path.join(this.promptsDir, filename)
+    this.currentPromptFile = filename  // 現在のファイルを記録
     
     try {
       const content = await fs.readFile(filepath, 'utf-8')
@@ -646,6 +677,32 @@ class PromptEditor {
           await executor.saveResult(result, filename)
         }
         
+        // テスト結果を履歴に記録
+        const promptFile = this.currentPromptFile || 'unknown'
+        const analysis = await this.analyzePrompt(prompt, promptFile)
+        
+        // バージョンを保存（既存バージョンがなければ新規作成）
+        let versionId = this.currentVersionId
+        if (!versionId) {
+          versionId = await this.storage.saveVersion(
+            promptFile,
+            prompt,
+            'テスト実行',
+            analysis.scores
+          )
+        }
+        
+        // テスト結果を保存
+        await this.storage.saveTestResult(versionId, {
+          provider,
+          systemPrompt,
+          variables,
+          output: result.data,
+          success: result.success,
+          executionTime: result.executionTime || 0,
+          model: result.model || 'unknown'
+        })
+        
         // モックとして保存するか確認
         const saveMock = await this.prompt('この結果をモックデータとして保存しますか？ (y/N): ')
         if (saveMock.toLowerCase() === 'y') {
@@ -706,6 +763,13 @@ class PromptEditor {
           platform: 'Twitter',
           style: 'エンターテイメント',
           topicIndex: 0,
+          topicTitle: 'AIツールで仕事効率が10倍に',
+          topicSource: 'TechCrunch Japan',
+          topicDate: '2025-06-18',
+          topicUrl: 'https://example.com/article',
+          topicSummary: 'OpenAIの最新ツールが発表され、多くの企業で導入が始まっている。特に文書作成や分析業務において、従来の10倍の効率化が実現されているという。大手コンサルティング会社の調査によると、導入企業の80%が業務時間を大幅に削減できたと回答。一方で、AIに依存しすぎることへの懸念も広がっている。',
+          topicKeyPoints: '1. OpenAIの新ツールが業務効率を10倍に向上\n2. 導入企業の80%が時間削減を実感\n3. 文書作成と分析業務で特に効果的\n4. AI依存への懸念も同時に広がる\n5. 今後さらに多くの企業が導入予定',
+          topicAnalysis: 'このトピックは「AIで仕事が奪われる」という恐怖と「効率化で楽になる」という期待の両面を持つため、強い感情的反応を引き起こす。特に30-40代のビジネスパーソンにとって切実な話題であり、自分ごととして捉えやすい。',
           topic: {
             TOPIC: 'AIツールで仕事効率が10倍に',
             perplexityAnalysis: 'このトピックは多くの人の関心を引く',
@@ -814,6 +878,416 @@ class PromptEditor {
     })
   }
 
+  /**
+   * 編集履歴を表示
+   */
+  async showHistory(promptFile = null) {
+    console.log('📚 編集履歴\n')
+    
+    try {
+      await this.storage.init()
+      
+      const query = promptFile ? { promptFile } : {}
+      const versions = await this.storage.searchHistory(query)
+      
+      if (versions.length === 0) {
+        console.log('履歴がありません')
+        return
+      }
+      
+      // ファイル別にグループ化
+      const byFile = {}
+      versions.forEach(v => {
+        if (!byFile[v.promptFile]) byFile[v.promptFile] = []
+        byFile[v.promptFile].push(v)
+      })
+      
+      for (const [file, fileVersions] of Object.entries(byFile)) {
+        console.log(`\n📄 ${file}`)
+        console.log('─'.repeat(60))
+        
+        fileVersions
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .slice(0, 10)
+          .forEach(v => {
+            const date = new Date(v.timestamp).toLocaleString('ja-JP')
+            const score = v.scores ? `スコア: ${v.scores.overall}` : 'スコアなし'
+            console.log(`  ${v.id} - ${date} - ${score}`)
+            console.log(`    理由: ${v.changeReason}`)
+            if (v.testResults.length > 0) {
+              console.log(`    テスト: ${v.testResults.length}回実行`)
+            }
+          })
+      }
+    } catch (error) {
+      console.log(`❌ 履歴表示エラー: ${error.message}`)
+    }
+  }
+
+  /**
+   * 過去バージョンに戻す
+   */
+  async rollback(promptFile, versionId) {
+    if (!promptFile || !versionId) {
+      console.log('❌ ファイル名とバージョンIDを指定してください')
+      console.log('例: rollback gpt/generate-concepts.txt v1234567890_abcd')
+      return
+    }
+    
+    try {
+      const version = await this.storage.getVersion(versionId)
+      const filepath = path.join(this.promptsDir, promptFile)
+      
+      console.log(`\n📝 ロールバック確認`)
+      console.log(`ファイル: ${promptFile}`)
+      console.log(`バージョン: ${version.id}`)
+      console.log(`作成日時: ${new Date(version.timestamp).toLocaleString('ja-JP')}`)
+      console.log(`変更理由: ${version.changeReason}`)
+      
+      const confirm = await this.prompt('\n本当にロールバックしますか？ (y/n): ')
+      
+      if (confirm.toLowerCase() === 'y') {
+        // 現在のバージョンを保存
+        const currentContent = await fs.readFile(filepath, 'utf-8')
+        await this.storage.saveVersion(
+          promptFile,
+          currentContent,
+          `ロールバック前のバックアップ (${versionId}へロールバック)`,
+          null
+        )
+        
+        // ロールバック実行
+        await fs.writeFile(filepath, version.content)
+        
+        console.log('✅ ロールバックが完了しました')
+        
+        // 新しいバージョンとして記録
+        await this.storage.saveVersion(
+          promptFile,
+          version.content,
+          `バージョン ${versionId} へロールバック`,
+          version.scores
+        )
+      } else {
+        console.log('キャンセルしました')
+      }
+    } catch (error) {
+      console.log(`❌ ロールバックエラー: ${error.message}`)
+    }
+  }
+
+  /**
+   * 影響範囲分析を表示
+   */
+  async showImpactAnalysis(filename) {
+    console.log('\n🔍 影響範囲分析中...\n')
+    
+    try {
+      const report = await this.impactAnalyzer.generateImpactReport(filename)
+      const severity = this.impactAnalyzer.evaluateImpactSeverity(report)
+      
+      console.log(`${severity.emoji} ${severity.message}`)
+      console.log('─'.repeat(80))
+      
+      // DB影響
+      if (report.affectedDB.tables.length > 0) {
+        console.log('\n🗄️  データベース影響:')
+        console.log(`影響を受けるテーブル: ${report.affectedDB.tables.join(', ')}`)
+        console.log('\n影響を受けるフィールド:')
+        report.affectedDB.fields.forEach(field => {
+          console.log(`  - ${field}`)
+        })
+        
+        if (report.affectedDB.warnings.length > 0) {
+          console.log('\n⚠️  DB関連の注意事項:')
+          report.affectedDB.warnings.forEach(warning => {
+            console.log(`  - ${warning}`)
+          })
+        }
+        
+        if (report.affectedDB.codeUsage.length > 0) {
+          console.log('\n🔧 コードでの使用状況:')
+          report.affectedDB.codeUsage.forEach(usage => {
+            console.log(`  - ${usage.location}`)
+            console.log(`    → ${usage.usage}`)
+          })
+        }
+      }
+      
+      // API影響
+      if (report.affectedAPIs.length > 0) {
+        console.log('\n🌐 影響を受けるAPI:')
+        report.affectedAPIs.forEach(api => {
+          console.log(`  - ${api.endpoint} (${api.file})`)
+        })
+      }
+      
+      // コンポーネント影響
+      if (report.affectedComponents.length > 0) {
+        console.log('\n🧩 影響を受けるコンポーネント:')
+        report.affectedComponents.forEach(comp => {
+          console.log(`  - ${comp.component} (${comp.file})`)
+        })
+      }
+      
+      // サマリー
+      console.log('\n📊 サマリー:')
+      console.log(`  - コンポーネント: ${report.summary.components}個`)
+      console.log(`  - API: ${report.summary.apis}個`)
+      console.log(`  - スクリプト: ${report.summary.scripts}個`)
+      console.log(`  - DBテーブル: ${report.summary.dbTables}個`)
+      console.log(`  - DBフィールド: ${report.summary.dbFields}個`)
+      
+      console.log('─'.repeat(80))
+      
+      // 推奨事項
+      if (severity.level === 'high') {
+        console.log('\n💡 推奨事項:')
+        console.log('  1. 変更前に影響を受けるコンポーネントのテストを確認')
+        console.log('  2. DBスキーマの変更が必要な場合はマイグレーションを準備')
+        console.log('  3. APIの出力形式が変わる場合はフロントエンドも同時に修正')
+        console.log('  4. 段階的なデプロイを検討')
+      }
+      
+    } catch (error) {
+      console.log(`❌ 影響範囲分析エラー: ${error.message}`)
+    }
+    
+    await this.prompt('\nEnterキーで編集画面に戻る...')
+  }
+
+  /**
+   * データ互換性チェックを表示
+   */
+  async showDataCompatibility(filename) {
+    console.log('\n🔍 データ互換性チェック中...\n')
+    
+    try {
+      // 互換性チェック
+      const compatibility = await this.impactAnalyzer.checkDataCompatibility(filename)
+      
+      // フィールド整合性チェック
+      const consistency = await this.impactAnalyzer.checkFieldConsistency(filename)
+      
+      // 結果表示
+      console.log(compatibility.compatible ? '✅ 互換性: OK' : '❌ 互換性: 問題あり')
+      console.log('─'.repeat(80))
+      
+      // 互換性問題
+      if (compatibility.issues.length > 0) {
+        console.log('\n⚠️  互換性の問題:')
+        const groupedIssues = {}
+        compatibility.issues.forEach(issue => {
+          if (!groupedIssues[issue.type]) {
+            groupedIssues[issue.type] = []
+          }
+          groupedIssues[issue.type].push(issue)
+        })
+        
+        Object.entries(groupedIssues).forEach(([type, issues]) => {
+          console.log(`\n  ${this.getIssueTypeLabel(type)}:`)
+          issues.slice(0, 5).forEach(issue => {
+            console.log(`    - ${issue.message}`)
+          })
+          if (issues.length > 5) {
+            console.log(`    ... 他 ${issues.length - 5} 件`)
+          }
+        })
+      }
+      
+      // フィールド整合性問題
+      if (consistency.variations.length > 0 || consistency.inconsistencies.length > 0) {
+        console.log('\n🔄 フィールド整合性の問題:')
+        
+        if (consistency.variations.length > 0) {
+          console.log('\n  フィールド名の揺れ:')
+          consistency.variations.slice(0, 5).forEach(v => {
+            console.log(`    - ${v.message}`)
+          })
+        }
+        
+        if (consistency.inconsistencies.length > 0) {
+          console.log('\n  フィールドの不整合:')
+          consistency.inconsistencies.forEach(i => {
+            console.log(`    - ${i.message}`)
+          })
+        }
+      }
+      
+      // 推奨事項
+      const allRecommendations = [
+        ...compatibility.recommendations,
+        ...consistency.recommendations
+      ]
+      
+      if (allRecommendations.length > 0) {
+        console.log('\n💡 推奨事項:')
+        const uniqueRecommendations = [...new Set(allRecommendations)]
+        uniqueRecommendations.forEach((rec, i) => {
+          console.log(`  ${i + 1}. ${rec}`)
+        })
+      }
+      
+      // 既存データサンプル
+      if (Object.keys(compatibility.existingDataSamples).length > 0) {
+        console.log('\n📊 既存データのサンプル:')
+        Object.entries(compatibility.existingDataSamples).forEach(([key, samples]) => {
+          console.log(`  ${key}: ${samples.length}件`)
+        })
+      }
+      
+      console.log('─'.repeat(80))
+      
+      // マイグレーション生成の提案
+      if (!compatibility.compatible || consistency.variations.length > 0) {
+        const generate = await this.prompt('\nマイグレーションスクリプトを生成しますか？ (y/N): ')
+        if (generate.toLowerCase() === 'y') {
+          await this.generateMigrationScripts(filename, compatibility, consistency)
+        }
+      }
+      
+    } catch (error) {
+      console.log(`❌ 互換性チェックエラー: ${error.message}`)
+    } finally {
+      // Prisma接続をクリーンアップ
+      await this.impactAnalyzer.cleanup()
+    }
+    
+    await this.prompt('\nEnterキーで編集画面に戻る...')
+  }
+
+  /**
+   * マイグレーションスクリプトを生成
+   */
+  async generateMigrationScripts(filename, compatibility, consistency) {
+    console.log('\n📝 マイグレーションスクリプト生成中...\n')
+    
+    const migrations = this.impactAnalyzer.generateMigrationScript(filename, compatibility, consistency)
+    
+    if (migrations.length === 0) {
+      console.log('生成するマイグレーションはありません。')
+      return
+    }
+    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5)
+    const baseDir = path.join(process.cwd(), 'scripts', 'migrations', timestamp)
+    
+    await fs.mkdir(baseDir, { recursive: true })
+    
+    console.log(`マイグレーションスクリプトを生成しました:`)
+    console.log(`📁 ${baseDir}\n`)
+    
+    for (const migration of migrations) {
+      const filename = `${migration.name}.js`
+      const filepath = path.join(baseDir, filename)
+      
+      const fullScript = `#!/usr/bin/env node
+
+/**
+ * ${migration.description}
+ * 
+ * 生成日時: ${new Date().toISOString()}
+ * プロンプトファイル: ${filename}
+ */
+
+const { PrismaClient } = require('../../lib/generated/prisma')
+const prisma = new PrismaClient()
+
+${migration.script}
+
+// メイン実行
+async function main() {
+  console.log('🚀 マイグレーション開始: ${migration.description}')
+  
+  try {
+    await ${migration.name.replace(/-/g, '_')}()
+    console.log('✅ マイグレーション完了')
+  } catch (error) {
+    console.error('❌ マイグレーションエラー:', error)
+    process.exit(1)
+  } finally {
+    await prisma.$disconnect()
+  }
+}
+
+if (require.main === module) {
+  main()
+}
+`
+      
+      await fs.writeFile(filepath, fullScript)
+      await fs.chmod(filepath, '755')
+      
+      console.log(`  ✅ ${filename}`)
+      console.log(`     ${migration.description}`)
+    }
+    
+    console.log('\n実行方法:')
+    migrations.forEach(migration => {
+      console.log(`  node scripts/migrations/${timestamp}/${migration.name}.js`)
+    })
+    
+    console.log('\n⚠️  実行前に必ずバックアップを取ってください！')
+  }
+
+  /**
+   * 問題タイプのラベルを取得
+   */
+  getIssueTypeLabel(type) {
+    const labels = {
+      'missing_fields': '不足フィールド',
+      'length_constraint': '文字数制限違反',
+      'value_constraint': '値の範囲違反',
+      'missing_structure_fields': '構造体の不足フィールド',
+      'missing_post': 'スレッド投稿の不足',
+      'error': 'エラー'
+    }
+    return labels[type] || type
+  }
+
+  /**
+   * 統計情報を表示
+   */
+  async showStats() {
+    console.log('📊 プロンプトエディター統計\n')
+    
+    try {
+      await this.storage.init()
+      const stats = await this.storage.getStats()
+      
+      console.log(`総バージョン数: ${stats.totalVersions}`)
+      console.log(`過去7日間の編集: ${stats.recentVersions}回`)
+      console.log(`平均スコア: ${stats.averageScore}/100`)
+      
+      if (stats.mostEditedPrompt) {
+        console.log(`\n最も編集されたプロンプト:`)
+        console.log(`  ${stats.mostEditedPrompt.file} (${stats.mostEditedPrompt.count}回)`)
+      }
+      
+      if (Object.keys(stats.scoreImprovement).length > 0) {
+        console.log(`\nスコア改善:`)
+        Object.entries(stats.scoreImprovement).forEach(([file, improvement]) => {
+          const sign = improvement > 0 ? '+' : ''
+          const emoji = improvement > 0 ? '📈' : improvement < 0 ? '📉' : '➡️'
+          console.log(`  ${emoji} ${file}: ${sign}${improvement}`)
+        })
+      }
+      
+      // ディスク使用量
+      const storageDir = path.join(process.cwd(), '.prompt-editor')
+      try {
+        const { stdout } = await execAsync(`du -sh "${storageDir}" 2>/dev/null || echo "0"`)
+        const size = stdout.trim().split('\t')[0]
+        console.log(`\nストレージ使用量: ${size}`)
+      } catch {
+        // エラーは無視
+      }
+      
+    } catch (error) {
+      console.log(`❌ 統計表示エラー: ${error.message}`)
+    }
+  }
+
   close() {
     this.rl.close()
   }
@@ -846,6 +1320,55 @@ async function main() {
         await editor.compare()
         break
         
+      case 'history':
+        await editor.showHistory(args[0])
+        break
+        
+      case 'rollback':
+        await editor.rollback(args[0], args[1])
+        break
+        
+      case 'stats':
+        await editor.showStats()
+        break
+        
+      case 'impact':
+        if (!args[0]) {
+          console.log('❌ ファイル名を指定してください')
+          break
+        }
+        await editor.showImpactAnalysis(args[0])
+        break
+        
+      case 'compat':
+      case 'compatibility':
+        if (!args[0]) {
+          console.log('❌ ファイル名を指定してください')
+          break
+        }
+        await editor.showDataCompatibility(args[0])
+        break
+        
+      case 'preview':
+        if (!args[0]) {
+          console.log('❌ ファイル名を指定してください')
+          break
+        }
+        const previewFilepath = path.join(editor.promptsDir, args[0])
+        try {
+          const previewContent = await fs.readFile(previewFilepath, 'utf-8')
+          const previewType = editor.detectPromptType(args[0])
+          const previewVars = editor.getSampleVariables(previewType, args[0])
+          const previewExpanded = editor.expandVariables(previewContent, previewVars)
+          console.log('\n📤 プロンプトプレビュー（デフォルト値で展開）:')
+          console.log('═'.repeat(80))
+          console.log(previewExpanded)
+          console.log('═'.repeat(80))
+        } catch (error) {
+          console.log(`❌ プレビューエラー: ${error.message}`)
+        }
+        break
+        
       default:
         console.log(`
 🎯 プロンプトエディター
@@ -857,13 +1380,21 @@ async function main() {
   list                プロンプト一覧を表示
   edit <file>        プロンプトを編集
   test <file>        プロンプトをテスト実行
+  preview <file>     プロンプトをプレビュー（変数展開確認）
+  impact <file>      プロンプトの影響範囲を分析
+  compat <file>      DB互換性チェック＆マイグレーション生成
   analyze            全プロンプトを分析
-  compare            バージョン比較（開発中）
+  compare            バージョン比較
+  history [file]     編集履歴を表示
+  rollback <file> <version>  過去バージョンに戻す
+  stats              統計情報を表示
 
 例:
   node scripts/dev-tools/prompt-editor.js list
   node scripts/dev-tools/prompt-editor.js edit perplexity/collect-topics.txt
   node scripts/dev-tools/prompt-editor.js test gpt/generate-concepts.txt
+  node scripts/dev-tools/prompt-editor.js impact gpt/generate-concepts.txt
+  node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt
   node scripts/dev-tools/prompt-editor.js analyze
 
 💡 ヒント:

@@ -102,76 +102,28 @@ ${topicAnalysis}
 - 【ビジュアル案】 → visualフィールドへ
 - 【投稿タイミング】 → timingフィールドへ
 
-必ず以下のJSON形式で、コンセプトA、コンセプトB、コンセプトCの3つを出力してください：
-
-【コンセプトA】
-{
-  "conceptId": "topic${topicIndex}_conceptA",
-  "conceptTitle": "",
-  "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
-  "viralScore": 0,
-  "viralFactors": [],
-  "structure": {
-    "openingHook": "",
-    "background": "",
-    "mainContent": "",
-    "reflection": "",
-    "cta": ""
-  },
-  "visual": "",
-  "timing": "",
-  "hashtags": []
-}
-
-【コンセプトB】
-{
-  "conceptId": "topic${topicIndex}_conceptB",
-  "conceptTitle": "",
-  "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
-  "viralScore": 0,
-  "viralFactors": [],
-  "structure": {
-    "openingHook": "",
-    "background": "",
-    "mainContent": "",
-    "reflection": "",
-    "cta": ""
-  },
-  "visual": "",
-  "timing": "",
-  "hashtags": []
-}
-
-【コンセプトC】
-{
-  "conceptId": "topic${topicIndex}_conceptC",
-  "conceptTitle": "",
-  "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
-  "viralScore": 0,
-  "viralFactors": [],
-  "structure": {
-    "openingHook": "",
-    "background": "",
-    "mainContent": "",
-    "reflection": "",
-    "cta": ""
-  },
-  "visual": "",
-  "timing": "",
-  "hashtags": []
-}
+必ず以下のJSON形式で3つのコンセプトを出力してください：
+[
+  {
+    "conceptId": "topic${topicIndex}_concept1",
+    "conceptTitle": "コンセプトのタイトル（20文字以内）",
+    "format": "single/threadのいずれか",
+    "hookType": "使用したフックの種類",
+    "hookCombination": ["組み合わせた場合のフックタイプ"],
+    "angle": "メイン角度",
+    "angleCombination": ["使用した角度の組み合わせ"],
+    "angleRationale": "なぜこの角度/組み合わせが効果的か、なぜこの形式を選んだか",
+    "viralScore": 85,
+    "viralFactors": ["バズる要因1", "バズる要因2"],
+    "structure": {
+      "openingHook": "どのような驚きや問いかけで始めるか",
+      "background": "どんな現状認識や問題意識を提示するか",
+      "mainContent": "どんな事実・体験・分析を展開するか",
+      "reflection": "どのような共感ポイントや価値づけをするか",
+      "cta": "どんな行動を促すか（コメント・RT・保存など）"
+    },
+    "visual": "ビジュアル案",
+    "timing": "投稿タイミング",
+    "hashtags": ["関連ハッシュタグ"]
+  }
+]

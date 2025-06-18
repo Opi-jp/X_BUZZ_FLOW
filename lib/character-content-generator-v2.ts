@@ -48,11 +48,12 @@ export async function generateCharacterContentV2({
           ]
         })
         
-        const mainPost = mainResponse.content[0].text.trim()
+        const mainContentBlock = mainResponse.content[0]
+        const mainPost = mainContentBlock.type === 'text' ? mainContentBlock.text.trim() : ''
         
         // ハッシュタグを追加（140文字以内に収める）
         const hashtags = concept.hashtags || []
-        const hashtagsStr = hashtags.length > 0 ? ` ${hashtags.map(h => `#${h}`).join(' ')}` : ''
+        const hashtagsStr = hashtags.length > 0 ? ` ${hashtags.map((h: string) => `#${h}`).join(' ')}` : ''
         
         // 文字数調整（140文字を超える場合は本文を短縮）
         let mainPostWithTags = mainPost + hashtagsStr
@@ -63,11 +64,11 @@ export async function generateCharacterContentV2({
         }
         
         return {
-          mainPost: mainPostWithTags,
-          replyPost: `出典：${concept.topicUrl || topicInfo?.url || ''}`,
+          posts: [mainPostWithTags],
           hashtags: hashtags,
           format: 'simple',
-          characterNote: 'カーディ・ダーレの2連投稿（メイン140文字＋出典ツリー）'
+          characterNote: 'カーディ・ダーレの投稿（シンプル版）',
+          sourceUrl: concept.topicUrl || topicInfo?.url || ''
         }
       } catch (error) {
         console.error('Claude API error:', error)
@@ -98,26 +99,40 @@ export async function generateCharacterContentV2({
           ]
         })
         
-        const content = threadResponse.content[0].text.trim()
+        const threadContentBlock = threadResponse.content[0]
+        const content = threadContentBlock.type === 'text' ? threadContentBlock.text.trim() : ''
         
-        // 5つの投稿に分割（番号や区切りで分ける）
-        const posts = content.split(/\n\n/).filter(p => p.trim())
-          .map(p => p.replace(/^[1-5]\.\s*/, '').trim())
-          .slice(0, 5)
+        // JSON形式のレスポンスをパース
+        let postsData: { post1: string; post2: string; post3: string; post4: string; post5: string }
+        try {
+          postsData = JSON.parse(content)
+        } catch (e) {
+          console.error('Failed to parse thread JSON:', e)
+          throw new Error('Invalid JSON response from Claude')
+        }
+        
+        // 5つの投稿を配列に変換
+        const posts = [
+          postsData.post1,
+          postsData.post2,
+          postsData.post3,
+          postsData.post4,
+          postsData.post5
+        ].filter(p => p && p.trim())
         
         // ハッシュタグは最初の投稿にのみ追加
         const hashtags = concept.hashtags || []
-        const hashtagsStr = hashtags.length > 0 ? ` ${hashtags.map(h => `#${h}`).join(' ')}` : ''
+        const hashtagsStr = hashtags.length > 0 ? ` ${hashtags.map((h: string) => `#${h}`).join(' ')}` : ''
         
         return {
-          threadPosts: [
+          posts: [
             posts[0] + hashtagsStr,
             ...posts.slice(1)
           ],
-          sourcePost: `出典：${concept.topicUrl || topicInfo?.url || ''}`,
           hashtags: hashtags,
           format: 'thread',
-          characterNote: 'カーディ・ダーレのスレッド形式（5段階の物語構造＋出典）'
+          characterNote: 'カーディ・ダーレの投稿（スレッド版）',
+          sourceUrl: concept.topicUrl || topicInfo?.url || ''
         }
       } catch (error) {
         console.error('Claude API error:', error)
@@ -161,7 +176,8 @@ export async function generateCharacterContentV2({
       ]
     })
 
-    const content = response.content[0].text.trim()
+    const contentBlock = response.content[0]
+    const content = contentBlock.type === 'text' ? contentBlock.text.trim() : ''
     
     return {
       content: content,
