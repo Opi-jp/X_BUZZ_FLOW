@@ -38,8 +38,8 @@ ${topicInfo?.title || concept.topicTitle}
 【注目ポイント】
 ${concept.structure?.openingHook || concept.hook}
 
-このトピックについて、100-120文字で印象的な一言を。
-（ハッシュタグ用に20文字分余裕を残す）
+このトピックについて、120-135文字で印象的な一言を。
+（ハッシュタグは不要、本文のみ）
 皮肉と哲学を込めて、カーディらしく。`
 
       try {
@@ -60,7 +60,14 @@ ${concept.structure?.openingHook || concept.hook}
         // ハッシュタグを追加（140文字以内に収める）
         const hashtags = concept.hashtags || []
         const hashtagsStr = hashtags.length > 0 ? ` ${hashtags.map(h => `#${h}`).join(' ')}` : ''
-        const mainPostWithTags = mainPost + hashtagsStr
+        
+        // 文字数調整（140文字を超える場合は本文を短縮）
+        let mainPostWithTags = mainPost + hashtagsStr
+        if (mainPostWithTags.length > 140) {
+          const overLength = mainPostWithTags.length - 140
+          const trimmedPost = mainPost.substring(0, mainPost.length - overLength - 3) + '...'
+          mainPostWithTags = trimmedPost + hashtagsStr
+        }
         
         return {
           mainPost: mainPostWithTags,
