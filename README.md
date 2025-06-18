@@ -127,3 +127,16 @@ CRON_SECRET= # Vercel Cron Job認証用
 
 1. Vercel環境変数に`CRON_SECRET`を設定（ランダムな文字列）
 2. デプロイ後、Vercelダッシュボードで確認
+
+## 📋 最新の更新（2025年6月19日）
+
+### 統合システム実装計画を策定
+- **計画書**: `/docs/current/integrated-system-implementation-plan-20250619.md`
+- **新アーキテクチャ**: Intel → Create → Publish → Analyze の4モジュール構成
+- **主な改善点**:
+  - バックエンドドリブン開発アプローチ
+  - データ表示の3段階最適化（Summary/Preview/Detail）
+  - 既存システムを活かした段階的移行（6フェーズ）
+  - 統一された命名規則とAPI体系
+
+詳細はCLAUDE.mdの作業記録を参照してください。
