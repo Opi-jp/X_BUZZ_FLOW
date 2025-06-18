@@ -34,6 +34,15 @@ cat MASTER_DOC.md
 - 新規ドキュメント作成禁止
 - プロンプトは`chain-of-thought-specification.md`参照
 
+## 📊 設計ドキュメント参照
+```bash
+# 重要ドキュメントを素早く確認
+node scripts/dev-tools/design-doc-viewer.js
+
+# システムフロー可視化
+node scripts/dev-tools/flow-visualizer.js
+```
+
 ## 📁 よくある質問（ファイル読み込み不要）
 - **DBエラー**: Prisma再生成 → `npx prisma generate`
 - **セッションの仕組み**: V2（ViralSession）とCoT（CotSession）の2種類

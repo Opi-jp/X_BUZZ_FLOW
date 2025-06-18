@@ -386,7 +386,37 @@ api/
 docs/
 ├── core/              # 重要仕様書
 ├── current/           # 最新実装の注意点
+├── visualizations/    # システム図・フロー図
 └── work-logs/         # 作業記録アーカイブ
+```
+
+## 📊 重要な設計ドキュメント（必読）
+
+### システム設計図
+```bash
+# 統合システム実装計画（最重要）
+cat docs/current/integrated-system-implementation-plan-20250619.md
+
+# システムアーキテクチャ図（Mermaid）
+cat docs/visualizations/system-architecture.md
+
+# データフロー詳細分析
+cat data_flow_analysis.md
+
+# NEWS×バイラル統合設計
+cat docs/current/news-viral-integration-design.md
+```
+
+### 可視化ツール
+```bash
+# フロー全体を可視化（リアルタイム状態確認）
+node scripts/dev-tools/flow-visualizer.js
+
+# Mermaidダイアグラム生成
+node scripts/dev-tools/flow-visualizer.js --mermaid
+
+# 特定セッションの詳細分析
+node scripts/dev-tools/flow-visualizer.js [sessionId] --detailed
 ```
 
 ## 🚀 高速デバッグツール

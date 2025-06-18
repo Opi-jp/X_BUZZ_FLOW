@@ -10,7 +10,7 @@
  * - node scripts/db-manager.js fix       # 不足しているカラムやテーブルを修正
  */
 
-const { PrismaClient } = require('../lib/generated/prisma')
+const { PrismaClient } = require('../../lib/generated/prisma')
 const { readFileSync } = require('fs')
 const { join } = require('path')
 

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X_BUZZ_FLOW システムフロー図</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .mermaid {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>X_BUZZ_FLOW システムフロー図</h1>
+    <div class="mermaid">
+graph LR
+    %% Intelligence Layer
+    A[🔍 Intelligence] --> A1[News RSS]
+    A --> A2[Social Metrics]
+    A --> A3[Trend Analysis]
+    
+    %% Creation Layer
+    A1 --> B[🎨 Creation]
+    A2 --> B
+    A3 --> B
+    B --> B1[Perplexity Search]
+    B1 --> B2[GPT Concepts]
+    B2 --> B3[Claude Contents]
+    
+    %% Publishing Layer
+    B3 --> C[📤 Publishing]
+    C --> C1[Draft Management]
+    C1 --> C2[Schedule/Post]
+    
+    %% Analytics Layer
+    C2 --> D[📊 Analytics]
+    D --> D1[Metrics Collection]
+    D1 --> D2[Report Generation]
+    D2 --> D3[Insights]
+    D3 -.-> A
+    
+    %% Styling
+    classDef intel fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+    classDef create fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff
+    classDef publish fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef analyze fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    
+    class A,A1,A2,A3 intel
+    class B,B1,B2,B3 create
+    class C,C1,C2 publish
+    class D,D1,D2,D3 analyze
+    </div>
+</body>
+</html>
