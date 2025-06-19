@@ -1,0 +1,340 @@
+=== PERPLEXITY RAW RESPONSE DEBUG ===
+Session ID: cmc31aazi000210voqrqi3f69
+Theme: 生成AI
+Platform: Twitter
+Style: エンタメ
+Timestamp: 2025-06-19T07:02:55.085Z
+Content Length: 2444 characters
+
+=== RAW CONTENT ===
+### トピック1: グーグルの新しい生成AI「Gemini 2.5 Pro」のリリース
+
+```
+{
+  "TOPIC": "Gemini 2.5 Pro",
+  "title": "Gemini 2.5 Proとは？グーグルが「思考型AI」で狙うOpenAI超え",
+  "source": "SB Bit",
+  "url": "https://www.sbbit.jp/article/cont1/166297",
+  "date": "2025-06-18",
+  "summary": "グーグルは2025年3月末に新しい生成AIモデル『Gemini 2.5 Pro』をリリースしました。このモデルは『思考型モデル（Thinking Model）』と呼ばれ、単純な質問応答だけでなく、段階的な思考プロセスを経て回答を導き出す点が最大の特徴です。チェーン・オブ・ソート（Chain-of-Thought）手法からインスピレーションを得たこのモデルは、情報分析から論理的結論の導出まで、文脈やニュアンスを考慮した応答を可能にします。また、マルチモーダル機能も強化されており、テキストだけでなく、画像、音声、動画などの多様な入力形式に対応しています。例えば、グラフや写真を含むPDFレポートの分析や、音声データと文字データを組み合わせた顧客対応記録の分析など、複合的なタスクを単一のAIシステムで処理できるようになりました。グーグルはこのモデルを通じて、生成AI市場での市場シェアを奪還する可能性を視野に置いています。",
+  "keyPoints": [
+    "2025年3月末に『Gemini 2.5 Pro』がリリースされた",
+    "『思考型モデル（Thinking Model）』を採用",
+    "チェーン・オブ・ソート（Chain-of-Thought）手法からインスピレーション",
+    "マルチモーダル機能の強化",
+    "複合的なタスクを単一のAIシステムで処理可能",
+    "生成AI市場での市場シェア奪還を目指す"
+  ],
+  "perplexityAnalysis": "このニュースは、グーグルの新たな技術的なブレークスルーと、それが市場に与える影響が大きいため、Twitterでバズる可能性が高い。特に、AI技術の進歩とその応用範囲の広がりが、多くのユーザーに強い興味と驚きを引き起こす。さらに、OpenAIやアンソロピックとの競争が激化する中でのグーグルの動きは、賛否両論を呼び、議論を生み出す要因となります。",
+  "additionalSources": [
+    {
+      "url": "https://www.sbbit.jp/article/cont1/166297",
+      "title": "Gemini 2.5 Proとは？グーグルが「思考型AI」で狙うOpenAI超え",
+      "source": "SB Bit",
+      "date": "2025-06-18"
+    }
+  ]
+}
+```
+
+### トピック2: ヒビノとWITCOLLECTIVEの生成AIを活用した次世代エンターテインメントのパートナーシップ
+
+```
+{
+  "TOPIC": "ヒビノとWITCOLLECTIVEのパートナーシップ",
+  "title": "ヒビノは小反発、生成AI活用の次世代エンタメ開発へ",
+  "source": "livedoor news",
+  "url": "https://news.livedoor.com/article/detail/28994816/",
+  "date": "2025-06-19",
+  "summary": "ヒビノは、AIサービスを手掛けるWITCOLLECTIVEとパートナーシップを結び、生成AIを活用した次世代エンターテインメントの開発に着手しました。このパートナーシップは、AI技術を利用して新しいエンターテインメントコンテンツを創造し、市場に新たな波を起こすことを目指しています。具体的なプロジェクト詳細はまだ公開されていませんが、両社の技術とリソースを組み合わせることで、従来のエンターテインメント形式を超えた新しい体験を提供することが期待されています。",
+  "keyPoints": [
+    "ヒビノとWITCOLLECTIVEのパートナーシップ成立",
+    "生成AIを活用した次世代エンターテインメントの開発",
+    "新しいエンターテインメントコンテンツの創造を目指す",
+    "両社の技術とリソースの組み合わせ",
+    "従来のエンターテインメント形式を超えた新しい体験の提供を期待"
+  ],
+  "perplexityAnalysis": "このニュースは、エンターテインメント業界におけるAI技術の活用が進む中での新たなパートナーシップとして注目されます。特に、AIを活用した新しいエンターテインメント形式がどのように展開されるかという点が、多くのユーザーに興味と期待を引き起こす。さらに、既存のエンターテインメント形式を超える新しい体験が提供される可能性は、驚きと共感を生み出し、Twitterでのシェアを促進する要因となります。",
+  "additionalSources": [
+    {
+      "url": "https://news.livedoor.com/article/detail/28994816/",
+      "title": "ヒビノは小反発、生成AI活用の次世代エンタメ開発へ",
+      "source": "livedoor news",
+      "date": "2025-06-19"
+    }
+  ]
+}
+```
+
+=== CHARACTER CODES AROUND POSITION 1249 ===
+Position 1149: 'i' (code: 105, hex: 0x69)
+Position 1150: 't' (code: 116, hex: 0x74)
+Position 1151: '.' (code: 46, hex: 0x2e)
+Position 1152: 'j' (code: 106, hex: 0x6a)
+Position 1153: 'p' (code: 112, hex: 0x70)
+Position 1154: '/' (code: 47, hex: 0x2f)
+Position 1155: 'a' (code: 97, hex: 0x61)
+Position 1156: 'r' (code: 114, hex: 0x72)
+Position 1157: 't' (code: 116, hex: 0x74)
+Position 1158: 'i' (code: 105, hex: 0x69)
+Position 1159: 'c' (code: 99, hex: 0x63)
+Position 1160: 'l' (code: 108, hex: 0x6c)
+Position 1161: 'e' (code: 101, hex: 0x65)
+Position 1162: '/' (code: 47, hex: 0x2f)
+Position 1163: 'c' (code: 99, hex: 0x63)
+Position 1164: 'o' (code: 111, hex: 0x6f)
+Position 1165: 'n' (code: 110, hex: 0x6e)
+Position 1166: 't' (code: 116, hex: 0x74)
+Position 1167: '1' (code: 49, hex: 0x31)
+Position 1168: '/' (code: 47, hex: 0x2f)
+Position 1169: '1' (code: 49, hex: 0x31)
+Position 1170: '6' (code: 54, hex: 0x36)
+Position 1171: '6' (code: 54, hex: 0x36)
+Position 1172: '2' (code: 50, hex: 0x32)
+Position 1173: '9' (code: 57, hex: 0x39)
+Position 1174: '7' (code: 55, hex: 0x37)
+Position 1175: '"' (code: 34, hex: 0x22)
+Position 1176: ',' (code: 44, hex: 0x2c)
+Position 1177: '
+' (code: 10, hex: 0x0a)
+Position 1178: ' ' (code: 32, hex: 0x20)
+Position 1179: ' ' (code: 32, hex: 0x20)
+Position 1180: ' ' (code: 32, hex: 0x20)
+Position 1181: ' ' (code: 32, hex: 0x20)
+Position 1182: ' ' (code: 32, hex: 0x20)
+Position 1183: ' ' (code: 32, hex: 0x20)
+Position 1184: '"' (code: 34, hex: 0x22)
+Position 1185: 't' (code: 116, hex: 0x74)
+Position 1186: 'i' (code: 105, hex: 0x69)
+Position 1187: 't' (code: 116, hex: 0x74)
+Position 1188: 'l' (code: 108, hex: 0x6c)
+Position 1189: 'e' (code: 101, hex: 0x65)
+Position 1190: '"' (code: 34, hex: 0x22)
+Position 1191: ':' (code: 58, hex: 0x3a)
+Position 1192: ' ' (code: 32, hex: 0x20)
+Position 1193: '"' (code: 34, hex: 0x22)
+Position 1194: 'G' (code: 71, hex: 0x47)
+Position 1195: 'e' (code: 101, hex: 0x65)
+Position 1196: 'm' (code: 109, hex: 0x6d)
+Position 1197: 'i' (code: 105, hex: 0x69)
+Position 1198: 'n' (code: 110, hex: 0x6e)
+Position 1199: 'i' (code: 105, hex: 0x69)
+Position 1200: ' ' (code: 32, hex: 0x20)
+Position 1201: '2' (code: 50, hex: 0x32)
+Position 1202: '.' (code: 46, hex: 0x2e)
+Position 1203: '5' (code: 53, hex: 0x35)
+Position 1204: ' ' (code: 32, hex: 0x20)
+Position 1205: 'P' (code: 80, hex: 0x50)
+Position 1206: 'r' (code: 114, hex: 0x72)
+Position 1207: 'o' (code: 111, hex: 0x6f)
+Position 1208: 'と' (code: 12392, hex: 0x3068)
+Position 1209: 'は' (code: 12399, hex: 0x306f)
+Position 1210: '？' (code: 65311, hex: 0xff1f)
+Position 1211: 'グ' (code: 12464, hex: 0x30b0)
+Position 1212: 'ー' (code: 12540, hex: 0x30fc)
+Position 1213: 'グ' (code: 12464, hex: 0x30b0)
+Position 1214: 'ル' (code: 12523, hex: 0x30eb)
+Position 1215: 'が' (code: 12364, hex: 0x304c)
+Position 1216: '「' (code: 12300, hex: 0x300c)
+Position 1217: '思' (code: 24605, hex: 0x601d)
+Position 1218: '考' (code: 32771, hex: 0x8003)
+Position 1219: '型' (code: 22411, hex: 0x578b)
+Position 1220: 'A' (code: 65, hex: 0x41)
+Position 1221: 'I' (code: 73, hex: 0x49)
+Position 1222: '」' (code: 12301, hex: 0x300d)
+Position 1223: 'で' (code: 12391, hex: 0x3067)
+Position 1224: '狙' (code: 29401, hex: 0x72d9)
+Position 1225: 'う' (code: 12358, hex: 0x3046)
+Position 1226: 'O' (code: 79, hex: 0x4f)
+Position 1227: 'p' (code: 112, hex: 0x70)
+Position 1228: 'e' (code: 101, hex: 0x65)
+Position 1229: 'n' (code: 110, hex: 0x6e)
+Position 1230: 'A' (code: 65, hex: 0x41)
+Position 1231: 'I' (code: 73, hex: 0x49)
+Position 1232: '超' (code: 36229, hex: 0x8d85)
+Position 1233: 'え' (code: 12360, hex: 0x3048)
+Position 1234: '"' (code: 34, hex: 0x22)
+Position 1235: ',' (code: 44, hex: 0x2c)
+Position 1236: '
+' (code: 10, hex: 0x0a)
+Position 1237: ' ' (code: 32, hex: 0x20)
+Position 1238: ' ' (code: 32, hex: 0x20)
+Position 1239: ' ' (code: 32, hex: 0x20)
+Position 1240: ' ' (code: 32, hex: 0x20)
+Position 1241: ' ' (code: 32, hex: 0x20)
+Position 1242: ' ' (code: 32, hex: 0x20)
+Position 1243: '"' (code: 34, hex: 0x22)
+Position 1244: 's' (code: 115, hex: 0x73)
+Position 1245: 'o' (code: 111, hex: 0x6f)
+Position 1246: 'u' (code: 117, hex: 0x75)
+Position 1247: 'r' (code: 114, hex: 0x72)
+Position 1248: 'c' (code: 99, hex: 0x63)
+Position 1249: 'e' (code: 101, hex: 0x65)
+Position 1250: '"' (code: 34, hex: 0x22)
+Position 1251: ':' (code: 58, hex: 0x3a)
+Position 1252: ' ' (code: 32, hex: 0x20)
+Position 1253: '"' (code: 34, hex: 0x22)
+Position 1254: 'S' (code: 83, hex: 0x53)
+Position 1255: 'B' (code: 66, hex: 0x42)
+Position 1256: ' ' (code: 32, hex: 0x20)
+Position 1257: 'B' (code: 66, hex: 0x42)
+Position 1258: 'i' (code: 105, hex: 0x69)
+Position 1259: 't' (code: 116, hex: 0x74)
+Position 1260: '"' (code: 34, hex: 0x22)
+Position 1261: ',' (code: 44, hex: 0x2c)
+Position 1262: '
+' (code: 10, hex: 0x0a)
+Position 1263: ' ' (code: 32, hex: 0x20)
+Position 1264: ' ' (code: 32, hex: 0x20)
+Position 1265: ' ' (code: 32, hex: 0x20)
+Position 1266: ' ' (code: 32, hex: 0x20)
+Position 1267: ' ' (code: 32, hex: 0x20)
+Position 1268: ' ' (code: 32, hex: 0x20)
+Position 1269: '"' (code: 34, hex: 0x22)
+Position 1270: 'd' (code: 100, hex: 0x64)
+Position 1271: 'a' (code: 97, hex: 0x61)
+Position 1272: 't' (code: 116, hex: 0x74)
+Position 1273: 'e' (code: 101, hex: 0x65)
+Position 1274: '"' (code: 34, hex: 0x22)
+Position 1275: ':' (code: 58, hex: 0x3a)
+Position 1276: ' ' (code: 32, hex: 0x20)
+Position 1277: '"' (code: 34, hex: 0x22)
+Position 1278: '2' (code: 50, hex: 0x32)
+Position 1279: '0' (code: 48, hex: 0x30)
+Position 1280: '2' (code: 50, hex: 0x32)
+Position 1281: '5' (code: 53, hex: 0x35)
+Position 1282: '-' (code: 45, hex: 0x2d)
+Position 1283: '0' (code: 48, hex: 0x30)
+Position 1284: '6' (code: 54, hex: 0x36)
+Position 1285: '-' (code: 45, hex: 0x2d)
+Position 1286: '1' (code: 49, hex: 0x31)
+Position 1287: '8' (code: 56, hex: 0x38)
+Position 1288: '"' (code: 34, hex: 0x22)
+Position 1289: '
+' (code: 10, hex: 0x0a)
+Position 1290: ' ' (code: 32, hex: 0x20)
+Position 1291: ' ' (code: 32, hex: 0x20)
+Position 1292: ' ' (code: 32, hex: 0x20)
+Position 1293: ' ' (code: 32, hex: 0x20)
+Position 1294: '}' (code: 125, hex: 0x7d)
+Position 1295: '
+' (code: 10, hex: 0x0a)
+Position 1296: ' ' (code: 32, hex: 0x20)
+Position 1297: ' ' (code: 32, hex: 0x20)
+Position 1298: ']' (code: 93, hex: 0x5d)
+Position 1299: '
+' (code: 10, hex: 0x0a)
+Position 1300: '}' (code: 125, hex: 0x7d)
+Position 1301: '
+' (code: 10, hex: 0x0a)
+Position 1302: '`' (code: 96, hex: 0x60)
+Position 1303: '`' (code: 96, hex: 0x60)
+Position 1304: '`' (code: 96, hex: 0x60)
+Position 1305: '
+' (code: 10, hex: 0x0a)
+Position 1306: '
+' (code: 10, hex: 0x0a)
+Position 1307: '#' (code: 35, hex: 0x23)
+Position 1308: '#' (code: 35, hex: 0x23)
+Position 1309: '#' (code: 35, hex: 0x23)
+Position 1310: ' ' (code: 32, hex: 0x20)
+Position 1311: 'ト' (code: 12488, hex: 0x30c8)
+Position 1312: 'ピ' (code: 12500, hex: 0x30d4)
+Position 1313: 'ッ' (code: 12483, hex: 0x30c3)
+Position 1314: 'ク' (code: 12463, hex: 0x30af)
+Position 1315: '2' (code: 50, hex: 0x32)
+Position 1316: ':' (code: 58, hex: 0x3a)
+Position 1317: ' ' (code: 32, hex: 0x20)
+Position 1318: 'ヒ' (code: 12498, hex: 0x30d2)
+Position 1319: 'ビ' (code: 12499, hex: 0x30d3)
+Position 1320: 'ノ' (code: 12494, hex: 0x30ce)
+Position 1321: 'と' (code: 12392, hex: 0x3068)
+Position 1322: 'W' (code: 87, hex: 0x57)
+Position 1323: 'I' (code: 73, hex: 0x49)
+Position 1324: 'T' (code: 84, hex: 0x54)
+Position 1325: 'C' (code: 67, hex: 0x43)
+Position 1326: 'O' (code: 79, hex: 0x4f)
+Position 1327: 'L' (code: 76, hex: 0x4c)
+Position 1328: 'L' (code: 76, hex: 0x4c)
+Position 1329: 'E' (code: 69, hex: 0x45)
+Position 1330: 'C' (code: 67, hex: 0x43)
+Position 1331: 'T' (code: 84, hex: 0x54)
+Position 1332: 'I' (code: 73, hex: 0x49)
+Position 1333: 'V' (code: 86, hex: 0x56)
+Position 1334: 'E' (code: 69, hex: 0x45)
+Position 1335: 'の' (code: 12398, hex: 0x306e)
+Position 1336: '生' (code: 29983, hex: 0x751f)
+Position 1337: '成' (code: 25104, hex: 0x6210)
+Position 1338: 'A' (code: 65, hex: 0x41)
+Position 1339: 'I' (code: 73, hex: 0x49)
+Position 1340: 'を' (code: 12434, hex: 0x3092)
+Position 1341: '活' (code: 27963, hex: 0x6d3b)
+Position 1342: '用' (code: 29992, hex: 0x7528)
+Position 1343: 'し' (code: 12375, hex: 0x3057)
+Position 1344: 'た' (code: 12383, hex: 0x305f)
+Position 1345: '次' (code: 27425, hex: 0x6b21)
+Position 1346: '世' (code: 19990, hex: 0x4e16)
+Position 1347: '代' (code: 20195, hex: 0x4ee3)
+Position 1348: 'エ' (code: 12456, hex: 0x30a8)
+
+=== FULL RESPONSE OBJECT ===
+{
+  "id": "2306628e-510d-4580-ba87-a0360f301e5a",
+  "model": "llama-3.1-sonar-large-128k-online",
+  "created": 1750316575,
+  "usage": {
+    "prompt_tokens": 1203,
+    "completion_tokens": 1342,
+    "total_tokens": 2545,
+    "search_context_size": "low"
+  },
+  "citations": [
+    "https://prtimes.jp/main/html/rd/p/000000398.000002235.html",
+    "https://www.sbbit.jp/article/cont1/166297",
+    "https://news.livedoor.com/article/detail/28994816/",
+    "https://note.com/nester_sns/n/n26ac5057414e",
+    "https://www.fnn.jp/articles/-/889350"
+  ],
+  "search_results": [
+    {
+      "title": "ホットリンク、2025年の父の日に関するX（旧Twitter）の投稿を調査",
+      "url": "https://prtimes.jp/main/html/rd/p/000000398.000002235.html",
+      "date": "2025-06-19"
+    },
+    {
+      "title": "Gemini 2.5 Proとは？グーグルが「思考型AI」で狙うOpenAI超え",
+      "url": "https://www.sbbit.jp/article/cont1/166297",
+      "date": "2025-06-18"
+    },
+    {
+      "title": "ヒビノは小反発、生成AI活用の次世代エンタメ開発へ",
+      "url": "https://news.livedoor.com/article/detail/28994816/",
+      "date": "2025-06-19"
+    },
+    {
+      "title": "スレッド型SNSの現在地と進化形｜X・Threads・Nesterを比較して ...",
+      "url": "https://note.com/nester_sns/n/n26ac5057414e",
+      "date": "2025-06-18"
+    },
+    {
+      "title": "約6割が“有料でも学びたい”と回答、生成AIのスキルは今や自己投資 ...",
+      "url": "https://www.fnn.jp/articles/-/889350",
+      "date": "2025-06-19"
+    }
+  ],
+  "object": "chat.completion",
+  "choices": [
+    {
+      "index": 0,
+      "finish_reason": "stop",
+      "message": {
+        "role": "assistant",
+        "content": "### トピック1: グーグルの新しい生成AI「Gemini 2.5 Pro」のリリース\n\n```\n{\n  \"TOPIC\": \"Gemini 2.5 Pro\",\n  \"title\": \"Gemini 2.5 Proとは？グーグルが「思考型AI」で狙うOpenAI超え\",\n  \"source\": \"SB Bit\",\n  \"url\": \"https://www.sbbit.jp/article/cont1/166297\",\n  \"date\": \"2025-06-18\",\n  \"summary\": \"グーグルは2025年3月末に新しい生成AIモデル『Gemini 2.5 Pro』をリリースしました。このモデルは『思考型モデル（Thinking Model）』と呼ばれ、単純な質問応答だけでなく、段階的な思考プロセスを経て回答を導き出す点が最大の特徴です。チェーン・オブ・ソート（Chain-of-Thought）手法からインスピレーションを得たこのモデルは、情報分析から論理的結論の導出まで、文脈やニュアンスを考慮した応答を可能にします。また、マルチモーダル機能も強化されており、テキストだけでなく、画像、音声、動画などの多様な入力形式に対応しています。例えば、グラフや写真を含むPDFレポートの分析や、音声データと文字データを組み合わせた顧客対応記録の分析など、複合的なタスクを単一のAIシステムで処理できるようになりました。グーグルはこのモデルを通じて、生成AI市場での市場シェアを奪還する可能性を視野に置いています。\",\n  \"keyPoints\": [\n    \"2025年3月末に『Gemini 2.5 Pro』がリリースされた\",\n    \"『思考型モデル（Thinking Model）』を採用\",\n    \"チェーン・オブ・ソート（Chain-of-Thought）手法からインスピレーション\",\n    \"マルチモーダル機能の強化\",\n    \"複合的なタスクを単一のAIシステムで処理可能\",\n    \"生成AI市場での市場シェア奪還を目指す\"\n  ],\n  \"perplexityAnalysis\": \"このニュースは、グーグルの新たな技術的なブレークスルーと、それが市場に与える影響が大きいため、Twitterでバズる可能性が高い。特に、AI技術の進歩とその応用範囲の広がりが、多くのユーザーに強い興味と驚きを引き起こす。さらに、OpenAIやアンソロピックとの競争が激化する中でのグーグルの動きは、賛否両論を呼び、議論を生み出す要因となります。\",\n  \"additionalSources\": [\n    {\n      \"url\": \"https://www.sbbit.jp/article/cont1/166297\",\n      \"title\": \"Gemini 2.5 Proとは？グーグルが「思考型AI」で狙うOpenAI超え\",\n      \"source\": \"SB Bit\",\n      \"date\": \"2025-06-18\"\n    }\n  ]\n}\n```\n\n### トピック2: ヒビノとWITCOLLECTIVEの生成AIを活用した次世代エンターテインメントのパートナーシップ\n\n```\n{\n  \"TOPIC\": \"ヒビノとWITCOLLECTIVEのパートナーシップ\",\n  \"title\": \"ヒビノは小反発、生成AI活用の次世代エンタメ開発へ\",\n  \"source\": \"livedoor news\",\n  \"url\": \"https://news.livedoor.com/article/detail/28994816/\",\n  \"date\": \"2025-06-19\",\n  \"summary\": \"ヒビノは、AIサービスを手掛けるWITCOLLECTIVEとパートナーシップを結び、生成AIを活用した次世代エンターテインメントの開発に着手しました。このパートナーシップは、AI技術を利用して新しいエンターテインメントコンテンツを創造し、市場に新たな波を起こすことを目指しています。具体的なプロジェクト詳細はまだ公開されていませんが、両社の技術とリソースを組み合わせることで、従来のエンターテインメント形式を超えた新しい体験を提供することが期待されています。\",\n  \"keyPoints\": [\n    \"ヒビノとWITCOLLECTIVEのパートナーシップ成立\",\n    \"生成AIを活用した次世代エンターテインメントの開発\",\n    \"新しいエンターテインメントコンテンツの創造を目指す\",\n    \"両社の技術とリソースの組み合わせ\",\n    \"従来のエンターテインメント形式を超えた新しい体験の提供を期待\"\n  ],\n  \"perplexityAnalysis\": \"このニュースは、エンターテインメント業界におけるAI技術の活用が進む中での新たなパートナーシップとして注目されます。特に、AIを活用した新しいエンターテインメント形式がどのように展開されるかという点が、多くのユーザーに興味と期待を引き起こす。さらに、既存のエンターテインメント形式を超える新しい体験が提供される可能性は、驚きと共感を生み出し、Twitterでのシェアを促進する要因となります。\",\n  \"additionalSources\": [\n    {\n      \"url\": \"https://news.livedoor.com/article/detail/28994816/\",\n      \"title\": \"ヒビノは小反発、生成AI活用の次世代エンタメ開発へ\",\n      \"source\": \"livedoor news\",\n      \"date\": \"2025-06-19\"\n    }\n  ]\n}\n```"
+      },
+      "delta": {
+        "role": "assistant",
+        "content": ""
+      }
+    }
+  ]
+}

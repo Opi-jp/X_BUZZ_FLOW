@@ -7,7 +7,7 @@
 
 const puppeteer = require('puppeteer');
 const chalk = require('chalk');
-const boxen = require('boxen');
+const boxen = require('boxen').default || require('boxen');
 const Table = require('cli-table3');
 
 const BASE_URL = process.argv[2] || 'http://localhost:3000';

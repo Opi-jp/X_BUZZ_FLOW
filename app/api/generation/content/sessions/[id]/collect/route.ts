@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
-import Perplexity from '@perplexity-ai/sdk'
+import { PerplexityClient } from '@/lib/perplexity'
 
 type RouteParams = {
   params: Promise<{
@@ -10,15 +10,23 @@ type RouteParams = {
   }>
 }
 
-const perplexity = new Perplexity({
-  apiKey: process.env.PERPLEXITY_API_KEY || ''
-})
-
 export async function POST(
   request: Request,
   { params }: RouteParams
 ) {
   try {
+    // API キーのチェック
+    if (!process.env.PERPLEXITY_API_KEY) {
+      console.error('PERPLEXITY_API_KEY is not set in environment variables')
+      return NextResponse.json(
+        { 
+          error: 'Configuration error',
+          message: 'Perplexity API key is not configured'
+        },
+        { status: 500 }
+      )
+    }
+    
     const { id } = await params
     
     // セッションを取得
@@ -44,9 +52,7 @@ export async function POST(
     await prisma.viralSession.update({
       where: { id },
       data: {
-        status: 'collecting',
-        currentPhase: 'COLLECTING',
-        updatedAt: new Date()
+        status: 'collecting'
       }
     })
 
@@ -58,7 +64,29 @@ export async function POST(
       'perplexity',
       'collect-topics.txt'
     )
-    const promptTemplate = await readFile(promptPath, 'utf-8')
+    
+    let promptTemplate: string
+    try {
+      promptTemplate = await readFile(promptPath, 'utf-8')
+    } catch (fileError) {
+      console.error('Failed to read prompt file:', promptPath, fileError)
+      
+      await prisma.viralSession.update({
+        where: { id },
+        data: {
+          status: 'error'
+        }
+      })
+      
+      return NextResponse.json(
+        { 
+          error: 'Configuration error',
+          message: 'Prompt template file not found',
+          path: promptPath
+        },
+        { status: 500 }
+      )
+    }
     
     // プロンプトの変数を置換
     const prompt = promptTemplate
@@ -67,15 +95,13 @@ export async function POST(
       .replace('${style}', session.style || 'エンターテイメント')
 
     try {
+      // Perplexityクライアントを初期化
+      const perplexity = new PerplexityClient()
+      
       // Perplexityでトピックを収集
-      const response = await perplexity.chat.completions.create({
-        model: 'llama-3.1-sonar-large-128k-online',
-        messages: [{
-          role: 'user',
-          content: prompt
-        }],
-        temperature: 0.7,
-        max_tokens: 3000
+      const response = await perplexity.searchWithContext({
+        query: prompt,
+        searchRecency: 'day' // 最新の情報を取得
       })
 
       const content = response.choices[0]?.message?.content
@@ -83,51 +109,96 @@ export async function POST(
         throw new Error('No content received from Perplexity')
       }
 
-      // JSONを抽出
-      const jsonMatch = content.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) {
-        throw new Error('No JSON found in response')
-      }
-
-      const topicsData = JSON.parse(jsonMatch[0])
+      console.log(`Received Perplexity response with ${content.length} characters`)
       
-      // セッションを更新
+      // セッションを更新 - 生のコンテンツをtopicsに保存
       await prisma.viralSession.update({
         where: { id },
         data: {
-          perplexityData: topicsData.topics || topicsData,
-          status: 'topics_collected',
-          currentPhase: 'TOPICS_COLLECTED',
-          updatedAt: new Date()
+          topics: content,
+          status: 'topics_collected'
         }
       })
 
+      console.log(`Successfully collected topics for session ${id}:`, {
+        contentLength: content.length,
+        theme: session.theme,
+        platform: session.platform
+      })
+      
       return NextResponse.json({ 
         success: true,
-        topicsCount: Array.isArray(topicsData.topics) ? topicsData.topics.length : 0
+        contentLength: content.length,
+        sessionId: id
       })
     } catch (error) {
       console.error('Perplexity API error:', error)
+      
+      // エラー詳細を取得
+      let errorMessage = 'Unknown error'
+      let errorDetails = {}
+      
+      if (error instanceof Error) {
+        errorMessage = error.message
+        
+        // Perplexity SDKのエラーレスポンスを詳しく記録
+        if ('response' in error && error.response) {
+          errorDetails = {
+            status: (error.response as any).status,
+            statusText: (error.response as any).statusText,
+            data: (error.response as any).data
+          }
+          console.error('Perplexity API response details:', errorDetails)
+        } else if ('cause' in error && error.cause) {
+          // 他のエラー原因も記録
+          errorDetails = {
+            cause: error.cause
+          }
+          console.error('Error cause:', error.cause)
+        }
+      }
       
       // エラーをセッションに記録
       await prisma.viralSession.update({
         where: { id },
         data: {
-          status: 'error',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          updatedAt: new Date()
+          status: 'error'
         }
       })
 
       return NextResponse.json(
-        { error: 'Failed to collect topics' },
+        { 
+          error: 'Failed to collect topics',
+          message: errorMessage,
+          details: process.env.NODE_ENV === 'development' ? errorDetails : undefined
+        },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Error in collect topics:', error)
+    
+    let errorMessage = 'Failed to process request'
+    let errorDetails = {}
+    
+    if (error instanceof Error) {
+      errorMessage = error.message
+      
+      // スタックトレースも記録（開発環境のみ）
+      if (process.env.NODE_ENV === 'development') {
+        errorDetails = {
+          name: error.name,
+          stack: error.stack
+        }
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to process request' },
+      { 
+        error: 'Failed to process request',
+        message: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined
+      },
       { status: 500 }
     )
   }

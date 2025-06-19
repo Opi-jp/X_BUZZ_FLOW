@@ -230,6 +230,36 @@ lucide-reactのTwitterアイコンが非推奨。Xアイコンに変更するか
 
 ---
 
+
+## 🔴 Perplexity API completions undefined
+
+### 解決策
+PerplexityClientを使うように修正済み。perplexity-sdkではなく/lib/perplexityのカスタムクライアントを使用
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Invalid JSON in response
+
+### 解決策
+Perplexity APIのレスポンスにエスケープされていない制御文字が含まれている可能性。JSONパース前にサニタイズが必要
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Invalid JSON Unexpected non-whitespace
+
+### 解決策
+Perplexity APIのレスポンスにJSONの後に余分な文字が含まれている。JSONブロックの終わりを正しく検出する必要がある
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

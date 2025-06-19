@@ -1,0 +1,28 @@
+[
+  {
+    "type": "network",
+    "url": "http://localhost:3333/api/debug/errors",
+    "method": "GET",
+    "failure": "net::ERR_CONNECTION_REFUSED",
+    "timestamp": "2025-06-19T06:10:39.712Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/generation/content",
+    "message": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "timestamp": "2025-06-19T06:10:39.713Z"
+  },
+  {
+    "type": "network",
+    "url": "http://localhost:3333/api/debug/errors",
+    "method": "GET",
+    "failure": "net::ERR_CONNECTION_REFUSED",
+    "timestamp": "2025-06-19T06:10:48.861Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/mission-control",
+    "message": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+    "timestamp": "2025-06-19T06:10:48.861Z"
+  }
+]

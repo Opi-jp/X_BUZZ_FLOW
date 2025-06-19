@@ -9,7 +9,7 @@ const chokidar = require('chokidar');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const chalk = require('chalk');
-const boxen = require('boxen');
+const boxen = require('boxen').default || require('boxen');
 const fs = require('fs').promises;
 const path = require('path');
 

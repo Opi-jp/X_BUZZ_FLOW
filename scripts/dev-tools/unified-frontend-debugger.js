@@ -8,7 +8,7 @@
 const express = require('express');
 const cors = require('cors');
 const chalk = require('chalk');
-const boxen = require('boxen');
+const boxen = require('boxen').default || require('boxen');
 const chokidar = require('chokidar');
 const axios = require('axios');
 const cheerio = require('cheerio');
