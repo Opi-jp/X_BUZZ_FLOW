@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { PrismaClient } from '@/lib/generated/prisma'
+import { PrismaClient } from '@/lib/prisma'
 import { generateCharacterContentBatch } from '@/lib/character-content-generator'
 import { DEFAULT_CHARACTERS } from '@/types/character'
 

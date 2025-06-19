@@ -10,7 +10,7 @@
  * node scripts/dev-tools/flow-visualizer.js --mermaid          # Mermaidダイアグラム生成
  */
 
-const { PrismaClient } = require('../../lib/generated/prisma');
+const { PrismaClient } = require('../../lib/prisma');
 const prisma = new PrismaClient();
 const chalk = require('chalk');
 const Table = require('cli-table3');

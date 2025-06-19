@@ -41,7 +41,7 @@ export async function POST(
       )
     }
 
-    if (session.status !== 'created' && session.status !== 'CREATED') {
+    if (session.status !== 'CREATED') {
       return NextResponse.json(
         { error: 'Session already started' },
         { status: 400 }
@@ -52,7 +52,7 @@ export async function POST(
     await prisma.viralSession.update({
       where: { id },
       data: {
-        status: 'collecting'
+        status: 'COLLECTING'
       }
     })
 
@@ -74,7 +74,7 @@ export async function POST(
       await prisma.viralSession.update({
         where: { id },
         data: {
-          status: 'error'
+          status: 'ERROR'
         }
       })
       
@@ -116,7 +116,7 @@ export async function POST(
         where: { id },
         data: {
           topics: content,
-          status: 'topics_collected'
+          status: 'TOPICS_COLLECTED'
         }
       })
 
@@ -162,7 +162,7 @@ export async function POST(
       await prisma.viralSession.update({
         where: { id },
         data: {
-          status: 'error'
+          status: 'ERROR'
         }
       })
 

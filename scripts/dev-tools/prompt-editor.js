@@ -1861,7 +1861,7 @@ class PromptEditor {
  * プロンプトファイル: ${filename}
  */
 
-const { PrismaClient } = require('../../../lib/generated/prisma')
+const { PrismaClient } = require('../../lib/prisma')
 const prisma = new PrismaClient()
 
 ${migration.script}

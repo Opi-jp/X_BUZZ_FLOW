@@ -170,4 +170,13 @@ CRON_SECRET= # Vercel Cron Job認証用
 - GPTによるスコアリングと推薦機能
 - 物語構造の選択的生成
 
+### 🔧 CoTシステムバックエンド修正（2025年6月19日 午後）
+- **ステータス管理統一**: すべて大文字（CREATED, TOPICS_COLLECTED等）に
+- **Perplexityパーサー実装**: 
+  - `PerplexityResponseParser`クラスを新規作成
+  - Markdown内のJSONブロック抽出
+  - 改行文字のエスケープ処理
+- **インポートパス統一**: `@/lib/prisma`に全て統一
+- **エラー記録**: 3件のパース関連エラーを記録・解決
+
 詳細はCLAUDE.mdの作業記録を参照してください。

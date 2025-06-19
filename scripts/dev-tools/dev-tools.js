@@ -421,7 +421,7 @@ class DevTools {
   
   async checkDatabase() {
     try {
-      const { PrismaClient } = require('../lib/generated/prisma')
+      const { PrismaClient } = require('../../lib/prisma')
       const prisma = new PrismaClient()
       
       await prisma.$connect()

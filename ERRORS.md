@@ -260,6 +260,76 @@ Perplexity APIのレスポンスにJSONの後に余分な文字が含まれて�
 
 ---
 
+
+## 🔴 Next.js webpack runtime error - Cannot find module './4243.js'
+
+### 解決策
+ページパスが存在しない場合に発生。実際のディレクトリ構造を確認して正しいパスにアクセスする必要がある
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Next.js 500エラー - 静的ファイルのMIMEタイプエラー
+
+### 解決策
+サーバーで500エラーが発生し、CSS・JSファイルがHTMLとして配信されている。サーバーログを確認する必要がある
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexity topics JSONパースエラー
+
+### 解決策
+topicsフィールドがMarkdown形式で保存されているが、APIはパース済みJSONを期待している。Perplexityからの生データ形式とAPIの期待値が一致していない。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 loadPrompt import エラー
+
+### 解決策
+@/lib/prompts が存在しない。正しくは lib/prompt-loader.ts から loadPrompt をインポートする必要がある
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexity topics パーサー実装
+
+### 解決策
+Perplexityのレスポンスが Markdown形式で返されるが、APIはJSON配列を期待していた。専用のパーサークラス PerplexityResponseParser を実装して解決
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 パーサーのインポートエラー
+
+### 解決策
+TypeScriptパーサーをAPIから使用する際、ビルドが必要。また、実際のPerplexityレスポンスにはJSON末尾に参照番号[1]が含まれることがある
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexity JSON内の改行文字エラー
+
+### 解決策
+PerplexityのレスポンスのJSONに含まれる改行文字が原因でJSONパースが失敗。summaryフィールド内に改行が含まれている
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

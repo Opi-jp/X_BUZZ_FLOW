@@ -8,7 +8,7 @@
 const fs = require('fs').promises
 const path = require('path')
 const { glob } = require('glob')
-const { PrismaClient } = require('../../../lib/generated/prisma')
+const { PrismaClient } = require('../../../lib/prisma')
 
 class PromptImpactAnalyzer {
   constructor() {

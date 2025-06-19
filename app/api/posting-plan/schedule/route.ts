@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { PostType } from '@/lib/generated/prisma'
+import { PostType } from '@/lib/prisma'
 
 // 選択した投稿計画をスケジュールに追加
 export async function POST(request: NextRequest) {

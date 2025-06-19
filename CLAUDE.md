@@ -807,5 +807,43 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **フィールド名の一致**: Prismaスキーマと API実装の整合性が重要
 - **生データ保存の利点**: JSONパースエラーを回避し、柔軟な処理が可能
 
+## 2025年6月19日の追加作業（CoTシステムのバックエンド修正）
+
+### 実施した作業
+
+#### 1. CoTシステムの全体的な実装見直し
+- **問題の特定**:
+  - ステータスの大文字/小文字不一致（`topics_collected` vs `TOPICS_COLLECTED`）
+  - Perplexityレスポンスのパース失敗（Markdown形式 vs JSON期待値）
+  - インポートパスの不統一（`@/lib/generated/prisma` vs `@/lib/prisma`）
+  - JSONパース時の改行文字エラー
+
+#### 2. 修正内容
+- **ステータス管理の統一**: すべて大文字（CREATED, COLLECTING, TOPICS_COLLECTED等）に統一
+- **Perplexityパーサーの実装**: 専用パーサークラス `PerplexityResponseParser` を作成
+  - Markdown内のJSONブロックを正しく抽出
+  - summary/perplexityAnalysis内の改行文字をエスケープ処理
+- **インポートパスの統一**: すべて `@/lib/prisma` に統一（dev-toolsも含む）
+
+#### 3. エラー記録
+- Perplexity topics JSONパースエラー
+- loadPrompt import エラー
+- Perplexity JSON内の改行文字エラー
+
+### 技術的な改善
+- **パーサーの堅牢性向上**: エラーハンドリングとデバッグログの追加
+- **データフローの整合性**: 各ステップ間でのデータ形式を明確化
+- **開発ツールの活用**: error-recorderで問題を記録し、将来の参考に
+
+### 重要な学び
+- **フロントエンドテスト前の準備の重要性**: バックエンドが不安定な状態でのフロントテストは地獄
+- **既存ツールの活用**: 新しいスクリプトを作るより、dev-toolsを使う方が効率的
+- **プロンプト変更時の注意**: プロンプトエディターを必ず使用すること
+
+### 次のステップ
+- キャラクター生成APIの動作確認
+- 下書き作成から投稿までの全フロー確認
+- フロントエンドとの統合テスト
+
 ---
-*最終更新: 2025/06/19 21:30*
+*最終更新: 2025/06/19 18:30*

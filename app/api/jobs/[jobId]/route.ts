@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/generated/prisma'
+import { prisma } from '@/lib/prisma'
 import { withErrorHandling, NotFoundError } from '@/lib/api/error-handler'
 
 // ジョブステータス取得API

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/generated/prisma'
+import { prisma } from '@/lib/prisma'
 import { withErrorHandling, ValidationError } from '@/lib/api/error-handler'
 import { SmartRTScheduler } from '@/lib/smart-rt-scheduler'
 import { env } from '@/lib/config/env'

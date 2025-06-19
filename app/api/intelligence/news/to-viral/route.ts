@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/generated/prisma'
+import { prisma } from '@/lib/prisma'
 import { withErrorHandling, ValidationError, NotFoundError } from '@/lib/api/error-handler'
 import { env } from '@/lib/config/env'
 import OpenAI from 'openai'

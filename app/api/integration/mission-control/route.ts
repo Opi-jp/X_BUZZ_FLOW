@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/generated/prisma'
+import { prisma } from '@/lib/prisma'
 import { withErrorHandling } from '@/lib/api/error-handler'
 import { subDays, startOfDay } from 'date-fns'
 

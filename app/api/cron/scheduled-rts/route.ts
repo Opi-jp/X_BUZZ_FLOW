@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/generated/prisma'
+import { prisma } from '@/lib/prisma'
 import { TwitterApi } from 'twitter-api-v2'
 import { env } from '@/lib/config/env'
 

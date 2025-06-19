@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { loadPrompt } from '@/lib/prompt-loader'
+import { PerplexityResponseParser } from '@/lib/parsers/perplexity-response-parser'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
@@ -52,7 +54,22 @@ export async function POST(
       data: { status: 'GENERATING_CONCEPTS' }
     })
 
-    const topics = (session.topics as any).parsed || []
+    // topicsフィールドをパース
+    let topics = []
+    try {
+      if (typeof session.topics === 'string') {
+        // Markdown形式のレスポンスをパース
+        topics = PerplexityResponseParser.parseTopics(session.topics)
+      } else if (session.topics && typeof session.topics === 'object') {
+        // 旧形式のレスポンスを処理
+        topics = PerplexityResponseParser.parseLegacyFormat(session.topics)
+      } else {
+        throw new Error('Invalid topics format')
+      }
+    } catch (parseError) {
+      console.error('Error parsing topics:', parseError)
+      throw new Error(`Failed to parse topics data: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`)
+    }
     
     if (topics.length === 0) {
       throw new Error('No topics found in session')
@@ -184,7 +201,10 @@ export async function POST(
     }
     
     return NextResponse.json(
-      { error: 'Failed to generate concepts' },
+      { 
+        error: 'Failed to generate concepts',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
