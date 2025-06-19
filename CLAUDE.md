@@ -897,5 +897,35 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 3. Analyzeモジュール（分析）のAPI実装
 4. フロントエンドの新API対応
 
+## 2025年1月19日の追加作業（API複雑性の根本原因分析）
+
+### 問題の発見
+- **117個のAPIエンドポイント**（本来15個で十分な直線的システム）
+- 認証エラーやDB接続エラーを回避するための「問題の先送り」が原因
+- テストのたびに仮エンドポイントを作成し、削除せずに蓄積
+
+### 典型的なパターン
+1. **認証エラー回避**: `/api/twitter/post` → `/api/test-post` → `/api/debug-post-v2` → ...
+2. **DB接続エラー回避**: `/api/generation/drafts` → `/api/generation/drafts-mock` → ...
+3. **セッション進行時の一時API**: 各フェーズごとにtest-*エンドポイントを作成
+
+### 解決策
+1. **シンプルな/api/v2/構造**を新規実装（11個のエンドポイントのみ）
+   - `/api/v2/flow/*` - フロー管理（3個）
+   - `/api/v2/drafts/*` - 下書き管理（3個）
+   - `/api/v2/post/*` - 投稿実行（2個）
+   - `/api/v2/data/*` - データ取得（3個）
+
+2. **根本問題の解決**
+   - 認証とDB接続の問題を先送りせずに解決
+   - エラーハンドリングの適切な実装
+   - テスト用エンドポイントの自動削除
+
+### 実装済み
+- `/api/v2/flow/start` - シンプルなフロー開始
+- `/api/v2/flow/[id]/status` - 進捗確認
+- `/api/v2/flow/[id]/next` - 次のステップへ
+- API複雑性分析ツール（`analyze-api-complexity-20250119.js`）
+
 ---
-*最終更新: 2025/01/19 20:20*
+*最終更新: 2025/01/19 20:30*
