@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { theme, options = {} } = body
+    const { theme, platform = 'Twitter', style = 'エンターテイメント' } = body
 
     if (!theme) {
       return NextResponse.json(
@@ -17,16 +17,14 @@ export async function POST(request: Request) {
     const session = await prisma.viralSession.create({
       data: {
         theme,
-        platform: options.platform || 'Twitter',
-        style: options.style || 'エンターテイメント',
+        platform,
+        style,
         status: 'CREATED',
-        currentPhase: 'INITIALIZED',
-        metadata: options
+        currentPhase: 'INITIALIZED'
       }
     })
 
     // 自動的に最初のステップ（Perplexity収集）を開始
-    // バックグラウンドで処理
     startPerplexityCollection(session.id).catch(console.error)
 
     return NextResponse.json({
@@ -46,9 +44,10 @@ export async function POST(request: Request) {
 // バックグラウンド処理
 async function startPerplexityCollection(sessionId: string) {
   try {
-    // 既存のPerplexity処理を呼び出し
+    // 既存のPerplexity処理を呼び出し（内部処理）
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/generation/content/sessions/${sessionId}/collect`,
+      `${baseUrl}/api/generation/content/sessions/${sessionId}/collect`,
       { method: 'POST' }
     )
     

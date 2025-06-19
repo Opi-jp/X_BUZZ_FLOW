@@ -26,9 +26,9 @@ export async function GET(
         errorMessage: true,
         createdAt: true,
         updatedAt: true,
-        // 進捗に応じてデータを含める
         topics: true,
         concepts: true,
+        selectedConcepts: true,
         claudeData: true
       }
     })
@@ -40,51 +40,48 @@ export async function GET(
       )
     }
 
-    // 進捗状況をわかりやすく整理
+    // 進捗状況を判定
     const progress = {
-      collecting: !!session.topics,
-      conceptsGenerated: !!session.concepts,
-      contentsGenerated: !!session.claudeData,
+      phase1_collecting: !!session.topics,
+      phase2_concepts: !!session.concepts,
+      phase3_contents: !!session.claudeData,
       completed: session.status === 'COMPLETED'
     }
 
-    // 現在のステップを判定
+    // 現在のステップ
     let currentStep = 'initializing'
+    let nextAction = null
+    
     if (session.status === 'ERROR') {
       currentStep = 'error'
     } else if (progress.completed) {
       currentStep = 'completed'
-    } else if (progress.contentsGenerated) {
-      currentStep = 'finalizing'
-    } else if (progress.conceptsGenerated) {
-      currentStep = 'generating_contents'
-    } else if (progress.collecting) {
+    } else if (progress.phase3_contents) {
+      currentStep = 'completed'
+    } else if (progress.phase2_concepts && !session.selectedConcepts) {
+      currentStep = 'awaiting_concept_selection'
+      nextAction = 'select_concepts'
+    } else if (progress.phase2_concepts && session.selectedConcepts) {
+      currentStep = 'awaiting_character_selection'
+      nextAction = 'select_character'
+    } else if (progress.phase1_collecting) {
       currentStep = 'generating_concepts'
     } else {
-      currentStep = 'collecting'
+      currentStep = 'collecting_topics'
     }
 
-    // レスポンスをシンプルに
     return NextResponse.json({
       id: session.id,
       theme: session.theme,
       currentStep,
+      nextAction,
       progress,
       error: session.errorMessage,
-      // 必要なデータのみ返す
       data: {
-        topics: session.topics ? 
-          (typeof session.topics === 'string' ? 
-            { raw: session.topics.substring(0, 200) + '...' } : 
-            session.topics) : null,
-        concepts: session.concepts ? 
-          (Array.isArray(session.concepts) ? 
-            session.concepts.length : 
-            'processing') : null,
-        contents: session.claudeData ? 
-          (Array.isArray(session.claudeData) ? 
-            session.claudeData.length : 
-            'processing') : null
+        topics: session.topics ? 'collected' : null,
+        concepts: session.concepts,
+        selectedConcepts: session.selectedConcepts,
+        contents: session.claudeData
       }
     })
   } catch (error) {
