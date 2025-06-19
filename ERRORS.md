@@ -330,6 +330,105 @@ PerplexityのレスポンスのJSONに含まれる改行文字が原因でJSON�
 
 ---
 
+
+## 🔴 middleware.tsリダイレクト問題
+
+### 解決策
+
+/api/twitter/postが/api/publish/post/nowにリダイレクトされて401 Unauthorizedエラーが発生。
+解決策: middleware.tsで該当行をコメントアウトして一時的に無効化。
+将来的には新しいAPIへの完全移行が必要。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Prismaインポートパス問題
+
+### 解決策
+
+dev-toolsで'../../lib/prisma'が見つからないエラー。
+原因: 正しいパスは'../../lib/generated/prisma'。
+解決策: 全てのdev-toolsのrequire文を修正。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 APIテストでの401 Unauthorized
+
+### 解決策
+
+原因: test-api-flow-20250119.jsが新しいAPIエンドポイント(/api/create/flow/start)を使用していた。
+このエンドポイントはrequireAuth()で認証が必要。
+解決策: 既存の認証不要のAPI(/api/generation/content/sessions)を使用する。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexity JSONパースエラー
+
+### 解決策
+
+エラー: 'Unexpected token #, ### トピック1:... is not valid JSON'
+原因: PerplexityがMarkdown形式で応答を返すが、JSON.parseで直接パースしようとした。
+解決策: PerplexityResponseParserクラスを使用してMarkdownからJSONを抽出する。
+実装済み: lib/parsers/perplexity-response-parser.ts
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 認証設計の整理
+
+### 解決策
+
+結論: 認証はTwitter投稿時のみ必要。
+- コンテンツ生成API: 認証不要（/api/generation/content/*）
+- Twitter投稿API: 認証必要（環境変数のTwitter API認証情報を使用）
+- 新しいAPIモジュール: requireAuth()を使用しているため要注意
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 フロントエンドでPerplexity JSONパースエラー
+
+### 解決策
+
+エラー: 'Unexpected token #, ### トピック1:... is not valid JSON'
+原因: フロントエンドでPerplexityのMarkdownレスポンスを直接JSON.parseしようとした。
+解決策: 
+1. バックエンドでパースを行い、フロントエンドでは生データを保持
+2. 表示用の簡易データを作成
+3. 実際のパースはgenerate-concepts APIで行われる
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 DebuggerInjectorエラー
+
+### 解決策
+
+警告: 'Debugger server not found. Run: node scripts/dev-tools/frontend-debugger-ai.js'
+原因: フロントエンドデバッガーサーバーが起動していない。
+解決策: 
+1. 開発時は無視しても問題ない
+2. デバッグが必要な場合は: node scripts/dev-tools/unified-frontend-debugger.js
+3. または環境変数でデバッガーを無効化
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

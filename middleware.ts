@@ -20,9 +20,9 @@ const API_REDIRECTS: Record<string, string> = {
   '/api/collect': '/api/intel/social/collect',
   
   // Creation Module への移行
-  '/api/generation/content/sessions': '/api/create/flow/start',
-  '/api/generation/content/session': '/api/create/flow/process',
-  '/api/generation/drafts': '/api/create/draft/generate',
+  // '/api/generation/content/sessions': '/api/create/flow/start', // 一時的にコメントアウト
+  // '/api/generation/content/session': '/api/create/flow/process', // 一時的にコメントアウト
+  // '/api/generation/drafts': '/api/create/draft/generate', // 一時的にコメントアウト
   '/api/viral/v2/sessions': '/api/create/flow/start',
   
   // Publishing Module への移行

@@ -68,23 +68,48 @@ export default function ResultPage() {
   const handlePostToTwitter = async (post: Post) => {
     // Twitter投稿APIを呼び出す
     try {
+      // 投稿内容を構築
+      const content = post.format === 'thread' 
+        ? post.posts?.map(p => p.content).join('\n\n') || ''
+        : post.content || ''
+      
+      // ハッシュタグを追加
+      const hashtags = ['AI時代', 'カーディダーレ']
+      const tweetText = `${content}\n\n${hashtags.map(tag => `#${tag}`).join(' ')}`
+      
       const response = await fetch('/api/twitter/post', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          content: post.format === 'thread' 
-            ? post.posts?.map(p => p.content) 
-            : [post.content],
-          sessionId,
-          conceptId: post.conceptId
+          text: tweetText
         })
       })
 
       if (response.ok) {
-        alert('投稿しました！')
-        fetchSession() // リロード
+        const result = await response.json()
+        if (result.success) {
+          alert(`投稿しました！\nURL: ${result.url}`)
+          // 下書きをデータベースに保存
+          await fetch('/api/generation/drafts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sessionId,
+              conceptId: post.conceptId,
+              title: post.conceptTitle,
+              content,
+              hashtags,
+              status: 'POSTED',
+              characterId: post.characterId,
+              tweetId: result.id
+            })
+          })
+          fetchSession() // リロード
+        }
       } else {
         throw new Error('投稿に失敗しました')
       }

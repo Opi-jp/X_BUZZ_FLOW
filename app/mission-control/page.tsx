@@ -18,7 +18,8 @@ import {
   TrendingUp,
   Users,
   Clock,
-  Send
+  Send,
+  Twitter
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -67,9 +68,9 @@ export default function MissionControl() {
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       actions: [
-        { name: '新規セッション', href: '/generation/content', icon: Brain },
+        { name: '詳細生成', href: '/create/detailed', icon: Brain },
         { name: '下書き管理', href: '/generation/drafts', icon: FileText },
-        { name: 'キャラクター管理', href: '/generation/characters', icon: Users }
+        { name: 'Twitter投稿', href: '/generation/post', icon: Twitter }
       ]
     },
     {
