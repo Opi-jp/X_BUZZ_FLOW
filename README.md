@@ -33,6 +33,10 @@ cat ERRORS.md      # エラー解決集
 # エラーが出たら
 node scripts/dev-tools/find-error.js "エラー内容"
 
+# フロントエンドデバッグ（NEW!!）
+node scripts/dev-tools/unified-frontend-debugger.js  # 統合デバッガー
+node scripts/dev-tools/vscode-error-monitor.js      # VSCodeエラーモニター
+
 # プロンプトを編集する（NEW）
 node scripts/dev-tools/prompt-editor.js list
 node scripts/dev-tools/prompt-editor.js edit gpt/generate-concepts.txt
@@ -130,13 +134,30 @@ CRON_SECRET= # Vercel Cron Job認証用
 
 ## 📋 最新の更新（2025年6月19日）
 
-### 統合システム実装計画を策定
-- **計画書**: `/docs/current/integrated-system-implementation-plan-20250619.md`
-- **新アーキテクチャ**: Intel → Create → Publish → Analyze の4モジュール構成
-- **主な改善点**:
-  - バックエンドドリブン開発アプローチ
-  - データ表示の3段階最適化（Summary/Preview/Detail）
-  - 既存システムを活かした段階的移行（6フェーズ）
-  - 統一された命名規則とAPI体系
+### 🚀 V2バイラルコンテンツ生成システム完成
+- **完全動作中**: 2トピック×6コンセプト版が稼働
+- **新UIフロー**: 
+  - `/generation/content` - コンテンツ生成開始
+  - `/generation/content/concept-select/[id]` - コンセプト選択
+  - `/generation/content/character-select/[id]` - キャラクター選択
+  - `/generation/content/results/[id]` - 結果表示
+- **下書き管理**: `/generation/drafts`
+- **スケジューラー**: `/generation/schedule`
+- **パブリッシャー**: `/automation/publisher`
+
+### 🔧 開発効率化ツール群
+- **統合フロントエンドデバッガー**: 
+  ```bash
+  node scripts/dev-tools/unified-frontend-debugger.js
+  # http://localhost:3335 でエラー監視・リンクチェック・AI分析
+  ```
+- **VSCodeエラーモニター**: ターミナルでリアルタイムエラー表示
+- **リアルタイムコードチェッカー**: ファイル保存時の構文チェック
+- **UIビヘイビアテスター**: ボタン・リンクの動作テスト
+
+### 🎯 今後の実装予定
+- 9つの組み合わせ（3フック×3角度）から選択するUI
+- GPTによるスコアリングと推薦機能
+- 物語構造の選択的生成
 
 詳細はCLAUDE.mdの作業記録を参照してください。

@@ -96,8 +96,8 @@ ${topicAnalysis}
 - thread: ツリー投稿（複数の投稿で詳細に展開）
 
 上記で検討した要素を以下のJSON形式に整理してください：
-- 【フック】で選んだ種類 → hookType、hookCombinationフィールドへ
-- 【角度】で選んだ切り口 → angle、angleCombinationフィールドへ  
+- 【フック】で考えた3つのオープニングフック → hookOptionsフィールドへ
+- 【角度】で構想した3つの独自の切り口 → angleOptionsフィールドへ  
 - 【投稿構造】の5つの要素 → structureの各フィールドへ（openingHook、background、mainContent、reflection、cta）
 - 【ビジュアル案】 → visualフィールドへ
 - 【投稿タイミング】 → timingフィールドへ
@@ -109,11 +109,18 @@ ${topicAnalysis}
   "conceptId": "topic${topicIndex}_conceptA",
   "conceptTitle": "",
   "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
+  "hookOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "angleOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "selectedHook": "",
+  "selectedAngle": "",
   "viralScore": 0,
   "viralFactors": [],
   "structure": {
@@ -133,11 +140,18 @@ ${topicAnalysis}
   "conceptId": "topic${topicIndex}_conceptB",
   "conceptTitle": "",
   "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
+  "hookOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "angleOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "selectedHook": "",
+  "selectedAngle": "",
   "viralScore": 0,
   "viralFactors": [],
   "structure": {
@@ -157,11 +171,18 @@ ${topicAnalysis}
   "conceptId": "topic${topicIndex}_conceptC",
   "conceptTitle": "",
   "format": "",
-  "hookType": "",
-  "hookCombination": [],
-  "angle": "",
-  "angleCombination": [],
-  "angleRationale": "",
+  "hookOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "angleOptions": [
+    {"type": "", "description": ""},
+    {"type": "", "description": ""},
+    {"type": "", "description": ""}
+  ],
+  "selectedHook": "",
+  "selectedAngle": "",
   "viralScore": 0,
   "viralFactors": [],
   "structure": {

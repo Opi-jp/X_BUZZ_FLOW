@@ -220,6 +220,16 @@ import { PrismaClient } from '@/lib/generated/prisma'
 
 ---
 
+
+## 🔴 Twitter icon deprecated
+
+### 解決策
+lucide-reactのTwitterアイコンが非推奨。Xアイコンに変更するか、独自のSVGアイコンを使用する
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：
@@ -239,4 +249,4 @@ git commit -m "docs: [エラー名]の解決策を追加"
 
 ---
 
-*最終更新: 2025/06/18*
+*最終更新: 2025/06/19*

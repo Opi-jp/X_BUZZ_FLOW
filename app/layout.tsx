@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
+import DebuggerInjector from './components/DebuggerInjector'
 
 const notoSansJP = Noto_Sans_JP({
   weight: ['300', '400', '500', '700'],
@@ -55,6 +56,7 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`${notoSansJP.variable} font-sans antialiased`} suppressHydrationWarning>
         <Providers>
+          <DebuggerInjector />
           <div className="min-h-screen bg-gray-100">
             {children}
           </div>

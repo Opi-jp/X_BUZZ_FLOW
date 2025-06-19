@@ -1,0 +1,58 @@
+{
+  "success": true,
+  "provider": "gpt",
+  "model": "gpt-4o",
+  "executionTime": 29467,
+  "content": "\n{\n  \"concepts\": [\n    {\n      \"conceptId\": \"topic0_conceptA\",\n      \"conceptTitle\": \"AI革命の裏側\",\n      \"format\": \"thread\",\n      \"hookOptions\": [\n        {\n          \"type\": \"意外性\",\n          \"description\": \"AIが仕事を奪う？実はあなたの味方かも！\"\n        },\n        {\n          \"type\": \"問い・未完性\",\n          \"description\": \"AIツールで仕事が10倍速くなる、信じられますか？\"\n        },\n        {\n          \"type\": \"自己投影\",\n          \"description\": \"あなたの仕事がAIでどれだけ変わる？\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"神話破壊型\",\n          \"description\": \"AIは仕事を奪うという誤解を解く\"\n        },\n        {\n          \"type\": \"リアルな声\",\n          \"description\": \"AI導入で劇的に変わった現場の声\"\n        },\n        {\n          \"type\": \"問題提起型\",\n          \"description\": \"AI導入の本当のコストと価値\"\n        }\n      ],\n      \"selectedHook\": \"AIが仕事を奪う？実はあなたの味方かも！\",\n      \"selectedAngle\": \"AIは仕事を奪うという誤解を解く\",\n      \"viralScore\": 8.5,\n      \"viralFactors\": [\"誤解を解く内容\", \"リアルな声\", \"社会的関心\"],\n      \"structure\": {\n        \"openingHook\": \"AIが仕事を奪う？実はあなたの味方かも！\",\n        \"background\": \"AIツールの導入で、仕事の効率が劇的に向上しています。しかし、AIへの誤解も多いのが現状です。\",\n        \"mainContent\": \"実際の現場では、AIが仕事を奪うのではなく、むしろ業務をサポートし効率を飛躍的に高めています。例えば、コーディングやドキュメント作成では生産性が10倍に。\",\n        \"reflection\": \"AIの導入で得られるのは、時間の節約だけでなく新たな価値の創出です。あなたはAIとどう向き合いますか？\",\n        \"cta\": \"AI導入による変化について、あなたの意見を教えてください！\"\n      },\n      \"visual\": \"before→afterで変化が伝わる2枚比較画像\",\n      \"timing\": \"平日夜（21時〜23時）\",\n      \"hashtags\": [\"#AI革命\", \"#仕事効率化\", \"#未来の働き方\"]\n    },\n    {\n      \"conceptId\": \"topic0_conceptB\",\n      \"conceptTitle\": \"AIで変わる日常\",\n      \"format\": \"single\",\n      \"hookOptions\": [\n        {\n          \"type\": \"数字・ロジック\",\n          \"description\": \"3ヶ月で10倍の生産性向上！\"\n        },\n        {\n          \"type\": \"緊急性\",\n          \"description\": \"今すぐAIを使って、時間を取り戻せ！\"\n        },\n        {\n          \"type\": \"意外性\",\n          \"description\": \"AIツール、導入コストは意外に低い？\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"ライフハック型\",\n          \"description\": \"AIを使った実践的な仕事効率化術\"\n        },\n        {\n          \"type\": \"データ駆動型\",\n          \"description\": \"導入後に得られる具体的な数字で解説\"\n        },\n        {\n          \"type\": \"予測・考察型\",\n          \"description\": \"今後のAIツールの進化と可能性\"\n        }\n      ],\n      \"selectedHook\": \"3ヶ月で10倍の生産性向上！\",\n      \"selectedAngle\": \"AIを使った実践的な仕事効率化術\",\n      \"viralScore\": 8.0,\n      \"viralFactors\": [\"具体的な数字\", \"実用性\", \"読者の関心\"],\n      \"structure\": {\n        \"openingHook\": \"3ヶ月で10倍の生産性向上！\",\n        \"background\": \"多くのビジネスパーソンが生産性向上を求めていますが、AIツールの導入でその願いが叶います。\",\n        \"mainContent\": \"AIを使えば、誰でも簡単に仕事効率が上がります。たとえば、毎日のルーチンワークが半分以下の時間に。\",\n        \"reflection\": \"結局、重要なのはツールの選び方と使い方。あなたはどう活用しますか？\",\n        \"cta\": \"あなたのAI活用法をシェアしてください！\"\n      },\n      \"visual\": \"グラフや数字を強調したインフォグラフィック\",\n      \"timing\": \"月曜朝（モチベーション系に強い）\",\n      \"hashtags\": [\"#AI活用\", \"#生産性向上\", \"#仕事術\"]\n    },\n    {\n      \"conceptId\": \"topic0_conceptC\",\n      \"conceptTitle\": \"AIの未来展望\",\n      \"format\": \"thread\",\n      \"hookOptions\": [\n        {\n          \"type\": \"問い・未完性\",\n          \"description\": \"AI導入で未来の働き方はどう変わる？\"\n        },\n        {\n          \"type\": \"自己投影\",\n          \"description\": \"あなたの仕事、AIでどう変わる？！\"\n        },\n        {\n          \"type\": \"緊急性\",\n          \"description\": \"AIの進化、今すぐ知っておくべき理由\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"予測・考察型\",\n          \"description\": \"AIがもたらす未来の働き方のシナリオ\"\n        },\n        {\n          \"type\": \"舞台裏や裏話的視点\",\n          \"description\": \"AI開発の裏側で何が起きているのか\"\n        },\n        {\n          \"type\": \"ケーススタディ型\",\n          \"description\": \"具体的な企業の成功事例から学ぶ\"\n        }\n      ],\n      \"selectedHook\": \"AI導入で未来の働き方はどう変わる？\",\n      \"selectedAngle\": \"AIがもたらす未来の働き方のシナリオ\",\n      \"viralScore\": 9.0,\n      \"viralFactors\": [\"未来予測\", \"具体例\", \"社会的インパクト\"],\n      \"structure\": {\n        \"openingHook\": \"AI導入で未来の働き方はどう変わる？\",\n        \"background\": \"AIの進化は私たちの働き方に大きな影響を与えています。今後の変化を見据えることが重要です。\",\n        \"mainContent\": \"AIがどのように業務を変え、私たちの生活に影響を及ぼすのか、具体的なシナリオを紹介します。\",\n        \"reflection\": \"未来の働き方を想像してみてください。あなたはどのようにAIと共存しますか？\",\n        \"cta\": \"あなたの未来予想図をコメントで教えてください！\"\n      },\n      \"visual\": \"モノローグ系の静かな動画\",\n      \"timing\": \"日曜夕方（「明日から」モードを活用）\",\n      \"hashtags\": [\"#AI未来\", \"#働き方改革\", \"#テクノロジー\"]\n    }\n  ]\n}",
+  "usage": {
+    "prompt_tokens": 2228,
+    "completion_tokens": 1736,
+    "total_tokens": 3964,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "raw": {
+    "id": "chatcmpl-BjulEKfnz9h5HlBLsN7knsitSj9r9",
+    "object": "chat.completion",
+    "created": 1750282648,
+    "model": "gpt-4o-2024-08-06",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "\n{\n  \"concepts\": [\n    {\n      \"conceptId\": \"topic0_conceptA\",\n      \"conceptTitle\": \"AI革命の裏側\",\n      \"format\": \"thread\",\n      \"hookOptions\": [\n        {\n          \"type\": \"意外性\",\n          \"description\": \"AIが仕事を奪う？実はあなたの味方かも！\"\n        },\n        {\n          \"type\": \"問い・未完性\",\n          \"description\": \"AIツールで仕事が10倍速くなる、信じられますか？\"\n        },\n        {\n          \"type\": \"自己投影\",\n          \"description\": \"あなたの仕事がAIでどれだけ変わる？\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"神話破壊型\",\n          \"description\": \"AIは仕事を奪うという誤解を解く\"\n        },\n        {\n          \"type\": \"リアルな声\",\n          \"description\": \"AI導入で劇的に変わった現場の声\"\n        },\n        {\n          \"type\": \"問題提起型\",\n          \"description\": \"AI導入の本当のコストと価値\"\n        }\n      ],\n      \"selectedHook\": \"AIが仕事を奪う？実はあなたの味方かも！\",\n      \"selectedAngle\": \"AIは仕事を奪うという誤解を解く\",\n      \"viralScore\": 8.5,\n      \"viralFactors\": [\"誤解を解く内容\", \"リアルな声\", \"社会的関心\"],\n      \"structure\": {\n        \"openingHook\": \"AIが仕事を奪う？実はあなたの味方かも！\",\n        \"background\": \"AIツールの導入で、仕事の効率が劇的に向上しています。しかし、AIへの誤解も多いのが現状です。\",\n        \"mainContent\": \"実際の現場では、AIが仕事を奪うのではなく、むしろ業務をサポートし効率を飛躍的に高めています。例えば、コーディングやドキュメント作成では生産性が10倍に。\",\n        \"reflection\": \"AIの導入で得られるのは、時間の節約だけでなく新たな価値の創出です。あなたはAIとどう向き合いますか？\",\n        \"cta\": \"AI導入による変化について、あなたの意見を教えてください！\"\n      },\n      \"visual\": \"before→afterで変化が伝わる2枚比較画像\",\n      \"timing\": \"平日夜（21時〜23時）\",\n      \"hashtags\": [\"#AI革命\", \"#仕事効率化\", \"#未来の働き方\"]\n    },\n    {\n      \"conceptId\": \"topic0_conceptB\",\n      \"conceptTitle\": \"AIで変わる日常\",\n      \"format\": \"single\",\n      \"hookOptions\": [\n        {\n          \"type\": \"数字・ロジック\",\n          \"description\": \"3ヶ月で10倍の生産性向上！\"\n        },\n        {\n          \"type\": \"緊急性\",\n          \"description\": \"今すぐAIを使って、時間を取り戻せ！\"\n        },\n        {\n          \"type\": \"意外性\",\n          \"description\": \"AIツール、導入コストは意外に低い？\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"ライフハック型\",\n          \"description\": \"AIを使った実践的な仕事効率化術\"\n        },\n        {\n          \"type\": \"データ駆動型\",\n          \"description\": \"導入後に得られる具体的な数字で解説\"\n        },\n        {\n          \"type\": \"予測・考察型\",\n          \"description\": \"今後のAIツールの進化と可能性\"\n        }\n      ],\n      \"selectedHook\": \"3ヶ月で10倍の生産性向上！\",\n      \"selectedAngle\": \"AIを使った実践的な仕事効率化術\",\n      \"viralScore\": 8.0,\n      \"viralFactors\": [\"具体的な数字\", \"実用性\", \"読者の関心\"],\n      \"structure\": {\n        \"openingHook\": \"3ヶ月で10倍の生産性向上！\",\n        \"background\": \"多くのビジネスパーソンが生産性向上を求めていますが、AIツールの導入でその願いが叶います。\",\n        \"mainContent\": \"AIを使えば、誰でも簡単に仕事効率が上がります。たとえば、毎日のルーチンワークが半分以下の時間に。\",\n        \"reflection\": \"結局、重要なのはツールの選び方と使い方。あなたはどう活用しますか？\",\n        \"cta\": \"あなたのAI活用法をシェアしてください！\"\n      },\n      \"visual\": \"グラフや数字を強調したインフォグラフィック\",\n      \"timing\": \"月曜朝（モチベーション系に強い）\",\n      \"hashtags\": [\"#AI活用\", \"#生産性向上\", \"#仕事術\"]\n    },\n    {\n      \"conceptId\": \"topic0_conceptC\",\n      \"conceptTitle\": \"AIの未来展望\",\n      \"format\": \"thread\",\n      \"hookOptions\": [\n        {\n          \"type\": \"問い・未完性\",\n          \"description\": \"AI導入で未来の働き方はどう変わる？\"\n        },\n        {\n          \"type\": \"自己投影\",\n          \"description\": \"あなたの仕事、AIでどう変わる？！\"\n        },\n        {\n          \"type\": \"緊急性\",\n          \"description\": \"AIの進化、今すぐ知っておくべき理由\"\n        }\n      ],\n      \"angleOptions\": [\n        {\n          \"type\": \"予測・考察型\",\n          \"description\": \"AIがもたらす未来の働き方のシナリオ\"\n        },\n        {\n          \"type\": \"舞台裏や裏話的視点\",\n          \"description\": \"AI開発の裏側で何が起きているのか\"\n        },\n        {\n          \"type\": \"ケーススタディ型\",\n          \"description\": \"具体的な企業の成功事例から学ぶ\"\n        }\n      ],\n      \"selectedHook\": \"AI導入で未来の働き方はどう変わる？\",\n      \"selectedAngle\": \"AIがもたらす未来の働き方のシナリオ\",\n      \"viralScore\": 9.0,\n      \"viralFactors\": [\"未来予測\", \"具体例\", \"社会的インパクト\"],\n      \"structure\": {\n        \"openingHook\": \"AI導入で未来の働き方はどう変わる？\",\n        \"background\": \"AIの進化は私たちの働き方に大きな影響を与えています。今後の変化を見据えることが重要です。\",\n        \"mainContent\": \"AIがどのように業務を変え、私たちの生活に影響を及ぼすのか、具体的なシナリオを紹介します。\",\n        \"reflection\": \"未来の働き方を想像してみてください。あなたはどのようにAIと共存しますか？\",\n        \"cta\": \"あなたの未来予想図をコメントで教えてください！\"\n      },\n      \"visual\": \"モノローグ系の静かな動画\",\n      \"timing\": \"日曜夕方（「明日から」モードを活用）\",\n      \"hashtags\": [\"#AI未来\", \"#働き方改革\", \"#テクノロジー\"]\n    }\n  ]\n}",
+          "refusal": null,
+          "annotations": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2228,
+      "completion_tokens": 1736,
+      "total_tokens": 3964,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "service_tier": "default",
+    "system_fingerprint": "fp_a288987b44"
+  }
+}

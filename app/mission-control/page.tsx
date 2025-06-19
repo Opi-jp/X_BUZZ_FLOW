@@ -12,16 +12,13 @@ import {
   Brain, 
   Calendar, 
   FileText, 
-  Hash, 
-  MessageSquare, 
   Newspaper, 
   Search,
   Sparkles,
   TrendingUp,
   Users,
   Clock,
-  CheckCircle,
-  AlertCircle
+  Send
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -38,7 +35,7 @@ export default function MissionControl() {
   const fetchRecentData = async () => {
     try {
       // V2システムの最新セッションを取得
-      const response = await fetch('/api/viral/v2/sessions?limit=5')
+      const response = await fetch('/api/generation/content/sessions?limit=5')
       const data = await response.json()
       setRecentSessions(data.sessions || [])
     } catch (error) {
@@ -57,9 +54,9 @@ export default function MissionControl() {
       color: 'text-blue-600',
       bgColor: 'bg-blue-100',
       actions: [
-        { name: 'ニュース収集', href: '/news', icon: Newspaper },
-        { name: 'バズ分析', href: '/buzz', icon: TrendingUp },
-        { name: 'トレンド調査', href: '/viral/v2/data-explorer', icon: BarChart3 }
+        { name: 'ニュース収集', href: '/intelligence/news', icon: Newspaper },
+        { name: 'バズ分析', href: '/intelligence/buzz', icon: TrendingUp },
+        { name: 'トレンド調査', href: '/intelligence/trends', icon: BarChart3 }
       ]
     },
     {
@@ -70,9 +67,9 @@ export default function MissionControl() {
       color: 'text-purple-600',
       bgColor: 'bg-purple-100',
       actions: [
-        { name: '新規セッション', href: '/viral/v2/sessions/create', icon: Brain },
-        { name: '下書き管理', href: '/viral/v2/drafts', icon: FileText },
-        { name: 'キャラクター設定', href: '/viral/character-selector', icon: Users }
+        { name: '新規セッション', href: '/generation/content', icon: Brain },
+        { name: '下書き管理', href: '/generation/drafts', icon: FileText },
+        { name: 'キャラクター管理', href: '/generation/characters', icon: Users }
       ]
     },
     {
@@ -83,9 +80,9 @@ export default function MissionControl() {
       color: 'text-green-600',
       bgColor: 'bg-green-100',
       actions: [
-        { name: 'スケジューラー', href: '/viral/v2/smart-scheduler', icon: Clock },
-        { name: 'パフォーマンス', href: '/viral/performance', icon: BarChart3 },
-        { name: '投稿履歴', href: '/viral/v2/dashboard', icon: MessageSquare }
+        { name: 'スケジューラー', href: '/generation/schedule', icon: Clock },
+        { name: 'パブリッシャー', href: '/automation/publisher', icon: Send },
+        { name: 'パフォーマンス', href: '/automation/analytics', icon: BarChart3 }
       ]
     }
   ]
@@ -190,7 +187,7 @@ export default function MissionControl() {
               <div className="text-center py-8 text-gray-500">
                 <Brain className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p>まだセッションがありません</p>
-                <Link href="/viral/v2/sessions/create">
+                <Link href="/generation/content">
                   <Button className="mt-4" size="sm">
                     最初のセッションを作成
                   </Button>
@@ -224,7 +221,7 @@ export default function MissionControl() {
                         <span className="text-gray-600">
                           {session.drafts?.length || 0} 下書き
                         </span>
-                        <Link href={`/viral/v2/sessions/${session.id}`}>
+                        <Link href={`/generation/content/results/${session.id}`}>
                           <Button variant="ghost" size="sm">
                             詳細を見る
                             <ArrowRight className="w-3 h-3 ml-1" />
@@ -249,7 +246,7 @@ export default function MissionControl() {
               <p className="text-sm text-blue-800 mb-4">
                 3ステップでバイラルコンテンツを生成
               </p>
-              <Link href="/viral/v2/sessions/create">
+              <Link href="/generation/content">
                 <Button className="w-full" variant="default">
                   新規セッションを開始
                 </Button>
@@ -265,7 +262,7 @@ export default function MissionControl() {
               <p className="text-sm text-purple-800 mb-4">
                 AIが選んだ重要ニュースをチェック
               </p>
-              <Link href="/news">
+              <Link href="/intelligence/news">
                 <Button className="w-full" variant="outline">
                   ニュースを見る
                 </Button>
@@ -281,7 +278,7 @@ export default function MissionControl() {
               <p className="text-sm text-green-800 mb-4">
                 投稿の効果を分析・最適化
               </p>
-              <Link href="/viral/performance">
+              <Link href="/automation/analytics">
                 <Button className="w-full" variant="outline">
                   分析を見る
                 </Button>
