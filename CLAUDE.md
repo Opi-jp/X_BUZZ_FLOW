@@ -922,10 +922,23 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
    - テスト用エンドポイントの自動削除
 
 ### 実装済み
-- `/api/v2/flow/start` - シンプルなフロー開始
-- `/api/v2/flow/[id]/status` - 進捗確認
-- `/api/v2/flow/[id]/next` - 次のステップへ
+- **シンプルAPI構造（バージョン番号なし）**
+  - `/api/flow` - フロー開始
+  - `/api/flow/[id]` - ステータス確認
+  - `/api/flow/[id]/next` - 次のステップへ
+  - `/api/drafts` - 下書き一覧
+  - `/api/drafts/[id]` - 下書き詳細・編集
+  - `/api/post` - 投稿実行
+- **フロントエンドUI**
+  - `/create` - 新規作成起点
+  - `/create/flow/[id]` - フロー進行状況（リアルタイム更新）
+  - `/drafts` - 下書き管理（編集・投稿）
 - API複雑性分析ツール（`analyze-api-complexity-20250119.js`）
+
+### 重要な教訓
+- **v2などのバージョン番号は使わない** - 最初から正しい設計で実装
+- **問題を先送りしない** - 認証エラーやDB接続エラーは根本解決
+- **テスト用エンドポイントは必ず削除** - 蓄積させない
 
 ---
 *最終更新: 2025/01/19 20:30*

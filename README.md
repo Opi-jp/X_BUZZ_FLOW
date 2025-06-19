@@ -58,12 +58,20 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 # 5. test-directコマンドで非インタラクティブ実行が可能
 ```
 
-### 使うAPI（2025年6月18日更新）
+### 使うAPI（2025年1月19日更新 - シンプル化完了）
 ```
-セッション: /api/generation/content/sessions/[id]
-下書き:     /api/generation/drafts/[id]
-ニュース:   /api/intelligence/news/*
-バズ分析:   /api/intelligence/buzz/*
+# メインフロー（11個のみ！）
+フロー開始:   POST /api/flow
+状態確認:     GET  /api/flow/[id]
+次へ進む:     POST /api/flow/[id]/next
+下書き一覧:   GET  /api/drafts
+下書き編集:   PUT  /api/drafts/[id]
+投稿実行:     POST /api/post
+
+# UI
+新規作成:     /create
+進行状況:     /create/flow/[id]
+下書き管理:   /drafts
 ```
 
 ## 技術スタック
