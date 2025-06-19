@@ -22,14 +22,11 @@ export async function GET(
         platform: true,
         style: true,
         status: true,
-        currentPhase: true,
-        errorMessage: true,
         createdAt: true,
-        updatedAt: true,
         topics: true,
         concepts: true,
-        selectedConcepts: true,
-        claudeData: true
+        selectedIds: true,
+        contents: true
       }
     })
 
@@ -44,7 +41,7 @@ export async function GET(
     const progress = {
       phase1_collecting: !!session.topics,
       phase2_concepts: !!session.concepts,
-      phase3_contents: !!session.claudeData,
+      phase3_contents: !!session.contents,
       completed: session.status === 'COMPLETED'
     }
 
@@ -58,10 +55,10 @@ export async function GET(
       currentStep = 'completed'
     } else if (progress.phase3_contents) {
       currentStep = 'completed'
-    } else if (progress.phase2_concepts && !session.selectedConcepts) {
+    } else if (progress.phase2_concepts && session.selectedIds.length === 0) {
       currentStep = 'awaiting_concept_selection'
       nextAction = 'select_concepts'
-    } else if (progress.phase2_concepts && session.selectedConcepts) {
+    } else if (progress.phase2_concepts && session.selectedIds.length > 0) {
       currentStep = 'awaiting_character_selection'
       nextAction = 'select_character'
     } else if (progress.phase1_collecting) {
@@ -76,12 +73,12 @@ export async function GET(
       currentStep,
       nextAction,
       progress,
-      error: session.errorMessage,
+      error: null,
       data: {
-        topics: session.topics ? 'collected' : null,
+        topics: session.topics,
         concepts: session.concepts,
-        selectedConcepts: session.selectedConcepts,
-        contents: session.claudeData
+        selectedConcepts: session.selectedIds,
+        contents: session.contents
       }
     })
   } catch (error) {

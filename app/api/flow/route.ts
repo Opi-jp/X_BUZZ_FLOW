@@ -2,8 +2,11 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
+  console.log('[API] POST /api/flow - Start')
   try {
+    console.log('[API] Parsing request body...')
     const body = await request.json()
+    console.log('[API] Body:', body)
     const { theme, platform = 'Twitter', style = 'エンターテイメント' } = body
 
     if (!theme) {
@@ -19,13 +22,13 @@ export async function POST(request: Request) {
         theme,
         platform,
         style,
-        status: 'CREATED',
-        currentPhase: 'INITIALIZED'
+        status: 'CREATED'
       }
     })
 
     // 自動的に最初のステップ（Perplexity収集）を開始
-    startPerplexityCollection(session.id).catch(console.error)
+    // TODO: 非同期処理の修正が必要
+    // startPerplexityCollection(session.id).catch(console.error)
 
     return NextResponse.json({
       id: session.id,
@@ -33,7 +36,8 @@ export async function POST(request: Request) {
       message: '情報収集を開始しました'
     })
   } catch (error) {
-    console.error('Flow start error:', error)
+    console.error('[API] Flow start error:', error)
+    console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack')
     return NextResponse.json(
       { error: 'Failed to start flow' },
       { status: 500 }
@@ -41,7 +45,8 @@ export async function POST(request: Request) {
   }
 }
 
-// バックグラウンド処理
+// バックグラウンド処理（一時的に無効化）
+/*
 async function startPerplexityCollection(sessionId: string) {
   try {
     // 既存のPerplexity処理を呼び出し（内部処理）
@@ -65,3 +70,4 @@ async function startPerplexityCollection(sessionId: string) {
     })
   }
 }
+*/

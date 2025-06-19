@@ -7,10 +7,11 @@ import { FileText, Send, Edit2, Trash2, Calendar, Loader2 } from 'lucide-react'
 interface Draft {
   id: string
   sessionId: string
+  title: string
   content: string
-  format: string
+  hashtags: string[]
   status: string
-  metadata: any
+  characterId?: string
   tweetId?: string
   createdAt: string
   updatedAt: string
@@ -49,7 +50,7 @@ export default function DraftsPage() {
     
     try {
       const content = editingDraft === draft.id ? editedContent : draft.content
-      const hashtags = draft.metadata?.hashtags || ['AI時代', 'X_BUZZ_FLOW']
+      const hashtags = draft.hashtags || ['AI時代', 'X_BUZZ_FLOW']
       const text = `${content}\n\n${hashtags.map((tag: string) => `#${tag.replace(/^#/, '')}`).join(' ')}`
       
       const response = await fetch('/api/post', {
@@ -122,12 +123,12 @@ export default function DraftsPage() {
   // ステータスのバッジ色
   const getStatusBadge = (status: string) => {
     const badges = {
-      draft: 'bg-gray-100 text-gray-700',
-      scheduled: 'bg-blue-100 text-blue-700',
-      posted: 'bg-green-100 text-green-700',
-      failed: 'bg-red-100 text-red-700'
+      'DRAFT': 'bg-gray-100 text-gray-700',
+      'SCHEDULED': 'bg-blue-100 text-blue-700', 
+      'POSTED': 'bg-green-100 text-green-700',
+      'FAILED': 'bg-red-100 text-red-700'
     }
-    return badges[status as keyof typeof badges] || badges.draft
+    return badges[status as keyof typeof badges] || badges['DRAFT']
   }
 
   if (loading) {
@@ -191,9 +192,9 @@ export default function DraftsPage() {
                       <span className="text-sm text-gray-500">
                         {new Date(draft.createdAt).toLocaleDateString('ja-JP')}
                       </span>
-                      {draft.metadata?.conceptTitle && (
+                      {draft.title && (
                         <span className="text-sm text-gray-600">
-                          {draft.metadata.conceptTitle}
+                          {draft.title}
                         </span>
                       )}
                     </div>
@@ -254,7 +255,7 @@ export default function DraftsPage() {
                           </button>
                         </>
                       )}
-                      {!isEditing && draft.status !== 'posted' && (
+                      {!isEditing && draft.status !== 'POSTED' && (
                         <>
                           <button
                             className="px-3 py-1 text-purple-600 border border-purple-600 rounded hover:bg-purple-50 flex items-center gap-1"
@@ -282,7 +283,7 @@ export default function DraftsPage() {
                           </button>
                         </>
                       )}
-                      {draft.status === 'posted' && draft.tweetId && (
+                      {draft.status === 'POSTED' && draft.tweetId && (
                         <a
                           href={`https://twitter.com/user/status/${draft.tweetId}`}
                           target="_blank"

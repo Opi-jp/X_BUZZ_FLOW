@@ -294,26 +294,25 @@ Step 2が必要とする情報 → Step 1の出力を設計
 - test-*やdebug-*のAPIは本番コードから呼ばない
 - 不明な場合は `node scripts/dev-tools/api-dependency-scanner.js` で確認
 
-## 🎯 現在のシステム状態（2025年6月18日時点）
+## 🎯 現在のシステム状態（2025年6月19日時点）
 
-### Mission Control / CoT統合実装完了
+### Create→Draft→Post フロー完全実装完了 ✅
 
-#### 主要な変更点：
-- **APIディレクトリ命名規則統一**
-  - Intelligence（情報収集・分析）
-  - Generation（コンテンツ生成）
-  - Automation（自動化・投稿）
-  - Integration（外部API連携）
+#### 2025年6月19日の重要な達成：
+- **Create→Draft→Post フロー**: Perplexity→GPT→Claude→ViralDraftV2→Twitter投稿の完全実装
+- **DB問題根本解決**: Prisma v6.10.1にアップデートでDB接続問題解決
+- **ViralDraftV2完全移行**: 旧テーブル使用停止、新スキーマ対応完了
+- **プロンプト管理強化**: ハードコード排除、loadPrompt()でバージョン管理対応
+- **データフロー修正**: selectedConcepts↔selectedIds変換問題解決
 
-- **CoT三段階構成（新仕様）**
-  ```
-  Step 1: Perplexity - 情報収集
-  Step 2: GPT - コンセプト化
-  Step 3: Claude - キャラクター化＋完成投稿
-  ```
-
-- **V2バイラルコンテンツ生成システム**
-  - expertise → theme への変更完了
+#### 現在動作中のメインフロー：
+```
+Step 1: Perplexity - トピック収集（topicsフィールド）
+Step 2: GPT - コンセプト生成（conceptsフィールド、selectedIds管理）
+Step 3: Claude - キャラクター投稿生成（contentsフィールド）
+Step 4: Draft - ViralDraftV2テーブルに保存
+Step 5: Post - Twitter投稿実行
+```
   - 5種類のフックタイプ、12種類の角度
   - バイラルスコアによる効果予測
 

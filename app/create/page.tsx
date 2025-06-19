@@ -24,7 +24,9 @@ export default function CreatePage() {
       })
 
       if (!response.ok) {
-        throw new Error('フロー開始に失敗しました')
+        const errorData = await response.json()
+        console.error('API Error:', errorData)
+        throw new Error(errorData.error || 'フロー開始に失敗しました')
       }
 
       const data = await response.json()

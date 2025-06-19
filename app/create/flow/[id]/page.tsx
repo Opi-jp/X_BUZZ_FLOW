@@ -19,8 +19,8 @@ interface FlowStatus {
   data: {
     topics: any
     concepts: any[]
-    selectedConcepts: any[]
-    contents: any[]
+    selectedConcepts: string[]
+    contents: any
   }
 }
 
@@ -217,9 +217,36 @@ export default function FlowDetailPage() {
               <h3 className="font-semibold">Phase 1: 情報収集（Perplexity）</h3>
             </div>
             {status.data.topics && (
-              <p className="mt-2 text-sm text-gray-600 ml-9">
-                トピックの収集が完了しました
-              </p>
+              <div className="mt-4 ml-9">
+                <p className="text-sm text-gray-600 mb-2">
+                  トピックの収集が完了しました
+                </p>
+                {/* トピックデータの表示 */}
+                <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                  <pre className="text-xs whitespace-pre-wrap">
+                    {typeof status.data.topics === 'string' 
+                      ? status.data.topics 
+                      : JSON.stringify(status.data.topics, null, 2)}
+                  </pre>
+                </div>
+                {/* 次へボタン */}
+                {status.currentStep === 'collecting_topics' && status.progress.phase1_collecting && !status.progress.phase2_concepts && (
+                  <button
+                    onClick={() => executeNextAction()}
+                    disabled={processingAction}
+                    className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400"
+                  >
+                    {processingAction ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        処理中...
+                      </span>
+                    ) : (
+                      'コンセプト生成へ進む'
+                    )}
+                  </button>
+                )}
+              </div>
             )}
           </div>
 
@@ -330,6 +357,40 @@ export default function FlowDetailPage() {
                       親しみやすく分かりやすいトーン
                     </div>
                   </button>
+                </div>
+              </div>
+            )}
+            
+            {/* 生成結果の表示 */}
+            {status.data.contents && (
+              <div className="mt-4 ml-9">
+                <p className="text-sm text-gray-600 mb-2">
+                  投稿が生成されました：
+                </p>
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                  {Array.isArray(status.data.contents) ? (
+                    status.data.contents.map((content: any, index: number) => (
+                      <div key={index} className="bg-white rounded p-3 border border-gray-200">
+                        <div className="text-sm font-medium text-gray-700 mb-1">
+                          投稿 {index + 1}
+                        </div>
+                        <div className="text-sm text-gray-900 whitespace-pre-wrap">
+                          {content.content || content}
+                        </div>
+                        {content.hashtags && (
+                          <div className="text-xs text-blue-600 mt-2">
+                            {content.hashtags.join(' ')}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-sm text-gray-900 whitespace-pre-wrap">
+                      {typeof status.data.contents === 'string' 
+                        ? status.data.contents 
+                        : JSON.stringify(status.data.contents, null, 2)}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

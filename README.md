@@ -1,5 +1,13 @@
 # X_BUZZ_FLOW - AIバイラルコンテンツシステム
 
+## ✅ Create→Draft→Post フロー実装完了！
+
+### 🎉 2025年6月19日達成
+- **完全フロー動作**: テーマ入力→トピック収集→コンセプト生成→キャラクター選択→下書き作成→Twitter投稿
+- **DB問題解決**: Prisma v6.10.1で根本解決
+- **ViralDraftV2移行**: 新スキーマ完全対応
+- **プロンプト管理**: バージョン管理対応
+
 ## 🚨 重要：最初にこれを読め！
 
 ### 🛑 最軽量版（NEW）
@@ -60,7 +68,7 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 
 ### 使うAPI（2025年1月19日更新 - シンプル化完了）
 ```
-# メインフロー（11個のみ！）
+# Create→Draft→Post フロー（実装完了✅）
 フロー開始:   POST /api/flow
 状態確認:     GET  /api/flow/[id]
 次へ進む:     POST /api/flow/[id]/next
@@ -68,10 +76,10 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 下書き編集:   PUT  /api/drafts/[id]
 投稿実行:     POST /api/post
 
-# UI
-新規作成:     /create
-進行状況:     /create/flow/[id]
-下書き管理:   /drafts
+# UI（完全実装済み）
+新規作成:     /create             # テーマ入力
+進行状況:     /create/flow/[id]   # リアルタイム進行状況
+下書き管理:   /drafts             # 編集・投稿・削除
 ```
 
 ## 技術スタック
@@ -83,14 +91,19 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **AI**: Claude API, Kaito API
 - **Deployment**: Vercel
 
-## 主要機能
+## 主要機能（2025年6月19日現在）
 
+### ✅ 実装完了
+1. **Create→Draft→Post フロー**: テーマ入力→Perplexity→GPT→Claude→下書き→投稿
+2. **キャラクター投稿**: カーディ・ダーレ等のペルソナでの投稿生成
+3. **下書き管理**: 編集・削除・投稿機能
+4. **リアルタイム進行状況**: 各フェーズの結果表示
+
+### 🔄 既存システム（動作中）
 1. バズ投稿収集（Kaito API）
-2. AIによる投稿パターン分析
-3. Claude APIによる投稿文案生成
-4. 投稿スケジューリング
-5. パフォーマンス分析
-6. 知識グラフによる関係性分析
+2. ニュース記事収集・分析
+3. 投稿スケジューリング
+4. パフォーマンス分析
 
 ## セットアップ
 

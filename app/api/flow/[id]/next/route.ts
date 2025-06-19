@@ -61,9 +61,9 @@ export async function POST(
         message: 'コンセプト生成を開始しました'
       })
       
-    } else if (!session.selectedConcepts) {
+    } else if (!session.selectedIds || session.selectedIds.length === 0) {
       // コンセプト選択が必要
-      if (!body.selectedConcepts) {
+      if (!body.selectedConcepts || body.selectedConcepts.length === 0) {
         return NextResponse.json({
           action: 'select_concepts',
           concepts: session.concepts,
@@ -71,10 +71,11 @@ export async function POST(
         })
       }
       
-      // 選択されたコンセプトを保存
+      // 選択されたコンセプトからIDを抽出して保存
+      const selectedIds = body.selectedConcepts.map((concept: any) => concept.conceptId)
       await prisma.viralSession.update({
         where: { id },
-        data: { selectedConcepts: body.selectedConcepts }
+        data: { selectedIds }
       })
       
       return NextResponse.json({
@@ -82,7 +83,7 @@ export async function POST(
         message: 'コンセプトを選択しました'
       })
       
-    } else if (!session.claudeData) {
+    } else if (!session.contents) {
       // キャラクター選択とClaude生成
       if (!body.characterId) {
         return NextResponse.json({
@@ -116,12 +117,15 @@ export async function POST(
       
     } else {
       // すべて完了
-      const drafts = await prisma.viralDraft.findMany({
+      const drafts = await prisma.viralDraftV2.findMany({
         where: { sessionId: id },
         select: {
           id: true,
+          title: true,
           content: true,
-          metadata: true,
+          hashtags: true,
+          characterId: true,
+          status: true,
           createdAt: true
         }
       })

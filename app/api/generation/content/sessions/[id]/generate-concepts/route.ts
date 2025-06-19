@@ -57,9 +57,15 @@ export async function POST(
     // topicsフィールドをパース
     let topics = []
     try {
+      console.log('[GPT] Topics type:', typeof session.topics)
+      console.log('[GPT] Topics sample:', JSON.stringify(session.topics).substring(0, 200))
+      
       if (typeof session.topics === 'string') {
         // Markdown形式のレスポンスをパース
         topics = PerplexityResponseParser.parseTopics(session.topics)
+      } else if (Array.isArray(session.topics)) {
+        // 既にパース済みの配列
+        topics = session.topics
       } else if (session.topics && typeof session.topics === 'object') {
         // 旧形式のレスポンスを処理
         topics = PerplexityResponseParser.parseLegacyFormat(session.topics)

@@ -15,7 +15,7 @@ export async function GET(
   try {
     const { id } = await params
     
-    const draft = await prisma.viralDraft.findUnique({
+    const draft = await prisma.viralDraftV2.findUnique({
       where: { id },
       include: {
         session: {
@@ -55,11 +55,10 @@ export async function PUT(
     const body = await request.json()
     const { content, metadata } = body
 
-    const draft = await prisma.viralDraft.update({
+    const draft = await prisma.viralDraftV2.update({
       where: { id },
       data: {
         content,
-        metadata,
         updatedAt: new Date()
       }
     })
@@ -82,7 +81,7 @@ export async function DELETE(
   try {
     const { id } = await params
     
-    await prisma.viralDraft.delete({
+    await prisma.viralDraftV2.delete({
       where: { id }
     })
 

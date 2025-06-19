@@ -29,12 +29,12 @@ export async function POST(request: Request) {
       
       // 下書きステータス更新
       if (draftId) {
-        await prisma.viralDraft.update({
+        await prisma.viralDraftV2.update({
           where: { id: draftId },
           data: {
-            status: 'posted',
+            status: 'POSTED',
             tweetId: mockId,
-            updatedAt: new Date()
+            postedAt: new Date()
           }
         })
       }
@@ -54,12 +54,12 @@ export async function POST(request: Request) {
     
     // 下書きステータス更新
     if (draftId) {
-      await prisma.viralDraft.update({
+      await prisma.viralDraftV2.update({
         where: { id: draftId },
         data: {
-          status: 'posted',
+          status: 'POSTED',
           tweetId: tweet.data.id,
-          updatedAt: new Date()
+          postedAt: new Date()
         }
       })
     }

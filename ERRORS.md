@@ -429,6 +429,96 @@ dev-toolsで'../../lib/prisma'が見つからないエラー。
 
 ---
 
+
+## 🔴 POST /api/flow 500エラー
+
+### 解決策
+Prismaクライアントバージョンの問題。サーバーログに詳細が表示されない。tmuxのnextウィンドウでログ確認必要
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 DBスキーマと実装の不一致
+
+### 解決策
+selectedConcepts→selectedIds、claudeData→contents、errorMessage削除、ViralDraft→ViralDraftV2
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 GPTコンセプト生成エラー
+
+### 解決策
+Failed to parse topics data: No valid topics found in response - topicsデータの形式が期待と異なる
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexity→GPTデータ変換エラー
+
+### 解決策
+topicsデータが存在するがGPTでパースエラー。PerplexityResponseParserが正しく動作していない可能性
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 DB push timeout
+
+### 解決策
+DATABASE_URLは接続可能だがnpx prisma db pushでタイムアウト。directUrlの設定に問題がある可能性。pooler経由のDBアクセスでスキーマ更新が困難
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 DB問題解決
+
+### 解決策
+Prismaを最新版（v6.10.1）にアップデートすることでDB接続問題を解決。ViralDraftV2: 39件、ViralSession: 40件確認。npm install @prisma/client@latest prisma@latest && npx prisma generateで解決
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Claude生成API修正
+
+### 解決策
+プロンプトローダーを使用してハードコードを排除。キャラクター別プロンプト（-simple.txt）とプロンプトエディターのバージョン管理に対応
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 GPTからClaudeデータ変換修正
+
+### 解決策
+フロントエンドから送られるselectedConceptsオブジェクト配列とAPI側で期待するselectedIds文字列配列のミスマッチを修正。conceptId抽出処理を追加
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 下書き→投稿フロー完全対応
+
+### 解決策
+全API・フロントエンドをViralDraftV2に移行完了。下書き一覧・編集・削除・投稿機能の完全実装。ステータス（DRAFT/POSTED）とハッシュタグ配列に対応
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

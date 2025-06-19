@@ -6,13 +6,17 @@
 
 ### Q: どのAPIを使えばいい？
 ```
-セッション: /api/generation/content/sessions/[id]
-下書き:     /api/generation/drafts/[id]
+【Create→Draft→Post フロー（実装完了）】
+セッション管理: /api/flow/[id]
+コンテンツ生成: /api/generation/content/sessions/[id]/*
+下書き管理:     /api/drafts/[id]
+投稿実行:       /api/post
+
+【その他のシステム】
 ニュース:   /api/intelligence/news/*
 バズ分析:   /api/intelligence/buzz/*
-投稿:       /api/twitter/post
 ```
-※ 旧パス（/api/viral/*, /api/news/*, /api/buzz/*）は削除済み（2025/06/18）
+※ 2025/06/19: Create→Draft→Post フロー完全実装済み、ViralDraftV2移行完了
 
 ### Q: エラーが出た
 → `ERRORS.md`を見る or `node scripts/dev-tools/find-error.js "エラー内容"`
@@ -54,25 +58,27 @@ node scripts/dev-tools/db-manager.js status
 
 ## 📋 現在のシステム構成
 
-### メインシステム（2025年6月18日現在）
-1. **V2バイラルシステム** ✅ 稼働中
-   - Perplexity→GPT→Claudeの3段階
-   - expertise→themeに変更済み
-   - `/api/generation/content/sessions/*`を使用（旧viral/v2は削除）
+### メインシステム（2025年6月19日現在）
+1. **Create→Draft→Post フロー** ✅ 完全実装済み
+   - Perplexity→GPT→Claude→ViralDraftV2→Twitter投稿
+   - プロンプトローダー使用（バージョン管理対応）
+   - DB問題解決済み（Prisma v6.10.1）
+   - フロントエンド完全対応
 
 2. **NEWSシステム** ✅ 稼働中
    - RSS収集とAI分析
-   - `/api/intelligence/news/*`を使用（旧newsは削除）
+   - `/api/intelligence/news/*`を使用
 
-3. **KaitoAPI** ✅ 稼働中
+3. **KaitoAPI/BUZZシステム** ✅ 稼働中
    - Twitter metrics収集（API制限回避）
    - バズ投稿の分析
 
-### 命名規則（2025年6月18日に移行完了）
-- ✅ **新構造への移行完了 - 旧ディレクトリは全て削除**
-  - `/api/generation/content/session/*` - CoTシステム
-  - `/api/generation/content/sessions/*` - V2セッション
-  - `/api/generation/drafts/*` - 下書き管理
+### 実装完了項目（2025年6月19日）
+- ✅ **ViralDraftV2完全移行**: 旧ViralDraftテーブル使用停止
+- ✅ **データフロー修正**: selectedConcepts↔selectedIds変換問題解決
+- ✅ **プロンプト管理**: ハードコード排除、loadPrompt()使用
+- ✅ **エラーハンドリング**: 全修正をerror-recorderで記録
+- ✅ **UI/UX対応**: 各フェーズ結果表示、リアルタイム更新
   - `/api/intelligence/news/*` - ニュース収集
   - `/api/intelligence/buzz/*` - バズ分析
   - `/api/automation/scheduler/*` - スケジュール管理

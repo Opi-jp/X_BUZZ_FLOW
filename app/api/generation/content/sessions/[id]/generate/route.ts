@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
+import { loadPrompt } from '@/lib/prompt-loader'
 import Anthropic from '@anthropic-ai/sdk'
 
 type RouteParams = {
@@ -80,34 +79,30 @@ export async function POST(
       )
     }
 
-    const selectedConcepts = session.selectedConcepts as any[]
-    if (!selectedConcepts || selectedConcepts.length === 0) {
+    // selectedIds配列から実際のコンセプトデータを取得
+    const selectedConceptIds = session.selectedIds as string[]
+    if (!selectedConceptIds || selectedConceptIds.length === 0) {
       return NextResponse.json(
         { error: 'No selected concepts found' },
         { status: 400 }
       )
     }
 
-    // プロンプトファイルを読み込み
-    const promptPath = join(
-      process.cwd(),
-      'lib',
-      'prompts',
-      'claude',
-      'character-profiles',
-      `${characterId}.txt`
-    )
-    
-    let promptTemplate = ''
-    try {
-      promptTemplate = await readFile(promptPath, 'utf-8')
-    } catch (error) {
-      // デフォルトプロンプトを使用
-      promptTemplate = await readFile(
-        join(process.cwd(), 'lib', 'prompts', 'claude', 'generate-post.txt'),
-        'utf-8'
+    const allConcepts = session.concepts as any[]
+    if (!allConcepts || allConcepts.length === 0) {
+      return NextResponse.json(
+        { error: 'No concepts available' },
+        { status: 400 }
       )
     }
+
+    // 選択されたコンセプトのみを抽出
+    const selectedConcepts = allConcepts.filter(concept => 
+      selectedConceptIds.includes(concept.conceptId)
+    )
+
+    // プロンプトファイルの存在確認（各ループで読み込むため、ここでは確認のみ）
+    const promptPath = `claude/character-profiles/${characterId}-simple.txt`
 
     // 生成された投稿を格納
     const generatedPosts = []
@@ -117,12 +112,13 @@ export async function POST(
       const characterProfile = wrapCharacterProfile(characterId)
       const conceptData = wrapConceptData(concept)
       
-      // プロンプトの変数を置換
-      const prompt = promptTemplate
-        .replace('${characterProfile}', characterProfile)
-        .replace('${conceptData}', conceptData)
-        .replace('${platform}', session.platform || 'Twitter')
-        .replace('${theme}', session.theme || '')
+      // プロンプトローダーで変数を展開
+      const prompt = loadPrompt(promptPath, {
+        character: characterProfile,
+        concept: conceptData,
+        platform: session.platform || 'Twitter',
+        theme: session.theme || ''
+      })
 
       try {
         const response = await anthropic.messages.create({
@@ -162,32 +158,30 @@ export async function POST(
     const updatedSession = await prisma.viralSession.update({
       where: { id },
       data: {
-        claudeData: generatedPosts,
-        currentPhase: 'COMPLETED',
-        status: 'completed',
-        updatedAt: new Date()
+        contents: generatedPosts,
+        status: 'COMPLETED'
       }
     })
 
-    // 下書きを作成
+    // 下書きを作成（ViralDraftV2を使用）
     for (const post of generatedPosts) {
-      await prisma.viralDraft.create({
+      const content = post.format === 'thread' 
+        ? post.posts.map((p: any) => p.content).join('\n\n') 
+        : post.content
+      
+      const hashtags = post.hashtags || []
+      
+      await prisma.viralDraftV2.create({
         data: {
           sessionId: id,
           conceptId: post.conceptId,
+          title: post.conceptTitle || 'Generated Content',
+          content: content,
+          hashtags: hashtags,
+          visualNote: post.visual,
           characterId: post.characterId,
-          content: post.format === 'thread' 
-            ? post.posts.map((p: any) => p.content).join('\n\n') 
-            : post.content,
-          format: post.format,
-          posts: post.posts,
-          metadata: {
-            conceptTitle: post.conceptTitle,
-            tone: post.tone,
-            callToAction: post.callToAction,
-            engagementHooks: post.engagementHooks
-          },
-          status: 'draft'
+          characterNote: `Generated as ${post.characterId}`,
+          status: 'DRAFT'
         }
       })
     }
