@@ -845,5 +845,57 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - 下書き作成から投稿までの全フロー確認
 - フロントエンドとの統合テスト
 
+## 2025年1月19日の作業記録（新APIモジュール実装とTwitter投稿成功）
+
+### 実施した作業
+
+#### 1. 新しいAPIモジュール構造の実装
+- **Intel/Create/Publish/Analyzeの4モジュール構成を採用**
+- **実装したAPI**:
+  - `/api/create/flow/complete` - 完全なコンテンツ生成フロー（Perplexity→GPT→Claude）
+  - `/api/publish/post/now` - 即時Twitter投稿API
+- **設計原則**: 機能別の明確な分離、RESTfulな命名規則
+
+#### 2. Twitter投稿機能の動作確認と修正
+- **問題発見**: middleware.tsで`/api/twitter/post`が`/api/publish/post/now`にリダイレクトされていた
+- **解決策**: リダイレクトを一時的にコメントアウト
+- **結果**: 実際にTwitterに投稿成功！
+  - 1件目: https://twitter.com/opi/status/1935657769438486549
+  - 2件目: https://twitter.com/opi/status/1935657943535640887
+
+#### 3. システム全体の動作確認
+- **コンテンツ生成フロー**: 
+  - 既存セッション（CONCEPTS_GENERATED）から下書き作成
+  - カーディ・ダーレのキャラクターでコンテンツ生成
+  - ハッシュタグ付きで投稿
+- **データベース状態**:
+  - セッション: 30件（各ステータスに分散）
+  - 下書き: 36件（DRAFT状態）
+  - 投稿済み: 3件（実際のTwitter URL付き）
+
+#### 4. テストスクリプトの作成
+- `test-new-apis-20250119.js` - 新APIの動作確認
+- `test-twitter-direct-20250119.js` - Twitter API直接テスト
+- `test-post-draft-20250119.js` - 下書きから投稿テスト
+- `test-post-with-env-20250119.js` - 環境変数確認付き投稿テスト
+- `test-complete-flow-20250119.js` - 完全フローテスト
+- `test-full-cycle-20250119.js` - システム全体の状態確認
+
+### 技術的な詳細
+- **環境変数**: Twitter API v1.1とv2.0の認証情報が正しく設定されていることを確認
+- **NextAuth**: セッション認証は必須ではなく、環境変数の認証情報でも投稿可能
+- **モックモード**: `USE_MOCK_POSTING`フラグで開発時のテストが可能
+
+### 重要な学び
+- **APIリダイレクトの影響**: middleware.tsのリダイレクトが予期しない動作を引き起こす可能性
+- **段階的な移行**: 既存のAPIを維持しながら新しい構造に移行する重要性
+- **実際の投稿テスト**: モックだけでなく実際の投稿テストの重要性
+
+### 次のステップ
+1. Intelモジュール（情報収集）のAPI実装
+2. 残りのCreateモジュールAPI実装
+3. Analyzeモジュール（分析）のAPI実装
+4. フロントエンドの新API対応
+
 ---
-*最終更新: 2025/06/19 18:30*
+*最終更新: 2025/01/19 20:20*

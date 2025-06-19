@@ -1,4 +1,4 @@
-const { PrismaClient } = require('../../lib/prisma');
+const { PrismaClient } = require('../../lib/generated/prisma');
 const prisma = new PrismaClient();
 
 async function checkLatestSession() {

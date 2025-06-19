@@ -3,22 +3,65 @@ import type { NextRequest } from 'next/server'
 
 // APIルートのマッピング（旧パスから新パスへのリダイレクト）
 const API_REDIRECTS: Record<string, string> = {
-  // Generation
+  // Generation（既存）
   '/api/characters': '/api/generation/characters',
   
-  // Integration
+  // Integration（既存）
   '/api/dashboard': '/api/integration/mission-control',
-  '/api/settings': '/api/integration/config'
+  '/api/settings': '/api/integration/config',
+  
+  // === Phase 1: 統合システム実装計画に基づく新しいマッピング ===
+  
+  // Intelligence Module への移行
+  '/api/intelligence/news/collect': '/api/intel/news/collect',
+  '/api/intelligence/news/analyze': '/api/intel/news/analyze',
+  '/api/intelligence/news/latest': '/api/intel/news/collect',
+  '/api/intelligence/buzz': '/api/intel/social/collect',
+  '/api/collect': '/api/intel/social/collect',
+  
+  // Creation Module への移行
+  '/api/generation/content/sessions': '/api/create/flow/start',
+  '/api/generation/content/session': '/api/create/flow/process',
+  '/api/generation/drafts': '/api/create/draft/generate',
+  '/api/viral/v2/sessions': '/api/create/flow/start',
+  
+  // Publishing Module への移行
+  // '/api/twitter/post': '/api/publish/post/now', // 一時的にコメントアウト
+  '/api/automation/scheduler': '/api/publish/schedule/set',
+  
+  // Analytics Module への移行
+  '/api/analytics/insights': '/api/analyze/report/generate',
+  '/api/automation/performance': '/api/analyze/metrics/collect'
 }
 
 // フロントエンドルートのマッピング
 const PAGE_REDIRECTS: Record<string, string> = {
-  // Intelligence
+  // Intelligence（既存）
   '/news': '/intelligence/news',
   '/buzz': '/intelligence/buzz',
   
-  // Dashboard
-  '/dashboard': '/mission-control'
+  // Dashboard（既存）
+  '/dashboard': '/mission-control',
+  
+  // === Phase 1: 新しいページ構造への移行 ===
+  
+  // Intel Module
+  '/intelligence': '/intel',
+  '/intelligence/news': '/intel/news',
+  '/intelligence/buzz': '/intel/social',
+  
+  // Create Module  
+  '/generation': '/create',
+  '/viral/v2': '/create/new',
+  '/generation/content': '/create/flow',
+  
+  // Publish Module
+  '/automation/publisher': '/publish',
+  '/automation/scheduler': '/publish/calendar',
+  
+  // Analyze Module
+  '/analytics': '/analyze',
+  '/automation/performance': '/analyze/metrics'
 }
 
 export function middleware(request: NextRequest) {
@@ -27,7 +70,7 @@ export function middleware(request: NextRequest) {
   
   // APIルートのリダイレクト
   for (const [oldPath, newPath] of Object.entries(API_REDIRECTS)) {
-    if (pathname.startsWith(oldPath)) {
+    if (pathname === oldPath || pathname.startsWith(oldPath + '/')) {
       const newUrl = new URL(request.url)
       newUrl.pathname = pathname.replace(oldPath, newPath)
       

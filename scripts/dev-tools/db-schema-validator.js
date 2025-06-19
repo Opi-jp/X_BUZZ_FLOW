@@ -6,7 +6,7 @@
  */
 
 require('dotenv').config({ path: '.env.local' });
-const { PrismaClient } = require('../../lib/prisma');
+const { PrismaClient } = require('../../lib/generated/prisma');
 const fs = require('fs');
 const path = require('path');
 

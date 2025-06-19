@@ -5,7 +5,7 @@
  * Prisma Studioの代替として、DB接続状態を監視
  */
 
-const { PrismaClient } = require('../../lib/prisma');
+const { PrismaClient } = require('../../lib/generated/prisma');
 const readline = require('readline');
 
 // カラー出力用のANSIコード

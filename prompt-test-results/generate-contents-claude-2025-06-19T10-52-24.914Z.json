@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "provider": "claude",
+  "model": "claude-sonnet-4-20250514",
+  "executionTime": 7012,
+  "content": "キャラクターの人格と投稿コンセプトの情報が不足しているため、具体的な投稿を作成できません。\n\n以下の情報を教えてください：\n\n**キャラクターデータについて：**\n- 職業・立場\n- 性格・話し方の特徴\n- 専門分野や関心事\n- 年齢層・属性\n\n**投稿コンセプトについて：**\n- テーマ・話題\n- 伝えたいメッセージ\n- ターゲット層\n- 投稿の目的（共感獲得、情報発信など）\n\nこれらの情報をいただければ、そのキャラクターらしい魅力的なTwitter投稿を120-135文字で作成いたします。物語構造（起承転結や問題→解決など）を織り込んだ、バズりやすい投稿をお作りします。",
+  "usage": {
+    "input_tokens": 193,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 261,
+    "service_tier": "standard"
+  },
+  "raw": {
+    "id": "msg_01DfxzApPu7ThNRAUw9UkYRw",
+    "type": "message",
+    "role": "assistant",
+    "model": "claude-sonnet-4-20250514",
+    "content": [
+      {
+        "type": "text",
+        "text": "キャラクターの人格と投稿コンセプトの情報が不足しているため、具体的な投稿を作成できません。\n\n以下の情報を教えてください：\n\n**キャラクターデータについて：**\n- 職業・立場\n- 性格・話し方の特徴\n- 専門分野や関心事\n- 年齢層・属性\n\n**投稿コンセプトについて：**\n- テーマ・話題\n- 伝えたいメッセージ\n- ターゲット層\n- 投稿の目的（共感獲得、情報発信など）\n\nこれらの情報をいただければ、そのキャラクターらしい魅力的なTwitter投稿を120-135文字で作成いたします。物語構造（起承転結や問題→解決など）を織り込んだ、バズりやすい投稿をお作りします。"
+      }
+    ],
+    "stop_reason": "end_turn",
+    "stop_sequence": null,
+    "usage": {
+      "input_tokens": 193,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "output_tokens": 261,
+      "service_tier": "standard"
+    }
+  }
+}
