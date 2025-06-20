@@ -18,7 +18,9 @@
     "clean:install": "npm run clean && npm install",
     "test:latest": "node test-scripts/$(ls -t test-scripts/*.js | head -1)",
     "archive:old": "bash scripts/night-cleanup.sh",
-    "docs:list": "find docs/current -name '*.md' -exec basename {} \\;"
+    "docs:list": "find docs/current -name '*.md' -exec basename {} \\;",
+    "build:watch": "nodemon --exec 'next build && echo \"✅ Build successful\" || echo \"❌ Build failed\"' --watch app --watch lib --watch components --ext ts,tsx,js,jsx",
+    "type:watch": "tsc --watch --noEmit --preserveWatchOutput"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.0",

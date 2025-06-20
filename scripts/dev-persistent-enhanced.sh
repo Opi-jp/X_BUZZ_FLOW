@@ -100,6 +100,21 @@ else
     tmux send-keys -t $SESSION_NAME:claude-console "echo ''" Enter
     tmux send-keys -t $SESSION_NAME:claude-console "PS1='\[\033[1;32m\]claude-dev\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]\$ '" Enter
     
+    # ビルド監視（ウィンドウ10）
+    echo -e "${RED}🔨 Build Monitor${NC}"
+    tmux new-window -t $SESSION_NAME -n build-watch
+    tmux send-keys -t $SESSION_NAME:build-watch "cd $PROJECT_DIR && sleep 10 && node scripts/dev-tools/build-monitor.js" Enter
+    
+    # TypeScript型チェック（ウィンドウ11）
+    echo -e "${PURPLE}📐 TypeScript Type Check${NC}"
+    tmux new-window -t $SESSION_NAME -n type-check
+    tmux send-keys -t $SESSION_NAME:type-check "cd $PROJECT_DIR && npm run type:watch" Enter
+    
+    # 自動エラーキャプチャ（ウィンドウ12）
+    echo -e "${YELLOW}🎯 Auto Error Capture${NC}"
+    tmux new-window -t $SESSION_NAME -n error-capture
+    tmux send-keys -t $SESSION_NAME:error-capture "cd $PROJECT_DIR && sleep 15 && node scripts/dev-tools/auto-error-capture.js" Enter
+    
     # 最初のウィンドウ（next）に戻る
     tmux select-window -t $SESSION_NAME:next
     
@@ -121,10 +136,12 @@ else
     echo -e "   ${YELLOW}3: api-monitor${NC}   - API依存関係監視"
     echo -e "   ${GREEN}4: db-monitor${NC}    - データベース監視"
     echo -e "   ${BLUE}5: prisma${NC}        - Prisma Studio"
-    echo -e "   ${PURPLE}6: flow-viz${NC}     - フロー可視化"
+    echo -e "   ${PURPLE}6: flow-viz${NC}      - フロー可視化"
     echo -e "   ${CYAN}7: e2e-test${NC}      - E2Eテスト"
     echo -e "   ${RED}8: error-watch${NC}   - エラー監視"
-    echo -e "   ${YELLOW}9: console${NC}      - インタラクティブコンソール"
+    echo -e "   ${YELLOW}9: console${NC}       - インタラクティブコンソール"
+    echo -e "   ${RED}10: build-watch${NC}  - ビルド監視"
+    echo -e "   ${PURPLE}11: type-check${NC}   - TypeScript型チェック"
     echo ""
     echo -e "${GREEN}🎉 統合開発環境に接続します...${NC}"
     echo ""

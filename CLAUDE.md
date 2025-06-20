@@ -63,6 +63,8 @@ node scripts/dev-tools/unified-monitoring-dashboard.js
 - **エラー即座検出**: F12でのコピペ作業不要
 - **セッション継続**: 中断からの復帰を完全サポート
 - **関数整合性チェック**: フロントエンド・バックエンド間の関数定義エラーを自動検出
+- **ビルド監視（2025年6月21日追加）**: ビルドエラーをClaude形式で即座に把握
+- **自動エラーキャプチャ（2025年6月21日追加）**: 開発中のエラーを自動記録・分類
 
 ### 統合開発ツール
 ```bash
@@ -85,19 +87,38 @@ node scripts/dev-tools/check-env.js          # 環境変数確認
 node scripts/dev-tools/check-session-urls.js # セッションURL確認
 ```
 
-### エラー解決支援
+### エラー解決支援（2025年6月21日強化）
 ```bash
 # 過去のエラー解決策を検索
 node scripts/dev-tools/find-error.js "database"
 node scripts/dev-tools/find-error.js "prisma" --detail
 
-# 新しいエラーを記録
+# 新しいエラーを記録（旧方式）
 node scripts/dev-tools/error-recorder.js
 node scripts/dev-tools/error-recorder.js --quick "エラー名" "解決策"
+
+# スマートエラー記録（推奨） - 詳細情報を自動収集
+node scripts/dev-tools/smart-error-recorder.js
+node scripts/dev-tools/smart-error-recorder.js --quick      # クイックモード
+node scripts/dev-tools/smart-error-recorder.js --unresolved # 未解決エラー一覧
+
+# 自動エラーキャプチャ（開発中のエラーを自動記録）
+node scripts/dev-tools/auto-error-capture.js
+node scripts/dev-tools/auto-error-capture.js --summary      # キャプチャ済みエラーのサマリー
+
+# バックエンド専用エラーモニター
+node scripts/dev-tools/backend-error-monitor.js
 
 # エラーカテゴリを表示
 node scripts/dev-tools/find-error.js --categories
 ```
+
+#### エラー記録システムの特徴
+- **自動コンテキスト収集**: Git状態、関連ファイル、スタックトレース
+- **エラーパターン認識**: DB、TypeScript、API、認証、LLM APIエラーを自動分類
+- **「詳細は後で追記」問題の解決**: 必要な情報を対話的に収集
+- **バックエンドエラー対応**: Prismaエラーコード解析、LLM APIレート制限検出
+- **リマインダー機能**: 未解決エラーの追跡管理
 
 ### API依存関係の可視化
 ```bash

@@ -33,7 +33,15 @@ class UnifiedMonitoringDashboard {
       performanceMetrics: null,
       errorCount: 0,
       uptime: null,
-      lastCheck: null
+      lastCheck: null,
+      build: {
+        lastBuildTime: null,
+        lastBuildSuccess: null,
+        lastBuildDuration: null,
+        errors: [],
+        warnings: [],
+        consecutiveFailures: 0
+      }
     }
     
     this.criticalPages = [
@@ -189,6 +197,18 @@ class UnifiedMonitoringDashboard {
     }
   }
 
+  async checkBuildStatus() {
+    try {
+      const buildStatusPath = path.join(process.cwd(), '.build-status.json')
+      if (fs.existsSync(buildStatusPath)) {
+        const buildStatus = JSON.parse(fs.readFileSync(buildStatusPath, 'utf-8'))
+        this.monitoringData.build = buildStatus
+      }
+    } catch (error) {
+      console.error('ビルド状態チェックエラー:', error)
+    }
+  }
+
   async execCommand(command) {
     return new Promise((resolve, reject) => {
       exec(command, { timeout: 10000 }, (error, stdout, stderr) => {
@@ -211,7 +231,8 @@ class UnifiedMonitoringDashboard {
       this.checkDatabaseStatus(),
       this.checkCriticalPages(),
       this.checkPerformanceMetrics(),
-      this.checkErrorLogs()
+      this.checkErrorLogs(),
+      this.checkBuildStatus()
     ])
   }
 
@@ -245,6 +266,9 @@ class UnifiedMonitoringDashboard {
     
     // エラー統計
     this.displayErrorStats()
+    
+    // ビルド状態
+    this.displayBuildStatus()
     
     console.log(`${colors.cyan}${'─'.repeat(70)}${colors.reset}`)
     console.log(`${colors.dim}Press Ctrl+C to stop monitoring${colors.reset}`)
@@ -348,6 +372,41 @@ class UnifiedMonitoringDashboard {
       const errorColor = errorCount > 10 ? colors.red : errorCount > 5 ? colors.yellow : colors.cyan
       console.log(`${errorColor}📝 Errors: ${errorCount} documented errors in ERRORS.md${colors.reset}`)
     }
+    console.log()
+  }
+
+  displayBuildStatus() {
+    console.log(`${colors.bold}${colors.purple}🔨 Build Status${colors.reset}`)
+    
+    const build = this.monitoringData.build
+    if (!build || !build.lastBuildTime) {
+      console.log(`${colors.dim}   No build information available${colors.reset}`)
+    } else {
+      const statusColor = build.lastBuildSuccess ? colors.green : colors.red
+      const statusIcon = build.lastBuildSuccess ? '✅' : '❌'
+      const lastBuildTime = new Date(build.lastBuildTime)
+      const timeStr = lastBuildTime.toLocaleTimeString()
+      
+      console.log(`   Last Build: ${timeStr}`)
+      console.log(`   Status: ${statusColor}${statusIcon} ${build.lastBuildSuccess ? 'Success' : 'Failed'}${colors.reset}`)
+      
+      if (build.lastBuildDuration) {
+        console.log(`   Duration: ${(build.lastBuildDuration / 1000).toFixed(1)}s`)
+      }
+      
+      if (build.errors && build.errors.length > 0) {
+        console.log(`   ${colors.red}Errors: ${build.errors.length}${colors.reset}`)
+      }
+      
+      if (build.warnings && build.warnings.length > 0) {
+        console.log(`   ${colors.yellow}Warnings: ${build.warnings.length}${colors.reset}`)
+      }
+      
+      if (build.consecutiveFailures > 0) {
+        console.log(`   ${colors.red}Consecutive Failures: ${build.consecutiveFailures}${colors.reset}`)
+      }
+    }
+    
     console.log()
   }
 

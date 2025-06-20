@@ -3,6 +3,35 @@
 このファイルには、繰り返し発生するエラーとその解決策を記録します。
 **同じエラーで時間を無駄にしないために、必ず確認してください。**
 
+## 🚀 新しいエラー記録システム
+
+### スマートエラー記録（推奨）
+```bash
+# 詳細情報を対話的に記録
+node scripts/dev-tools/smart-error-recorder.js
+
+# クイックモード（最小限の情報で記録）
+node scripts/dev-tools/smart-error-recorder.js --quick
+
+# 未解決エラーの確認
+node scripts/dev-tools/smart-error-recorder.js --unresolved
+```
+
+### 自動エラーキャプチャ
+```bash
+# 開発中のエラーを自動記録（永続サーバーと一緒に起動推奨）
+node scripts/dev-tools/auto-error-capture.js
+
+# キャプチャしたエラーのサマリー表示
+node scripts/dev-tools/auto-error-capture.js --summary
+```
+
+**メリット**:
+- 「詳細は後で追記」を防ぐ
+- コンテキスト情報（Git状態、関連ファイル等）を自動収集
+- エラーパターンの自動分類
+- 未解決エラーのリマインダー機能
+
 ---
 
 ## 🔴 DB接続エラー
@@ -1098,3 +1127,64 @@ npx prisma generate
 - **セッション継続**: 中断からの復帰が完全自動化
 - **型安全性**: フロントエンド・バックエンド間のエラー大幅削減
 - **ログ可視性**: Claude（AI）が状況を即座に把握可能
+
+---
+
+## 📝 エラー記録方法（改善版）
+
+### 従来の問題
+- 「詳細は後で追記」のまま放置される
+- エラー発生時のコンテキストが失われる
+- 同じエラーを何度も繰り返す
+
+### 新しい記録方法
+
+#### 1. スマートエラー記録（手動記録時）
+```bash
+# 詳細情報を対話的に記録
+node scripts/dev-tools/smart-error-recorder.js
+
+# 特徴：
+# - Git状態、ブランチ、最近のコミットを自動記録
+# - エラーパターンを自動分類（DB/TypeScript/Build等）
+# - 関連ファイルを自動検出
+# - 未解決エラーはリマインダー登録
+```
+
+#### 2. 自動エラーキャプチャ（開発中）
+```bash
+# dev-persistent-enhanced.shに追加予定
+node scripts/dev-tools/auto-error-capture.js
+
+# 特徴：
+# - エラー発生時に自動的に詳細を記録
+# - スタックトレースを保存
+# - デスクトップ通知
+# - エラーサマリーレポート
+```
+
+#### 3. 記録される情報
+- **基本情報**: タイトル、エラーメッセージ、発生日時
+- **コンテキスト**: Gitブランチ、変更ファイル、Node.jsバージョン
+- **分類**: カテゴリ（DB/Build/TypeScript等）、タグ
+- **詳細**: 再現手順、試した解決策、実際の解決策、根本原因
+- **関連**: 関連ファイル、スクリーンショット、スタックトレース
+
+#### 4. エラー管理
+```bash
+# 未解決エラーの確認
+node scripts/dev-tools/smart-error-recorder.js --unresolved
+
+# エラーサマリーの表示
+node scripts/dev-tools/auto-error-capture.js --summary
+
+# エラー詳細の保存場所
+.error-details/         # 詳細JSON
+.error-capture/         # 自動キャプチャ
+```
+
+### ベストプラクティス
+1. **即座に記録**: エラー発生時にすぐ記録（記憶が新鮮なうちに）
+2. **詳細を省略しない**: 「後で」は来ない
+3. **解決策を必ず記録**: 未解決でも「試したこと」を記録
+4. **定期的な見直し**: 未解決エラーを週1で確認
