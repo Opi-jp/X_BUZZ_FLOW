@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAvailableCharacters } from '@/lib/character-loader'
+import { 
+  CreatePostErrorHandler, 
+  CreatePostPhase,
+  withRetry,
+  CreatePostError,
+  CreatePostErrorType
+} from '@/lib/create-post-error-handler'
+import { 
+  IDGenerator, 
+  EntityType,
+  DataTransformer,
+  CommonSchemas,
+  ModuleSchemas
+} from '@/lib/core/unified-system-manager'
 
 type RouteParams = {
   params: Promise<{
@@ -12,21 +26,45 @@ export async function POST(
   request: Request,
   { params }: RouteParams
 ) {
+  const requestId = IDGenerator.generate(EntityType.ACTIVITY_LOG)
+  
   try {
     const { id } = await params
+    
+    // IDのバリデーション
+    if (!IDGenerator.validate(id, EntityType.VIRAL_SESSION)) {
+      throw new CreatePostError(
+        'Invalid session ID format',
+        CreatePostPhase.DRAFT,
+        CreatePostErrorType.DATA_VALIDATION_ERROR,
+        id,
+        false
+      )
+    }
+    
     const body = await request.json()
     const { autoProgress = false } = body
     
-    const session = await prisma.viralSession.findUnique({
-      where: { id }
-    })
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Session not found' },
-        { status: 404 }
-      )
-    }
+    // セッション取得（エラーハンドリング付き）
+    const session = await withRetry(
+      async () => {
+        const sess = await prisma.viralSession.findUnique({
+          where: { id }
+        })
+        if (!sess) {
+          throw new CreatePostError(
+            'Session not found',
+            CreatePostPhase.DRAFT,
+            CreatePostErrorType.INVALID_SESSION_STATE,
+            id,
+            false
+          )
+        }
+        return sess
+      },
+      CreatePostPhase.DRAFT,
+      { sessionId: id }
+    )
 
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
 
@@ -35,44 +73,46 @@ export async function POST(
       case 'CREATED':
         // Perplexity収集（実際に存在するAPIを呼び出し）
         try {
-          const response = await fetch(
-            `${baseUrl}/api/generation/content/sessions/${id}/collect`,
-            { 
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                theme: session.theme,
-                platform: session.platform,
-                style: session.style
-              })
-            }
+          const response = await withRetry(
+            async () => {
+              const res = await fetch(
+                `${baseUrl}/api/generation/content/sessions/${id}/collect`,
+                { 
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    theme: session.theme,
+                    platform: session.platform,
+                    style: session.style
+                  }),
+                  signal: AbortSignal.timeout(30000) // 30秒タイムアウト
+                }
+              )
+              
+              if (!res.ok) {
+                const errorText = await res.text()
+                throw new CreatePostError(
+                  `Collect API failed: ${errorText}`,
+                  CreatePostPhase.PERPLEXITY,
+                  CreatePostErrorType.API_INVALID_RESPONSE,
+                  id,
+                  true,
+                  { statusCode: res.status, errorText }
+                )
+              }
+              
+              return res
+            },
+            CreatePostPhase.PERPLEXITY,
+            { sessionId: id, maxRetries: 3 }
           )
-          
-          if (!response.ok) {
-            // 別のAPIが利用可能か確認
-            console.log('Primary collect API failed, checking alternatives...')
-            
-            // セッションステータスをCOLLECTINGに更新
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'COLLECTING' }
-            })
-            
-            return NextResponse.json({
-              action: 'collecting',
-              message: 'トピック収集を開始しました（非同期処理）',
-              status: 'COLLECTING'
-            })
-          }
           
           return NextResponse.json({
             action: 'collecting',
             message: 'トピック収集を開始しました'
           })
         } catch (error) {
-          console.error('Collect topics error:', error)
-          
-          // フォールバック: セッションステータスを更新のみ
+          // エラーでもステータスは更新（非同期処理として継続）
           await prisma.viralSession.update({
             where: { id },
             data: { status: 'COLLECTING' }
@@ -81,7 +121,8 @@ export async function POST(
           return NextResponse.json({
             action: 'collecting',
             message: 'トピック収集を開始しました（バックグラウンド処理）',
-            status: 'COLLECTING'
+            status: 'COLLECTING',
+            warning: error instanceof Error ? error.message : 'Collection API unavailable'
           })
         }
         
@@ -93,19 +134,31 @@ export async function POST(
             where: { id }
           })
           
-          // topicsが既に存在する場合は次のステップへ
+          // Perplexityのレスポンスをチェック
           if (updatedSession?.topics) {
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'TOPICS_COLLECTED' }
-            })
-            
-            return NextResponse.json({
-              action: 'topics_collected',
-              message: 'トピック収集が完了しました',
-              status: 'TOPICS_COLLECTED',
-              autoProgress: true
-            })
+            try {
+              // topicsがJSON文字列の場合はパース
+              const topics = typeof updatedSession.topics === 'string' 
+                ? JSON.parse(updatedSession.topics) 
+                : updatedSession.topics
+                
+              if (topics && (Array.isArray(topics) || typeof topics === 'object')) {
+                await prisma.viralSession.update({
+                  where: { id },
+                  data: { status: 'TOPICS_COLLECTED' }
+                })
+                
+                return NextResponse.json({
+                  action: 'topics_collected',
+                  message: 'トピック収集が完了しました',
+                  status: 'TOPICS_COLLECTED',
+                  autoProgress: true
+                })
+              }
+            } catch (error) {
+              console.error('Topics parsing error:', error)
+              // パースエラーの場合も収集中として扱う
+            }
           }
         }
         
@@ -119,30 +172,34 @@ export async function POST(
       case 'TOPICS_COLLECTED':
         // GPTコンセプト生成
         try {
-          const generateConceptsResponse = await fetch(
-            `${baseUrl}/api/generation/content/sessions/${id}/generate-concepts`,
-            { 
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' }
-            }
+          const generateConceptsResponse = await withRetry(
+            async () => {
+              const res = await fetch(
+                `${baseUrl}/api/generation/content/sessions/${id}/generate-concepts`,
+                { 
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  signal: AbortSignal.timeout(60000) // 60秒タイムアウト（GPTは時間がかかる）
+                }
+              )
+              
+              if (!res.ok) {
+                const errorText = await res.text()
+                throw new CreatePostError(
+                  `Generate concepts API failed: ${errorText}`,
+                  CreatePostPhase.GPT,
+                  CreatePostErrorType.API_INVALID_RESPONSE,
+                  id,
+                  true,
+                  { statusCode: res.status, errorText }
+                )
+              }
+              
+              return res
+            },
+            CreatePostPhase.GPT,
+            { sessionId: id, maxRetries: 3 }
           )
-          
-          if (!generateConceptsResponse.ok) {
-            const errorText = await generateConceptsResponse.text()
-            console.error('Generate concepts API failed:', errorText)
-            
-            // ステータスを更新して次のステップへ
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'GENERATING_CONCEPTS' }
-            })
-            
-            return NextResponse.json({
-              action: 'generating_concepts',
-              message: 'コンセプト生成を開始しました（非同期処理）',
-              status: 'GENERATING_CONCEPTS'
-            })
-          }
           
           return NextResponse.json({
             action: 'generating_concepts',
@@ -150,9 +207,7 @@ export async function POST(
             status: 'GENERATING_CONCEPTS'
           })
         } catch (error) {
-          console.error('Generate concepts error:', error)
-          
-          // フォールバック: ステータスを更新
+          // エラーでもステータスは更新
           await prisma.viralSession.update({
             where: { id },
             data: { status: 'GENERATING_CONCEPTS' }
@@ -161,7 +216,8 @@ export async function POST(
           return NextResponse.json({
             action: 'generating_concepts',
             message: 'コンセプト生成を開始しました（バックグラウンド処理）',
-            status: 'GENERATING_CONCEPTS'
+            status: 'GENERATING_CONCEPTS',
+            warning: error instanceof Error ? error.message : 'Concept generation API unavailable'
           })
         }
         
@@ -222,18 +278,33 @@ export async function POST(
             const defaultCharacterId = characters[0]?.id || 'cardi-dare'
             
             try {
-              const generateResponse = await fetch(
-                `${baseUrl}/api/generation/content/sessions/${id}/generate`,
-                {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ characterId: defaultCharacterId })
-                }
+              const generateResponse = await withRetry(
+                async () => {
+                  const res = await fetch(
+                    `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+                    {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ characterId: defaultCharacterId }),
+                      signal: AbortSignal.timeout(45000) // 45秒タイムアウト
+                    }
+                  )
+                  
+                  if (!res.ok) {
+                    throw new CreatePostError(
+                      'Generate content failed',
+                      CreatePostPhase.CLAUDE,
+                      CreatePostErrorType.API_INVALID_RESPONSE,
+                      id,
+                      true
+                    )
+                  }
+                  
+                  return res
+                },
+                CreatePostPhase.CLAUDE,
+                { sessionId: id, maxRetries: 3 }
               )
-              
-              if (!generateResponse.ok) {
-                console.error('Generate content failed in autoProgress mode')
-              }
               
               return NextResponse.json({
                 action: 'generating_content',
@@ -283,18 +354,33 @@ export async function POST(
           const defaultCharacterId = body.characterId || characters[0]?.id || 'cardi-dare'
           
           try {
-            const generateResponse = await fetch(
-              `${baseUrl}/api/generation/content/sessions/${id}/generate`,
-              {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ characterId: defaultCharacterId })
-              }
+            const generateResponse = await withRetry(
+              async () => {
+                const res = await fetch(
+                  `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+                  {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ characterId: defaultCharacterId }),
+                    signal: AbortSignal.timeout(45000)
+                  }
+                )
+                
+                if (!res.ok) {
+                  throw new CreatePostError(
+                    'Generate content failed',
+                    CreatePostPhase.CLAUDE,
+                    CreatePostErrorType.API_INVALID_RESPONSE,
+                    id,
+                    true
+                  )
+                }
+                
+                return res
+              },
+              CreatePostPhase.CLAUDE,
+              { sessionId: id }
             )
-            
-            if (!generateResponse.ok) {
-              console.error('Generate content failed in autoProgress mode')
-            }
             
             return NextResponse.json({
               action: 'generating_content',
@@ -328,18 +414,33 @@ export async function POST(
         }
         
         // Claude生成
-        const generateResponse = await fetch(
-          `${baseUrl}/api/generation/content/sessions/${id}/generate`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ characterId: body.characterId })
-          }
+        const generateResponse = await withRetry(
+          async () => {
+            const res = await fetch(
+              `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+              {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ characterId: body.characterId }),
+                signal: AbortSignal.timeout(45000)
+              }
+            )
+            
+            if (!res.ok) {
+              throw new CreatePostError(
+                'Failed to generate content',
+                CreatePostPhase.CLAUDE,
+                CreatePostErrorType.API_INVALID_RESPONSE,
+                id,
+                true
+              )
+            }
+            
+            return res
+          },
+          CreatePostPhase.CLAUDE,
+          { sessionId: id }
         )
-        
-        if (!generateResponse.ok) {
-          throw new Error('Failed to generate content')
-        }
         
         return NextResponse.json({
           action: 'generating_content',
@@ -384,7 +485,7 @@ export async function POST(
             return NextResponse.json({
               action: 'completed',
               message: 'すべての処理が完了しました',
-              drafts,
+              drafts: drafts.map(draft => DataTransformer.toDisplayData(draft, EntityType.DRAFT)),
               autoProgress: true
             })
           }
@@ -416,7 +517,8 @@ export async function POST(
         return NextResponse.json({
           action: 'completed',
           message: 'すべての処理が完了しました',
-          drafts
+          drafts: drafts.map(draft => DataTransformer.toDisplayData(draft, EntityType.DRAFT)),
+          requestId
         })
         
       default:
@@ -429,10 +531,13 @@ export async function POST(
     }
 
   } catch (error) {
-    console.error('Next step error:', error)
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to proceed' },
-      { status: 500 }
+    const errorResponse = await CreatePostErrorHandler.handle(
+      error,
+      CreatePostPhase.DRAFT,
+      undefined,
+      undefined
     )
+    
+    return NextResponse.json(errorResponse, { status: 500 })
   }
 }

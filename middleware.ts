@@ -7,8 +7,6 @@ const API_REDIRECTS: Record<string, string> = {
   
   // Intel Module (情報収集) → 直接対応
   '/api/intel/collect/topics': '/api/flow',
-  '/api/intel/news/collect': '/api/intelligence/news/collect',
-  '/api/intel/social/collect': '/api/collect',
   
   // Create Module (コンテンツ生成) → 1:1マッピング（循環回避）
   '/api/create/flow/start': '/api/flow',
@@ -21,8 +19,6 @@ const API_REDIRECTS: Record<string, string> = {
   '/api/publish/calendar': '/api/generation/drafts',
   
   // Analyze Module (分析・監視) → 直接対応
-  '/api/analyze/report/generate': '/api/analytics/insights',
-  '/api/analyze/metrics/collect': '/api/automation/performance',
   '/api/analyze/dashboard': '/api/integration/mission-control',
   
   // 旧パス → シンプルAPI直接 (詳細パスは除外)
