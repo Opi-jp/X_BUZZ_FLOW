@@ -18,8 +18,8 @@ cat START_HERE.md
 
 ### 🚀 軽量版
 ```bash
-# 最小限の情報
-cat QUICK_START.md
+# 最初に読むファイル
+cat START_HERE.md
 ```
 
 ### 📚 詳細版（必要に応じて）
