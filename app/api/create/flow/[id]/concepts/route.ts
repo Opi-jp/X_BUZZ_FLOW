@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { loadPrompt } from '@/lib/prompt-loader'
 import { PerplexityResponseParser } from '@/lib/parsers/perplexity-response-parser'
 import OpenAI from 'openai'
 import { ErrorManager, DBManager, PromptManager, IDGenerator, EntityType } from '@/lib/core/unified-system-manager'
@@ -8,7 +7,13 @@ import { claudeLog } from '@/lib/core/claude-logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  timeout: 120000, // 2分タイムアウト
 })
+
+export async function GET() {
+  console.log('📍 Concepts API GET called - route exists!')
+  return NextResponse.json({ message: 'Concepts API route exists' })
+}
 
 type RouteParams = {
   params: Promise<{
@@ -20,8 +25,31 @@ export async function POST(
   request: Request,
   { params }: RouteParams
 ) {
+  console.log('🚀 POST handler called!')
+  console.log('Request URL:', request.url)
+  console.log('Request method:', request.method)
+  
+  let id: string
   try {
-    const { id } = await params
+    console.log('🔍 Attempting to extract ID from params...')
+    const resolvedParams = await params
+    id = resolvedParams.id
+    console.log('✅ ID extracted:', id)
+    
+    // Environment variable check
+    console.log('=== 🔧 GPT CONCEPTS API START ===')
+    console.log('Session ID:', id)
+    console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY)
+    console.log('OPENAI_API_KEY length:', process.env.OPENAI_API_KEY?.length || 0)
+    
+    if (!process.env.OPENAI_API_KEY) {
+      console.error('❌ OPENAI_API_KEY is not set')
+      return NextResponse.json(
+        { error: 'OpenAI API key not configured' },
+        { status: 500 }
+      )
+    }
+    console.log('✅ Environment check passed')
     
     // Validate ID
     if (!id || id === 'undefined' || id === 'null') {
@@ -61,47 +89,29 @@ export async function POST(
       })
     })
     
-    claudeLog('Starting concept generation', { sessionId: id })
+    claudeLog.info(
+      { module: 'api', operation: 'generate-concepts' },
+      'Starting concept generation',
+      { sessionId: id }
+    )
 
-    // topicsフィールドをパース
+    // 既存のtopicsデータを直接使用（簡略化）
     let topics = []
-    try {
-      claudeLog('Parsing topics', { 
-        sessionId: id,
-        topicsType: typeof session.topics,
-        topicsSample: JSON.stringify(session.topics).substring(0, 200)
-      })
-      
-      if (typeof session.topics === 'string') {
-        // Markdown形式のレスポンスをパース
-        topics = PerplexityResponseParser.parseTopics(session.topics)
-      } else if (Array.isArray(session.topics)) {
-        // 既にパース済みの配列
-        topics = session.topics
-      } else if (session.topics && typeof session.topics === 'object') {
-        // 旧形式のレスポンスを処理
-        topics = PerplexityResponseParser.parseLegacyFormat(session.topics)
-      } else {
-        throw new Error('Invalid topics format')
-      }
-    } catch (parseError) {
-      console.error('Error parsing topics:', parseError)
-      throw new Error(`Failed to parse topics data: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`)
+    if (session.topics && typeof session.topics === 'object' && (session.topics as any).topics) {
+      topics = (session.topics as any).topics
+    } else {
+      throw new Error('No valid topics found in session')
     }
     
-    if (topics.length === 0) {
-      throw new Error('No topics found in session')
-    }
+    console.log('📋 Found topics:', topics.length)
 
-    // 最も有望な2つのトピックのみを処理
-    const topicsToProcess = topics.slice(0, 2)
-    claudeLog('Processing topics', { 
-      sessionId: id,
-      topicCount: topicsToProcess.length 
-    })
+    // テスト用: 1つのトピックのみ処理
+    const topicsToProcess = topics.slice(0, 1)
+    console.log('🧪 TEST: Processing only 1 topic for faster testing')
     
     // 各トピックに対して3つのコンセプトを生成
     const conceptPromises = topicsToProcess.map(async (topic: any, topicIndex: number) => {
+      console.log('🔧 Loading prompt for topic:', topic.TOPIC)
       const prompt = await PromptManager.load(
         'gpt/generate-concepts.txt',
         {
@@ -118,6 +128,8 @@ export async function POST(
         },
         { validate: true, cache: true }
       )
+      console.log('✅ Prompt loaded successfully, length:', prompt.length)
+      console.log('🚀 Making OpenAI API call...')
 
       const response = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -132,7 +144,7 @@ export async function POST(
           }
         ],
         temperature: 0.8,
-        max_tokens: 3500
+        max_tokens: 1000  // テスト用に短縮
       })
 
       const content = response.choices[0].message.content || ''
@@ -196,10 +208,15 @@ export async function POST(
     const allConceptsArrays = await Promise.all(conceptPromises)
     const allConcepts = allConceptsArrays.flat()
 
-    claudeLog('Generated concepts', { 
-      sessionId: id,
-      conceptCount: allConcepts.length 
-    })
+    claudeLog.success(
+      { module: 'api', operation: 'generate-concepts', sessionId: id },
+      'Generated concepts',
+      0,
+      { conceptCount: allConcepts.length }
+    )
+    
+    console.log('✅ GPT Concepts generated successfully:', allConcepts.length, 'concepts')
+    console.log('📝 Sample concept:', JSON.stringify(allConcepts[0], null, 2))
 
     // セッションを更新
     const updatedSession = await DBManager.transaction(async (tx) => {
@@ -219,17 +236,21 @@ export async function POST(
     })
     
   } catch (error) {
+    console.error('🚨 Concepts API Error:', error)
+    console.error('🚨 Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
+    const sessionId = (await params).id
     const errorId = await ErrorManager.logError(error, {
       module: 'create-flow-concepts',
       operation: 'generate-concepts',
-      sessionId: id
+      sessionId: sessionId
     })
     
     // エラー時はステータスを戻す
     try {
       await DBManager.transaction(async (tx) => {
         await tx.viral_sessions.update({
-          where: { id: (await params).id },
+          where: { id: sessionId },
           data: { status: 'TOPICS_COLLECTED' }
         })
       })

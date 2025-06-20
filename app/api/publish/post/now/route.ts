@@ -58,7 +58,9 @@ export async function POST(request: Request) {
     }
 
     // 実際の投稿
-    const tweet = await client.v2.tweet(text)
+    // 読み書き可能なクライアントを取得
+    const rwClient = client.readWrite
+    const tweet = await rwClient.v2.tweet(text)
     
     const tweetUrl = `https://twitter.com/${tweet.data.author_id || 'user'}/status/${tweet.data.id}`
     

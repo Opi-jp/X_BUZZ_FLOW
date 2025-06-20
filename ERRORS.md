@@ -1560,6 +1560,11284 @@ Database schema validation issues detected
 
 ---
 
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Collect API パスエラー
+
+**カテゴリ**: API | **タグ**: api, network
+**記録日時**: 2025/6/21 2:32:47
+
+
+### 症状
+```
+POST /api/generation/content/sessions/[id]/collectが404を返す。実際のパスは/api/create/flow/list/[id]/collectの可能性
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+APIパスを/api/create/flow/[id]/collectに修正
+
+### 根本原因
+
+processルートで間違ったAPIパスを使用
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 プロンプトファイル未実装エラー
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 2:35:22
+
+
+### 症状
+```
+perplexity/collect-topics.txtが存在しない。PromptManager.loadが失敗
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+プロンプトファイルを作成するか、直接プロンプトを記述
+
+### 根本原因
+
+新しいAPIエンドポイントでプロンプトファイルが未実装
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 PerplexityResponseParser実装完了
+
+**カテゴリ**: Module | **タグ**: import, dependency
+**記録日時**: 2025/6/21 4:04:18
+
+
+### 症状
+```
+Module not found: Can't resolve '@/lib/parsers/perplexity-parser'
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+PerplexityResponseParserクラスを実装
+
+### 根本原因
+
+モジュールが存在しなかった
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 パーサー混在問題
+
+**カテゴリ**: API | **タグ**: api, network
+**記録日時**: 2025/6/21 4:07:21
+
+
+### 症状
+```
+GPT APIで旧/新パーサーが混在
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+統一パーサーに修正必要
+
+### 根本原因
+
+実装統合時の不一致
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 プロンプトファイル実装完了
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 4:10:43
+
+
+### 症状
+```
+perplexity/collect-topics.txt と gpt/generate-concepts.txt を実装
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+PromptManagerでの読み込み成功
+
+### 根本原因
+
+Phase 2 API整合性修正完了
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 プロンプト確認完了
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 4:12:44
+
+
+### 症状
+```
+既存プロンプトと整合性確認
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+PromptManagerによるバージョン管理システムが正常動作
+
+### 根本原因
+
+Phase 2 API整合性修正完了確認
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Perplexityパーサーエラー
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 4:14:55
+
+
+### 症状
+```
+Required topics array missing
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+フォールバック処理が動作、パーサー要修正
+
+### 根本原因
+
+Zodスキーマとレスポンス形式の不一致
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 GPT APIビルドエラー
+
+**カテゴリ**: Module | **タグ**: import, dependency
+**記録日時**: 2025/6/21 4:15:20
+**関連ファイル**: ./8548.js
+
+### 症状
+```
+Cannot find module './8548.js'
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+Webpackモジュール解決失敗、サーバー再起動必要
+
+### 根本原因
+
+Phase 2修正後のビルド問題
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api critical
+
+### 解決策
+Health check failed: Request failed with status code 500
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: 
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Twitter API readWrite undefined
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 5:49:24
+
+
+### 症状
+```
+Cannot read properties of undefined (reading 'update') - client.v2 is undefined
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+client.readWrite.v2.tweet()を使用
+
+### 根本原因
+
+Twitter APIクライアントの初期化方法が間違っていた
+
+### 再発防止策
+
+
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

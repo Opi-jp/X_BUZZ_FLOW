@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
-import { PerplexityClient } from '@/lib/perplexity'
-import { ErrorManager, DBManager, PromptManager } from '@/lib/core/unified-system-manager'
-import { claudeLog } from '@/lib/core/claude-logger'
+import { ErrorManager, DBManager } from '@/lib/core/unified-system-manager'
+import { ClaudeLogger } from '@/lib/core/claude-logger'
 
 type RouteParams = {
   params: Promise<{
@@ -17,18 +14,6 @@ export async function POST(
   { params }: RouteParams
 ) {
   try {
-    // API キーのチェック
-    if (!process.env.PERPLEXITY_API_KEY) {
-      console.error('PERPLEXITY_API_KEY is not set in environment variables')
-      return NextResponse.json(
-        { 
-          error: 'Configuration error',
-          message: 'Perplexity API key is not configured'
-        },
-        { status: 500 }
-      )
-    }
-    
     const { id } = await params
     
     // セッションを取得
@@ -46,7 +31,11 @@ export async function POST(
     // topicsデータが既に存在する場合はスキップ
     if (session.topics) {
       return NextResponse.json(
-        { error: 'Topics already collected', success: true },
+        { 
+          message: 'Topics already collected', 
+          success: true,
+          topics: session.topics 
+        },
         { status: 200 }
       )
     }
@@ -61,95 +50,28 @@ export async function POST(
       })
     })
     
-    claudeLog('Starting topic collection', { sessionId: id, theme: session.theme })
+    ClaudeLogger.flow(
+      { module: 'create', operation: 'collect-topics', sessionId: id },
+      'Delegating to Intel module for topic collection',
+      { theme: session.theme }
+    )
 
-    // プロンプトを読み込み
-    let prompt: string
-    try {
-      prompt = await PromptManager.load(
-        'perplexity/collect-topics.txt',
-        {
-          theme: session.theme,
-          platform: session.platform || 'Twitter',
-          style: session.style || 'エンターテイメント'
-        },
-        { validate: true, cache: true }
-      )
-    } catch (promptError) {
-      const errorId = await ErrorManager.logError(promptError, {
-        module: 'create-flow-collect',
-        operation: 'load-prompt',
-        sessionId: id
-      })
-      
-      await DBManager.transaction(async (tx) => {
-        await tx.viral_sessions.update({
-          where: { id },
-          data: { status: 'ERROR' }
-        })
-      })
-      
-      return NextResponse.json(
-        { 
-          error: 'プロンプトテンプレートの読み込みに失敗しました',
-          errorId
-        },
-        { status: 500 }
-      )
-    }
-
-    try {
-      // Perplexityクライアントを初期化
-      const perplexity = new PerplexityClient()
-      
-      // Perplexityでトピックを収集
-      const response = await perplexity.searchWithContext({
-        query: prompt,
-        searchRecency: 'day' // 最新の情報を取得
-      })
-
-      const content = response.choices[0]?.message?.content
-      if (!content) {
-        throw new Error('No content received from Perplexity')
-      }
-
-      claudeLog('Received Perplexity response', { 
+    // Intel モジュールのトレンド収集APIを呼び出し
+    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const intelResponse = await fetch(`${baseUrl}/api/intel/trends/collect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         sessionId: id,
-        contentLength: content.length 
-      })
-      
-      // セッションを更新 - 生のコンテンツをtopicsに保存
-      await DBManager.transaction(async (tx) => {
-        await tx.viral_sessions.update({
-          where: { id },
-          data: {
-            topics: content,
-            status: 'TOPICS_COLLECTED'
-          }
-        })
-      })
-
-      claudeLog('Successfully collected topics', {
-        sessionId: id,
-        contentLength: content.length,
         theme: session.theme,
-        platform: session.platform
+        platform: session.platform || 'Twitter',
+        style: session.style || 'エンターテイメント'
       })
+    })
+
+    if (!intelResponse.ok) {
+      const errorData = await intelResponse.json()
       
-      return NextResponse.json({ 
-        success: true,
-        contentLength: content.length,
-        sessionId: id
-      })
-    } catch (error) {
-      const errorId = await ErrorManager.logError(error, {
-        module: 'create-flow-collect',
-        operation: 'perplexity-api',
-        sessionId: id,
-        theme: session.theme
-      })
-      
-      // エラーをセッションに記録
       await DBManager.transaction(async (tx) => {
         await tx.viral_sessions.update({
           where: { id },
@@ -157,29 +79,39 @@ export async function POST(
         })
       })
       
-      const userMessage = ErrorManager.getUserMessage(error, 'ja')
-
-      return NextResponse.json(
-        { 
-          error: userMessage,
-          errorId
-        },
-        { status: 500 }
-      )
+      throw new Error(`Intel trends collect failed: ${errorData.error}`)
     }
-  } catch (error) {
-    const errorId = await ErrorManager.logError(error, {
-      module: 'create-flow-collect',
-      operation: 'request-processing'
+
+    const intelData = await intelResponse.json()
+    
+    ClaudeLogger.success(
+      { module: 'create', operation: 'collect-topics', sessionId: id },
+      'Topic collection completed via Intel module',
+      0,
+      { topicCount: intelData.topics?.topics?.length || 0 }
+    )
+
+    return NextResponse.json({
+      success: true,
+      sessionId: id,
+      topics: intelData.topics,
+      nextStep: 'concepts'
+    })
+  } catch (error: any) {
+    ClaudeLogger.error(
+      { module: 'create', operation: 'collect-topics' },
+      'Topic collection failed',
+      error
+    )
+    
+    await ErrorManager.logError(error, {
+      module: 'create',
+      operation: 'flow-collect',
+      metadata: { sessionId: (await params).id }
     })
     
-    const userMessage = ErrorManager.getUserMessage(error, 'ja')
-    
     return NextResponse.json(
-      { 
-        error: userMessage,
-        errorId
-      },
+      { error: 'Failed to collect topics', details: error.message },
       { status: 500 }
     )
   }

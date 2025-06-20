@@ -68,9 +68,13 @@ export async function POST(
   request: Request,
   { params }: RouteParams
 ) {
+  let id: string
+  let body: any
+  
   try {
-    const { id } = await params
-    const body = await request.json()
+    const resolvedParams = await params
+    id = resolvedParams.id
+    body = await request.json()
     const { characterId } = body
 
     if (!characterId) {
@@ -92,8 +96,8 @@ export async function POST(
       )
     }
 
-    // selectedIds配列から実際のコンセプトデータを取得
-    const selectedConceptIds = session.selectedIds as string[]
+    // リクエストボディまたはセッションから選択されたコンセプトIDを取得
+    const selectedConceptIds = body.selectedConceptIds || session.selected_ids as string[]
     if (!selectedConceptIds || selectedConceptIds.length === 0) {
       return NextResponse.json(
         { error: 'No selected concepts found' },
@@ -121,11 +125,15 @@ export async function POST(
     for (const concept of selectedConcepts) {
       let prompt = '' // スコープを外に出す
       try {
-        claudeLog('Processing concept', { 
-          sessionId: id,
-          conceptId: concept.conceptId,
-          format: concept.format 
-        })
+        claudeLog.info(
+          { module: 'api', operation: 'generate-character-content' },
+          'Processing concept',
+          { 
+            sessionId: id,
+            conceptId: concept.conceptId,
+            format: concept.format 
+          }
+        )
         
         // formatに基づいてプロンプトパスを決定
         const formatSuffix = concept.format === 'thread' ? 'thread' : 'simple'
@@ -134,7 +142,11 @@ export async function POST(
         const characterProfile = await wrapCharacterProfile(characterId)
         const conceptData = wrapConceptData(concept)
         
-        claudeLog('Loading prompt', { promptPath })
+        claudeLog.info(
+          { module: 'api', operation: 'generate-character-content' },
+          'Loading prompt',
+          { promptPath }
+        )
         
         // プロンプトローダーで変数を展開
         prompt = await PromptManager.load(
@@ -148,7 +160,11 @@ export async function POST(
           { validate: true, cache: true }
         )
 
-        claudeLog('Prompt loaded', { promptLength: prompt.length })
+        claudeLog.info(
+          { module: 'api', operation: 'generate-character-content' },
+          'Prompt loaded',
+          { promptLength: prompt.length }
+        )
 
         const response = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-latest',
@@ -162,10 +178,14 @@ export async function POST(
 
         const content = response.content[0]
         if (content.type === 'text') {
-          claudeLog('Claude response received', { 
-            responseLength: content.text.length,
-            preview: content.text.substring(0, 200)
-          })
+          claudeLog.info(
+            { module: 'api', operation: 'generate-character-content' },
+            'Claude response received',
+            { 
+              responseLength: content.text.length,
+              preview: content.text.substring(0, 200)
+            }
+          )
           
           // Claudeのレスポンスが直接テキストの場合
           const responseText = content.text.trim()
@@ -217,13 +237,32 @@ export async function POST(
           characterId,
           promptLength: prompt ? prompt.length : 0
         })
+        
+        // エラーをDBManagerで記録
+        await ErrorManager.logError(error, {
+          module: 'create-flow-generate',
+          operation: 'generate-character-content',
+          sessionId: id,
+          metadata: {
+            conceptId: concept.conceptId,
+            characterId,
+            format: concept.format
+          }
+        })
+        
         // エラーがあってもスキップして続行
       }
     }
 
     if (generatedPosts.length === 0) {
+      // より詳細なエラー情報を提供
       return NextResponse.json(
-        { error: 'Failed to generate any posts' },
+        { 
+          error: 'Failed to generate any posts',
+          details: 'Check server logs for detailed error information',
+          selectedConcepts: selectedConcepts.length,
+          characterId
+        },
         { status: 500 }
       )
     }
@@ -253,17 +292,17 @@ export async function POST(
           await tx.viral_drafts_v2.create({
             data: {
               id: draftId,
-              sessionId: id,
-              conceptId: post.conceptId,
+              session_id: id,  // DBはsnake_case
+              concept_id: post.conceptId,  // DBはsnake_case
               title: post.conceptTitle || 'Generated Thread',
               content: JSON.stringify({
                 format: 'thread',
                 posts: post.posts
               }),
               hashtags: hashtags,
-              visualNote: matchingConcept?.visual,
-              characterId: post.characterId,
-              characterNote: `Generated as ${post.characterId} (thread)`,
+              visual_note: matchingConcept?.visual,
+              character_id: post.characterId,  // DBはsnake_case
+              character_note: `Generated as ${post.characterId} (thread)`,
               status: 'DRAFT'
             }
           })
@@ -272,14 +311,14 @@ export async function POST(
           await tx.viral_drafts_v2.create({
             data: {
               id: draftId,
-              sessionId: id,
-              conceptId: post.conceptId,
+              session_id: id,  // DBはsnake_case
+              concept_id: post.conceptId,  // DBはsnake_case
               title: post.conceptTitle || 'Generated Content',
               content: post.content,
               hashtags: hashtags,
-              visualNote: matchingConcept?.visual,
-              characterId: post.characterId,
-              characterNote: `Generated as ${post.characterId} (single)`,
+              visual_note: matchingConcept?.visual,
+              character_id: post.characterId,  // DBはsnake_case
+              character_note: `Generated as ${post.characterId} (single)`,
               status: 'DRAFT'
             }
           })
@@ -287,10 +326,12 @@ export async function POST(
       }
     })
     
-    claudeLog('Content generation completed', { 
-      sessionId: id,
-      generatedCount: generatedPosts.length 
-    })
+    claudeLog.success(
+      { module: 'api', operation: 'generate-character-content', sessionId: id },
+      'Content generation completed',
+      0,
+      { generatedCount: generatedPosts.length }
+    )
 
     return NextResponse.json({ 
       success: true,

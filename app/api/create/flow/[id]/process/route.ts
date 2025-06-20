@@ -90,7 +90,7 @@ export async function POST(
           const response = await withRetry(
             async () => {
               const res = await fetch(
-                `${baseUrl}/api/generation/content/sessions/${id}/collect`,
+                `${baseUrl}/api/create/flow/${id}/collect`,
                 { 
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -193,7 +193,7 @@ export async function POST(
           const generateConceptsResponse = await withRetry(
             async () => {
               const res = await fetch(
-                `${baseUrl}/api/generation/content/sessions/${id}/generate-concepts`,
+                `${baseUrl}/api/create/flow/${id}/concepts`,
                 { 
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -305,7 +305,7 @@ export async function POST(
               const generateResponse = await withRetry(
                 async () => {
                   const res = await fetch(
-                    `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+                    `${baseUrl}/api/create/flow/${id}/generate`,
                     {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
@@ -383,7 +383,7 @@ export async function POST(
             const generateResponse = await withRetry(
               async () => {
                 const res = await fetch(
-                  `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+                  `${baseUrl}/api/create/flow/${id}/generate`,
                   {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -443,7 +443,7 @@ export async function POST(
         const generateResponse = await withRetry(
           async () => {
             const res = await fetch(
-              `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+              `${baseUrl}/api/create/flow/${id}/generate`,
               {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

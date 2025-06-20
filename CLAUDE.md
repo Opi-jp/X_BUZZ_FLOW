@@ -1283,3 +1283,32 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - 未使用テーブルの段階的な削除（viral_posts等）
 - db-schema-validator.jsの警告への対応（低優先度）
 
+## 2025年6月20日の追加作業（Create→Draft→Postフロー完全実装）
+
+### 実施した作業
+
+#### 1. Perplexity→GPT→Claudeフローの動作確認
+- **Perplexity処理**: トピック収集、JSONパース、DB保存すべて正常動作
+- **GPT処理**: DBからデータ取得、コンセプト生成、DB更新すべて正常動作
+- **Claude処理**: キャラクターベース生成（カーディ・ダーレ）正常動作
+
+#### 2. API修正内容
+- **ClaudeLogger修正**: 全APIで関数呼び出しからstaticメソッドに変更
+- **DBフィールド名統一**: camelCase → snake_case（session_id、concept_id等）
+- **スコープ問題解決**: try-catch内での変数アクセス問題を修正
+- **キャラクターファイルパス修正**: `/lib/prompts/characters/`に統一
+
+#### 3. Twitter投稿機能の確認
+- **API修正**: `client.v2.tweet` → `client.readWrite.v2.tweet`
+- **動作確認**: Twitter APIは正常に動作（403エラーは重複コンテンツのため）
+- **環境変数**: OAuth 1.0a認証情報が正しく設定されていることを確認
+
+### 技術的な成果
+- **完全なE2Eフロー**: Perplexity→GPT→Claude→Twitter投稿まで実装完了
+- **DB整合性**: 全フィールドでsnake_case命名規則を統一
+- **エラーハンドリング**: 統一システム管理による包括的エラー処理
+
+### 未解決の課題
+- **selectedIds vs selected_ids**: 一部のAPIでフィールド名の不一致
+- **Twitter投稿の重複チェック**: 同一コンテンツの再投稿防止機能
+

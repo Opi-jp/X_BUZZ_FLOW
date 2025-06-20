@@ -121,7 +121,7 @@ async function handleCreatedState(
     const response = await withRetry(
       async () => {
         const res = await fetch(
-          `${baseUrl}/api/generation/content/sessions/${id}/collect`,
+          `${baseUrl}/api/create/flow/${id}/collect`,
           { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -225,7 +225,7 @@ async function handleTopicsCollectedState(
     const response = await withRetry(
       async () => {
         const res = await fetch(
-          `${baseUrl}/api/generation/content/sessions/${id}/generate-concepts`,
+          `${baseUrl}/api/create/flow/${id}/concepts`,
           { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -341,7 +341,7 @@ async function handleConceptsGeneratedState(
         const generateResponse = await withRetry(
           async () => {
             const res = await fetch(
-              `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+              `${baseUrl}/api/create/flow/${id}/generate`,
               {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -416,7 +416,7 @@ async function handleConceptsGeneratedState(
       const generateResponse = await withRetry(
         async () => {
           const res = await fetch(
-            `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+            `${baseUrl}/api/create/flow/${id}/generate`,
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -476,7 +476,7 @@ async function handleConceptsGeneratedState(
   const generateResponse = await withRetry(
     async () => {
       const res = await fetch(
-        `${baseUrl}/api/generation/content/sessions/${id}/generate`,
+        `${baseUrl}/api/create/flow/${id}/generate`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

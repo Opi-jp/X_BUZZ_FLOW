@@ -37,12 +37,12 @@ export async function GET() {
 
   // Step 2: Dynamic import with full module check
   try {
-    const module = await import('@/lib/prisma')
+    const prismaModule = await import('@/lib/prisma')
     results.step2_dynamic_import = {
       success: true,
-      moduleKeys: Object.keys(module),
-      hasPrisma: 'prisma' in module,
-      prismaType: typeof module.prisma
+      moduleKeys: Object.keys(prismaModule),
+      hasPrisma: 'prisma' in prismaModule,
+      prismaType: typeof prismaModule.prisma
     }
   } catch (error) {
     results.step2_dynamic_import = {

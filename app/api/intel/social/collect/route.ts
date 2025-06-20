@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getKaitoSinceParam } from '@/lib/date-utils'
+import { ClaudeLogger } from '@/lib/core/claude-logger'
+import { ErrorManager, DBManager } from '@/lib/core/unified-system-manager'
 
 // Vercel Function Configuration
 export const maxDuration = 30 // 30秒（Pro planは60秒まで可能）

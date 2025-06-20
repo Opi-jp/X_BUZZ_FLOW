@@ -1,77 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Brain, Loader2, Sparkles } from 'lucide-react'
-import { claudeLog } from '@/lib/core/claude-logger'
+import Link from 'next/link'
+import { Brain, Plus, FileText, Users, Zap } from 'lucide-react'
 
-export default function CreatePage() {
-  const router = useRouter()
-  const [theme, setTheme] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const startFlow = async () => {
-    if (!theme.trim()) {
-      claudeLog.logFrontendAction('validation-error', 'CreatePage', { reason: 'empty-theme' })
-      return
-    }
-
-    claudeLog.logFrontendAction('start-flow', 'CreatePage', { theme })
-    setLoading(true)
-    setError(null)
-
-    try {
-      claudeLog.info(
-        { module: 'frontend', operation: 'api-call' },
-        '🌐 Starting flow creation',
-        { theme }
-      )
-
-      const response = await fetch('/api/create/flow/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        claudeLog.error(
-          { module: 'frontend', operation: 'api-error' },
-          '❌ API call failed',
-          errorData
-        )
-        throw new Error(errorData.error || 'フロー開始に失敗しました')
-      }
-
-      const data = await response.json()
-      
-      claudeLog.success(
-        { module: 'frontend', operation: 'flow-created', sessionId: data.id },
-        '✅ Flow created successfully'
-      )
-      
-      // フロー詳細ページへ遷移
-      claudeLog.logFrontendAction('navigate', 'CreatePage', { 
-        to: `/create/flow/${data.id}`,
-        sessionId: data.id
-      })
-      router.push(`/create/flow/${data.id}`)
-      
-    } catch (err) {
-      claudeLog.error(
-        { module: 'frontend', operation: 'flow-creation' },
-        '💥 Flow creation failed',
-        err
-      )
-      setError(err instanceof Error ? err.message : 'エラーが発生しました')
-      setLoading(false)
-    }
-  }
-
+export default function CreateOverviewPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12">
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         {/* ヘッダー */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
@@ -79,101 +14,135 @@ export default function CreatePage() {
               <Brain className="w-12 h-12 text-purple-600" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            AIバイラルコンテンツ生成
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Create - コンテンツ生成
           </h1>
-          <p className="text-gray-600">
-            テーマを入力するだけで、バズる投稿を自動生成します
+          <p className="text-xl text-gray-600">
+            AI駆動の3段階生成フローでバイラルコンテンツを作成
           </p>
         </div>
 
-        {/* メインフォーム */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="space-y-6">
-            {/* テーマ入力 */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                投稿テーマ
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && startFlow()}
-                  placeholder="例: AIと働き方の未来、Web3の可能性、etc..."
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  disabled={loading}
-                />
-                <Sparkles className="absolute right-3 top-3.5 w-5 h-5 text-gray-400" />
+        {/* 生成フロー説明 */}
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            🔄 3段階生成フロー
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-blue-600">1</span>
               </div>
+              <h3 className="text-lg font-semibold mb-2">Intel - 情報収集</h3>
+              <p className="text-gray-600 text-sm">
+                Perplexityで最新トピックを収集・分析
+              </p>
             </div>
-
-            {/* エラー表示 */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-sm text-red-700">{error}</p>
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-green-600">2</span>
               </div>
-            )}
-
-            {/* 開始ボタン */}
-            <button
-              onClick={startFlow}
-              disabled={!theme.trim() || loading}
-              className="w-full py-3 px-6 bg-purple-600 text-white font-medium rounded-lg hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  生成を開始しています...
-                </span>
-              ) : (
-                '生成開始'
-              )}
-            </button>
-          </div>
-
-          {/* 機能説明 */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">
-              📖 生成フロー（3ステップ）
-            </h3>
-            <div className="space-y-2 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">1</span>
-                <span>Perplexity: 最新トピックを収集・分析</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">2</span>
-                <span>GPT-4o: バイラルコンセプトを生成（複数案）</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">3</span>
-                <span>Claude: キャラクター投稿文を作成</span>
-              </div>
+              <h3 className="text-lg font-semibold mb-2">Concepts - 企画</h3>
+              <p className="text-gray-600 text-sm">
+                GPT-4oでバイラルコンセプトを複数生成
+              </p>
             </div>
-            <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <p className="text-xs text-amber-700">
-                💡 ヒント: 具体的で時事性のあるテーマほど、バズりやすい投稿が生成されます
+            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-xl font-bold text-purple-600">3</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Generate - 生成</h3>
+              <p className="text-gray-600 text-sm">
+                Claudeでキャラクター投稿文を作成
               </p>
             </div>
           </div>
         </div>
 
-        {/* 便利リンク */}
-        <div className="mt-8 flex justify-center gap-6">
-          <a
-            href="/drafts"
-            className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1"
+        {/* アクションカード */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <Link href="/create/new" className="group">
+            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border-2 border-transparent group-hover:border-purple-200">
+              <div className="flex items-center mb-4">
+                <Plus className="w-8 h-8 text-purple-600 mr-3" />
+                <h3 className="text-xl font-semibold">新規作成</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                テーマを入力して新しいバイラルコンテンツを生成開始
+              </p>
+              <div className="text-purple-600 font-medium group-hover:text-purple-700">
+                開始する →
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/create/flow" className="group">
+            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border-2 border-transparent group-hover:border-blue-200">
+              <div className="flex items-center mb-4">
+                <Zap className="w-8 h-8 text-blue-600 mr-3" />
+                <h3 className="text-xl font-semibold">進行中フロー</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                実行中の生成フローを確認・管理
+              </p>
+              <div className="text-blue-600 font-medium group-hover:text-blue-700">
+                確認する →
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/drafts" className="group">
+            <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow border-2 border-transparent group-hover:border-green-200">
+              <div className="flex items-center mb-4">
+                <FileText className="w-8 h-8 text-green-600 mr-3" />
+                <h3 className="text-xl font-semibold">下書き管理</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                生成済みの下書きを編集・投稿
+              </p>
+              <div className="text-green-600 font-medium group-hover:text-green-700">
+                管理する →
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* 統計情報（モック） */}
+        <div className="bg-white rounded-xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">📊 Create統計</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-600">42</div>
+              <div className="text-gray-600">今月の生成数</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600">89%</div>
+              <div className="text-gray-600">成功率</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600">3.2</div>
+              <div className="text-gray-600">平均バイラルスコア</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-orange-600">15</div>
+              <div className="text-gray-600">下書き数</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ナビゲーション */}
+        <div className="mt-12 flex justify-center gap-6">
+          <Link 
+            href="/hub" 
+            className="text-gray-600 hover:text-gray-700 font-medium"
           >
-            📝 下書き一覧を見る →
-          </a>
-          <a
-            href="/mission-control"
-            className="text-gray-600 hover:text-gray-700 font-medium flex items-center gap-1"
+            ← ハブに戻る
+          </Link>
+          <Link 
+            href="/publish" 
+            className="text-purple-600 hover:text-purple-700 font-medium"
           >
-            🎯 ダッシュボード
-          </a>
+            投稿管理 →
+          </Link>
         </div>
       </div>
     </div>
