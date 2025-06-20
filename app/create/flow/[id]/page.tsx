@@ -41,7 +41,7 @@ export default function FlowDetailPage() {
 
     const checkStatus = async () => {
       try {
-        const response = await fetch(`/api/flow/${flowId}`)
+        const response = await fetch(`/api/create/flow/${flowId}/status`)
         if (!response.ok) throw new Error('ステータス取得失敗')
         
         const data = await response.json()
@@ -69,7 +69,7 @@ export default function FlowDetailPage() {
       } else {
         checkStatus()
       }
-    }, 2000)
+    }, 3000)
 
     return () => clearInterval(interval)
   }, [flowId, status?.progress.completed, error])
@@ -81,7 +81,7 @@ export default function FlowDetailPage() {
     setProcessingAction(true)
     
     try {
-      const response = await fetch(`/api/flow/${flowId}/next`, {
+      const response = await fetch(`/api/create/flow/${flowId}/process`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(actionData || {})
@@ -94,7 +94,7 @@ export default function FlowDetailPage() {
       }
       
       // ステータスを再取得
-      const statusResponse = await fetch(`/api/flow/${flowId}`)
+      const statusResponse = await fetch(`/api/create/flow/${flowId}/status`)
       const newStatus = await statusResponse.json()
       setStatus(newStatus)
       

@@ -3,30 +3,37 @@ import type { NextRequest } from 'next/server'
 
 // APIルートのマッピング（統合システム計画準拠）
 const API_REDIRECTS: Record<string, string> = {
-  // === 統合システム計画準拠のマッピング（循環回避版） ===
+  // === 統合システム計画準拠のマッピング ===
   
-  // Intel Module (情報収集) → 直接対応
-  '/api/intel/collect/topics': '/api/flow',
+  // Create Module (旧 → 新)
+  '/api/flow': '/api/create/flow/start',
+  '/api/drafts': '/api/create/draft/list',
+  '/api/generation/content/sessions': '/api/create/flow/list',
+  '/api/generation/drafts': '/api/create/draft/list',
+  '/api/characters': '/api/create/persona/list',
   
-  // Create Module (コンテンツ生成) → 1:1マッピング（循環回避）
-  '/api/create/flow/start': '/api/flow',
-  '/api/create/draft/list': '/api/drafts',
-  '/api/create/draft/manage': '/api/drafts',
+  // Publish Module (旧 → 新)
+  '/api/post': '/api/publish/post/now',
+  '/api/twitter/post': '/api/publish/post/now',
+  '/api/publish': '/api/publish/post/now',
+  '/api/posting-plan/schedule': '/api/publish/schedule/set',
+  '/api/posting-plan/generate': '/api/publish/schedule/generate',
   
-  // Publish Module (投稿・配信) → 直接対応
-  '/api/publish/post/now': '/api/post',
-  '/api/publish/schedule/set': '/api/automation/scheduler',
-  '/api/publish/calendar': '/api/generation/drafts',
+  // Intel Module (旧 → 新)
+  '/api/collect': '/api/intel/social/collect',
+  '/api/news/latest': '/api/intel/news/latest',
+  '/api/news/articles': '/api/intel/news/articles',
+  '/api/news/collect': '/api/intel/news/collect',
+  '/api/buzz/trending': '/api/intel/social/trending',
+  '/api/buzz-posts': '/api/intel/social/posts',
+  '/api/briefing/morning': '/api/intel/insights/briefing',
   
-  // Analyze Module (分析・監視) → 直接対応
-  '/api/analyze/dashboard': '/api/integration/mission-control',
-  
-  // 旧パス → シンプルAPI直接 (詳細パスは除外)
-  '/api/twitter/post': '/api/post',
-  '/api/viral/v2/sessions': '/api/flow',
+  // Analyze Module (旧 → 新)
+  '/api/dashboard/stats': '/api/analyze/metrics/overview',
+  '/api/analytics': '/api/analyze/metrics/data',
+  '/api/viral/performance/recent': '/api/analyze/performance/recent',
   
   // 既存（互換性維持）
-  '/api/characters': '/api/generation/characters',
   '/api/dashboard': '/api/integration/mission-control',
   '/api/settings': '/api/integration/config'
 }
@@ -52,6 +59,11 @@ export function middleware(request: NextRequest) {
   // APIルートのリダイレクト
   for (const [oldPath, newPath] of Object.entries(API_REDIRECTS)) {
     if (pathname === oldPath || pathname.startsWith(oldPath + '/')) {
+      // リダイレクトループを防ぐ
+      if (pathname.startsWith(newPath)) {
+        return NextResponse.next()
+      }
+      
       const newUrl = new URL(request.url)
       newUrl.pathname = pathname.replace(oldPath, newPath)
       

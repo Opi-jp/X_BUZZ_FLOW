@@ -36,7 +36,7 @@ export default function GenerationContentPage() {
     setError(null)
 
     try {
-      const response = await fetch('/api/generation/content/sessions', {
+      const response = await fetch('/api/create/flow/list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ export default function GenerationContentPage() {
       const sessionId = data.session?.id || data.sessionId
       
       // Perplexityでトピック収集を開始
-      const collectResponse = await fetch(`/api/generation/content/sessions/${sessionId}/collect`, {
+      const collectResponse = await fetch(`/api/create/flow/list/${sessionId}/collect`, {
         method: 'POST'
       })
 

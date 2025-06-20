@@ -45,7 +45,7 @@ export default function DraftsPage() {
 
   const fetchDrafts = async () => {
     try {
-      const response = await fetch('/api/generation/drafts')
+      const response = await fetch('/api/create/draft/list')
       if (!response.ok) throw new Error('Failed to fetch drafts')
       const data = await response.json()
       setDrafts(data.drafts)
@@ -68,7 +68,7 @@ export default function DraftsPage() {
     if (!editingId) return
 
     try {
-      const response = await fetch(`/api/generation/drafts/${editingId}`, {
+      const response = await fetch(`/api/create/draft/list/${editingId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: editContent })
@@ -88,7 +88,7 @@ export default function DraftsPage() {
     if (!confirm('この下書きを削除しますか？')) return
 
     try {
-      const response = await fetch(`/api/generation/drafts/${draftId}`, {
+      const response = await fetch(`/api/create/draft/list/${draftId}`, {
         method: 'DELETE'
       })
 
@@ -108,7 +108,7 @@ export default function DraftsPage() {
     if (!confirm('今すぐ投稿しますか？')) return
 
     try {
-      const response = await fetch('/api/twitter/post', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ draftId })

@@ -47,7 +47,7 @@ export default function ResultPage() {
 
   const fetchSession = async () => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}`)
+      const response = await fetch(`/api/create/flow/list/${sessionId}`)
       if (!response.ok) throw new Error('セッションの取得に失敗しました')
       
       const data = await response.json()
@@ -77,7 +77,7 @@ export default function ResultPage() {
       const hashtags = ['AI時代', 'カーディダーレ']
       const tweetText = `${content}\n\n${hashtags.map(tag => `#${tag}`).join(' ')}`
       
-      const response = await fetch('/api/twitter/post', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ export default function ResultPage() {
         if (result.success) {
           alert(`投稿しました！\nURL: ${result.url}`)
           // 下書きをデータベースに保存
-          await fetch('/api/generation/drafts', {
+          await fetch('/api/create/draft/list', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

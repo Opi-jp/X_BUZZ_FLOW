@@ -69,7 +69,7 @@ export default function UnifiedPublishPage() {
   const fetchDrafts = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/drafts')
+      const response = await fetch('/api/create/draft/list')
       if (!response.ok) throw new Error('下書きの取得に失敗しました')
       
       const data = await response.json()
@@ -128,7 +128,7 @@ export default function UnifiedPublishPage() {
         ? `${scheduledDate}T${scheduledTime}:00.000Z`
         : undefined
 
-      const response = await fetch('/api/publish', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

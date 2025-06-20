@@ -14,6 +14,7 @@
  */
 
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 const readline = require('readline');
 const { exec } = require('child_process');
@@ -351,6 +352,42 @@ async function main() {
 
   if (args.includes('--unresolved')) {
     await recorder.showUnresolved();
+    process.exit(0);
+  }
+
+  if (args.includes('--check-status')) {
+    console.log(chalk.green('✅ スマートエラー記録システム - 状態確認'));
+    console.log(chalk.yellow('\n📁 エラー記録ディレクトリ:'));
+    console.log(`  - .error-details/ : ${fsSync.existsSync('.error-details') ? '✅ 存在' : '❌ 未作成'}`);
+    console.log(`  - .error-capture/ : ${fsSync.existsSync('.error-capture') ? '✅ 存在' : '❌ 未作成'}`);
+    console.log(`  - logs/ : ${fsSync.existsSync('logs') ? '✅ 存在' : '❌ 未作成'}`);
+    
+    // エラー統計
+    try {
+      const errorFiles = fsSync.existsSync('.error-details') ? 
+        fsSync.readdirSync('.error-details').filter(f => f.endsWith('.json')) : [];
+      console.log(chalk.yellow('\n📊 エラー統計:'));
+      console.log(`  - 記録済みエラー数: ${errorFiles.length}`);
+      
+      if (errorFiles.length > 0) {
+        let resolved = 0;
+        let unresolved = 0;
+        errorFiles.forEach(file => {
+          const data = JSON.parse(fsSync.readFileSync(path.join('.error-details', file), 'utf8'));
+          if (data.resolved) resolved++;
+          else unresolved++;
+        });
+        console.log(`  - 解決済み: ${resolved}`);
+        console.log(`  - 未解決: ${unresolved}`);
+      }
+    } catch (error) {
+      console.log(chalk.red('  エラー統計の取得に失敗しました'));
+    }
+    
+    console.log(chalk.yellow('\n💡 使い方:'));
+    console.log('  - エラーを記録: node scripts/dev-tools/smart-error-recorder.js');
+    console.log('  - 未解決エラーを表示: node scripts/dev-tools/smart-error-recorder.js --unresolved');
+    console.log('  - 自動エラーキャプチャを起動: node scripts/dev-tools/auto-error-capture.js');
     process.exit(0);
   }
 

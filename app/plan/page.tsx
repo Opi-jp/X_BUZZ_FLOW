@@ -52,7 +52,7 @@ export default function PlanPage() {
   const generatePlan = async () => {
     setGenerating(true)
     try {
-      const res = await fetch('/api/posting-plan/generate', {
+      const res = await fetch('/api/publish/post/now/post/now/post/nowing-plan/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -105,7 +105,7 @@ export default function PlanPage() {
     const selectedPlans = plan?.plan.filter((_, i) => selectedPosts.has(i)) || []
     
     try {
-      const res = await fetch('/api/posting-plan/schedule', {
+      const res = await fetch('/api/publish/post/now/post/now/post/nowing-plan/schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plans: selectedPlans })

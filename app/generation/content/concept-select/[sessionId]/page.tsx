@@ -34,7 +34,7 @@ export default function ConceptSelectPage() {
 
   const fetchSession = async () => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}`)
+      const response = await fetch(`/api/create/flow/list/${sessionId}`)
       if (!response.ok) throw new Error('セッションの取得に失敗しました')
       
       const data = await response.json()
@@ -54,7 +54,7 @@ export default function ConceptSelectPage() {
 
     try {
       // 選択されたコンセプトを保存
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}/concepts`, {
+      const response = await fetch(`/api/create/flow/list/${sessionId}/concepts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

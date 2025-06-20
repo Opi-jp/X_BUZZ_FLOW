@@ -44,15 +44,17 @@ export async function POST(
     
     // リクエストボディを安全にパース
     let autoProgress = false
+    let body: any = {}
     try {
       const contentLength = request.headers.get('content-length')
       if (contentLength && parseInt(contentLength) > 0) {
-        const body = await request.json()
+        body = await request.json()
         autoProgress = body.autoProgress || false
       }
     } catch (e) {
       // ボディが空の場合はデフォルト値を使用
       console.log('No request body provided, using defaults')
+      body = {}
     }
     
     // セッション取得（エラーハンドリング付き）

@@ -55,7 +55,7 @@ export default function CharacterSelectPage() {
 
   const fetchSession = async () => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}`)
+      const response = await fetch(`/api/create/flow/list/${sessionId}`)
       if (!response.ok) throw new Error('セッションの取得に失敗しました')
       
       const data = await response.json()
@@ -75,7 +75,7 @@ export default function CharacterSelectPage() {
 
     try {
       // 投稿生成を開始
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}/generate`, {
+      const response = await fetch(`/api/create/flow/list/${sessionId}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

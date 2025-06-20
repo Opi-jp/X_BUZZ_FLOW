@@ -63,6 +63,27 @@ node scripts/dev-tools/unified-monitoring-dashboard.js
 - **エラー即座検出**: F12でのコピペ作業不要
 - **セッション継続**: 中断からの復帰を完全サポート
 - **関数整合性チェック**: フロントエンド・バックエンド間の関数定義エラーを自動検出
+- **スマートエラー統合**: エラーの自動記録・通知・解決提案（2025年6月20日追加）
+
+#### スマートエラー記録システム（Claude統合版）
+```bash
+# エラー状況を確認（Claude専用）
+node scripts/dev-tools/claude-check-errors.js
+
+# 手動でエラーを記録
+node scripts/dev-tools/smart-error-recorder.js
+
+# クイック記録（最小限の情報で素早く記録）
+node scripts/dev-tools/smart-error-recorder.js --quick
+
+# 未解決エラーの確認
+node scripts/dev-tools/smart-error-recorder.js --unresolved
+
+# Claude-dev環境内のショートカット（13番ウィンドウ）
+ser   # エラー記録
+serq  # クイック記録
+seru  # 未解決エラー表示
+```
 - **ビルド監視（2025年6月21日追加）**: ビルドエラーをClaude形式で即座に把握
 - **自動エラーキャプチャ（2025年6月21日追加）**: 開発中のエラーを自動記録・分類
 

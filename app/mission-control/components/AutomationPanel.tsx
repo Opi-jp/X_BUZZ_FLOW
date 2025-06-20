@@ -85,12 +85,12 @@ export function AutomationPanel() {
       setScheduledPosts(scheduledData.posts || [])
 
       // 最近の投稿パフォーマンスを取得
-      const performanceRes = await fetch('/api/viral/performance/recent?limit=5')
+      const performanceRes = await fetch('/api/analyze/performance/recent?limit=5')
       const performanceData = await performanceRes.json()
       setRecentPosts(performanceData.posts || [])
 
       // 統計情報を取得
-      const statsRes = await fetch('/api/dashboard/stats')
+      const statsRes = await fetch('/api/analyze/metrics/overview')
       const statsData = await statsRes.json()
       setStats({
         todayPosts: statsData.todayPosts || 0,

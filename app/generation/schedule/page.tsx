@@ -56,7 +56,7 @@ export default function SchedulePage() {
   const fetchDrafts = async () => {
     try {
       const promises = allDraftIds.map(id => 
-        fetch(`/api/generation/drafts/${id}`).then(res => res.json())
+        fetch(`/api/create/draft/list/${id}`).then(res => res.json())
       )
       const results = await Promise.all(promises)
       setDrafts(results.map(r => r.draft).filter(Boolean))
@@ -102,7 +102,7 @@ export default function SchedulePage() {
     setSubmitting(true)
     try {
       const promises = scheduledDrafts.map(([draftId, scheduledAt]) =>
-        fetch(`/api/generation/drafts/${draftId}/schedule`, {
+        fetch(`/api/create/draft/list/${draftId}/schedule`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ scheduledAt: scheduledAt.toISOString() })

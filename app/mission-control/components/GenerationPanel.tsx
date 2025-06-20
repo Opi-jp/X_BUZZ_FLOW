@@ -58,7 +58,7 @@ export function GenerationPanel() {
       // V2システムのセッションを取得
       const [sessionsRes, charactersRes] = await Promise.all([
         fetch('/api/viral/v2/sessions?limit=10'),
-        fetch('/api/characters')
+        fetch('/api/create/persona/list')
       ])
       
       const sessionsData = await sessionsRes.json()

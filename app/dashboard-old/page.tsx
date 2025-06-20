@@ -88,7 +88,7 @@ export default function DashboardOld() {
 
   const fetchRPCandidates = async () => {
     try {
-      const res = await fetch('/api/buzz-posts?limit=50')
+      const res = await fetch('/api/intel/social/posts?limit=50')
       const data = await res.json()
       
       // 自動スコアリングしてRP候補を抽出
@@ -134,7 +134,7 @@ export default function DashboardOld() {
 
   const fetchNewsHighlights = async () => {
     try {
-      const res = await fetch('/api/news/articles?analyzed=true&limit=5&includeAnalysis=true&sortBy=importance&sortOrder=desc')
+      const res = await fetch('/api/intel/news/articles?analyzed=true&limit=5&includeAnalysis=true&sortBy=importance&sortOrder=desc')
       if (res.ok) {
         const data = await res.json()
         const highlights = data.articles
@@ -156,7 +156,7 @@ export default function DashboardOld() {
 
   const loadBriefing = async () => {
     try {
-      const res = await fetch('/api/briefing/morning', {
+      const res = await fetch('/api/intel/insights/briefing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

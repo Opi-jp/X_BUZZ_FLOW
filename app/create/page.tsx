@@ -28,7 +28,7 @@ export default function CreatePage() {
         { theme }
       )
 
-      const response = await fetch('/api/flow', {
+      const response = await fetch('/api/create/flow/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ theme })

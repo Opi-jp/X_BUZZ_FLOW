@@ -67,7 +67,7 @@ export default function MorningPage() {
 
   const fetchRPCandidates = async () => {
     try {
-      const res = await fetch('/api/buzz-posts?limit=50')
+      const res = await fetch('/api/intel/social/posts?limit=50')
       const data = await res.json()
       
       // 自動スコアリングしてRP候補を抽出
@@ -107,7 +107,7 @@ export default function MorningPage() {
 
   const fetchNewsHighlights = async () => {
     try {
-      const res = await fetch('/api/news/articles?analyzed=true&limit=5')
+      const res = await fetch('/api/intel/news/articles?analyzed=true&limit=5')
       if (res.ok) {
         const data = await res.json()
         setNewsHighlights(data.articles.filter((a: any) => a.importance >= 0.7))
@@ -119,7 +119,7 @@ export default function MorningPage() {
 
   const loadBriefing = async () => {
     try {
-      const res = await fetch('/api/briefing/morning', {
+      const res = await fetch('/api/intel/insights/briefing', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

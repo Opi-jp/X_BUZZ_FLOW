@@ -5,8 +5,8 @@
  * 接続プール、ログ設定、環境別設定を含む
  */
 
-import { PrismaClient } from './generated/prisma'
-export { PostType, PrismaClient } from './generated/prisma'
+import { PrismaClient } from '@/lib/generated/prisma'
+export { PostType, PrismaClient } from '@/lib/generated/prisma'
 
 // グローバル型宣言（開発時のホットリロード対策）
 declare global {
@@ -36,12 +36,15 @@ const prismaConfig: any = {
  * 開発時: グローバルインスタンスを再利用（ホットリロード対策）
  * 本番時: 新しいインスタンスを作成
  */
-export const prisma = globalThis.__prisma || new PrismaClient(prismaConfig)
+const prismaInstance = globalThis.__prisma || new PrismaClient(prismaConfig)
 
 // 開発時のグローバルインスタンス保存
 if (isDevelopment) {
-  globalThis.__prisma = prisma
+  globalThis.__prisma = prismaInstance
 }
+
+// Named exportとして明示的にエクスポート
+export const prisma = prismaInstance
 
 /**
  * Prisma接続のヘルスチェック

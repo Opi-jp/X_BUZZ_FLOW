@@ -1,9 +1,29 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma-client'
 import { claudeLog } from '@/lib/core/claude-logger'
 
 export async function POST(request: Request) {
-  const apiCall = claudeLog.logApiCall('POST', '/api/flow')
+  console.error('=== CREATE FLOW START API CALLED ===')
+  console.error('Environment check:', {
+    NODE_ENV: process.env.NODE_ENV,
+    DATABASE_URL: !!process.env.DATABASE_URL,
+    DIRECT_URL: !!process.env.DIRECT_URL
+  })
+  console.error('Prisma import check:', { prisma, type: typeof prisma })
+  
+  // モジュール診断
+  try {
+    const libPrisma = await import('@/lib/prisma')
+    console.error('Dynamic import result:', {
+      keys: Object.keys(libPrisma),
+      hasPrisma: 'prisma' in libPrisma,
+      prismaType: typeof libPrisma.prisma
+    })
+  } catch (e) {
+    console.error('Dynamic import error:', e)
+  }
+  
+  const apiCall = claudeLog.logApiCall('POST', '/api/create/flow/start')
   const startTime = apiCall.start()
   
   try {
@@ -36,6 +56,15 @@ export async function POST(request: Request) {
       { module: 'database', operation: 'create-session' },
       '🗄️ Creating new viral session'
     )
+
+    // Prisma診断
+    if (!prisma) {
+      console.error('PRISMA IS UNDEFINED!')
+      console.error('Import path: @/lib/prisma')
+      const importedModule = await import('@/lib/prisma')
+      console.error('Imported module keys:', Object.keys(importedModule))
+      throw new Error('Prisma client is not initialized')
+    }
 
     // シンプルなセッション作成
     const session = await prisma.viralSession.create({

@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
     try {
       setLoading(true)
       // TODO: Replace with actual API call
-      // const response = await fetch(`/api/analytics?range=${timeRange}`)
+      // const response = await fetch(`/api/analyze/metrics/data?range=${timeRange}`)
       // const data = await response.json()
       
       // Mock data

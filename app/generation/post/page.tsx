@@ -30,7 +30,7 @@ export default function PostPage() {
   const fetchDrafts = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/drafts')
+      const response = await fetch('/api/create/draft/list')
       if (!response.ok) throw new Error('下書きの取得に失敗しました')
       
       const data = await response.json()
@@ -58,7 +58,7 @@ export default function PostPage() {
         throw new Error(`文字数が280文字を超えています（${tweetText.length}文字）`)
       }
       
-      const response = await fetch('/api/twitter/post', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export default function PostPage() {
       
       if (response.ok && result.success) {
         // 下書きのステータスを更新
-        await fetch(`/api/drafts/${draft.id}`, {
+        await fetch(`/api/create/draft/list/${draft.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

@@ -32,7 +32,7 @@ export default function DraftsPage() {
 
   const fetchDrafts = async () => {
     try {
-      const response = await fetch('/api/drafts')
+      const response = await fetch('/api/create/draft/list')
       if (!response.ok) throw new Error('Failed to fetch drafts')
       
       const data = await response.json()
@@ -53,7 +53,7 @@ export default function DraftsPage() {
       const hashtags = draft.hashtags || ['AI時代', 'X_BUZZ_FLOW']
       const text = `${content}\n\n${hashtags.map((tag: string) => `#${tag.replace(/^#/, '')}`).join(' ')}`
       
-      const response = await fetch('/api/post', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, draftId: draft.id })
@@ -80,7 +80,7 @@ export default function DraftsPage() {
     if (!confirm('この下書きを削除しますか？')) return
     
     try {
-      const response = await fetch(`/api/drafts/${id}`, {
+      const response = await fetch(`/api/create/draft/list/${id}`, {
         method: 'DELETE'
       })
       
@@ -97,7 +97,7 @@ export default function DraftsPage() {
     if (editingDraft === draft.id) {
       // 保存
       try {
-        const response = await fetch(`/api/drafts/${draft.id}`, {
+        const response = await fetch(`/api/create/draft/list/${draft.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content: editedContent })

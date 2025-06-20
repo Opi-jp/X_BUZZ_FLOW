@@ -115,6 +115,26 @@ else
     tmux new-window -t $SESSION_NAME -n error-capture
     tmux send-keys -t $SESSION_NAME:error-capture "cd $PROJECT_DIR && sleep 15 && node scripts/dev-tools/auto-error-capture.js" Enter
     
+    # スマートエラーレコーダー（ウィンドウ13）
+    echo -e "${RED}📝 Smart Error Recorder${NC}"
+    tmux new-window -t $SESSION_NAME -n smart-error
+    tmux send-keys -t $SESSION_NAME:smart-error "cd $PROJECT_DIR && clear" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '🔴 Smart Error Recorder - Ready'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '================================'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo ''" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '📊 現在のエラー統計:'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "node scripts/dev-tools/smart-error-recorder.js --check-status" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo ''" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '⚡ ショートカット:'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '  記録: ser (Smart Error Record)'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '  クイック記録: serq (Quick record)'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo '  未解決: seru (Show unresolved)'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "echo ''" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "alias ser='node scripts/dev-tools/smart-error-recorder.js'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "alias serq='node scripts/dev-tools/smart-error-recorder.js --quick'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "alias seru='node scripts/dev-tools/smart-error-recorder.js --unresolved'" Enter
+    tmux send-keys -t $SESSION_NAME:smart-error "PS1='\[\033[1;31m\]smart-error\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]\$ '" Enter
+    
     # 最初のウィンドウ（next）に戻る
     tmux select-window -t $SESSION_NAME:next
     
@@ -142,6 +162,8 @@ else
     echo -e "   ${YELLOW}9: console${NC}       - インタラクティブコンソール"
     echo -e "   ${RED}10: build-watch${NC}  - ビルド監視"
     echo -e "   ${PURPLE}11: type-check${NC}   - TypeScript型チェック"
+    echo -e "   ${YELLOW}12: error-capture${NC} - 自動エラーキャプチャ"
+    echo -e "   ${RED}13: smart-error${NC}  - スマートエラーレコーダー"
     echo ""
     echo -e "${GREEN}🎉 統合開発環境に接続します...${NC}"
     echo ""

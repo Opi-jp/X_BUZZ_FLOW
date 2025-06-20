@@ -7,8 +7,21 @@
 
 const API_BASE = process.env.NEXTAUTH_URL || 'http://localhost:3000'
 
-// テスト用のテーマ
-const TEST_THEME = 'AIと働き方の未来'
+// コマンドライン引数からテーマを取得
+const args = process.argv.slice(2)
+let TEST_THEME = 'AIと働き方の未来'
+let AUTO_PROGRESS = false
+
+// 引数をパース
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--theme' && args[i + 1]) {
+    TEST_THEME = args[i + 1]
+    i++
+  } else if (args[i] === '--auto-progress') {
+    AUTO_PROGRESS = true
+  }
+}
+
 const TEST_PLATFORM = 'Twitter'
 const TEST_STYLE = 'エンターテイメント'
 
@@ -49,7 +62,7 @@ async function runE2ETest() {
   try {
     // 1. セッション作成
     console.log('📝 Step 1: セッション作成')
-    const createResponse = await makeRequest('/api/flow', 'POST', {
+    const createResponse = await makeRequest('/api/create/flow/start', 'POST', {
       theme: TEST_THEME,
       platform: TEST_PLATFORM,
       style: TEST_STYLE
@@ -74,9 +87,9 @@ async function runE2ETest() {
       
       // 次のステップへ進む
       const nextResponse = await makeRequest(
-        `/api/flow/${sessionId}/next`,
+        `/api/create/flow/${sessionId}/process`,
         'POST',
-        { autoProgress: true }
+        { autoProgress: AUTO_PROGRESS }
       )
       
       console.log(`   アクション: ${nextResponse.action}`)
@@ -85,19 +98,22 @@ async function runE2ETest() {
       // ステータス確認
       await delay(2000) // API処理待ち
       
-      const statusResponse = await makeRequest(`/api/flow/${sessionId}`)
-      currentStatus = statusResponse.status || statusResponse.session?.status || currentStatus
+      const statusResponse = await makeRequest(`/api/create/flow/${sessionId}/status`)
+      currentStatus = nextResponse.status || statusResponse.currentStep || currentStatus
       
       // 各フェーズの結果を表示
-      if (statusResponse.topics && !statusResponse.concepts) {
-        console.log(`   ✅ トピック収集完了（${statusResponse.topics.length}文字）`)
-      } else if (statusResponse.concepts && !statusResponse.contents) {
-        const conceptCount = statusResponse.concepts.length
+      if (statusResponse.data?.topics && !statusResponse.data?.concepts) {
+        const topicsLength = typeof statusResponse.data.topics === 'string' 
+          ? statusResponse.data.topics.length 
+          : JSON.stringify(statusResponse.data.topics).length
+        console.log(`   ✅ トピック収集完了（${topicsLength}文字）`)
+      } else if (statusResponse.data?.concepts && !statusResponse.data?.contents) {
+        const conceptCount = statusResponse.data.concepts.length
         console.log(`   ✅ コンセプト生成完了（${conceptCount}個）`)
-        if (statusResponse.selectedIds) {
-          console.log(`   ✅ コンセプト選択完了（${statusResponse.selectedIds.length}個選択）`)
+        if (statusResponse.data?.selectedConcepts) {
+          console.log(`   ✅ コンセプト選択完了（${statusResponse.data.selectedConcepts.length}個選択）`)
         }
-      } else if (statusResponse.contents) {
+      } else if (statusResponse.data?.contents) {
         console.log(`   ✅ コンテンツ生成完了`)
       }
       
@@ -124,7 +140,7 @@ async function runE2ETest() {
     
     // 3. 最終確認
     console.log('\n📊 最終結果確認')
-    const finalSession = await makeRequest(`/api/generation/content/sessions/${sessionId}`)
+    const finalSession = await makeRequest(`/api/create/flow/${sessionId}/status`)
     
     console.log(`\n✅ E2Eテスト成功！`)
     console.log(`   総ステップ数: ${stepCount}`)
@@ -134,7 +150,7 @@ async function runE2ETest() {
     console.log(`   コンテンツ: ${finalSession.contents ? '✓' : '✗'}`)
     
     // 4. 下書き確認
-    const draftsResponse = await makeRequest('/api/drafts')
+    const draftsResponse = await makeRequest('/api/create/draft/list')
     const drafts = Array.isArray(draftsResponse) ? draftsResponse : draftsResponse.drafts || []
     const sessionDrafts = drafts.filter(d => d.sessionId === sessionId)
     console.log(`   下書き数: ${sessionDrafts.length}`)
@@ -145,7 +161,7 @@ async function runE2ETest() {
       const draftToPost = sessionDrafts[0]
       console.log(`投稿する下書き: ${draftToPost.title}`)
       
-      const postResponse = await makeRequest('/api/post', 'POST', {
+      const postResponse = await makeRequest('/api/publish/post/now', 'POST', {
         content: draftToPost.content,
         hashtags: draftToPost.hashtags,
         draftId: draftToPost.id

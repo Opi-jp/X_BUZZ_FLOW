@@ -55,12 +55,12 @@ export function IntelligencePanel() {
     try {
       if (activeTab === 'news') {
         // 最新ニュースを取得
-        const response = await fetch('/api/news/latest?limit=5')
+        const response = await fetch('/api/intel/news/latest?limit=5')
         const data = await response.json()
         setNewsItems(data.items || [])
       } else if (activeTab === 'buzz') {
         // バズ投稿を取得
-        const response = await fetch('/api/buzz/trending?limit=5')
+        const response = await fetch('/api/intel/social/trending?limit=5')
         const data = await response.json()
         setBuzzPosts(data.posts || [])
       }
@@ -74,7 +74,7 @@ export function IntelligencePanel() {
   const handleCollectNews = async () => {
     setCollectingNews(true)
     try {
-      const response = await fetch('/api/news/collect', { method: 'POST' })
+      const response = await fetch('/api/intel/news/collect', { method: 'POST' })
       if (response.ok) {
         await fetchLatestData()
       }

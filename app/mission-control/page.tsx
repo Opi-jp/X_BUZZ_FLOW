@@ -36,7 +36,7 @@ export default function MissionControl() {
   const fetchRecentData = async () => {
     try {
       // V2システムの最新セッションを取得
-      const response = await fetch('/api/generation/content/sessions?limit=5')
+      const response = await fetch('/api/create/flow/list?limit=5')
       const data = await response.json()
       setRecentSessions(data.sessions || [])
     } catch (error) {

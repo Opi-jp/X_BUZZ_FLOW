@@ -87,7 +87,7 @@ export default function SessionStatusPage() {
 
   const fetchSession = async () => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}`)
+      const response = await fetch(`/api/create/flow/list/${sessionId}`)
       if (!response.ok) throw new Error('セッションの取得に失敗しました')
       
       const data = await response.json()
@@ -115,7 +115,7 @@ export default function SessionStatusPage() {
 
   const generateConcepts = async () => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}/concepts`, {
+      const response = await fetch(`/api/create/flow/list/${sessionId}/concepts`, {
         method: 'POST'
       })
       

@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
     if (includeNews) {
       const since = new Date(Date.now() - (timeRange === '24h' ? 24 : 6) * 60 * 60 * 1000)
       
-      const newsArticles = await prisma.newsArticle.findMany({
+      const newsArticles = await prisma.news_articles.findMany({
         where: {
-          publishedAt: { gte: since },
+          published_at: { gte: since },
           OR: [
             { importance: { gte: 0.7 } },
             // 未処理でもAI関連の重要そうな記事を含める
@@ -51,12 +51,12 @@ export async function POST(request: NextRequest) {
         },
         orderBy: [
           { importance: 'desc' },
-          { publishedAt: 'desc' }
+          { published_at: 'desc' }
         ],
         take: 10,
         include: {
-          source: true, // NewsSourceのデータも含める
-          analysis: true // NewsAnalysisの詳細データも含める
+          news_sources: true, // NewsSourceのデータも含める
+          news_analyses: true // NewsAnalysisの詳細データも含める
         }
       })
 
@@ -64,27 +64,27 @@ export async function POST(request: NextRequest) {
         id: article.id,
         title: article.title,
         source: {
-          id: article.source.id,
-          name: article.source.name,
-          url: article.source.url
+          id: article.news_sources.id,
+          name: article.news_sources.name,
+          url: article.news_sources.url
         }, // sourceオブジェクトとして渡す
-        sourceName: article.source.name, // 互換性のため名前も直接設定
+        sourceName: article.news_sources.name, // 互換性のため名前も直接設定
         importance: article.importance || 0.5, // 未処理の場合はデフォルト値
-        summary: (article as any).description || article.analysis?.summary || article.title,
+        summary: (article as any).description || article.news_analyses?.summary || article.title,
         url: article.url,
-        publishedAt: article.publishedAt,
+        publishedAt: article.published_at,
         category: article.category || 'other',
         processed: article.processed,
         // NewsAnalysisのデータを含める（新しいスキーマ対応）
-        analysis: article.analysis ? {
-          summary: article.analysis.summary,
-          sentiment: article.analysis.sentiment,
-          keywords: article.analysis.keywords,
-          topics: article.analysis.topics
+        analysis: article.news_analyses ? {
+          summary: article.news_analyses.summary,
+          japaneseSummary: article.news_analyses.japanese_summary,
+          keyPoints: article.news_analyses.key_points,
+          impact: article.news_analyses.impact
         } : null,
-        // 互換性のため keywords も直接設定
-        keywords: article.analysis?.keywords || [],
-        topics: article.analysis?.topics || []
+        // 互換性のため keywords も直接設定  
+        keywords: article.news_analyses?.key_points || [],
+        topics: []
       }))
     }
 

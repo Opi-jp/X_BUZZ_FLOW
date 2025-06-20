@@ -36,7 +36,7 @@ export default function DetailedCreatePage() {
     setError(null)
     
     try {
-      const response = await fetch('/api/generation/content/sessions', {
+      const response = await fetch('/api/create/flow/list', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export default function DetailedCreatePage() {
   // Step 2: Perplexityでトピック収集
   const collectTopics = async (sessionId: string) => {
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}/collect`, {
+      const response = await fetch(`/api/create/flow/list/${sessionId}/collect`, {
         method: 'POST'
       })
       
@@ -82,7 +82,7 @@ export default function DetailedCreatePage() {
       
       // ポーリングでステータス確認
       const checkStatus = setInterval(async () => {
-        const statusResponse = await fetch(`/api/generation/content/sessions/${sessionId}`)
+        const statusResponse = await fetch(`/api/create/flow/list/${sessionId}`)
         const statusData = await statusResponse.json()
         
         if (statusData.session?.status === 'TOPICS_COLLECTED') {
@@ -118,7 +118,7 @@ export default function DetailedCreatePage() {
     setLoading(true)
     
     try {
-      const response = await fetch(`/api/generation/content/sessions/${sessionId}/generate-concepts`, {
+      const response = await fetch(`/api/create/flow/list/${sessionId}/generate-concepts`, {
         method: 'POST'
       })
       
@@ -126,7 +126,7 @@ export default function DetailedCreatePage() {
       
       // ポーリングでステータス確認
       const checkStatus = setInterval(async () => {
-        const statusResponse = await fetch(`/api/generation/content/sessions/${sessionId}`)
+        const statusResponse = await fetch(`/api/create/flow/list/${sessionId}`)
         const statusData = await statusResponse.json()
         
         if (statusData.session?.status === 'CONCEPTS_GENERATED') {
@@ -159,7 +159,7 @@ export default function DetailedCreatePage() {
     
     try {
       // 選択されたコンセプトIDを送信
-      const response = await fetch(`/api/generation/content/sessions/${sessionData.sessionId}/select-concepts`, {
+      const response = await fetch(`/api/create/flow/list/${sessionData.sessionId}/select-concepts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -172,7 +172,7 @@ export default function DetailedCreatePage() {
       if (!response.ok) throw new Error('コンセプト選択に失敗')
       
       // Claudeでコンテンツ生成
-      const generateResponse = await fetch(`/api/generation/content/sessions/${sessionData.sessionId}/claude-generate`, {
+      const generateResponse = await fetch(`/api/create/flow/list/${sessionData.sessionId}/claude-generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ export default function DetailedCreatePage() {
       if (!generateResponse.ok) throw new Error('コンテンツ生成に失敗')
       
       // 結果を取得
-      const sessionResponse = await fetch(`/api/generation/content/sessions/${sessionData.sessionId}`)
+      const sessionResponse = await fetch(`/api/create/flow/list/${sessionData.sessionId}`)
       const sessionResult = await sessionResponse.json()
       
       const contents = typeof sessionResult.session.contents === 'string' 
@@ -195,7 +195,7 @@ export default function DetailedCreatePage() {
       // 下書きを作成
       const drafts = []
       for (const content of contents) {
-        const draftResponse = await fetch('/api/generation/drafts', {
+        const draftResponse = await fetch('/api/create/draft/list', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export default function DetailedCreatePage() {
       const hashtags = draft.hashtags.map((tag: string) => `#${tag.replace(/^#/, '')}`).join(' ')
       const tweetText = `${content}\n\n${hashtags}`
       
-      const response = await fetch('/api/twitter/post', {
+      const response = await fetch('/api/publish/post/now/post/now/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -248,7 +248,7 @@ export default function DetailedCreatePage() {
         alert(`投稿成功！\nURL: ${result.url}`)
         
         // 下書きステータス更新
-        await fetch(`/api/generation/drafts/${draft.id}`, {
+        await fetch(`/api/create/draft/list/${draft.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
