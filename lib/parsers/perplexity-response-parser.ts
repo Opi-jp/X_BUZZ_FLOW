@@ -42,20 +42,45 @@ export class PerplexityResponseParser {
       console.log('Found code block, first 100 chars:', jsonContent.substring(0, 100))
       
       try {
-        // JSONパース前に改行文字の処理
-        // summary内の改行を\\nにエスケープ
+        // JSONパース前の前処理
         let processedJson = jsonContent
         
-        // "summary": "..." の中の実際の改行を \n にエスケープ
-        processedJson = processedJson.replace(/"summary":\s*"([^"]*(?:\n[^"]*)*?)"/g, (match, content) => {
-          const escaped = content.replace(/\n/g, '\\n')
-          return `"summary": "${escaped}"`
-        })
+        // 不完全なJSONを検出（最後のフィールドが切れている場合）
+        if (processedJson.includes('...') && !processedJson.trim().endsWith('}')) {
+          console.warn('Detected truncated JSON, attempting to fix...')
+          // 最後の不完全な行を削除
+          const lines = processedJson.split('\n')
+          let lastValidLine = lines.length - 1
+          
+          // 最後の有効な行を探す
+          while (lastValidLine >= 0 && !lines[lastValidLine].includes('}') && !lines[lastValidLine].includes(']')) {
+            lastValidLine--
+          }
+          
+          if (lastValidLine >= 0) {
+            // 不完全な部分を削除して、JSONを閉じる
+            processedJson = lines.slice(0, lastValidLine + 1).join('\n')
+            
+            // 必要に応じて閉じタグを追加
+            const openBraces = (processedJson.match(/{/g) || []).length
+            const closeBraces = (processedJson.match(/}/g) || []).length
+            const openBrackets = (processedJson.match(/\[/g) || []).length
+            const closeBrackets = (processedJson.match(/\]/g) || []).length
+            
+            // 閉じタグを追加
+            if (openBrackets > closeBrackets) {
+              processedJson += '\n]'
+            }
+            if (openBraces > closeBraces) {
+              processedJson += '\n}'
+            }
+          }
+        }
         
-        // "perplexityAnalysis": "..." の中の改行も同様に処理
-        processedJson = processedJson.replace(/"perplexityAnalysis":\s*"([^"]*(?:\n[^"]*)*?)"/g, (match, content) => {
-          const escaped = content.replace(/\n/g, '\\n')
-          return `"perplexityAnalysis": "${escaped}"`
+        // 改行文字のエスケープ処理
+        // すべての文字列値内の改行をエスケープ
+        processedJson = processedJson.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
+          return match.replace(/\n/g, '\\n').replace(/\r/g, '\\r')
         })
         
         // JSONをパース

@@ -294,11 +294,16 @@ Step 2が必要とする情報 → Step 1の出力を設計
 - test-*やdebug-*のAPIは本番コードから呼ばない
 - 不明な場合は `node scripts/dev-tools/api-dependency-scanner.js` で確認
 
-## 🎯 現在のシステム状態（2025年6月19日時点）
+## 🎯 現在のシステム状態（2025年6月20日時点）
 
 ### Create→Draft→Post フロー完全実装完了 ✅
 
-#### 2025年6月19日の重要な達成：
+#### 2025年6月20日の重要な達成：
+- **実際のTwitter投稿成功**: Create→Draft→Postフローで実際の投稿確認
+- **autoProgress機能実装**: E2Eテスト用の自動進行モード追加
+- **APIパラメータ整合性確認**: すべてのAPIで入出力の一貫性を検証
+
+#### 2025年6月19日の達成事項：
 - **Create→Draft→Post フロー**: Perplexity→GPT→Claude→ViralDraftV2→Twitter投稿の完全実装
 - **DB問題根本解決**: Prisma v6.10.1にアップデートでDB接続問題解決
 - **ViralDraftV2完全移行**: 旧テーブル使用停止、新スキーマ対応完了
@@ -357,6 +362,11 @@ Step 5: Post - Twitter投稿実行
 - 非同期処理は`continue-async`を使用
 - プロンプトのロール定義は一貫性を保つ
 - ポート3000必須（Twitter OAuth認証の制約）
+- **LLM応答時間（実測値）**: 
+  - Perplexity: 20-60秒（最新ニュース検索・分析のため最も重い）
+  - GPT-4o: 15-45秒（複数並列処理時はさらに増加）
+  - Claude: 10-30秒
+- **テスト時の待機時間**: 各フェーズごとに適切な待機時間を設定すること
 
 ## 🔧 技術スタック
 

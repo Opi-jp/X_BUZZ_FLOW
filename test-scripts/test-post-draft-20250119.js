@@ -1,143 +1,80 @@
-#!/usr/bin/env node
-
+#\!/usr/bin/env node
 /**
- * 下書きから直接投稿するテスト
- * Date: 2025-01-19
+ * 下書きから投稿実行テスト
  */
 
-const { PrismaClient } = require('../lib/generated/prisma')
-const prisma = new PrismaClient()
-const chalk = require('chalk')
+const baseUrl = 'http://localhost:3000'
 
-async function postDraft() {
+async function testPostDraft() {
+  console.log('🚀 下書きから投稿実行テスト')
+  console.log('='.repeat(50))
+  
   try {
-    // 最新の下書きを取得
-    const draft = await prisma.viralDraftV2.findFirst({
-      where: { status: 'DRAFT' },
-      orderBy: { createdAt: 'desc' }
-    })
+    // 1. 最新の下書きを取得
+    console.log('\n1️⃣ 下書き取得...')
+    const draftsRes = await fetch(`${baseUrl}/api/drafts`)
+    const draftsData = await draftsRes.json()
     
-    if (!draft) {
-      console.log(chalk.red('❌ 投稿可能な下書きがありません'))
+    if (\!draftsData.drafts || draftsData.drafts.length === 0) {
+      console.log('❌ 下書きが見つかりません')
       return
     }
     
-    console.log(chalk.blue('📝 下書き情報:'))
-    console.log(chalk.gray(`ID: ${draft.id}`))
-    console.log(chalk.gray(`タイトル: ${draft.title}`))
-    console.log(chalk.gray(`キャラクター: ${draft.characterId}`))
-    
-    // 投稿内容を構築
-    const hashtags = draft.hashtags.map(tag => `#${tag.replace(/^#/, '')}`).join(' ')
-    const tweetText = `${draft.content}\n\n${hashtags}`
-    
-    console.log(chalk.yellow('\n📱 投稿内容:'))
-    console.log(chalk.gray('─'.repeat(50)))
-    console.log(tweetText)
-    console.log(chalk.gray('─'.repeat(50)))
-    console.log(chalk.gray(`文字数: ${tweetText.length}`))
-    
-    if (tweetText.length > 280) {
-      console.log(chalk.red('❌ 280文字を超えています'))
+    // DRAFT状態の最初の下書きを選択
+    const draft = draftsData.drafts.find(d => d.status === 'DRAFT')
+    if (\!draft) {
+      console.log('❌ 投稿可能な下書きが見つかりません')
       return
     }
     
-    // Twitter APIで投稿
-    console.log(chalk.yellow('\n📤 Twitter投稿を実行します...'))
+    console.log(`✅ 下書き選択: ${draft.title}`)
+    console.log(`内容: ${draft.content.substring(0, 100)}...`)
+    console.log(`ハッシュタグ: ${draft.hashtags.join(' ')}`)
     
-    const response = await fetch('http://localhost:3000/api/twitter/post', {
+    // 2. 投稿実行
+    console.log('\n2️⃣ Twitter投稿実行...')
+    const postRes = await fetch(`${baseUrl}/api/post`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: tweetText })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: draft.content,
+        hashtags: draft.hashtags,
+        draftId: draft.id
+      })
     })
     
-    const result = await response.json()
-    
-    if (response.ok && result.success) {
-      console.log(chalk.green('\n✅ 投稿成功!'))
-      console.log(chalk.blue(`URL: ${result.url}`))
-      console.log(chalk.gray(`Tweet ID: ${result.id}`))
+    if (postRes.ok) {
+      const postResult = await postRes.json()
+      console.log('\n✅ 投稿成功！')
+      console.log(`📱 Twitter URL: ${postResult.url || postResult.tweetUrl || '(モックモード)'}`)
+      console.log(`Tweet ID: ${postResult.id || postResult.tweetId || 'N/A'}`)
       
-      if (result.mock) {
-        console.log(chalk.yellow('⚠️  モック投稿モード'))
+      // 3. 下書きのステータス確認
+      console.log('\n3️⃣ 下書きステータス確認...')
+      const updatedDraftsRes = await fetch(`${baseUrl}/api/drafts`)
+      const updatedDraftsData = await updatedDraftsRes.json()
+      const updatedDraft = updatedDraftsData.drafts.find(d => d.id === draft.id)
+      
+      if (updatedDraft) {
+        console.log(`下書きステータス: ${updatedDraft.status}`)
+        console.log(`Tweet ID: ${updatedDraft.tweetId || 'なし'}`)
       }
-      
-      // 下書きのステータスを更新
-      await prisma.viralDraftV2.update({
-        where: { id: draft.id },
-        data: {
-          status: 'POSTED',
-          postedAt: new Date(),
-          tweetId: result.id
-        }
-      })
-      
-      console.log(chalk.green('✅ 下書きステータス更新完了'))
-      
     } else {
-      console.log(chalk.red('❌ 投稿失敗'))
-      console.log(chalk.red('エラー詳細:'))
-      console.log(result)
-      
-      // 新しいpublish APIも試してみる
-      console.log(chalk.yellow('\n🔄 新しいpublish APIで再試行...'))
-      
-      const publishResponse = await fetch('http://localhost:3000/api/publish/post/now', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: draft.content,
-          draftId: draft.id,
-          hashtags: draft.hashtags
-        })
-      })
-      
-      const publishResult = await publishResponse.json()
-      console.log('Publish API結果:', publishResult)
+      console.log(`\n❌ 投稿失敗: ${postRes.status}`)
+      const errorText = await postRes.text()
+      console.log('エラー:', errorText.substring(0, 200))
     }
     
   } catch (error) {
-    console.error(chalk.red('❌ エラー:'), error)
-  } finally {
-    await prisma.$disconnect()
+    console.error('❌ エラー:', error.message)
   }
 }
 
-async function checkAuthStatus() {
-  console.log(chalk.blue('🔐 認証状態確認\n'))
-  
-  // 環境変数の確認
-  const hasTwitterV1 = !!(
-    process.env.TWITTER_API_KEY &&
-    process.env.TWITTER_API_SECRET &&
-    process.env.TWITTER_ACCESS_TOKEN &&
-    process.env.TWITTER_ACCESS_SECRET
-  )
-  
-  const hasTwitterV2 = !!(
-    process.env.TWITTER_CLIENT_ID &&
-    process.env.TWITTER_CLIENT_SECRET
-  )
-  
-  console.log(`Twitter v1.1 認証: ${hasTwitterV1 ? '✅' : '❌'}`)
-  console.log(`Twitter v2 認証: ${hasTwitterV2 ? '✅' : '❌'}`)
-  
-  if (!hasTwitterV1 && !hasTwitterV2) {
-    console.log(chalk.yellow('\n⚠️  Twitter認証情報が設定されていません'))
-    console.log('モック投稿モードで動作します')
-  }
-}
+// 環境変数の確認
+console.log('📋 環境変数チェック:')
+console.log(`USE_MOCK_POSTING: ${process.env.USE_MOCK_POSTING || '未設定'}`)
+console.log(`TWITTER_CLIENT_ID: ${process.env.TWITTER_CLIENT_ID ? '設定済み' : '未設定'}`)
+console.log(`TWITTER_CLIENT_SECRET: ${process.env.TWITTER_CLIENT_SECRET ? '設定済み' : '未設定'}`)
 
-async function main() {
-  console.log(chalk.yellow('🚀 下書き投稿テスト'))
-  console.log(chalk.gray('===================\n'))
-  
-  await checkAuthStatus()
-  await postDraft()
-}
-
-main().catch(console.error)
+testPostDraft()
+EOF < /dev/null

@@ -41,10 +41,11 @@ export async function POST(
       )
     }
 
-    if (session.status !== 'CREATED') {
+    // topicsデータが既に存在する場合はスキップ
+    if (session.topics) {
       return NextResponse.json(
-        { error: 'Session already started' },
-        { status: 400 }
+        { error: 'Topics already collected', success: true },
+        { status: 200 }
       )
     }
 

@@ -1,0 +1,63 @@
+{
+  "timestamp": "2025-06-19T22:47:29.185Z",
+  "apiStatus": {
+    "Flow Start": {
+      "status": 200,
+      "ok": true,
+      "responseTime": 201,
+      "hasData": true,
+      "endpoint": "/api/flow"
+    },
+    "Drafts List": {
+      "status": 200,
+      "ok": true,
+      "responseTime": 293,
+      "hasData": true,
+      "endpoint": "/api/drafts"
+    },
+    "Health Check": {
+      "status": 200,
+      "ok": true,
+      "responseTime": 170,
+      "hasData": true,
+      "endpoint": "/api/health"
+    }
+  },
+  "mappingStatus": {
+    "Intel → Flow": {
+      "works": true,
+      "redirected": true,
+      "status": 200
+    },
+    "Create → Flow": {
+      "works": true,
+      "redirected": true,
+      "status": 200
+    },
+    "Publish → Post": {
+      "works": false,
+      "redirected": true,
+      "status": 500
+    }
+  },
+  "performanceMetrics": {
+    "API Response Time": {
+      "average": 75,
+      "min": 67,
+      "max": 92,
+      "samples": 5
+    },
+    "Concurrent Requests": {
+      "total": 10,
+      "successful": 10,
+      "totalTime": 263,
+      "avgPerRequest": 26
+    },
+    "Database Query Time": {
+      "queryTime": 73,
+      "recordCount": 10,
+      "hasData": true
+    }
+  },
+  "errors": []
+}

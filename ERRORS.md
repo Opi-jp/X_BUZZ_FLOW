@@ -519,6 +519,98 @@ Prismaを最新版（v6.10.1）にアップデートすることでDB接続問�
 
 ---
 
+
+## 🔴 Perplexity JSON parse error
+
+### 解決策
+PerplexityのJSONレスポンスが途中で切れていることがある。URLに...が含まれる場合は不完全なJSONを修復する処理を追加した。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Claude generation Failed to generate any posts
+
+### 解決策
+プロンプトローダー、キャラクターファイル、プロンプトファイルすべて正常に存在するが、Claude APIが500エラーを返す。詳細ログを追加して原因調査中。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Create部分の実装計画実行中に落ちました
+
+### 症状
+- Create部分の実装計画を実行中にシステムがクラッシュ
+- 具体的なエラーメッセージは不明
+
+### 考えられる原因
+Based on common create-related errors in the system:
+1. **Prismaクライアントエラー** - 最新版v6.10.1へのアップデートで解決済みだが、再発の可能性
+2. **非同期処理のタイムアウト** - Vercelの300秒制限やフェーズ間でのコンテキスト消失
+3. **APIエンドポイントの混乱** - 新旧API混在による予期しない動作
+4. **Node.jsプロセスの古いコード実行** - ファイル変更が反映されていない
+5. **DB接続エラー** - DIRECT_URLとDATABASE_URLの設定ミス
+
+### 調査結果
+- 現在動作中のプロセス: next-server (v15.3.0), npm run dev
+- tmuxセッション(xbuzz:next)にエラーログなし
+- Create関連ファイル:
+  - `/app/api/create/flow/*` - 新APIモジュール
+  - `/app/create/*` - フロントエンドページ
+  - 多数のテストスクリプト存在
+
+### 解決策
+1. サーバープロセスの再起動:
+   ```bash
+   # tmuxセッションで再起動
+   tmux attach -t xbuzz
+   # Ctrl+C でサーバー停止後
+   npm run dev
+   ```
+
+2. 環境確認:
+   ```bash
+   node scripts/dev-tools/check-env.js
+   node scripts/dev-tools/db-schema-validator.js
+   ```
+
+3. APIエンドポイントの確認:
+   ```bash
+   node scripts/dev-tools/api-dependency-scanner.js
+   ```
+
+### 根本対策
+- エラー発生時は必ずtmuxセッションのログを確認
+- 実装前に環境のヘルスチェックを実行
+- API変更時は依存関係スキャナーで影響範囲を確認
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 E2E Test Status undefined error
+
+### 解決策
+E2Eテストでステータスがundefinedを返す問題。実際には全フェーズ完了しているが、status取得時にundefinedが返される。APIレスポンスの形式確認が必要。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 E2E Test drafts.filter error
+
+### 解決策
+E2Eテストの最後でdrafts.filterがundefinedに対して実行されるエラー。3つの下書きは正常に作成されているが、最終的な下書き取得時にundefinedが返される。APIレスポンス形式の確認が必要。
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

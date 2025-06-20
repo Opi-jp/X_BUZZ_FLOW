@@ -14,22 +14,33 @@ const anthropic = new Anthropic({
 })
 
 // キャラクターデータを自然文で表現
-function wrapCharacterProfile(characterId: string): string {
-  const profiles: Record<string, string> = {
-    'cardi-dare': `あなたは「カーディ・ダーレ」として投稿を作成します。
-
-カーディ・ダーレ（53歳）
-- 経歴: 元詐欺師 → 元王様 → 現在はただの飲んだくれ
-- 哲学: 「人間は最適化できない。それが救いだ」
-- 性格: シニカルで辛辣、しかし根は優しい。人生経験豊富
-- 口調: ぶっきらぼうで皮肉っぽいが、時折優しさが滲む
-- 特徴: ツイートに酒の話題がよく出る。理想主義者を小馬鹿にしつつも、その純粋さを密かに羨んでいる`,
+async function wrapCharacterProfile(characterId: string): Promise<string> {
+  try {
+    // キャラクターファイルを読み込み
+    const fs = await import('fs/promises')
+    const path = await import('path')
+    const characterPath = path.join(process.cwd(), 'lib', 'prompts', 'characters', `${characterId}.json`)
     
-    'default': `あなたはニュートラルで親しみやすいトーンで投稿を作成します。
+    const characterData = await fs.readFile(characterPath, 'utf-8')
+    const character = JSON.parse(characterData)
+    
+    // キャラクター情報を自然文に変換
+    let profile = `あなたは「${character.name}」として投稿を作成します。\n\n`
+    
+    if (character.age) profile += `${character.name}（${character.age}歳）\n`
+    if (character.background) profile += `- 経歴: ${character.background}\n`
+    if (character.philosophy) profile += `- 哲学: 「${character.philosophy}」\n`
+    if (character.personality) profile += `- 性格: ${character.personality}\n`
+    if (character.tone) profile += `- 口調: ${character.tone}\n`
+    if (character.traits) profile += `- 特徴: ${character.traits}`
+    
+    return profile
+  } catch (error) {
+    console.error(`Failed to load character profile: ${characterId}`, error)
+    // デフォルトに戻る
+    return `あなたはニュートラルで親しみやすいトーンで投稿を作成します。
 情報を分かりやすく伝え、読者との共感を大切にしてください。`
   }
-  
-  return profiles[characterId] || profiles['default']
 }
 
 // コンセプトデータを自然文で表現
@@ -109,18 +120,25 @@ export async function POST(
 
     // 各コンセプトに対して投稿を生成
     for (const concept of selectedConcepts) {
-      const characterProfile = wrapCharacterProfile(characterId)
-      const conceptData = wrapConceptData(concept)
-      
-      // プロンプトローダーで変数を展開
-      const prompt = loadPrompt(promptPath, {
+      let prompt = '' // スコープを外に出す
+      try {
+        console.log(`Processing concept: ${concept.conceptId}`)
+        
+        const characterProfile = await wrapCharacterProfile(characterId)
+        const conceptData = wrapConceptData(concept)
+        
+        console.log('Loading prompt from:', promptPath)
+        
+        // プロンプトローダーで変数を展開
+        prompt = loadPrompt(promptPath, {
         character: characterProfile,
         concept: conceptData,
         platform: session.platform || 'Twitter',
         theme: session.theme || ''
       })
 
-      try {
+        console.log('Prompt loaded, length:', prompt.length)
+
         const response = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-latest',
           max_tokens: 2000,
@@ -133,7 +151,25 @@ export async function POST(
 
         const content = response.content[0]
         if (content.type === 'text') {
-          const postData = JSON.parse(content.text)
+          console.log('Claude response:', content.text.substring(0, 200))
+          
+          // Claudeのレスポンスが直接テキストの場合
+          const responseText = content.text.trim()
+          
+          // JSON形式でない場合は、テキストをそのまま使用
+          let postData
+          if (responseText.startsWith('{')) {
+            try {
+              postData = JSON.parse(responseText)
+            } catch (parseError) {
+              console.warn('Failed to parse as JSON, using as plain text')
+              postData = { content: responseText }
+            }
+          } else {
+            // プレーンテキストの場合
+            postData = { content: responseText }
+          }
+          
           generatedPosts.push({
             conceptId: concept.conceptId,
             conceptTitle: concept.conceptTitle,
@@ -143,6 +179,13 @@ export async function POST(
         }
       } catch (error) {
         console.error(`Error generating post for concept ${concept.conceptId}:`, error)
+        console.error('Error details:', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined,
+          conceptTitle: concept.conceptTitle,
+          characterId,
+          promptLength: prompt ? prompt.length : 0
+        })
         // エラーがあってもスキップして続行
       }
     }
@@ -169,7 +212,9 @@ export async function POST(
         ? post.posts.map((p: any) => p.content).join('\n\n') 
         : post.content
       
-      const hashtags = post.hashtags || []
+      // コンセプトから関連するハッシュタグを取得
+      const matchingConcept = selectedConcepts.find(c => c.conceptId === post.conceptId)
+      const hashtags = matchingConcept?.hashtags || ['#AI', '#働き方', '#未来']
       
       await prisma.viralDraftV2.create({
         data: {

@@ -41,12 +41,15 @@ export async function POST(
       )
     }
     
-    if (!session.topics || session.status !== 'TOPICS_COLLECTED') {
+    if (!session.topics) {
       return NextResponse.json(
         { error: 'Topics not collected yet' },
         { status: 400 }
       )
     }
+    
+    // ステータスチェック: データがあれば処理を続行
+    // ステータスに関わらず、topicsデータがあれば概念生成可能
 
     // ステータスを更新
     await prisma.viralSession.update({
