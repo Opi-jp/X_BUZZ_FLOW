@@ -1,0 +1,46 @@
+[
+  {
+    "type": "console",
+    "url": "http://localhost:3000/create/content",
+    "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "timestamp": "2025-06-20T02:03:22.981Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/create/content",
+    "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "timestamp": "2025-06-20T02:03:23.345Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/create/content",
+    "message": "Refused to execute script from 'http://localhost:3000/_next/static/chunks/main-app.js?v=1750385002931' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "timestamp": "2025-06-20T02:03:23.345Z"
+  },
+  {
+    "type": "network",
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1750385002931",
+    "method": "GET",
+    "failure": "net::ERR_ABORTED",
+    "timestamp": "2025-06-20T02:03:23.346Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/mission-control",
+    "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "timestamp": "2025-06-20T02:03:32.675Z"
+  },
+  {
+    "type": "console",
+    "url": "http://localhost:3000/mission-control",
+    "message": "Refused to execute script from 'http://localhost:3000/_next/static/chunks/main-app.js?v=1750385012573' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "timestamp": "2025-06-20T02:03:32.675Z"
+  },
+  {
+    "type": "network",
+    "url": "http://localhost:3000/_next/static/chunks/main-app.js?v=1750385012573",
+    "method": "GET",
+    "failure": "net::ERR_ABORTED",
+    "timestamp": "2025-06-20T02:03:32.675Z"
+  }
+]

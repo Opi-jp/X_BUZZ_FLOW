@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Brain, Loader2, Sparkles } from 'lucide-react'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 export default function CreatePage() {
   const router = useRouter()
@@ -11,12 +12,22 @@ export default function CreatePage() {
   const [error, setError] = useState<string | null>(null)
 
   const startFlow = async () => {
-    if (!theme.trim()) return
+    if (!theme.trim()) {
+      claudeLog.logFrontendAction('validation-error', 'CreatePage', { reason: 'empty-theme' })
+      return
+    }
 
+    claudeLog.logFrontendAction('start-flow', 'CreatePage', { theme })
     setLoading(true)
     setError(null)
 
     try {
+      claudeLog.info(
+        { module: 'frontend', operation: 'api-call' },
+        '🌐 Starting flow creation',
+        { theme }
+      )
+
       const response = await fetch('/api/flow', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,16 +36,34 @@ export default function CreatePage() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        console.error('API Error:', errorData)
+        claudeLog.error(
+          { module: 'frontend', operation: 'api-error' },
+          '❌ API call failed',
+          errorData
+        )
         throw new Error(errorData.error || 'フロー開始に失敗しました')
       }
 
       const data = await response.json()
       
+      claudeLog.success(
+        { module: 'frontend', operation: 'flow-created', sessionId: data.id },
+        '✅ Flow created successfully'
+      )
+      
       // フロー詳細ページへ遷移
+      claudeLog.logFrontendAction('navigate', 'CreatePage', { 
+        to: `/create/flow/${data.id}`,
+        sessionId: data.id
+      })
       router.push(`/create/flow/${data.id}`)
       
     } catch (err) {
+      claudeLog.error(
+        { module: 'frontend', operation: 'flow-creation' },
+        '💥 Flow creation failed',
+        err
+      )
       setError(err instanceof Error ? err.message : 'エラーが発生しました')
       setLoading(false)
     }

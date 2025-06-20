@@ -10,12 +10,9 @@ const { PrismaClient } = require('../../lib/generated/prisma');
 const fs = require('fs');
 const path = require('path');
 
+// プロジェクト標準の接続方法を使用（@/lib/prismaと同じ）
 const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DIRECT_URL || process.env.DATABASE_URL
-    }
-  }
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
 });
 
 // チェック結果を格納
@@ -165,7 +162,7 @@ async function validateAllTables() {
   console.log(`${colors.blue}Checking all tables...${colors.reset}`);
   
   // Prismaスキーマファイルを読み込む
-  const schemaPath = path.join(__dirname, '../prisma/schema.prisma');
+  const schemaPath = path.join(__dirname, '../../prisma/schema.prisma');
   const schemaContent = fs.readFileSync(schemaPath, 'utf8');
   
   // モデル名を抽出

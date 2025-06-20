@@ -1,20 +1,41 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 export async function POST(request: Request) {
-  console.log('[API] POST /api/flow - Start')
+  const apiCall = claudeLog.logApiCall('POST', '/api/flow')
+  const startTime = apiCall.start()
+  
   try {
-    console.log('[API] Parsing request body...')
+    claudeLog.info(
+      { module: 'api', operation: 'parse-body' },
+      '📝 Parsing request body'
+    )
+    
     const body = await request.json()
-    console.log('[API] Body:', body)
     const { theme, platform = 'Twitter', style = 'エンターテイメント' } = body
 
+    claudeLog.info(
+      { module: 'api', operation: 'validate-input' },
+      '✅ Input validation',
+      { theme, platform, style }
+    )
+
     if (!theme) {
+      claudeLog.warn(
+        { module: 'api', operation: 'validation-error' },
+        '❌ Theme is required'
+      )
       return NextResponse.json(
         { error: 'Theme is required' },
         { status: 400 }
       )
     }
+
+    claudeLog.info(
+      { module: 'database', operation: 'create-session' },
+      '🗄️ Creating new viral session'
+    )
 
     // シンプルなセッション作成
     const session = await prisma.viralSession.create({
@@ -26,18 +47,39 @@ export async function POST(request: Request) {
       }
     })
 
+    claudeLog.logCreateFlow(session.id, 'CREATED', 'SUCCESS', {
+      theme,
+      platform,
+      style
+    })
+
     // 自動的に最初のステップ（Perplexity収集）を開始
     // TODO: 非同期処理の修正が必要
     // startPerplexityCollection(session.id).catch(console.error)
 
-    return NextResponse.json({
+    const response = {
       id: session.id,
       status: 'COLLECTING',
       message: '情報収集を開始しました'
-    })
+    }
+
+    apiCall.end(startTime, 200, response)
+    claudeLog.success(
+      { module: 'api', operation: 'flow-start', sessionId: session.id },
+      '🎉 Flow started successfully',
+      Date.now() - startTime,
+      response
+    )
+
+    return NextResponse.json(response)
   } catch (error) {
-    console.error('[API] Flow start error:', error)
-    console.error('[API] Error stack:', error instanceof Error ? error.stack : 'No stack')
+    apiCall.end(startTime, 500)
+    claudeLog.error(
+      { module: 'api', operation: 'flow-start' },
+      '💥 Flow start failed',
+      error
+    )
+    
     return NextResponse.json(
       { error: 'Failed to start flow' },
       { status: 500 }

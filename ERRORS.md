@@ -611,6 +611,306 @@ E2Eテストの最後でdrafts.filterがundefinedに対して実行されるエ�
 
 ---
 
+
+## 🔴 DB Schema Validator接続エラー
+
+### 解決策
+db-schema-validator実行時にCan't reach database server at db.atyvtqorzthnszyulquu.supabase.co:5432エラー発生。しかしcurl http://localhost:3000/api/healthでは正常接続確認済み。dev-tools/db-schema-validator.jsが古い接続方法を使用している可能性。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 2つのPrisma接続方法混在
+
+### 解決策
+db-schema-validator.jsはで直接DB接続を試行。一方、health APIは（CONNECTION_POOL経由）を使用。DIRECT_URLはpooler未対応のため接続失敗。解決策：db-schema-validator.jsも@/lib/prismaを使用するか、Next.js API経由でスキーマ検証を実行する。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 package.json整合性問題
+
+### 解決策
+engines指定でNode.js 18.xだが実際は24.1.0で動作中。package.jsonのenginesを'>=18.0.0'に更新すべき。onKeyPressも非推奨警告あり。
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Prisma Client Error
+
+### 解決策
+Invalid STUDIO_EMBED_BUILD invocation in prisma/build/index.js - Prisma Studio起動時にハッシュ生成エラー
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 API 500 Error
+
+### 解決策
+GET /api/flow/[id] returning 500 status - session flow API failure with 780ms response time
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Next.js Build Error
+
+### 解決策
+ENOENT: no such file or directory, open '/Users/yukio/X_BUZZ_FLOW/.next/server/app/api/flow/[id]/route.js' - Next.jsビルドファイルが存在しない
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 api high
+
+### 解決策
+Health check failed: Request failed with status code 404
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 古いNext.jsプロセス問題解決
+
+### 解決策
+古いNext.jsプロセス（PID 28574,28568,28555）が残存してポート競合。kill -9で強制終了後、tmuxで再起動して正常復旧
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 CLIエラー高速化成功
+
+### 解決策
+Claude-dev環境＋即座エラー検出システムにより、エラー発見→修正サイクルが大幅高速化。500エラー（古いNext.jsプロセス問題）を3分で特定・解決
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 関数マッピング分析完了
+
+### 解決策
+統一関数マッピングツール実行完了。7個の問題検出(Critical:3, Warning:4)。主要問題: DB接続統一、型定義分散、APIレスポンス形式不一致。実際のコードではtheme/textパラメータは正しく実装済み
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 lib/utils.ts不足エラー
+
+### 解決策
+Module build failed: No such file or directory lib/utils.ts - Next.jsビルドエラー。共通ユーティリティファイルが不足している
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 統合システム復旧課題
+
+### 解決策
+lib/utils.ts, lib/prisma.ts, lib/core/claude-logger.ts等の基本ファイルが不足。統合システム実装時にファイルの依存関係を完全に設定する必要
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：
@@ -630,4 +930,4 @@ git commit -m "docs: [エラー名]の解決策を追加"
 
 ---
 
-*最終更新: 2025/06/19*
+*最終更新: 2025/06/20*
