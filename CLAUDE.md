@@ -1038,3 +1038,48 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 
 ---
 *最終更新: 2025/06/20 16:00*
+
+## 2025年6月20日の作業記録（統一システム管理統合とAPI整理）
+
+### 実施した作業
+
+#### 1. 統一システム管理の完全統合
+- **Create→Postフローの改善**: `/api/flow/[id]/next/route.ts`に包括的エラーハンドリング統合
+- **パラメータ整合性確保**: IDバリデーション、withRetry、DataTransformer適用  
+- **フェーズ別タイムアウト**: Perplexity(30s)、GPT(60s)、Claude(45s)設定
+
+#### 2. API構造の大幅整理
+- **APIエンドポイント数削減**: 87個 → 78個（9個削除）
+- **「動作システム保護 + ゴミ掃除」アプローチ**採用
+- **動作中システム**: NEWS、KaitoAPI、Create→Postフローを完全保護
+
+#### 3. 削除したAPI一覧
+```
+/api/intelligence/news/debug/          # デバッグ専用（未使用）
+/api/intelligence/news/test-sources/   # テスト専用（未使用）
+/api/intel/                           # 全体（intelligenceとの重複）
+/api/insights/                        # 全体（未使用）
+/api/generation/.../generate-character-contents-v2/  # 重複
+/api/generation/.../generate-contents/              # 重複
+/api/post-with-auth/                  # 未使用
+/api/jobs/[jobId]/                    # 未使用
+```
+
+### 重要な技術的学び
+
+#### 統一システム管理の効果
+- **IDGenerator**: プレフィックス付きID生成で型安全性確保
+- **withRetry**: 指数バックオフによる自動リトライ機能
+- **CreatePostErrorHandler**: フェーズ別エラー分類と日本語メッセージ
+- **DataTransformer**: 一貫したレスポンス形式による表示層統一
+
+#### 「動作システム保護」の重要性
+- 動作中システムを事前特定してから整理作業を実施
+- 後方互換性ではなく「現在動作するものの保護」が重要
+- 未使用APIの大胆な削除により開発効率大幅向上
+
+#### Phase 2完了時の状態
+- **統一エラーハンドリング**: 全APIで一貫したエラー処理
+- **パラメータ整合性**: 型安全性とバリデーションを標準化
+- **API構造最適化**: 重複排除と命名規則統一により保守性向上
+
