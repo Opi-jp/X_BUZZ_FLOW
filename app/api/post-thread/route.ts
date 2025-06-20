@@ -33,11 +33,10 @@ export async function POST(request: Request) {
       accessSecret: process.env.TWITTER_ACCESS_SECRET,
     })
 
-    // sourceUrlがある場合は最後の投稿に追加
+    // sourceUrlがある場合は別の投稿として追加
     const postsToTweet = [...posts]
     if (sourceUrl) {
-      const lastIndex = postsToTweet.length - 1
-      postsToTweet[lastIndex] = `${postsToTweet[lastIndex]}\n\n🔗 ${sourceUrl}`
+      postsToTweet.push(`🔗 ${sourceUrl}`)
     }
 
     // モックモードのチェック

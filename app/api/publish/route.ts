@@ -69,19 +69,50 @@ export async function POST(request: NextRequest) {
             continue
           }
 
-          // ハッシュタグ付きテキストを構築
-          const hashtags = draft.hashtags.map(tag => `#${tag.replace(/^#/, '')}`).join(' ')
-          const tweetText = `${draft.content}\n\n${hashtags}`
+          // contentがJSON形式（thread）かどうかチェック
+          let isThread = false
+          let posts: string[] = []
+          let parsedContent: any = null
           
-          // 既存の投稿APIを呼び出し
-          const postResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/post`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              text: tweetText,
-              draftId: id 
+          try {
+            parsedContent = JSON.parse(draft.content)
+            if (parsedContent.format === 'thread' && Array.isArray(parsedContent.posts)) {
+              isThread = true
+              posts = parsedContent.posts
+            }
+          } catch {
+            // JSONパースエラーの場合は通常の投稿として扱う
+            isThread = false
+          }
+
+          let postResponse
+          
+          if (isThread) {
+            // スレッド投稿
+            const sourceUrl = draft.sourceUrl || parsedContent?.sourceUrl
+            postResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/post-thread`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                posts,
+                draftId: id,
+                sourceUrl
+              })
             })
-          })
+          } else {
+            // 通常の単一投稿
+            const hashtags = draft.hashtags.map(tag => `#${tag.replace(/^#/, '')}`).join(' ')
+            const tweetText = `${draft.content}\n\n${hashtags}`
+            
+            postResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/post`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                text: tweetText,
+                draftId: id 
+              })
+            })
+          }
           
           const postResult = await postResponse.json()
           
