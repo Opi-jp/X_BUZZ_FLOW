@@ -76,7 +76,7 @@ export class SmartRTScheduler {
     const start = startOfDay(new Date())
     const end = endOfDay(new Date())
     
-    return await prisma.post.count({
+    return await prisma.scheduledPost.count({
       where: {
         postedAt: {
           gte: start,
@@ -122,7 +122,7 @@ export class SmartRTScheduler {
     const start = new Date(slotTime)
     const end = addMinutes(start, 59)
     
-    return await prisma.post.count({
+    return await prisma.scheduledPost.count({
       where: {
         scheduledAt: {
           gte: start,

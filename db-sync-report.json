@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-06-20T08:23:07.279Z",
+  "timestamp": "2025-06-20T09:00:46.791Z",
   "summary": {
     "implementation": {
-      "usedModels": 46,
-      "usedOperations": 46,
-      "usedFields": 90
+      "usedModels": 44,
+      "usedOperations": 44,
+      "usedFields": 89
     },
     "schema": {
       "models": 43,
@@ -16,7 +16,7 @@
       "types": 9
     },
     "sync": {
-      "issues": 3,
+      "issues": 1,
       "warnings": 1
     }
   },
@@ -24,20 +24,8 @@
     {
       "layer": "implementation-schema",
       "type": "MISSING_IN_SCHEMA",
-      "model": "aiPattern",
-      "message": "実装で使用されているモデル 'aiPattern' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
       "model": "client",
       "message": "実装で使用されているモデル 'client' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "post",
-      "message": "実装で使用されているモデル 'post' がスキーマに存在しません"
     }
   ],
   "warnings": [
@@ -58,7 +46,6 @@
         "lt",
         "in",
         "select",
-        "usageCount",
         "posts",
         "orderBy",
         "_count",
@@ -81,9 +68,7 @@
   ],
   "details": {
     "missingModels": [
-      "aiPattern",
-      "client",
-      "post"
+      "client"
     ],
     "missingTables": [],
     "unusedModels": []

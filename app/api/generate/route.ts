@@ -21,10 +21,8 @@ export async function POST(request: NextRequest) {
       where: { id: refPostId },
     }) : null
 
-    // AIパターン取得（新スキーマでは一時的に無効化）
-    const pattern = null // patternId ? await prisma.aiPattern.findUnique({
-    //   where: { id: patternId },
-    // }) : null
+    // AIパターン取得（廃止）
+    const pattern = null
 
     // プロンプト構築
     let systemPrompt = `あなたは大屋友紀雄のSNS投稿アシスタントです。
@@ -110,13 +108,6 @@ export async function POST(request: NextRequest) {
     const data = await response.json()
     const generatedContent = data.content[0].text
 
-    // パターンの使用回数を更新（新スキーマでは一時的に無効化）
-    // if (pattern) {
-    //   await prisma.aiPattern.update({
-    //     where: { id: pattern.id },
-    //     data: { usageCount: pattern.usageCount + 1 },
-    //   })
-    // }
 
     return NextResponse.json({
       generatedContent,

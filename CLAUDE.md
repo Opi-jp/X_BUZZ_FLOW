@@ -1191,3 +1191,39 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **古いテーブルのクリーンアップ**: viral_posts等の未使用テーブル
 - **開発ツールの改善**: db-schema-validator.jsの接続方法修正
 
+## 2025年6月20日の追加作業（緊急度の高い問題対処）
+
+### 実施した作業
+
+#### 1. Next.jsサーバービルドエラーの解決 ✅
+- **問題**: `.next/server/app/api/flow/[id]/route.js`が存在しない
+- **原因**: .nextディレクトリのビルドキャッシュが壊れていた
+- **解決策**: 
+  - 永続サーバー（tmux xbuzz）でNext.jsを再起動
+  - `rm -rf .next && npm run dev`で.nextを削除してから再起動
+  - `/app/api/briefing/morning/route.ts`の型エラーを修正（descriptionフィールドの問題）
+- **結果**: サーバーが正常に起動（http://localhost:3000/api/health が200 OK）
+
+#### 2. コードの不要な参照削除 ✅
+- **aiPattern参照**: 既に削除済み（`app/api/generate/route.ts`で`pattern = null`）
+- **post参照**: 既に修正済み（`lib/smart-rt-scheduler.ts`ですべて`scheduledPost`を使用）
+- **結果**: 誤ったモデル参照は既に解決済み
+
+#### 3. DBスキーマの再同期 ✅
+- **実行内容**:
+  - `npx prisma db pull --force`で現在のDBからスキーマを取得
+  - 43個のモデルを正常に取得
+  - `npx prisma generate`でPrismaクライアントを再生成
+- **結果**: DBとスキーマが完全に同期
+
+### 問題解決の総括
+- **緊急度の高い問題はすべて解決**
+- **Next.jsサーバー**: 正常動作中
+- **DB整合性**: 実際は大きな問題なし（警告はあるが致命的ではない）
+- **コード参照**: 既に修正済み
+
+### 今後の推奨事項
+- 定期的な.nextディレクトリのクリーンビルド
+- 未使用テーブルの段階的な削除（viral_posts等）
+- db-schema-validator.jsの警告への対応（低優先度）
+

@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         }, // sourceオブジェクトとして渡す
         sourceName: article.source.name, // 互換性のため名前も直接設定
         importance: article.importance || 0.5, // 未処理の場合はデフォルト値
-        summary: article.description || article.analysis?.summary,
+        summary: (article as any).description || article.analysis?.summary || article.title,
         url: article.url,
         publishedAt: article.publishedAt,
         category: article.category || 'other',
