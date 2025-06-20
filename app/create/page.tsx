@@ -133,21 +133,46 @@ export default function CreatePage() {
             </button>
           </div>
 
-          {/* ヒント */}
+          {/* 機能説明 */}
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
-              💡 ヒント: 具体的で時事性のあるテーマほど、バズりやすい投稿が生成されます
-            </p>
+            <h3 className="text-sm font-medium text-gray-700 mb-3">
+              📖 生成フロー（3ステップ）
+            </h3>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">1</span>
+                <span>Perplexity: 最新トピックを収集・分析</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">2</span>
+                <span>GPT-4o: バイラルコンセプトを生成（複数案）</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs flex items-center justify-center font-medium">3</span>
+                <span>Claude: キャラクター投稿文を作成</span>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <p className="text-xs text-amber-700">
+                💡 ヒント: 具体的で時事性のあるテーマほど、バズりやすい投稿が生成されます
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* 既存の下書きへのリンク */}
-        <div className="mt-8 text-center">
+        {/* 便利リンク */}
+        <div className="mt-8 flex justify-center gap-6">
           <a
             href="/drafts"
-            className="text-purple-600 hover:text-purple-700 font-medium"
+            className="text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1"
           >
-            下書き一覧を見る →
+            📝 下書き一覧を見る →
+          </a>
+          <a
+            href="/mission-control"
+            className="text-gray-600 hover:text-gray-700 font-medium flex items-center gap-1"
+          >
+            🎯 ダッシュボード
           </a>
         </div>
       </div>

@@ -911,6 +911,16 @@ lib/utils.ts, lib/prisma.ts, lib/core/claude-logger.ts等の基本ファイル�
 
 ---
 
+
+## 🔴 統合Publishシステム認証問題
+
+### 解決策
+Twitter API認証は正常動作。即時投稿は成功（URL: https://twitter.com/user/status/1935894360874537235）。スケジュール投稿はPrismaスキーマの scheduledTime フィールド名不一致で修正済み。統合フローは完全動作確認済み。
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

@@ -70,8 +70,8 @@ class PromptEditor {
         // サブディレクトリの場合
         console.log(`${indent}📁 ${entry.name}/`)
         await this.listFilesRecursive(fullPath, baseDir, indent + '  ')
-      } else if (entry.name.endsWith('.txt')) {
-        // テキストファイルの場合
+      } else if (entry.name.endsWith('.txt') || entry.name.endsWith('.json')) {
+        // テキストファイルまたはJSONファイルの場合
         const stats = await fs.stat(fullPath)
         const content = await fs.readFile(fullPath, 'utf-8')
         const lines = content.split('\n').length

@@ -112,9 +112,6 @@ export async function POST(
       selectedConceptIds.includes(concept.conceptId)
     )
 
-    // プロンプトファイルの存在確認（各ループで読み込むため、ここでは確認のみ）
-    const promptPath = `claude/character-profiles/${characterId}-simple.txt`
-
     // 生成された投稿を格納
     const generatedPosts = []
 
@@ -123,6 +120,11 @@ export async function POST(
       let prompt = '' // スコープを外に出す
       try {
         console.log(`Processing concept: ${concept.conceptId}`)
+        console.log(`Concept format: ${concept.format}`)
+        
+        // formatに基づいてプロンプトパスを決定
+        const formatSuffix = concept.format === 'thread' ? 'thread' : 'simple'
+        const promptPath = `claude/character-profiles/${characterId}-${formatSuffix}.txt`
         
         const characterProfile = await wrapCharacterProfile(characterId)
         const conceptData = wrapConceptData(concept)
@@ -156,18 +158,35 @@ export async function POST(
           // Claudeのレスポンスが直接テキストの場合
           const responseText = content.text.trim()
           
-          // JSON形式でない場合は、テキストをそのまま使用
+          // formatに応じてレスポンスを処理
           let postData
-          if (responseText.startsWith('{')) {
+          if (concept.format === 'thread') {
+            // スレッド形式の場合はJSONパース
             try {
-              postData = JSON.parse(responseText)
+              const threadData = JSON.parse(responseText)
+              // post1-post5形式をpostsの配列に変換
+              const posts = []
+              for (let i = 1; i <= 5; i++) {
+                const postKey = `post${i}`
+                if (threadData[postKey]) {
+                  posts.push(threadData[postKey])
+                }
+              }
+              postData = { 
+                posts,
+                format: 'thread'
+              }
             } catch (parseError) {
-              console.warn('Failed to parse as JSON, using as plain text')
-              postData = { content: responseText }
+              console.error('Failed to parse thread JSON:', parseError)
+              // エラーの場合はスキップ
+              continue
             }
           } else {
-            // プレーンテキストの場合
-            postData = { content: responseText }
+            // シングル形式の場合はテキストをそのまま使用
+            postData = { 
+              content: responseText,
+              format: 'single'
+            }
           }
           
           generatedPosts.push({
@@ -208,27 +227,44 @@ export async function POST(
 
     // 下書きを作成（ViralDraftV2を使用）
     for (const post of generatedPosts) {
-      const content = post.format === 'thread' 
-        ? post.posts.map((p: any) => p.content).join('\n\n') 
-        : post.content
-      
       // コンセプトから関連するハッシュタグを取得
       const matchingConcept = selectedConcepts.find(c => c.conceptId === post.conceptId)
       const hashtags = matchingConcept?.hashtags || ['#AI', '#働き方', '#未来']
       
-      await prisma.viralDraftV2.create({
-        data: {
-          sessionId: id,
-          conceptId: post.conceptId,
-          title: post.conceptTitle || 'Generated Content',
-          content: content,
-          hashtags: hashtags,
-          visualNote: post.visual,
-          characterId: post.characterId,
-          characterNote: `Generated as ${post.characterId}`,
-          status: 'DRAFT'
-        }
-      })
+      if (post.format === 'thread') {
+        // スレッド形式の場合は、posts配列をJSONとして保存
+        await prisma.viralDraftV2.create({
+          data: {
+            sessionId: id,
+            conceptId: post.conceptId,
+            title: post.conceptTitle || 'Generated Thread',
+            content: JSON.stringify({
+              format: 'thread',
+              posts: post.posts
+            }),
+            hashtags: hashtags,
+            visualNote: matchingConcept?.visual,
+            characterId: post.characterId,
+            characterNote: `Generated as ${post.characterId} (thread)`,
+            status: 'DRAFT'
+          }
+        })
+      } else {
+        // シングル形式の場合は、contentをそのまま保存
+        await prisma.viralDraftV2.create({
+          data: {
+            sessionId: id,
+            conceptId: post.conceptId,
+            title: post.conceptTitle || 'Generated Content',
+            content: post.content,
+            hashtags: hashtags,
+            visualNote: matchingConcept?.visual,
+            characterId: post.characterId,
+            characterNote: `Generated as ${post.characterId} (single)`,
+            status: 'DRAFT'
+          }
+        })
+      }
     }
 
     return NextResponse.json({ 

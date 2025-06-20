@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Brain, Loader2, Check, AlertCircle, ChevronRight } from 'lucide-react'
+import { Brain, Loader2, Check, AlertCircle, ChevronRight, Send } from 'lucide-react'
 
 interface FlowStatus {
   id: string
@@ -187,17 +187,37 @@ export default function FlowDetailPage() {
           <div className="mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-gray-600">進行状況</span>
-              <span className="text-sm text-gray-600">
-                {Object.values(status.progress).filter(Boolean).length} / 4
+              <span className="text-sm font-medium text-gray-900">
+                {Object.values(status.progress).filter(Boolean).length} / 4 完了
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
-                className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500 relative"
                 style={{ 
                   width: `${(Object.values(status.progress).filter(Boolean).length / 4) * 100}%` 
                 }}
-              />
+              >
+                {Object.values(status.progress).filter(Boolean).length > 0 && (
+                  <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse" />
+                )}
+              </div>
+            </div>
+            
+            {/* ステップ表示 */}
+            <div className="mt-3 flex justify-between text-xs text-gray-500">
+              <span className={status.progress.phase1_collecting ? 'text-purple-600 font-medium' : ''}>
+                📡 収集
+              </span>
+              <span className={status.progress.phase2_concepts ? 'text-purple-600 font-medium' : ''}>
+                💡 生成
+              </span>
+              <span className={status.progress.phase3_contents ? 'text-purple-600 font-medium' : ''}>
+                ✍️ 執筆
+              </span>
+              <span className={status.progress.completed ? 'text-green-600 font-medium' : ''}>
+                ✅ 完了
+              </span>
             </div>
           </div>
         </div>
@@ -210,11 +230,21 @@ export default function FlowDetailPage() {
               {status.progress.phase1_collecting ? (
                 <Check className="w-6 h-6 text-green-600" />
               ) : status.currentStep === 'collecting_topics' ? (
-                <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
+                <div className="relative">
+                  <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
+                </div>
               ) : (
                 <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
               )}
-              <h3 className="font-semibold">Phase 1: 情報収集（Perplexity）</h3>
+              <div className="flex-1">
+                <h3 className="font-semibold">Phase 1: 情報収集（Perplexity）</h3>
+                {status.currentStep === 'collecting_topics' && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    ⏱️ 予想時間: 30-60秒（最新情報の検索・分析）
+                  </p>
+                )}
+              </div>
             </div>
             {status.data.topics && (
               <div className="mt-4 ml-9">
@@ -260,7 +290,14 @@ export default function FlowDetailPage() {
               ) : (
                 <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
               )}
-              <h3 className="font-semibold">Phase 2: コンセプト生成（GPT）</h3>
+              <div className="flex-1">
+                <h3 className="font-semibold">Phase 2: コンセプト生成（GPT）</h3>
+                {status.currentStep === 'generating_concepts' && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    ⏱️ 予想時間: 15-45秒（複数コンセプトの生成・評価）
+                  </p>
+                )}
+              </div>
             </div>
             
             {/* コンセプト選択UI */}
@@ -327,7 +364,14 @@ export default function FlowDetailPage() {
               ) : (
                 <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
               )}
-              <h3 className="font-semibold">Phase 3: 投稿生成（Claude）</h3>
+              <div className="flex-1">
+                <h3 className="font-semibold">Phase 3: 投稿生成（Claude）</h3>
+                {status.currentStep === 'generating_contents' && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    ⏱️ 予想時間: 10-30秒（キャラクター投稿文の作成）
+                  </p>
+                )}
+              </div>
             </div>
             
             {/* キャラクター選択UI */}
@@ -407,6 +451,13 @@ export default function FlowDetailPage() {
                 投稿の下書きが作成されました。編集して投稿しましょう。
               </p>
               <div className="flex gap-3">
+                <button
+                  onClick={() => router.push('/publish')}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  投稿・スケジュール
+                </button>
                 <button
                   onClick={() => router.push('/drafts')}
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"

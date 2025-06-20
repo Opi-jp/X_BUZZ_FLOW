@@ -30,7 +30,7 @@ export default function PostPage() {
   const fetchDrafts = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/generation/drafts')
+      const response = await fetch('/api/drafts')
       if (!response.ok) throw new Error('下書きの取得に失敗しました')
       
       const data = await response.json()
@@ -70,7 +70,7 @@ export default function PostPage() {
       
       if (response.ok && result.success) {
         // 下書きのステータスを更新
-        await fetch(`/api/generation/drafts/${draft.id}`, {
+        await fetch(`/api/drafts/${draft.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
