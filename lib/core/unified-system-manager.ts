@@ -464,7 +464,7 @@ export class ErrorManager {
     
     // DBに記録
     try {
-      await prisma.apiErrorLog.create({
+      await prisma.api_error_logs.create({
         data: {
           id: errorLog.id,
           endpoint: `${context.module}/${context.operation}`,
@@ -483,6 +483,18 @@ export class ErrorManager {
     // 開発環境ではコンソールにも出力
     if (process.env.NODE_ENV === 'development') {
       console.error('[ErrorManager]', errorLog)
+    }
+    
+    // ファイルにも記録
+    try {
+      const fs = require('fs').promises
+      const path = require('path')
+      const errorDir = path.join(process.cwd(), 'logs', 'errors')
+      await fs.mkdir(errorDir, { recursive: true })
+      const errorFile = path.join(errorDir, `${errorLog.id}.json`)
+      await fs.writeFile(errorFile, JSON.stringify(errorLog, null, 2))
+    } catch (fileError) {
+      console.error('Failed to write error log to file:', fileError)
     }
     
     return errorLog.id

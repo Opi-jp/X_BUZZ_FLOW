@@ -981,6 +981,76 @@ Gender型とnews_articles_url_keyインデックスが既に存在するため�
 
 ---
 
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

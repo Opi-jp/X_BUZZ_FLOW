@@ -13,8 +13,11 @@ export async function GET(
   request: Request,
   { params }: RouteParams
 ) {
+  console.error('=== STATUS API CALLED ===')
+  const { id } = await params
+  console.error('Session ID:', id)
+  
   try {
-    const { id } = await params
     
     claudeLog.info(
       { module: 'api', operation: 'status-check' },
@@ -39,7 +42,11 @@ export async function GET(
     })
 
     if (!session) {
-      claudeLog('Session not found', { sessionId: id })
+      claudeLog.warn(
+        { module: 'api', operation: 'status-check' },
+        'Session not found',
+        { sessionId: id }
+      )
       return NextResponse.json(
         { error: 'Session not found' },
         { status: 404 }
@@ -76,11 +83,15 @@ export async function GET(
       currentStep = 'collecting_topics'
     }
 
-    claudeLog('Session status determined', { 
-      sessionId: session.id, 
-      currentStep, 
-      nextAction 
-    })
+    claudeLog.info(
+      { module: 'api', operation: 'status-check' },
+      'Session status determined',
+      { 
+        sessionId: session.id, 
+        currentStep, 
+        nextAction 
+      }
+    )
 
     return NextResponse.json({
       id: session.id,
