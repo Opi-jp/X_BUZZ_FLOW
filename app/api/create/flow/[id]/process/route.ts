@@ -284,7 +284,7 @@ export async function POST(
         
       case 'CONCEPTS_GENERATED':
         // コンセプト選択が必要かチェック
-        if (!session.selectedIds || session.selectedIds.length === 0) {
+        if (!session.selected_ids || session.selected_ids.length === 0) {
           // autoProgressがtrueの場合は自動的に最初の3つを選択
           if (autoProgress) {
             const concepts = session.concepts as any[]
@@ -293,7 +293,7 @@ export async function POST(
             await DBManager.transaction(async (tx) => {
               await tx.viral_sessions.update({
                 where: { id },
-                data: { selectedIds }
+                data: { selected_ids: selectedIds }
               })
             })
             
@@ -363,7 +363,7 @@ export async function POST(
           await DBManager.transaction(async (tx) => {
             await tx.viral_sessions.update({
               where: { id },
-              data: { selectedIds }
+              data: { selected_ids: selectedIds }
             })
           })
           
@@ -373,7 +373,7 @@ export async function POST(
           })
         }
         
-        // selectedIdsがある場合は次のステップへ
+        // selected_idsがある場合は次のステップへ
         // autoProgressの場合は自動的に進む
         if (autoProgress) {
           const characters = await getAvailableCharacters()
@@ -501,7 +501,7 @@ export async function POST(
           
           // draftsが存在する場合も完了とみなす
           const drafts = await prisma.viral_drafts_v2.findMany({
-            where: { sessionId: id }
+            where: { session_id: id }
           })
           
           if (drafts.length > 0) {
@@ -532,15 +532,15 @@ export async function POST(
       case 'COMPLETED':
         // すべて完了
         const drafts = await prisma.viral_drafts_v2.findMany({
-          where: { sessionId: id },
+          where: { session_id: id },
           select: {
             id: true,
             title: true,
             content: true,
             hashtags: true,
-            characterId: true,
+            character_id: true,
             status: true,
-            createdAt: true
+            created_at: true
           }
         })
         

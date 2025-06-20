@@ -12838,6 +12838,38 @@ Twitter APIクライアントの初期化方法が間違っていた
 
 ---
 
+
+## 🔴 Twitter API update error
+
+**カテゴリ**: Database | **タグ**: prisma, db
+**記録日時**: 2025/6/21 6:05:29
+
+
+### 症状
+```
+Cannot read properties of undefined (reading 'update') - 投稿は成功するがDBが更新されない
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+readWriteプロパティとDB更新のデバッグログを追加
+
+### 根本原因
+
+Twitter APIのレスポンス形式が想定と異なる可能性
+
+### 再発防止策
+
+
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：

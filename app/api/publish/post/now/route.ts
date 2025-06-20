@@ -16,6 +16,12 @@ export async function POST(request: Request) {
     }
 
     // 環境変数の確認
+    console.log('Twitter API環境変数チェック:')
+    console.log('  TWITTER_API_KEY:', !!process.env.TWITTER_API_KEY)
+    console.log('  TWITTER_API_SECRET:', !!process.env.TWITTER_API_SECRET)
+    console.log('  TWITTER_ACCESS_TOKEN:', !!process.env.TWITTER_ACCESS_TOKEN)
+    console.log('  TWITTER_ACCESS_SECRET:', !!process.env.TWITTER_ACCESS_SECRET)
+    
     if (!process.env.TWITTER_API_KEY || !process.env.TWITTER_API_SECRET || 
         !process.env.TWITTER_ACCESS_TOKEN || !process.env.TWITTER_ACCESS_SECRET) {
       console.error('Missing Twitter API credentials in environment variables')
@@ -26,12 +32,14 @@ export async function POST(request: Request) {
     }
 
     // 環境変数から認証情報を取得
+    console.log('TwitterApiクライアント作成...')
     const client = new TwitterApi({
       appKey: process.env.TWITTER_API_KEY,
       appSecret: process.env.TWITTER_API_SECRET,
       accessToken: process.env.TWITTER_ACCESS_TOKEN,
       accessSecret: process.env.TWITTER_ACCESS_SECRET,
     })
+    console.log('TwitterApiクライアント作成完了')
 
     // モックモードのチェック
     if (process.env.USE_MOCK_POSTING === 'true') {
@@ -39,12 +47,12 @@ export async function POST(request: Request) {
       
       // 下書きステータス更新
       if (draftId) {
-        await prisma.viralDraftV2.update({
+        await prisma.viral_drafts_v2.update({
           where: { id: draftId },
           data: {
             status: 'POSTED',
-            tweetId: mockId,
-            postedAt: new Date()
+            tweet_id: mockId,
+            posted_at: new Date()
           }
         })
       }
@@ -59,21 +67,33 @@ export async function POST(request: Request) {
 
     // 実際の投稿
     // 読み書き可能なクライアントを取得
+    console.log('readWriteクライアント取得...')
     const rwClient = client.readWrite
+    console.log('readWriteクライアント取得完了:', !!rwClient)
+    console.log('v2.tweet実行中...')
     const tweet = await rwClient.v2.tweet(text)
+    console.log('v2.tweet実行完了:', tweet.data.id)
     
-    const tweetUrl = `https://twitter.com/${tweet.data.author_id || 'user'}/status/${tweet.data.id}`
+    // Twitter APIv2では author_id が返されないため、シンプルなURL形式を使用
+    const tweetUrl = `https://twitter.com/user/status/${tweet.data.id}`
     
     // 下書きステータス更新
     if (draftId) {
-      await prisma.viralDraftV2.update({
-        where: { id: draftId },
-        data: {
-          status: 'POSTED',
-          tweetId: tweet.data.id,
-          postedAt: new Date()
-        }
-      })
+      console.log('下書きステータス更新開始:', draftId)
+      try {
+        const updateResult = await prisma.viral_drafts_v2.update({
+          where: { id: draftId },
+          data: {
+            status: 'POSTED',
+            tweet_id: tweet.data.id,
+            posted_at: new Date()
+          }
+        })
+        console.log('下書きステータス更新完了:', updateResult.id)
+      } catch (dbError) {
+        console.error('DB更新エラー:', dbError)
+        // DB更新エラーでも投稿は成功しているので、成功レスポンスを返す
+      }
     }
     
     return NextResponse.json({
