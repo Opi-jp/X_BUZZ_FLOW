@@ -68,5 +68,6 @@ tmp/
 temp/
 /app/generated/prisma
 
-# Backup
+# Backup and Archives
 .backup/
+.archive/
