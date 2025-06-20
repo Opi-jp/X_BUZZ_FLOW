@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { IDGenerator, EntityType, ErrorManager, DBManager } from '@/lib/core/unified-system-manager'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 export async function POST(request: Request) {
   try {
@@ -13,24 +15,48 @@ export async function POST(request: Request) {
       )
     }
 
-    // セッションを作成
-    const session = await prisma.viralSession.create({
-      data: {
-        theme,
-        platform,
-        style,
-        status: 'CREATED'
-      }
+    // セッションを作成（トランザクション内で実行）
+    const session = await DBManager.transaction(async (tx) => {
+      const sessionId = IDGenerator.generate(EntityType.VIRAL_SESSION)
+      
+      claudeLog.info(
+        { module: 'api', operation: 'session-create' },
+        'Creating new session',
+        { sessionId, theme, platform, style }
+      )
+      
+      return await tx.viral_sessions.create({
+        data: {
+          id: sessionId,
+          theme,
+          platform,
+          style,
+          status: 'CREATED'
+        }
+      })
     })
+
+    claudeLog.info(
+      { module: 'api', operation: 'session-created' },
+      'Session created successfully',
+      { sessionId: session.id }
+    )
 
     return NextResponse.json({ 
       success: true,
       session 
     })
   } catch (error) {
-    console.error('Error creating session:', error)
+    const errorId = await ErrorManager.logError(error, {
+      module: 'create-flow-list',
+      operation: 'create-session',
+      context: { theme, platform, style }
+    })
+    
+    const userMessage = ErrorManager.getUserMessage(error, 'ja')
+    
     return NextResponse.json(
-      { error: 'Failed to create session' },
+      { error: userMessage, errorId },
       { status: 500 }
     )
   }
@@ -41,14 +67,20 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
 
-    const sessions = await prisma.viralSession.findMany({
+    claudeLog.info(
+      { module: 'api', operation: 'session-list' },
+      'Fetching session list',
+      { limit }
+    )
+
+    const sessions = await prisma.viral_sessions.findMany({
       orderBy: { createdAt: 'desc' },
       take: limit,
       include: {
         _count: {
-          select: { drafts: true }
+          select: { viral_drafts_v2: true }
         },
-        drafts: {
+        viral_drafts_v2: {
           select: {
             id: true,
             content: true,
@@ -58,11 +90,23 @@ export async function GET(request: Request) {
       }
     })
 
+    claudeLog.info(
+      { module: 'api', operation: 'session-list-success' },
+      'Sessions fetched successfully',
+      { count: sessions.length }
+    )
+
     return NextResponse.json({ sessions })
   } catch (error) {
-    console.error('Error fetching sessions:', error)
+    const errorId = await ErrorManager.logError(error, {
+      module: 'create-flow-list',
+      operation: 'fetch-sessions'
+    })
+    
+    const userMessage = ErrorManager.getUserMessage(error, 'ja')
+    
     return NextResponse.json(
-      { error: 'Failed to fetch sessions' },
+      { error: userMessage, errorId },
       { status: 500 }
     )
   }

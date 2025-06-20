@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAvailableCharacters } from '@/lib/character-loader'
+import { claudeLog } from '@/lib/core/claude-logger'
+import { DBManager, ErrorManager } from '@/lib/core/unified-system-manager'
 import { 
   CreatePostErrorHandler, 
   CreatePostPhase,
@@ -60,7 +62,7 @@ export async function POST(
     // セッション取得（エラーハンドリング付き）
     const session = await withRetry(
       async () => {
-        const sess = await prisma.viralSession.findUnique({
+        const sess = await prisma.viral_sessions.findUnique({
           where: { id }
         })
         if (!sess) {
@@ -125,9 +127,11 @@ export async function POST(
           })
         } catch (error) {
           // エラーでもステータスは更新（非同期処理として継続）
-          await prisma.viralSession.update({
-            where: { id },
-            data: { status: 'COLLECTING' }
+          await DBManager.transaction(async (tx) => {
+            await tx.viral_sessions.update({
+              where: { id },
+              data: { status: 'COLLECTING' }
+            })
           })
           
           return NextResponse.json({
@@ -142,7 +146,7 @@ export async function POST(
         // autoProgressの場合は状態を確認して自動的に次へ
         if (autoProgress) {
           // セッションの最新状態を再取得
-          const updatedSession = await prisma.viralSession.findUnique({
+          const updatedSession = await prisma.viral_sessions.findUnique({
             where: { id }
           })
           
@@ -155,9 +159,11 @@ export async function POST(
                 : updatedSession.topics
                 
               if (topics && (Array.isArray(topics) || typeof topics === 'object')) {
-                await prisma.viralSession.update({
-                  where: { id },
-                  data: { status: 'TOPICS_COLLECTED' }
+                await DBManager.transaction(async (tx) => {
+                  await tx.viral_sessions.update({
+                    where: { id },
+                    data: { status: 'TOPICS_COLLECTED' }
+                  })
                 })
                 
                 return NextResponse.json({
@@ -220,9 +226,11 @@ export async function POST(
           })
         } catch (error) {
           // エラーでもステータスは更新
-          await prisma.viralSession.update({
-            where: { id },
-            data: { status: 'GENERATING_CONCEPTS' }
+          await DBManager.transaction(async (tx) => {
+            await tx.viral_sessions.update({
+              where: { id },
+              data: { status: 'GENERATING_CONCEPTS' }
+            })
           })
           
           return NextResponse.json({
@@ -237,15 +245,17 @@ export async function POST(
         // autoProgressの場合は状態を確認して自動的に次へ
         if (autoProgress) {
           // セッションの最新状態を再取得
-          const updatedSession = await prisma.viralSession.findUnique({
+          const updatedSession = await prisma.viral_sessions.findUnique({
             where: { id }
           })
           
           // conceptsが既に存在する場合は次のステップへ
           if (updatedSession?.concepts && Array.isArray(updatedSession.concepts) && updatedSession.concepts.length > 0) {
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'CONCEPTS_GENERATED' }
+            await DBManager.transaction(async (tx) => {
+              await tx.viral_sessions.update({
+                where: { id },
+                data: { status: 'CONCEPTS_GENERATED' }
+              })
             })
             
             return NextResponse.json({
@@ -280,9 +290,11 @@ export async function POST(
             const concepts = session.concepts as any[]
             const selectedIds = concepts.slice(0, 3).map(concept => concept.conceptId)
             
-            await prisma.viralSession.update({
-              where: { id },
-              data: { selectedIds }
+            await DBManager.transaction(async (tx) => {
+              await tx.viral_sessions.update({
+                where: { id },
+                data: { selectedIds }
+              })
             })
             
             // 自動的にデフォルトキャラクターで次へ進む
@@ -348,9 +360,11 @@ export async function POST(
           
           // 選択されたコンセプトからIDを抽出して保存
           const selectedIds = body.selectedConcepts.map((concept: any) => concept.conceptId)
-          await prisma.viralSession.update({
-            where: { id },
-            data: { selectedIds }
+          await DBManager.transaction(async (tx) => {
+            await tx.viral_sessions.update({
+              where: { id },
+              data: { selectedIds }
+            })
           })
           
           return NextResponse.json({
@@ -464,15 +478,17 @@ export async function POST(
         // autoProgressの場合は状態を確認して自動的に次へ
         if (autoProgress) {
           // セッションの最新状態を再取得
-          const updatedSession = await prisma.viralSession.findUnique({
+          const updatedSession = await prisma.viral_sessions.findUnique({
             where: { id }
           })
           
           // contentsが既に存在する場合は次のステップへ
           if (updatedSession?.contents && Array.isArray(updatedSession.contents) && updatedSession.contents.length > 0) {
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'CONTENTS_GENERATED' }
+            await DBManager.transaction(async (tx) => {
+              await tx.viral_sessions.update({
+                where: { id },
+                data: { status: 'CONTENTS_GENERATED' }
+              })
             })
             
             return NextResponse.json({
@@ -484,14 +500,16 @@ export async function POST(
           }
           
           // draftsが存在する場合も完了とみなす
-          const drafts = await prisma.viralDraftV2.findMany({
+          const drafts = await prisma.viral_drafts_v2.findMany({
             where: { sessionId: id }
           })
           
           if (drafts.length > 0) {
-            await prisma.viralSession.update({
-              where: { id },
-              data: { status: 'COMPLETED' }
+            await DBManager.transaction(async (tx) => {
+              await tx.viral_sessions.update({
+                where: { id },
+                data: { status: 'COMPLETED' }
+              })
             })
             
             return NextResponse.json({
@@ -513,7 +531,7 @@ export async function POST(
       case 'CONTENTS_GENERATED':
       case 'COMPLETED':
         // すべて完了
-        const drafts = await prisma.viralDraftV2.findMany({
+        const drafts = await prisma.viral_drafts_v2.findMany({
           where: { sessionId: id },
           select: {
             id: true,

@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { ErrorManager, DataTransformer } from '@/lib/core/unified-system-manager'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 type RouteParams = {
   params: Promise<{
@@ -14,7 +16,13 @@ export async function GET(
   try {
     const { id } = await params
     
-    const session = await prisma.viralSession.findUnique({
+    claudeLog.info(
+      { module: 'api', operation: 'status-check' },
+      'Checking session status',
+      { sessionId: id }
+    )
+    
+    const session = await prisma.viral_sessions.findUnique({
       where: { id },
       select: {
         id: true,
@@ -31,6 +39,7 @@ export async function GET(
     })
 
     if (!session) {
+      claudeLog('Session not found', { sessionId: id })
       return NextResponse.json(
         { error: 'Session not found' },
         { status: 404 }
@@ -67,6 +76,12 @@ export async function GET(
       currentStep = 'collecting_topics'
     }
 
+    claudeLog('Session status determined', { 
+      sessionId: session.id, 
+      currentStep, 
+      nextAction 
+    })
+
     return NextResponse.json({
       id: session.id,
       theme: session.theme,
@@ -82,9 +97,16 @@ export async function GET(
       }
     })
   } catch (error) {
-    console.error('Status check error:', error)
+    const errorId = await ErrorManager.logError(error, {
+      module: 'create-flow-status',
+      operation: 'check-status',
+      sessionId: id
+    })
+    
+    const userMessage = ErrorManager.getUserMessage(error, 'ja')
+    
     return NextResponse.json(
-      { error: 'Failed to check status' },
+      { error: userMessage, errorId },
       { status: 500 }
     )
   }

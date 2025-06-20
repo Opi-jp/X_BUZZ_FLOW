@@ -60,6 +60,12 @@ chroma_data/
 logs/
 *.log
 
+# Error tracking
+.error-details/
+.error-capture/
+.claude-errors.md
+.claude-build-errors.md
+
 # OS files
 Thumbs.db
 
@@ -67,6 +73,7 @@ Thumbs.db
 tmp/
 temp/
 /app/generated/prisma
+/test-scripts/
 
 # Backup and Archives
 .backup/

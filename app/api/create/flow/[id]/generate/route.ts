@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { loadPrompt } from '@/lib/prompt-loader'
 import Anthropic from '@anthropic-ai/sdk'
+import { ErrorManager, DBManager, PromptManager, IDGenerator, EntityType } from '@/lib/core/unified-system-manager'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 type RouteParams = {
   params: Promise<{
@@ -79,7 +81,7 @@ export async function POST(
     }
 
     // セッションを取得
-    const session = await prisma.viralSession.findUnique({
+    const session = await prisma.viral_sessions.findUnique({
       where: { id }
     })
 
@@ -119,8 +121,11 @@ export async function POST(
     for (const concept of selectedConcepts) {
       let prompt = '' // スコープを外に出す
       try {
-        console.log(`Processing concept: ${concept.conceptId}`)
-        console.log(`Concept format: ${concept.format}`)
+        claudeLog('Processing concept', { 
+          sessionId: id,
+          conceptId: concept.conceptId,
+          format: concept.format 
+        })
         
         // formatに基づいてプロンプトパスを決定
         const formatSuffix = concept.format === 'thread' ? 'thread' : 'simple'
@@ -129,17 +134,21 @@ export async function POST(
         const characterProfile = await wrapCharacterProfile(characterId)
         const conceptData = wrapConceptData(concept)
         
-        console.log('Loading prompt from:', promptPath)
+        claudeLog('Loading prompt', { promptPath })
         
         // プロンプトローダーで変数を展開
-        prompt = loadPrompt(promptPath, {
-        character: characterProfile,
-        concept: conceptData,
-        platform: session.platform || 'Twitter',
-        theme: session.theme || ''
-      })
+        prompt = await PromptManager.load(
+          promptPath,
+          {
+            character: characterProfile,
+            concept: conceptData,
+            platform: session.platform || 'Twitter',
+            theme: session.theme || ''
+          },
+          { validate: true, cache: true }
+        )
 
-        console.log('Prompt loaded, length:', prompt.length)
+        claudeLog('Prompt loaded', { promptLength: prompt.length })
 
         const response = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-latest',
@@ -153,7 +162,10 @@ export async function POST(
 
         const content = response.content[0]
         if (content.type === 'text') {
-          console.log('Claude response:', content.text.substring(0, 200))
+          claudeLog('Claude response received', { 
+            responseLength: content.text.length,
+            preview: content.text.substring(0, 200)
+          })
           
           // Claudeのレスポンスが直接テキストの場合
           const responseText = content.text.trim()
@@ -217,55 +229,68 @@ export async function POST(
     }
 
     // セッションを更新
-    const updatedSession = await prisma.viralSession.update({
-      where: { id },
-      data: {
-        contents: generatedPosts,
-        status: 'COMPLETED'
-      }
+    const updatedSession = await DBManager.transaction(async (tx) => {
+      return await tx.viral_sessions.update({
+        where: { id },
+        data: {
+          contents: generatedPosts,
+          status: 'COMPLETED'
+        }
+      })
     })
 
     // 下書きを作成（ViralDraftV2を使用）
-    for (const post of generatedPosts) {
-      // コンセプトから関連するハッシュタグを取得
-      const matchingConcept = selectedConcepts.find(c => c.conceptId === post.conceptId)
-      const hashtags = matchingConcept?.hashtags || ['#AI', '#働き方', '#未来']
-      
-      if (post.format === 'thread') {
-        // スレッド形式の場合は、posts配列をJSONとして保存
-        await prisma.viralDraftV2.create({
-          data: {
-            sessionId: id,
-            conceptId: post.conceptId,
-            title: post.conceptTitle || 'Generated Thread',
-            content: JSON.stringify({
-              format: 'thread',
-              posts: post.posts
-            }),
-            hashtags: hashtags,
-            visualNote: matchingConcept?.visual,
-            characterId: post.characterId,
-            characterNote: `Generated as ${post.characterId} (thread)`,
-            status: 'DRAFT'
-          }
-        })
-      } else {
-        // シングル形式の場合は、contentをそのまま保存
-        await prisma.viralDraftV2.create({
-          data: {
-            sessionId: id,
-            conceptId: post.conceptId,
-            title: post.conceptTitle || 'Generated Content',
-            content: post.content,
-            hashtags: hashtags,
-            visualNote: matchingConcept?.visual,
-            characterId: post.characterId,
-            characterNote: `Generated as ${post.characterId} (single)`,
-            status: 'DRAFT'
-          }
-        })
+    await DBManager.transaction(async (tx) => {
+      for (const post of generatedPosts) {
+        // コンセプトから関連するハッシュタグを取得
+        const matchingConcept = selectedConcepts.find(c => c.conceptId === post.conceptId)
+        const hashtags = matchingConcept?.hashtags || ['#AI', '#働き方', '#未来']
+        
+        const draftId = IDGenerator.generate(EntityType.DRAFT)
+        
+        if (post.format === 'thread') {
+          // スレッド形式の場合は、posts配列をJSONとして保存
+          await tx.viral_drafts_v2.create({
+            data: {
+              id: draftId,
+              sessionId: id,
+              conceptId: post.conceptId,
+              title: post.conceptTitle || 'Generated Thread',
+              content: JSON.stringify({
+                format: 'thread',
+                posts: post.posts
+              }),
+              hashtags: hashtags,
+              visualNote: matchingConcept?.visual,
+              characterId: post.characterId,
+              characterNote: `Generated as ${post.characterId} (thread)`,
+              status: 'DRAFT'
+            }
+          })
+        } else {
+          // シングル形式の場合は、contentをそのまま保存
+          await tx.viral_drafts_v2.create({
+            data: {
+              id: draftId,
+              sessionId: id,
+              conceptId: post.conceptId,
+              title: post.conceptTitle || 'Generated Content',
+              content: post.content,
+              hashtags: hashtags,
+              visualNote: matchingConcept?.visual,
+              characterId: post.characterId,
+              characterNote: `Generated as ${post.characterId} (single)`,
+              status: 'DRAFT'
+            }
+          })
+        }
       }
-    }
+    })
+    
+    claudeLog('Content generation completed', { 
+      sessionId: id,
+      generatedCount: generatedPosts.length 
+    })
 
     return NextResponse.json({ 
       success: true,
@@ -273,9 +298,17 @@ export async function POST(
       session: updatedSession
     })
   } catch (error) {
-    console.error('Error generating content:', error)
+    const errorId = await ErrorManager.logError(error, {
+      module: 'create-flow-generate',
+      operation: 'generate-content',
+      sessionId: id,
+      characterId: body?.characterId
+    })
+    
+    const userMessage = ErrorManager.getUserMessage(error, 'ja')
+    
     return NextResponse.json(
-      { error: 'Failed to generate content' },
+      { error: userMessage, errorId },
       { status: 500 }
     )
   }

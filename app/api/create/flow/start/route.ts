@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma-client'
+import { prisma } from '@/lib/prisma'
 import { claudeLog } from '@/lib/core/claude-logger'
+import { logApiError, logPrismaError } from '@/lib/api/error-logger'
+import { DBManager, IDGenerator, EntityType, ErrorManager } from '@/lib/core/unified-system-manager'
 
 export async function POST(request: Request) {
   console.error('=== CREATE FLOW START API CALLED ===')
@@ -57,23 +59,26 @@ export async function POST(request: Request) {
       '🗄️ Creating new viral session'
     )
 
-    // Prisma診断
-    if (!prisma) {
-      console.error('PRISMA IS UNDEFINED!')
-      console.error('Import path: @/lib/prisma')
-      const importedModule = await import('@/lib/prisma')
-      console.error('Imported module keys:', Object.keys(importedModule))
-      throw new Error('Prisma client is not initialized')
-    }
+    // 統一システム管理を使用してセッション作成
+    const sessionId = IDGenerator.generate(EntityType.VIRAL_SESSION)
+    
+    claudeLog.info(
+      { module: 'database', operation: 'create-session-with-unified' },
+      '🗄️ Creating session with unified system manager',
+      { sessionId }
+    )
 
-    // シンプルなセッション作成
-    const session = await prisma.viralSession.create({
-      data: {
-        theme,
-        platform,
-        style,
-        status: 'CREATED'
-      }
+    // DBManagerを使用してトランザクション内でセッション作成
+    const session = await DBManager.transaction(async (tx) => {
+      return await tx.viral_sessions.create({
+        data: {
+          id: sessionId,
+          theme,
+          platform,
+          style,
+          status: 'CREATED'
+        }
+      })
     })
 
     claudeLog.logCreateFlow(session.id, 'CREATED', 'SUCCESS', {
@@ -101,7 +106,7 @@ export async function POST(request: Request) {
     )
 
     return NextResponse.json(response)
-  } catch (error) {
+  } catch (error: any) {
     apiCall.end(startTime, 500)
     claudeLog.error(
       { module: 'api', operation: 'flow-start' },
@@ -109,8 +114,31 @@ export async function POST(request: Request) {
       error
     )
     
+    // バックエンドエラーをログに記録
+    logApiError({
+      timestamp: new Date().toISOString(),
+      method: request.method,
+      url: '/api/create/flow/start',
+      status: 500,
+      error: error.message || 'Unknown error',
+      stack: error.stack,
+      body: await request.text().catch(() => 'Unable to read body')
+    })
+    
+    // Prismaエラーの場合は詳細を記録
+    if (error.code && error.code.startsWith('P')) {
+      logPrismaError(error, 'viral_sessions.create')
+    }
+    
+    // 統一システムのエラー管理にも記録
+    await ErrorManager.logError(error, {
+      module: 'create',
+      operation: 'flow-start',
+      metadata: { theme, platform, style }
+    })
+    
     return NextResponse.json(
-      { error: 'Failed to start flow' },
+      { error: 'Failed to start flow', details: error.message },
       { status: 500 }
     )
   }

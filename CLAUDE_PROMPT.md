@@ -6,6 +6,18 @@
 
 # X_BUZZ_FLOW 作業開始
 
+## 🚨 作業開始前の必須手順（エラーキャプチャ起動）
+```bash
+# バックエンドエラー監視を起動（APIエラーを自動記録）
+node scripts/dev-tools/backend-error-capture.js &
+
+# フロントエンドエラー監視を起動（ブラウザエラーを自動記録）
+node scripts/dev-tools/auto-error-capture.js &
+
+# 既存のエラーを確認
+node scripts/dev-tools/claude-check-errors.js
+```
+
 ## 1️⃣ 10秒でプロジェクト状態を把握
 ```bash
 # 統合ステータスチェック（1コマンドで全体把握）
@@ -30,86 +42,43 @@ cat CLAUDE.md | grep -A 20 "## 🚀 クイックスタート"
 cat MASTER_DOC.md | head -100
 ```
 
-## 3️⃣ 開発環境の起動
+## 3️⃣ 現在動作中のシステム確認
 ```bash
-# Claude-dev統合環境（推奨）- エラー監視・ビルド監視付き
-./scripts/dev-persistent-enhanced.sh
+# API使用状況（重複を防ぐ）
+node scripts/dev-tools/api-dependency-scanner.js
 
-# または通常の永続サーバー
-./scripts/dev-persistent.sh
+# DB整合性チェック
+node scripts/dev-tools/db-schema-validator.js
+
+# セッション状態確認
+node scripts/dev-tools/flow-visualizer.js
 ```
 
-## 4️⃣ 現在のシステム状態確認
+## 4️⃣ 主要システムの動作確認URL
+- http://localhost:3000/mission-control - 統合ダッシュボード
+- http://localhost:3000/create - Create→Draft→Postフロー
+- http://localhost:3000/intelligence/news - NEWSシステム
+- http://localhost:3555 - Prisma Studio（DB確認）
+
+## 5️⃣ よく使うコマンド
 ```bash
-# DB接続とスキーマ状態
-node scripts/dev-tools/db-schema-validator.js --quick
+# プロンプト編集
+node scripts/dev-tools/prompt-editor.js list
 
-# API依存関係（重複・未使用を検出）
-node scripts/dev-tools/api-dependency-scanner.js --summary
-
-# セッションとフローの状態
-node scripts/dev-tools/flow-visualizer.js --summary
-
-# ビルド状態
-npm run build:check || echo "ビルドエラーあり"
-```
-
-## 5️⃣ よく使う開発コマンド
-```bash
-# エラー検索（過去の解決策を探す）
-node scripts/dev-tools/find-error.js "エラーキーワード"
-
-# エラー記録（新しいエラーを記録）
+# エラー記録（手動）
 node scripts/dev-tools/smart-error-recorder.js
 
-# プロンプト確認・編集
-node scripts/dev-tools/prompt-editor.js list
-node scripts/dev-tools/prompt-editor.js edit [ファイル名]
-
-# E2Eフローテスト
-node scripts/dev-tools/e2e-flow-tester.js
+# ビルド監視
+node scripts/dev-tools/build-monitor.js
 ```
 
-## ⚠️ 開発の鉄則
-1. **ポート3000必須**（Twitter認証の制約）
-2. **エラーは必ず記録**（同じエラーを繰り返さない）
-3. **既存ツールを使う**（新しいスクリプトを作らない）
-4. **問題の根本解決**（モックやダミーで回避しない）
-
-## 🚫 絶対にやってはいけないこと
-- ❌ DB接続エラーをモックデータで回避
-- ❌ 一時的なテストスクリプトの乱造
-- ❌ 新規ドキュメントの作成
-- ❌ npm run dev（永続サーバーを使う）
-- ❌ エラーの「詳細は後で追記」
-
-## 📊 現在の主要システム（2025年6月時点）
-
-### 統合システムアーキテクチャ
-```
-[収集] → [分析] → [生成] → [配信] → [評価]
-Intel → Create → Publish → Analyze → Optimize
-```
-
-### 各モジュールの状態
-1. **Intel（インテリジェンス）** ✅ 
-   - News: ニュース収集・分析（完全動作）
-   - Social: KaitoAPI連携（完全動作）
-   - Trends: トレンド検出（実装中）
-
-2. **Create（クリエーション）** ✅ 
-   - Flow: Perplexity→GPT→Claude（完全動作）
-   - Draft: 下書き管理（完全動作）
-   - Persona: キャラクター生成（完全動作）
-
-3. **Publish（パブリッシュ）** ✅
-   - Post: Twitter投稿（完全動作）
-   - Schedule: スケジュール管理（完全動作）
-
-4. **Analyze（アナライズ）** ⚠️
-   - Performance: パフォーマンス分析（UI実装済み）
-   - Insights: インサイト生成（データ接続待ち）
+## ⚠️ 重要な注意事項
+1. **永続サーバーを使用**: `./scripts/dev-persistent-enhanced.sh`
+2. **ポート3000必須**: Twitter OAuth認証の制約
+3. **エラーキャプチャは必ず起動**: 問題の早期発見のため
+4. **同じエラーを繰り返さない**: ERRORS.mdを先に確認
+5. **APIの重複を防ぐ**: 新規作成前にapi-dependency-scannerで確認
 
 ---
 
-このプロンプトを実行後、具体的な作業内容を教えてください。
+以上をコピーして使用してください。

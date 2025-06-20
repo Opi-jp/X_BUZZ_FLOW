@@ -1,50 +1,93 @@
 /**
  * Prisma Client 統一インスタンス
  * 
- * プロジェクト全体で使用するPrismaクライアントの統一管理
- * 接続プール、ログ設定、環境別設定を含む
+ * Next.js 15.3 App Router対応版
+ * 環境変数の明示的な読み込みとデバッグログ付き
  */
 
+// 環境変数の読み込みを最初に行う
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env.local' })
+dotenv.config({ path: '.env' })
+
+// 環境変数の検証
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is not defined in environment variables')
+}
+
 import { PrismaClient } from '@/lib/generated/prisma'
-export { PostType, PrismaClient } from '@/lib/generated/prisma'
+export { PostType } from '@/lib/generated/prisma'
 
 // グローバル型宣言（開発時のホットリロード対策）
 declare global {
   var __prisma: PrismaClient | undefined
+  var __prismaPromise: Promise<PrismaClient> | undefined
 }
 
 // 環境別設定
 const isDevelopment = process.env.NODE_ENV === 'development'
 
 // ログレベル設定
-const logLevels: any = isDevelopment 
-  ? ['query', 'info', 'warn', 'error']
+const logLevels = isDevelopment 
+  ? ['error', 'warn'] // queryログは大量になるので開発時も抑制
   : ['error']
 
 /**
  * Prismaクライアントの設定
  */
-const prismaConfig: any = {
-  log: logLevels,
-  // エラーフォーマット設定
+const prismaConfig = {
+  log: logLevels as any,
   errorFormat: isDevelopment ? 'pretty' : 'minimal',
+} as const
+
+/**
+ * Prismaクライアントの作成（遅延初期化）
+ */
+function createPrismaClient(): PrismaClient {
+  console.log('🔄 Creating new Prisma Client instance...')
+  console.log('📊 Database URL:', process.env.DATABASE_URL ? 'Set' : 'Not set')
+  console.log('🔧 Environment:', process.env.NODE_ENV)
+  
+  const client = new PrismaClient(prismaConfig)
+  
+  // 接続テスト
+  client.$connect()
+    .then(() => {
+      console.log('✅ Prisma Client connected successfully')
+    })
+    .catch((error) => {
+      console.error('❌ Prisma Client connection failed:', error)
+    })
+  
+  return client
 }
 
 /**
- * Prismaクライアント インスタンス
- * 
- * 開発時: グローバルインスタンスを再利用（ホットリロード対策）
- * 本番時: 新しいインスタンスを作成
+ * シングルトンインスタンスの取得
+ * Next.js 15.3のホットリロードに対応
  */
-const prismaInstance = globalThis.__prisma || new PrismaClient(prismaConfig)
-
-// 開発時のグローバルインスタンス保存
-if (isDevelopment) {
-  globalThis.__prisma = prismaInstance
+function getPrismaClient(): PrismaClient {
+  if (!isDevelopment) {
+    // 本番環境では常に新しいインスタンス
+    return createPrismaClient()
+  }
+  
+  // 開発環境ではグローバルインスタンスを再利用
+  if (!globalThis.__prisma) {
+    globalThis.__prisma = createPrismaClient()
+  }
+  
+  return globalThis.__prisma
 }
 
-// Named exportとして明示的にエクスポート
-export const prisma = prismaInstance
+// Prismaクライアント インスタンス
+export const prisma = getPrismaClient()
+
+// デバッグ情報を出力
+if (isDevelopment) {
+  console.log('🔌 Prisma Client exported')
+  console.log('📝 Available models:', Object.keys(prisma).filter(key => !key.startsWith('$')))
+}
 
 /**
  * Prisma接続のヘルスチェック
@@ -89,7 +132,7 @@ export async function disconnectPrisma(): Promise<void> {
  * トランザクション実行のヘルパー
  */
 export async function executeTransaction<T>(
-  callback: (tx: PrismaClient) => Promise<T>
+  callback: (tx: typeof prisma) => Promise<T>
 ): Promise<T> {
   try {
     return await prisma.$transaction(callback)
@@ -99,38 +142,19 @@ export async function executeTransaction<T>(
   }
 }
 
-/**
- * バッチ操作のヘルパー
- */
-export async function executeBatch<T>(operations: T[]): Promise<T[]> {
-  try {
-    // @ts-ignore - Prisma transaction typing issue
-    return await prisma.$transaction(operations)
-  } catch (error) {
-    console.error('Batch operation failed:', error)
-    throw error
-  }
-}
-
-// 開発時のデバッグ情報
-if (isDevelopment) {
-  console.log('🔌 Prisma Client initialized')
-  console.log('📊 Log levels:', logLevels)
-  console.log('🗄️ Database URL:', process.env.DATABASE_URL ? 'Set' : 'Not set')
-}
-
 // プロセス終了時の接続切断
-process.on('beforeExit', async () => {
-  await disconnectPrisma()
-})
-
-// エラー時の接続切断
-process.on('SIGINT', async () => {
-  await disconnectPrisma()
-  process.exit(0)
-})
-
-process.on('SIGTERM', async () => {
-  await disconnectPrisma()
-  process.exit(0)
-})
+if (typeof process !== 'undefined') {
+  process.on('beforeExit', async () => {
+    await disconnectPrisma()
+  })
+  
+  process.on('SIGINT', async () => {
+    await disconnectPrisma()
+    process.exit(0)
+  })
+  
+  process.on('SIGTERM', async () => {
+    await disconnectPrisma()
+    process.exit(0)
+  })
+}

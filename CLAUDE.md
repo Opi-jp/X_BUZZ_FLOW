@@ -8,14 +8,19 @@
 ./scripts/dev-tools/health-check.sh
 
 # 2. 永続サーバーの起動（必須）
-./scripts/dev-persistent.sh  # tmuxで永続的な起動
-# または Prisma Studioなしバージョン
-./scripts/dev-persistent-no-studio.sh
+./scripts/dev-persistent-enhanced.sh  # Claude-dev統合環境（推奨）
+# または 基本版
+./scripts/dev-persistent.sh
+
+# 3. エラーキャプチャの起動（🚨 重要：作業開始時に必ず実行）
+node scripts/dev-tools/backend-error-capture.js &  # バックエンドエラー監視
+node scripts/dev-tools/auto-error-capture.js &     # フロントエンドエラー監視
 
 # ⚠️ 重要: 
 # - ポート3000必須（Twitter認証のWebhookが3000を指定）
 # - npm run devは使用しない（APIタイムアウトが発生する）
 # - tmuxがインストールされていることが前提条件
+# - エラーキャプチャは作業開始時に必ず起動すること
 ```
 
 ### 最重要ドキュメントの確認
@@ -200,6 +205,8 @@ node scripts/dev-tools/prompt-editor.js stats
 ### 概要
 開発の一貫性を保つための中央管理システムを導入しました。ID生成、型定義、エラーハンドリング、プロンプト管理、DB連携などを統一的に管理します。
 
+**2025/06/20 重要更新**: Prisma初期化問題を統一システム管理で解決。すべてのCreate APIが統一システムを使用するように改修済み。
+
 ### 基本的な使い方
 ```typescript
 import { IDGenerator, EntityType, ErrorManager, PromptManager, DataTransformer, DBManager } from '@/lib/core/unified-system-manager'
@@ -249,6 +256,13 @@ const result = await DBManager.transaction(async (tx) => {
 3. **開発効率**: よく使うパターンがすぐに使える
 4. **保守性**: 中央管理により変更が容易
 5. **エラー削減**: パラメータの不一致によるエラーを防ぐ
+
+### Prismaモデル名の注意事項（重要）
+Prismaスキーマではsnake_caseを使用します：
+- ✅ 正しい: `prisma.viral_sessions.create()`
+- ❌ 間違い: `prisma.viralSession.create()`
+- ✅ 正しい: `prisma.viral_drafts_v2.findMany()`
+- ❌ 間違い: `prisma.viralDraftV2.findMany()`
 
 ## 🔧 フロントエンド改善システム（2025年6月20日実装完了）
 

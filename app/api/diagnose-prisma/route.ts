@@ -12,11 +12,12 @@ try {
   results.imports.prismaClient = {
     success: true,
     type: typeof prisma1,
-    hasViralSession: !!prisma1?.viralSession
+    hasViralSession: !!prisma1?.viralSession,
+    keys: prisma1 ? Object.keys(prisma1).slice(0, 5) : []
   }
   
-  if (prisma1?.viralSession) {
-    const count = await prisma1.viralSession.count()
+  if (prisma1?.viral_sessions) {
+    const count = await prisma1.viral_sessions.count()
     results.tests.prismaClient = { count }
   }
 } catch (e: any) {

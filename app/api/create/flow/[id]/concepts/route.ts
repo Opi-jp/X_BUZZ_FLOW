@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { loadPrompt } from '@/lib/prompt-loader'
 import { PerplexityResponseParser } from '@/lib/parsers/perplexity-response-parser'
 import OpenAI from 'openai'
+import { ErrorManager, DBManager, PromptManager, IDGenerator, EntityType } from '@/lib/core/unified-system-manager'
+import { claudeLog } from '@/lib/core/claude-logger'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -30,7 +32,7 @@ export async function POST(
     }
     
     // セッションを取得
-    const session = await prisma.viralSession.findUnique({
+    const session = await prisma.viral_sessions.findUnique({
       where: { id }
     })
     
@@ -52,16 +54,23 @@ export async function POST(
     // ステータスに関わらず、topicsデータがあれば概念生成可能
 
     // ステータスを更新
-    await prisma.viralSession.update({
-      where: { id },
-      data: { status: 'GENERATING_CONCEPTS' }
+    await DBManager.transaction(async (tx) => {
+      await tx.viral_sessions.update({
+        where: { id },
+        data: { status: 'GENERATING_CONCEPTS' }
+      })
     })
+    
+    claudeLog('Starting concept generation', { sessionId: id })
 
     // topicsフィールドをパース
     let topics = []
     try {
-      console.log('[GPT] Topics type:', typeof session.topics)
-      console.log('[GPT] Topics sample:', JSON.stringify(session.topics).substring(0, 200))
+      claudeLog('Parsing topics', { 
+        sessionId: id,
+        topicsType: typeof session.topics,
+        topicsSample: JSON.stringify(session.topics).substring(0, 200)
+      })
       
       if (typeof session.topics === 'string') {
         // Markdown形式のレスポンスをパース
@@ -86,22 +95,29 @@ export async function POST(
 
     // 最も有望な2つのトピックのみを処理
     const topicsToProcess = topics.slice(0, 2)
-    console.log(`Processing ${topicsToProcess.length} most promising topics`)
+    claudeLog('Processing topics', { 
+      sessionId: id,
+      topicCount: topicsToProcess.length 
+    })
     
     // 各トピックに対して3つのコンセプトを生成
     const conceptPromises = topicsToProcess.map(async (topic: any, topicIndex: number) => {
-      const prompt = loadPrompt('gpt/generate-concepts.txt', {
-        platform: session.platform,
-        style: session.style,
-        topicTitle: topic.TOPIC,
-        topicSource: topic.source || 'Unknown',
-        topicDate: topic.date || new Date().toISOString().split('T')[0],
-        topicUrl: topic.url,
-        topicSummary: topic.summary || '',
-        topicKeyPoints: topic.keyPoints ? topic.keyPoints.map((point: string, i: number) => `${i + 1}. ${point}`).join('\n') : '',
-        topicAnalysis: topic.perplexityAnalysis,
-        topicIndex: topicIndex + 1
-      })
+      const prompt = await PromptManager.load(
+        'gpt/generate-concepts.txt',
+        {
+          platform: session.platform,
+          style: session.style,
+          topicTitle: topic.TOPIC,
+          topicSource: topic.source || 'Unknown',
+          topicDate: topic.date || new Date().toISOString().split('T')[0],
+          topicUrl: topic.url,
+          topicSummary: topic.summary || '',
+          topicKeyPoints: topic.keyPoints ? topic.keyPoints.map((point: string, i: number) => `${i + 1}. ${point}`).join('\n') : '',
+          topicAnalysis: topic.perplexityAnalysis,
+          topicIndex: topicIndex + 1
+        },
+        { validate: true, cache: true }
+      )
 
       const response = await openai.chat.completions.create({
         model: 'gpt-4o',
@@ -167,9 +183,10 @@ export async function POST(
         }
       }
 
-      // トピック情報を各コンセプトに追加
+      // トピック情報を各コンセプトに追加（ID付与）
       return concepts.map((concept: any) => ({
         ...concept,
+        conceptId: IDGenerator.generate(EntityType.CONCEPT),
         topicTitle: topic.TOPIC,
         topicUrl: topic.url,
         topicSummary: topic.summary
@@ -179,15 +196,20 @@ export async function POST(
     const allConceptsArrays = await Promise.all(conceptPromises)
     const allConcepts = allConceptsArrays.flat()
 
-    console.log(`Generated ${allConcepts.length} concepts total`)
+    claudeLog('Generated concepts', { 
+      sessionId: id,
+      conceptCount: allConcepts.length 
+    })
 
     // セッションを更新
-    const updatedSession = await prisma.viralSession.update({
-      where: { id },
-      data: {
-        concepts: allConcepts,
-        status: 'CONCEPTS_GENERATED'
-      }
+    const updatedSession = await DBManager.transaction(async (tx) => {
+      return await tx.viral_sessions.update({
+        where: { id },
+        data: {
+          concepts: allConcepts,
+          status: 'CONCEPTS_GENERATED'
+        }
+      })
     })
 
     return NextResponse.json({
@@ -197,22 +219,30 @@ export async function POST(
     })
     
   } catch (error) {
-    console.error('Error generating concepts:', error)
+    const errorId = await ErrorManager.logError(error, {
+      module: 'create-flow-concepts',
+      operation: 'generate-concepts',
+      sessionId: id
+    })
     
     // エラー時はステータスを戻す
     try {
-      await prisma.viralSession.update({
-        where: { id: (await params).id },
-        data: { status: 'TOPICS_COLLECTED' }
+      await DBManager.transaction(async (tx) => {
+        await tx.viral_sessions.update({
+          where: { id: (await params).id },
+          data: { status: 'TOPICS_COLLECTED' }
+        })
       })
     } catch (e) {
       // リセットエラーは無視
     }
     
+    const userMessage = ErrorManager.getUserMessage(error, 'ja')
+    
     return NextResponse.json(
       { 
-        error: 'Failed to generate concepts',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: userMessage,
+        errorId
       },
       { status: 500 }
     )

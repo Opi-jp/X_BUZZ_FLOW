@@ -8,6 +8,10 @@ AIを使ったTwitterバイラルコンテンツ生成システム。
 ```bash
 # Claude-dev統合開発環境（推奨）
 ./scripts/dev-persistent-enhanced.sh
+
+# 🚨 重要：作業開始時に必ずエラーキャプチャを起動
+node scripts/dev-tools/backend-error-capture.js &  # バックエンドエラー監視
+node scripts/dev-tools/auto-error-capture.js &     # フロントエンドエラー監視
 ```
 
 ### 重要ドキュメント
@@ -27,8 +31,11 @@ node scripts/dev-tools/smart-error-recorder.js
 # 自動エラーキャプチャ（バックグラウンド）
 node scripts/dev-tools/auto-error-capture.js
 
-# バックエンド専用エラーモニター
-node scripts/dev-tools/backend-error-monitor.js
+# バックエンド専用エラーモニター（NEW: 2025/06/20）
+node scripts/dev-tools/backend-error-capture.js  # tmuxとログを監視
+
+# Claudeでエラー状況確認
+node scripts/dev-tools/claude-check-errors.js
 ```
 
 ### ビルド監視
