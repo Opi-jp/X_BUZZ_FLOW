@@ -33,10 +33,10 @@ export async function GET(
         platform: true,
         style: true,
         status: true,
-        createdAt: true,
+        created_at: true,
         topics: true,
         concepts: true,
-        selectedIds: true,
+        selected_ids: true,
         contents: true
       }
     })
@@ -71,10 +71,10 @@ export async function GET(
       currentStep = 'completed'
     } else if (progress.phase3_contents) {
       currentStep = 'completed'
-    } else if (progress.phase2_concepts && session.selectedIds.length === 0) {
+    } else if (progress.phase2_concepts && session.selected_ids.length === 0) {
       currentStep = 'awaiting_concept_selection'
       nextAction = 'select_concepts'
-    } else if (progress.phase2_concepts && session.selectedIds.length > 0) {
+    } else if (progress.phase2_concepts && session.selected_ids.length > 0) {
       currentStep = 'awaiting_character_selection'
       nextAction = 'select_character'
     } else if (progress.phase1_collecting) {
@@ -103,7 +103,7 @@ export async function GET(
       data: {
         topics: session.topics,
         concepts: session.concepts,
-        selectedConcepts: session.selectedIds,
+        selectedConcepts: session.selected_ids,
         contents: session.contents
       }
     })

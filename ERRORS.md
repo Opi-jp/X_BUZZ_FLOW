@@ -7,14 +7,17 @@
 
 ### スマートエラー記録（推奨）
 ```bash
-# 詳細情報を対話的に記録
-node scripts/dev-tools/smart-error-recorder.js
+# エラーを記録（非対話的）
+node scripts/dev-tools/smart-error-recorder.js [タイトル] [メッセージ] [解決策] [原因]
 
-# クイックモード（最小限の情報で記録）
-node scripts/dev-tools/smart-error-recorder.js --quick
+# 例
+node scripts/dev-tools/smart-error-recorder.js "API 404エラー" "collect APIが見つからない" "パスを修正" "古いAPIパスを使用"
 
 # 未解決エラーの確認
 node scripts/dev-tools/smart-error-recorder.js --unresolved
+
+# システム状態の確認
+node scripts/dev-tools/smart-error-recorder.js --check-status
 ```
 
 ### 自動エラーキャプチャ
@@ -1018,6 +1021,512 @@ Database schema validation issues detected
 Database schema validation issues detected
 
 *詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 Prisma フィールド名エラー
+
+**カテゴリ**: Database | **タグ**: prisma, db
+**記録日時**: 2025/6/21 2:09:31
+
+
+### 症状
+```
+PrismaのモデルでcamelCase（createdAt、selectedIds）を使用していたが、実際のDBカラムはsnake_case（created_at、selected_ids）だった。すべてのフィールド名をsnake_caseに統一することで解決。
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+
+
+### 根本原因
+
+
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 database high
+
+### 解決策
+Database schema validation issues detected
+
+*詳細は後で追記*
+
+---
+
+
+## 🔴 テストエラー
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 2:23:21
+
+
+### 症状
+```
+非対話的モードのテスト
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+正常に動作
+
+### 根本原因
+
+対話的モードを削除
+
+### 再発防止策
+
+
+
+---
+
+
+## 🔴 Collect API 404エラー
+
+**カテゴリ**: API | **タグ**: api, network
+**記録日時**: 2025/6/21 2:23:30
+
+
+### 症状
+```
+POST /api/generation/content/sessions/[id]/collect が404を返す
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+APIパスを正しく修正、または既存のAPIに統一
+
+### 根本原因
+
+古いAPIパスを使用していた可能性、またはAPIが実装されていない
+
+### 再発防止策
+
+
 
 ---
 

@@ -16,7 +16,7 @@
 const fs = require('fs').promises;
 const fsSync = require('fs');
 const path = require('path');
-const readline = require('readline');
+// readline は削除: 非対話的モードのため不要
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const chalk = require('chalk');
@@ -27,20 +27,11 @@ const ERROR_DETAILS_DIR = path.join(process.cwd(), '.error-details');
 
 class SmartErrorRecorder {
   constructor() {
-    this.rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    });
+    // 非対話的モードのため、readlineは不要
   }
 
-  async prompt(question, defaultValue = '') {
-    return new Promise(resolve => {
-      const q = defaultValue ? `${question} [${chalk.dim(defaultValue)}]: ` : `${question}: `;
-      this.rl.question(q, answer => {
-        resolve(answer || defaultValue);
-      });
-    });
-  }
+  // 削除: readline関連のメソッドは不要
+  // 非対話的モードのため、これらのメソッドは削除されました
 
   async collectContextInfo() {
     const context = {
@@ -129,54 +120,22 @@ class SmartErrorRecorder {
     return detailsPath;
   }
 
-  async recordError(quickMode = false) {
+  async recordErrorFromArgs(title, message, solution, cause) {
     console.log(chalk.red.bold('🔴 スマートエラー記録システム\n'));
 
     // コンテキスト情報を収集
     console.log(chalk.blue('📊 コンテキスト情報を収集中...'));
     const context = await this.collectContextInfo();
 
-    // エラー情報を収集
-    const errorTitle = await this.prompt('エラーのタイトル');
-    const errorMessage = await this.prompt('エラーメッセージ（複数行可、空行で終了）');
-    
-    // 複数行入力を処理
-    let fullErrorMessage = errorMessage;
-    if (!quickMode && errorMessage) {
-      console.log(chalk.dim('（複数行入力中... 空行で終了）'));
-      let line;
-      while ((line = await this.prompt('')) !== '') {
-        fullErrorMessage += '\n' + line;
-      }
-    }
-
     // エラーパターンを検出
-    const { category, tags } = await this.detectErrorPattern(fullErrorMessage);
+    const { category, tags } = await this.detectErrorPattern(message);
     console.log(chalk.yellow(`🏷️  検出されたカテゴリ: ${category}`));
     console.log(chalk.yellow(`🏷️  タグ: ${tags.join(', ')}`));
 
     // 関連ファイルを検出
-    const relatedFiles = await this.findRelatedFiles(fullErrorMessage);
+    const relatedFiles = await this.findRelatedFiles(message);
     if (relatedFiles.length > 0) {
       console.log(chalk.cyan(`📁 関連ファイル: ${relatedFiles.join(', ')}`));
-    }
-
-    // 追加情報を収集
-    let reproduceSteps = '';
-    let attemptedSolutions = '';
-    let actualSolution = '';
-    let rootCause = '';
-    let prevention = '';
-    let screenshot = '';
-
-    if (!quickMode) {
-      console.log(chalk.green('\n📝 詳細情報を入力してください：'));
-      reproduceSteps = await this.prompt('再現手順', '不明');
-      attemptedSolutions = await this.prompt('試した解決策', 'なし');
-      actualSolution = await this.prompt('実際の解決策', '未解決');
-      rootCause = await this.prompt('根本原因', '調査中');
-      prevention = await this.prompt('再発防止策', '検討中');
-      screenshot = await this.prompt('スクリーンショットのパス（あれば）', '');
     }
 
     // エラーIDを生成
@@ -185,18 +144,18 @@ class SmartErrorRecorder {
     // 詳細情報を保存
     const details = {
       id: errorId,
-      title: errorTitle,
-      message: fullErrorMessage,
+      title,
+      message,
       category,
       tags,
       relatedFiles,
       context,
-      reproduceSteps,
-      attemptedSolutions,
-      actualSolution,
-      rootCause,
-      prevention,
-      screenshot,
+      reproduceSteps: '',
+      attemptedSolutions: '',
+      actualSolution: solution,
+      rootCause: cause,
+      prevention: '',
+      screenshot: '',
       recordedAt: new Date().toISOString()
     };
 
@@ -210,16 +169,18 @@ class SmartErrorRecorder {
     console.log(chalk.blue(`📄 詳細情報: ${detailsPath}`));
 
     // リマインダーを設定
-    if (actualSolution === '未解決' || rootCause === '調査中') {
+    if (solution === '調査中' || cause === '調査中') {
       console.log(chalk.yellow('\n⏰ リマインダー: このエラーは未解決です'));
       console.log(chalk.yellow('   後で詳細を更新してください'));
       
       // 未解決エラーリストに追加
-      await this.addToUnresolvedList(errorId, errorTitle);
+      await this.addToUnresolvedList(errorId, title);
     }
-
-    this.rl.close();
   }
+
+  // 削除: 対話的モードは不要
+  // recordError() メソッドは削除されました
+  // 代わりに recordErrorFromArgs() を使用してください
 
   formatErrorEntry(details) {
     const {
@@ -350,56 +311,75 @@ async function main() {
   const args = process.argv.slice(2);
   const recorder = new SmartErrorRecorder();
 
-  if (args.includes('--unresolved')) {
-    await recorder.showUnresolved();
-    process.exit(0);
-  }
-
-  if (args.includes('--check-status')) {
-    console.log(chalk.green('✅ スマートエラー記録システム - 状態確認'));
-    console.log(chalk.yellow('\n📁 エラー記録ディレクトリ:'));
-    console.log(`  - .error-details/ : ${fsSync.existsSync('.error-details') ? '✅ 存在' : '❌ 未作成'}`);
-    console.log(`  - .error-capture/ : ${fsSync.existsSync('.error-capture') ? '✅ 存在' : '❌ 未作成'}`);
-    console.log(`  - logs/ : ${fsSync.existsSync('logs') ? '✅ 存在' : '❌ 未作成'}`);
-    
-    // エラー統計
-    try {
-      const errorFiles = fsSync.existsSync('.error-details') ? 
-        fsSync.readdirSync('.error-details').filter(f => f.endsWith('.json')) : [];
-      console.log(chalk.yellow('\n📊 エラー統計:'));
-      console.log(`  - 記録済みエラー数: ${errorFiles.length}`);
-      
-      if (errorFiles.length > 0) {
-        let resolved = 0;
-        let unresolved = 0;
-        errorFiles.forEach(file => {
-          const data = JSON.parse(fsSync.readFileSync(path.join('.error-details', file), 'utf8'));
-          if (data.resolved) resolved++;
-          else unresolved++;
-        });
-        console.log(`  - 解決済み: ${resolved}`);
-        console.log(`  - 未解決: ${unresolved}`);
-      }
-    } catch (error) {
-      console.log(chalk.red('  エラー統計の取得に失敗しました'));
+  try {
+    if (args.includes('--unresolved')) {
+      await recorder.showUnresolved();
+      process.exit(0);
     }
-    
-    console.log(chalk.yellow('\n💡 使い方:'));
-    console.log('  - エラーを記録: node scripts/dev-tools/smart-error-recorder.js');
-    console.log('  - 未解決エラーを表示: node scripts/dev-tools/smart-error-recorder.js --unresolved');
-    console.log('  - 自動エラーキャプチャを起動: node scripts/dev-tools/auto-error-capture.js');
-    process.exit(0);
-  }
 
-  if (args.includes('--quick')) {
-    await recorder.recordError(true);
-  } else {
-    await recorder.recordError(false);
+    if (args.includes('--check-status')) {
+      console.log(chalk.green('✅ スマートエラー記録システム - 状態確認'));
+      console.log(chalk.yellow('\n📁 エラー記録ディレクトリ:'));
+      console.log(`  - .error-details/ : ${fsSync.existsSync('.error-details') ? '✅ 存在' : '❌ 未作成'}`);
+      console.log(`  - .error-capture/ : ${fsSync.existsSync('.error-capture') ? '✅ 存在' : '❌ 未作成'}`);
+      console.log(`  - logs/ : ${fsSync.existsSync('logs') ? '✅ 存在' : '❌ 未作成'}`);
+      
+      // エラー統計
+      try {
+        const errorFiles = fsSync.existsSync('.error-details') ? 
+          fsSync.readdirSync('.error-details').filter(f => f.endsWith('.json')) : [];
+        console.log(chalk.yellow('\n📊 エラー統計:'));
+        console.log(`  - 記録済みエラー数: ${errorFiles.length}`);
+        
+        if (errorFiles.length > 0) {
+          let resolved = 0;
+          let unresolved = 0;
+          errorFiles.forEach(file => {
+            const data = JSON.parse(fsSync.readFileSync(path.join('.error-details', file), 'utf8'));
+            if (data.resolved) resolved++;
+            else unresolved++;
+          });
+          console.log(`  - 解決済み: ${resolved}`);
+          console.log(`  - 未解決: ${unresolved}`);
+        }
+      } catch (error) {
+        console.log(chalk.red('  エラー統計の取得に失敗しました'));
+      }
+      
+      console.log(chalk.yellow('\n💡 使い方:'));
+      console.log('  - エラーを記録: node scripts/dev-tools/smart-error-recorder.js [タイトル] [メッセージ] [解決策] [原因]');
+      console.log('  - 状態確認: node scripts/dev-tools/smart-error-recorder.js --check-status');
+      console.log('  - 未解決エラーを表示: node scripts/dev-tools/smart-error-recorder.js --unresolved');
+      console.log('  - 自動エラーキャプチャを起動: node scripts/dev-tools/auto-error-capture.js');
+      process.exit(0);
+    }
+
+    // コマンドライン引数からエラー情報を取得
+    if (args.length >= 4) {
+      const [title, message, solution, cause] = args;
+      await recorder.recordErrorFromArgs(title, message, solution, cause);
+    } else {
+      console.log(chalk.red('エラー: 引数が不足しています'));
+      console.log(chalk.yellow('\n使い方:'));
+      console.log('  node scripts/dev-tools/smart-error-recorder.js [タイトル] [メッセージ] [解決策] [原因]');
+      console.log('\n例:');
+      console.log('  node scripts/dev-tools/smart-error-recorder.js "API 404エラー" "collect APIが見つからない" "パスを修正" "古いAPIパスを使用"');
+      console.log('\nオプション:');
+      console.log('  --unresolved    未解決エラーを表示');
+      console.log('  --check-status  システム状態を確認');
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error(chalk.red('エラーが発生しました:'), error);
+    process.exit(1);
   }
 }
 
 if (require.main === module) {
-  main().catch(console.error);
+  main().catch(error => {
+    console.error(chalk.red('予期しないエラーが発生しました:'), error);
+    process.exit(1);
+  });
 }
 
 module.exports = SmartErrorRecorder;
