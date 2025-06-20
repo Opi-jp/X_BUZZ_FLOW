@@ -73,3 +73,17 @@ node scripts/dev-tools/check-env.js
 # セッションデータの確認
 node scripts/dev-tools/check-session-urls.js
 ```
+
+### 分析・テストツール（2025年6月20日追加）
+```bash
+# API複雑性分析
+node scripts/dev-tools/api-complexity-analyzer.js
+
+# フローボトルネック分析
+node scripts/dev-tools/flow-bottleneck-analyzer.js
+
+# E2Eフローテスト
+node scripts/dev-tools/e2e-flow-tester.js
+node scripts/dev-tools/e2e-flow-tester.js --theme "AIと働き方"
+node scripts/dev-tools/e2e-flow-tester.js --auto-progress
+```
