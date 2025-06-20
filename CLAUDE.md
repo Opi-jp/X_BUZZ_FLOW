@@ -45,6 +45,25 @@ cat docs/prompt-master-specification.md
 
 開発ツールは `scripts/dev-tools/` ディレクトリに整理されています。
 
+### 🚀 Claude専用開発環境（2025年6月20日追加）
+```bash
+# Claude-dev統合開発環境起動（推奨）
+./scripts/dev-persistent-enhanced.sh
+
+# Claude専用エラー検出（リアルタイム）
+node scripts/dev-tools/claude-instant-error-detector.js
+
+# 統合監視ダッシュボード
+node scripts/dev-tools/unified-monitoring-dashboard.js
+```
+
+#### Claude専用システムの特徴
+- **ClaudeLogger**: 構造化ログ出力で即座にエラー原因を把握
+- **10種類の統合監視**: API、DB、フロントエンド、リンク切れまで網羅
+- **エラー即座検出**: F12でのコピペ作業不要
+- **セッション継続**: 中断からの復帰を完全サポート
+- **関数整合性チェック**: フロントエンド・バックエンド間の関数定義エラーを自動検出
+
 ### 統合開発ツール
 ```bash
 node scripts/dev-tools/dev-tools.js start   # 開発環境起動
@@ -188,6 +207,47 @@ const result = await DBManager.transaction(async (tx) => {
 3. **開発効率**: よく使うパターンがすぐに使える
 4. **保守性**: 中央管理により変更が容易
 5. **エラー削減**: パラメータの不一致によるエラーを防ぐ
+
+## 🔧 フロントエンド改善システム（2025年6月20日実装完了）
+
+### 実装済みコアファイル
+1. **ClaudeLogger** (`/lib/core/claude-logger.ts`)
+   - Claude専用の構造化ログシステム
+   - フロー進行状況、エラー詳細、API追跡
+   - 開発・本番両対応
+
+2. **統一型定義** (`/types/frontend.ts`)
+   - Create→Draft→Postフロー完全対応
+   - FlowSession、ConceptOption、GeneratedContent型
+   - フロントエンド・バックエンド間の整合性確保
+
+3. **API契約システム** (`/lib/shared/api-contracts.ts`)
+   - Zodベースのバリデーション
+   - 統一エラーハンドリング
+   - Request/Response型定義
+
+4. **セッション管理** (`/lib/frontend/session-manager.ts`)
+   - LocalStorage状態管理
+   - 中断からの復帰
+   - コンテキスト保持
+
+### 自動テストツール
+- **フロントエンドフローテスター**: Puppeteerベースの完全自動テスト
+- **関数マッピングツール**: バックエンド・フロントエンド関数定義の整合性チェック
+- **エラー即座検出**: リアルタイムエラー監視とパターンマッチング
+
+### 開発フロー
+```bash
+# 1. Claude-dev環境起動
+./scripts/dev-persistent-enhanced.sh
+
+# 2. 別ターミナルでClaude専用エラー検出
+node scripts/dev-tools/claude-instant-error-detector.js
+
+# 3. 開発作業（エラーは自動検出・記録）
+# 4. フロントエンドフローテスト
+node scripts/dev-tools/frontend-flow-tester.js
+```
 
 ## 📝 テストスクリプトの管理ルール
 
