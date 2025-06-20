@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
   engineType    = "library"
 }
@@ -8,10 +8,9 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  // directUrl = env("DIRECT_URL")  // 一時的にコメントアウト
+  directUrl = env("DIRECT_URL")
 }
 
-// 既存システム（ニュース・バズ投稿）
 model BuzzPost {
   id               String          @id @default(uuid())
   postId           String          @unique @map("post_id")
@@ -40,70 +39,71 @@ model BuzzPost {
 
 model BuzzConfig {
   id              String   @id
-  keywords        String[]
-  accounts        String[]
-  minEngagement   Int      @map("min_engagement")
-  minImpressions  Int      @map("min_impressions")
-  collectInterval Int      @map("collect_interval")
-  enabled         Boolean
+  keywords        String[] @default([])
+  accounts        String[] @default([])
+  minEngagement   Int      @default(1000) @map("min_engagement")
+  minImpressions  Int      @default(5000) @map("min_impressions")
+  collectInterval Int      @default(60) @map("collect_interval")
+  enabled         Boolean  @default(false)
   createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("buzz_config")
 }
 
 model ScheduledPost {
-  id            String          @id @default(uuid())
-  content       String
-  scheduledTime DateTime        @map("scheduled_time")
-  status        PostStatus      @default(DRAFT)
-  postType      PostType        @map("post_type")
-  refPostId     String?         @map("ref_post_id")
-  templateType  String?         @map("template_type")
-  aiGenerated   Boolean         @default(false) @map("ai_generated")
-  aiPrompt      String?         @map("ai_prompt")
-  editedContent String?         @map("edited_content")
-  postedAt      DateTime?       @map("posted_at")
-  postResult    Json?           @map("post_result")
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @updatedAt @map("updated_at")
-  refPost       BuzzPost?       @relation(fields: [refPostId], references: [id])
+  id             String          @id @default(uuid())
+  content        String
+  scheduledTime  DateTime        @map("scheduled_time")
+  status         PostStatus      @default(DRAFT)
+  postType       PostType        @map("post_type")
+  refPostId      String?         @map("ref_post_id")
+  templateType   String?         @map("template_type")
+  aiGenerated    Boolean         @default(false) @map("ai_generated")
+  aiPrompt       String?         @map("ai_prompt")
+  editedContent  String?         @map("edited_content")
+  postedAt       DateTime?       @map("posted_at")
+  postResult     Json?           @map("post_result")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+  post_analytics PostAnalytics[]
+  refPost        BuzzPost?       @relation(fields: [refPostId], references: [id])
 
   @@map("scheduled_posts")
 }
 
 model PostAnalytics {
-  id               String   @id @default(uuid())
-  postId           String   @map("post_id")
-  impressions      Int
-  engagements      Int
-  likes            Int
-  retweets         Int
-  replies          Int
-  profileClicks    Int      @map("profile_clicks")
-  urlClicks        Int      @map("url_clicks")
-  detailExpands    Int      @map("detail_expands")
-  engagementRate   Float    @map("engagement_rate")
-  collectedAt      DateTime @default(now()) @map("collected_at")
+  id                String        @id @default(uuid())
+  scheduled_post_id String
+  impressions       Int
+  likes             Int
+  retweets          Int
+  replies           Int
+  profileClicks     Int           @map("profile_clicks")
+  link_clicks       Int
+  measured_at       DateTime      @default(now())
+  engagementRate    Float         @map("engagement_rate")
+  ai_analysis       String?
+  scheduled_posts   ScheduledPost @relation(fields: [scheduled_post_id], references: [id])
 
   @@map("post_analytics")
 }
 
 model User {
-  id             String    @id @default(uuid())
-  twitterId      String    @unique @map("twitter_id")
+  id             String          @id @default(uuid())
+  twitterId      String          @unique @map("twitter_id")
   username       String
   name           String?
   email          String?
   image          String?
-  accessToken    String    @map("access_token")
-  refreshToken   String?   @map("refresh_token")
-  tokenSecret    String?   @map("token_secret")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  accessToken    String          @map("access_token")
+  refreshToken   String?         @map("refresh_token")
+  tokenSecret    String?         @map("token_secret")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  accounts       accounts[]
   sessions       Session[]
   watchlistUsers WatchlistUser[]
-  characterProfiles CharacterProfile[]
 
   @@map("users")
 }
@@ -113,43 +113,42 @@ model Session {
   sessionToken String   @unique @map("session_token")
   userId       String   @map("user_id")
   expires      DateTime
+  created_at   DateTime @default(now())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
 model NewsSource {
-  id          String        @id @default(uuid())
-  name        String
-  url         String
-  rssUrl      String        @map("rss_url")
-  category    String
-  language    String        @default("ja")
-  isActive    Boolean       @default(true) @map("is_active")
-  lastFetched DateTime?     @map("last_fetched")
-  createdAt   DateTime      @default(now()) @map("created_at")
-  articles    NewsArticle[]
+  id        String        @id @default(uuid())
+  name      String
+  url       String
+  type      String
+  category  String
+  active    Boolean       @default(true)
+  createdAt DateTime      @default(now()) @map("created_at")
+  articles  NewsArticle[]
 
   @@map("news_sources")
 }
 
 model NewsArticle {
-  id              String             @id @default(uuid())
-  sourceId        String             @map("source_id")
-  title           String
-  description     String?
-  url             String             @unique
-  publishedAt     DateTime           @map("published_at")
-  category        String?
-  tags            String[]
-  importance      Float?
-  processed       Boolean            @default(false)
-  createdAt       DateTime           @default(now()) @map("created_at")
-  metadata        Json?              @db.Json
-  analysis        NewsAnalysis?
-  source          NewsSource         @relation(fields: [sourceId], references: [id])
-  newsThreadItems NewsThreadItem[]
-  viralRelations  NewsViralRelation[]
+  id                    String                  @id @default(uuid())
+  sourceId              String                  @map("source_id")
+  title                 String
+  summary               String
+  content               String
+  url                   String                  @unique
+  publishedAt           DateTime                @map("published_at")
+  category              String?
+  importance            Float?
+  processed             Boolean                 @default(false)
+  createdAt             DateTime                @default(now()) @map("created_at")
+  metadata              Json?                   @db.Json
+  analysis              NewsAnalysis?
+  news_analysis_results news_analysis_results[]
+  source                NewsSource              @relation(fields: [sourceId], references: [id])
+  newsThreadItems       NewsThreadItem[]
 
   @@map("news_articles")
 }
@@ -168,55 +167,90 @@ model NewsThread {
 }
 
 model NewsThreadItem {
-  id        String      @id @default(uuid())
-  threadId  String      @map("thread_id")
-  articleId String      @map("article_id")
-  order     Int
-  content   String?
-  createdAt DateTime    @default(now()) @map("created_at")
-  thread    NewsThread  @relation(fields: [threadId], references: [id])
-  article   NewsArticle @relation(fields: [articleId], references: [id])
+  id              String       @id @default(uuid())
+  threadId        String       @map("thread_id")
+  articleId       String?      @map("article_id")
+  tweet_id        String?
+  parent_tweet_id String?
+  posted_at       DateTime?
+  content         String
+  metadata        Json?        @db.Json
+  position        Int
+  article         NewsArticle? @relation(fields: [articleId], references: [id])
+  thread          NewsThread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
 
   @@map("news_thread_items")
 }
 
 model NewsAnalysis {
-  id        String      @id @default(uuid())
-  articleId String      @unique @map("article_id")
-  summary   String
-  sentiment String
-  keywords  String[]
-  topics    String[]
-  createdAt DateTime    @default(now()) @map("created_at")
-  article   NewsArticle @relation(fields: [articleId], references: [id])
+  id               String      @id @default(uuid())
+  articleId        String      @unique @map("article_id")
+  category         String
+  summary          String
+  japanese_summary String
+  key_points       String[]
+  impact           String
+  analyzed_by      String
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updated_at       DateTime
+  article          NewsArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
 
+  @@index([category])
+  @@index([impact])
   @@map("news_analyses")
 }
 
 model JobQueue {
-  id          String    @id @default(uuid())
-  type        String
-  payload     Json      @db.Json
-  status      String    @default("pending")
-  priority    Int       @default(0)
-  attempts    Int       @default(0)
-  maxAttempts Int       @default(3) @map("max_attempts")
-  runAt       DateTime  @default(now()) @map("run_at")
-  completedAt DateTime? @map("completed_at")
-  error       String?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id         String    @id @default(uuid())
+  type       String
+  status     String    @default("pending")
+  payload    Json?     @db.Json
+  result     Json?     @db.Json
+  error      String?
+  progress   Int       @default(0)
+  total      Int?
+  started_at DateTime?
+  ended_at   DateTime?
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
 
-  @@index([status, runAt])
+  @@index([createdAt])
+  @@index([type, status])
   @@map("job_queue")
+}
+
+model ApiTask {
+  id           String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  type         String
+  sessionId    String    @map("session_id")
+  phase_number Int
+  step_name    String
+  request      Json
+  status       String    @default("QUEUED")
+  retry_count  Int       @default(0)
+  response     Json?
+  error        String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  started_at   DateTime?
+  completed_at DateTime?
+  taskType     String    @default("unknown") @map("task_type")
+
+  @@index([sessionId], map: "idx_api_tasks_session_id")
+  @@index([status], map: "idx_api_tasks_status")
+  @@map("api_tasks")
 }
 
 model CollectionPreset {
   id          String   @id @default(uuid())
   name        String
   description String?
-  settings    Json     @db.Json
-  isActive    Boolean  @default(true) @map("is_active")
+  query       String
+  keywords    String[]
+  minLikes    Int      @default(100)
+  minRetweets Int      @default(50)
+  language    String   @default("ja")
+  category    String
+  isActive    Boolean  @default(true)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -224,189 +258,154 @@ model CollectionPreset {
 }
 
 model WatchlistUser {
-  id             String              @id @default(uuid())
-  userId         String              @map("user_id")
-  twitterId      String              @map("twitter_id")
-  username       String
-  displayName    String              @map("display_name")
-  followers      Int?
-  following      Int?
-  isActive       Boolean             @default(true) @map("is_active")
-  lastChecked    DateTime?           @map("last_checked")
-  createdAt      DateTime            @default(now()) @map("created_at")
-  user           User                @relation(fields: [userId], references: [id])
-  tweets         WatchlistTweet[]
-  interactions   InteractionHistory[]
+  id              String           @id @default(uuid())
+  twitterId       String           @unique @map("twitter_id")
+  username        String
+  displayName     String           @map("display_name")
+  profile_image   String?
+  bio             String?
+  followers_count Int              @default(0)
+  category        String[]
+  notes           String?
+  priority        Int              @default(0)
+  is_following    Boolean          @default(false)
+  added_at        DateTime         @default(now())
+  lastChecked     DateTime?        @map("last_checked")
+  userId          String           @map("user_id")
+  tweets          WatchlistTweet[]
+  user            User             @relation(fields: [userId], references: [id])
 
-  @@unique([userId, twitterId])
+  @@unique([userId, username])
   @@map("watchlist_users")
 }
 
 model WatchlistTweet {
-  id               String        @id @default(uuid())
-  watchlistUserId  String        @map("watchlist_user_id")
-  tweetId          String        @map("tweet_id")
-  content          String
-  createdAt        DateTime      @map("created_at")
-  retweetCount     Int           @map("retweet_count")
-  likeCount        Int           @map("like_count")
-  replyCount       Int           @map("reply_count")
-  collectedAt      DateTime      @default(now()) @map("collected_at")
-  watchlistUser    WatchlistUser @relation(fields: [watchlistUserId], references: [id])
+  id                String        @id @default(uuid())
+  tweetId           String        @unique @map("tweet_id")
+  watchlistUserId   String        @map("watchlist_user_id")
+  content           String
+  likes_count       Int
+  retweets_count    Int
+  replies_count     Int
+  impressions_count Int
+  has_replied       Boolean       @default(false)
+  has_quoted        Boolean       @default(false)
+  posted_at         DateTime
+  collectedAt       DateTime      @default(now()) @map("collected_at")
+  url               String
+  media_urls        Json?
+  watchlistUser     WatchlistUser @relation(fields: [watchlistUserId], references: [id], map: "watchlist_tweets_user_id_fkey")
 
-  @@unique([tweetId])
   @@map("watchlist_tweets")
 }
 
 model InteractionHistory {
-  id              String        @id @default(uuid())
-  watchlistUserId String        @map("watchlist_user_id")
-  interactionType String        @map("interaction_type")
-  tweetId         String?       @map("tweet_id")
-  metadata        Json?         @db.Json
-  createdAt       DateTime      @default(now()) @map("created_at")
-  watchlistUser   WatchlistUser @relation(fields: [watchlistUserId], references: [id])
+  id              String   @id @default(uuid())
+  type            String
+  source_tweet_id String
+  target_tweet_id String?
+  content         String?
+  createdAt       DateTime @default(now()) @map("created_at")
 
   @@map("interaction_history")
 }
 
 model PerplexityReport {
-  id                 String   @id @default(uuid())
-  query              String
-  focus              String
-  rawAnalysis        String   @db.Text
-  trends             Json
-  insights           Json
-  contentAngles      Json     @map("content_angles")
-  marketContext      Json     @map("market_context")
-  competitorActivity Json     @map("competitor_activity")
-  riskFactors        Json     @map("risk_factors")
-  createdAt          DateTime @default(now()) @map("created_at")
+  id              String   @id @default(uuid())
+  query           String
+  focus           String
+  rawAnalysis     String
+  trends          Json
+  insights        Json
+  personal_angles Json
+  buzz_prediction Float
+  recommendations Json
+  metadata        Json
+  createdAt       DateTime @default(now()) @map("created_at")
 
+  @@index([createdAt])
   @@map("perplexity_reports")
 }
 
-// Chain of Thought システム（新規設計）
 model CotSession {
-  id              String              @id @default(uuid())
-  
-  // ユーザー設定（仕様書 Phase 1）
-  theme          String              // 発信したいテーマ
-  style          String              // コンテンツのスタイル
-  platform       String              // プラットフォーム
-  
-  // セッション状態
-  status         CotSessionStatus    @default(PENDING)
-  currentPhase   Int                 @default(1) @map("current_phase")
-  currentStep    CotPhaseStep        @default(THINK) @map("current_step")
-  
-  // エラー・リトライ管理
-  lastError      String?             @map("last_error")
-  retryCount     Int                 @default(0) @map("retry_count")
-  nextRetryAt    DateTime?           @map("next_retry_at")
-  
-  // メトリクス
-  totalTokens    Int                 @default(0) @map("total_tokens")
-  totalDuration  Int                 @default(0) @map("total_duration") // ミリ秒
-  
-  // タイムスタンプ
-  createdAt      DateTime            @default(now()) @map("created_at")
-  updatedAt      DateTime            @updatedAt @map("updated_at")
-  completedAt    DateTime?           @map("completed_at")
-  
-  // リレーション
-  phases         CotPhase[]          // 各フェーズの詳細
-  drafts         CotDraft[]          // 生成されたコンテンツ下書き
-  
+  id            String           @id @default(dbgenerated("(gen_random_uuid())::text"))
+  theme         String
+  style         String
+  platform      String
+  status        CotSessionStatus @default(PENDING)
+  currentPhase  Int              @default(1) @map("current_phase")
+  currentStep   CotPhaseStep     @default(THINK) @map("current_step")
+  lastError     String?          @map("last_error")
+  retryCount    Int              @default(0) @map("retry_count")
+  nextRetryAt   DateTime?        @map("next_retry_at")
+  totalTokens   Int              @default(0) @map("total_tokens")
+  totalDuration Int              @default(0) @map("total_duration")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @default(now()) @updatedAt @map("updated_at")
+  completedAt   DateTime?        @map("completed_at")
+  metadata      Json?
+  drafts        CotDraft[]
+  phases        CotPhase[]
+
   @@index([status, createdAt])
   @@index([currentPhase, currentStep])
   @@map("cot_sessions")
 }
 
 model CotPhase {
-  id           String         @id @default(uuid())
-  sessionId    String         @map("session_id")
-  phaseNumber  Int           @map("phase_number") // 1-5
-  
-  // Think結果
-  thinkPrompt  String?       @db.Text @map("think_prompt")
-  thinkResult  Json?         @db.Json @map("think_result")
-  thinkTokens  Int?          @default(0) @map("think_tokens")
-  thinkAt      DateTime?     @map("think_at")
-  
-  // Execute結果
-  executeResult Json?        @db.Json @map("execute_result")
-  executeDuration Int?       @default(0) @map("execute_duration") // ミリ秒
-  executeAt     DateTime?    @map("execute_at")
-  
-  // Perplexity生応答（テスト用） - executeResultに含める形で対応
-  // perplexityResponses Json?  @db.Json @map("perplexity_responses")
-  
-  // Integrate結果
-  integratePrompt String?    @db.Text @map("integrate_prompt")
-  integrateResult Json?      @db.Json @map("integrate_result")
-  integrateTokens Int?       @default(0) @map("integrate_tokens")
-  integrateAt     DateTime?  @map("integrate_at")
-  
-  // フェーズ状態
-  status       CotPhaseStatus @default(PENDING)
-  
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  
-  // リレーション
-  session      CotSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  
+  id              String         @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sessionId       String         @map("session_id")
+  phaseNumber     Int            @map("phase_number")
+  thinkPrompt     String?        @map("think_prompt")
+  thinkResult     Json?          @map("think_result")
+  thinkTokens     Int?           @default(0) @map("think_tokens")
+  thinkAt         DateTime?      @map("think_at")
+  executeResult   Json?          @map("execute_result")
+  executeDuration Int?           @default(0) @map("execute_duration")
+  executeAt       DateTime?      @map("execute_at")
+  integratePrompt String?        @map("integrate_prompt")
+  integrateResult Json?          @map("integrate_result")
+  integrateTokens Int?           @default(0) @map("integrate_tokens")
+  integrateAt     DateTime?      @map("integrate_at")
+  status          CotPhaseStatus @default(PENDING)
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @default(now()) @updatedAt @map("updated_at")
+  session         CotSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
   @@unique([sessionId, phaseNumber])
   @@index([sessionId, phaseNumber])
   @@map("cot_phases")
 }
 
 model CotDraft {
-  id             String        @id @default(uuid())
-  sessionId      String        @map("session_id")
-  conceptNumber  Int          @map("concept_number") // 1-3（Phase 3で3つのコンセプト）
-  
-  // Phase 3 コンセプト情報
-  title          String
-  hook           String        @db.Text
-  angle          String        @db.Text
-  format         String        // スレッド/ビデオ/投稿タイプ
-  
-  // Phase 4 完全なコンテンツ
-  content        String?       @db.Text // コピペ即投稿可能なコンテンツ
-  // threadContent  Json?         @db.Json // スレッドの場合の追加投稿 // 一時的にコメントアウト
-  visualGuide    String?       @db.Text @map("visual_guide") // 画像/動画の説明
-  
-  // メタデータ
-  timing         String        // 最適投稿タイミング
-  hashtags       String[]      
-  newsSource     String?       @map("news_source") // 元ニュースソース
-  sourceUrl      String?       @map("source_url")
-  
-  // Phase 5 実行戦略
-  kpis           Json?         @db.Json // 成功指標
-  riskAssessment Json?         @db.Json @map("risk_assessment")
-  optimizationTips Json?       @db.Json @map("optimization_tips")
-  
-  // 投稿管理
-  status         CotDraftStatus @default(DRAFT)
-  editedContent  String?       @db.Text @map("edited_content")
-  scheduledAt    DateTime?     @map("scheduled_at")
-  postedAt       DateTime?     @map("posted_at")
-  postId         String?       @map("post_id") // 投稿後のID
-  
-  // パフォーマンス
-  viralScore     Float?        @map("viral_score") // 予測バイラルスコア
-  
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
-  
-  // リレーション
-  session        CotSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  performance    CotDraftPerformance?
-  scheduledRTs   ScheduledRetweet[]
-  
+  id               String               @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sessionId        String               @map("session_id")
+  conceptNumber    Int                  @map("concept_number")
+  title            String
+  hook             String
+  angle            String
+  format           String
+  content          String?
+  thread_content   Json?
+  visualGuide      String?              @map("visual_guide")
+  timing           String
+  hashtags         String[]
+  newsSource       String?              @map("news_source")
+  sourceUrl        String?              @map("source_url")
+  kpis             Json?
+  riskAssessment   Json?                @map("risk_assessment")
+  optimizationTips Json?                @map("optimization_tips")
+  status           CotDraftStatus       @default(DRAFT)
+  editedContent    String?              @map("edited_content")
+  scheduledAt      DateTime?            @map("scheduled_at")
+  postedAt         DateTime?            @map("posted_at")
+  postId           String?              @map("post_id")
+  viralScore       Float?               @map("viral_score")
+  createdAt        DateTime             @default(now()) @map("created_at")
+  updatedAt        DateTime             @default(now()) @updatedAt @map("updated_at")
+  performance      CotDraftPerformance?
+  session          CotSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
   @@unique([sessionId, conceptNumber])
   @@index([sessionId])
   @@index([status])
@@ -415,39 +414,420 @@ model CotDraft {
 }
 
 model CotDraftPerformance {
-  id           String     @id @default(uuid())
-  draftId      String     @unique @map("draft_id")
-  
-  // 30分後
-  likes30m     Int?       @map("likes_30m")
-  retweets30m  Int?       @map("retweets_30m")
-  replies30m   Int?       @map("replies_30m")
-  impressions30m Int?     @map("impressions_30m")
-  
-  // 1時間後
-  likes1h      Int?       @map("likes_1h")
-  retweets1h   Int?       @map("retweets_1h")
-  replies1h    Int?       @map("replies_1h")
-  impressions1h Int?      @map("impressions_1h")
-  
-  // 24時間後
-  likes24h     Int?       @map("likes_24h")
-  retweets24h  Int?       @map("retweets_24h")
-  replies24h   Int?       @map("replies_24h")
-  impressions24h Int?     @map("impressions_24h")
-  
-  // 計算フィールド
-  engagementRate Float?   @map("engagement_rate")
-  viralCoefficient Float? @map("viral_coefficient")
-  
-  // メタデータ
-  collectedAt  DateTime   @default(now()) @map("collected_at")
-  lastUpdateAt DateTime   @updatedAt @map("last_update_at")
-  
-  // リレーション
-  draft        CotDraft   @relation(fields: [draftId], references: [id], onDelete: Cascade)
-  
+  id               String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  draftId          String   @unique @map("draft_id")
+  likes30m         Int?     @map("likes_30m")
+  retweets30m      Int?     @map("retweets_30m")
+  replies30m       Int?     @map("replies_30m")
+  impressions30m   Int?     @map("impressions_30m")
+  likes1h          Int?     @map("likes_1h")
+  retweets1h       Int?     @map("retweets_1h")
+  replies1h        Int?     @map("replies_1h")
+  impressions1h    Int?     @map("impressions_1h")
+  likes24h         Int?     @map("likes_24h")
+  retweets24h      Int?     @map("retweets_24h")
+  replies24h       Int?     @map("replies_24h")
+  impressions24h   Int?     @map("impressions_24h")
+  engagementRate   Float?   @map("engagement_rate")
+  viralCoefficient Float?   @map("viral_coefficient")
+  collectedAt      DateTime @default(now()) @map("collected_at")
+  lastUpdateAt     DateTime @default(now()) @updatedAt @map("last_update_at")
+  draft            CotDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
   @@map("cot_draft_performance")
+}
+
+model ScheduledRetweet {
+  id              String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  originalPostId  String    @map("original_post_id")
+  originalContent String    @map("original_content")
+  scheduledAt     DateTime  @map("scheduled_at")
+  status          RTStatus  @default(SCHEDULED)
+  rtStrategy      String    @map("rt_strategy")
+  addComment      Boolean   @default(false) @map("add_comment")
+  commentText     String?   @map("comment_text")
+  viralDraftId    String?   @map("viral_draft_id")
+  cotDraftId      String?   @map("cot_draft_id")
+  executedAt      DateTime? @map("executed_at")
+  rtPostId        String?   @map("rt_post_id")
+  error           String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@index([status, scheduledAt])
+  @@index([originalPostId])
+  @@map("scheduled_retweets")
+}
+
+model UnifiedPerformance {
+  id               String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  contentId        String   @unique @map("content_id")
+  contentType      String   @map("content_type")
+  metrics30m       Json?    @map("metrics_30m")
+  metrics1h        Json?    @map("metrics_1h")
+  metrics24h       Json?    @map("metrics_24h")
+  engagementRate   Float?   @map("engagement_rate")
+  viralCoefficient Float?   @map("viral_coefficient")
+  collectedAt      DateTime @default(now()) @map("collected_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("unified_performance")
+}
+
+model NewsViralRelation {
+  id             String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  newsId         String   @map("news_id")
+  sessionId      String   @map("session_id")
+  relevanceScore Float?   @map("relevance_score")
+  usedInContent  Boolean  @default(false) @map("used_in_content")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@unique([newsId, sessionId], map: "news_viral_relations_unique")
+  @@map("news_viral_relations")
+}
+
+model SessionActivityLog {
+  id           String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sessionId    String   @map("session_id")
+  sessionType  String   @map("session_type")
+  activityType String   @map("activity_type")
+  details      Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([sessionId])
+  @@index([createdAt])
+  @@map("session_activity_logs")
+}
+
+model ApiErrorLog {
+  id             String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  endpoint       String
+  method         String
+  statusCode     Int      @map("status_code")
+  errorMessage   String?  @map("error_message")
+  stackTrace     String?  @map("stack_trace")
+  requestBody    Json?    @map("request_body")
+  requestHeaders Json?    @map("request_headers")
+  userAgent      String?  @map("user_agent")
+  ipAddress      String?  @map("ip_address")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([endpoint])
+  @@index([statusCode])
+  @@index([createdAt])
+  @@map("api_error_logs")
+}
+
+model ViralSession {
+  id                 String         @id @default(dbgenerated("(gen_random_uuid())::text"))
+  theme              String
+  platform           String
+  style              String
+  status             String         @default("CREATED")
+  createdAt          DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  topics             Json?
+  concepts           Json?
+  selectedIds        String[]       @default([]) @map("selected_ids")
+  contents           Json?
+  characterProfileId String?        @map("character_profile_id")
+  voiceStyleMode     String?        @map("voice_style_mode")
+  drafts             ViralDraftV2[]
+
+  @@index([status], map: "idx_viral_sessions_status")
+  @@map("viral_sessions")
+}
+
+model ViralDraftV2 {
+  id              String                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  sessionId       String                 @map("session_id")
+  conceptId       String                 @map("concept_id")
+  title           String
+  content         String
+  hashtags        String[]
+  visualNote      String?                @map("visual_note")
+  status          String                 @default("DRAFT")
+  scheduledAt     DateTime?              @map("scheduled_at") @db.Timestamptz(6)
+  postedAt        DateTime?              @map("posted_at") @db.Timestamptz(6)
+  tweetId         String?                @map("tweet_id")
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  characterId     String?                @map("character_id")
+  characterNote   String?                @map("character_note")
+  sourceUrl       String?                @map("source_url")
+  news_article_id String?
+  performance     ViralDraftPerformance?
+  session         ViralSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_session")
+
+  @@index([scheduledAt], map: "idx_viral_drafts_v2_scheduled_at")
+  @@index([sessionId], map: "idx_viral_drafts_v2_session_id")
+  @@index([status], map: "idx_viral_drafts_v2_status")
+  @@map("viral_drafts_v2")
+}
+
+model ViralDraftPerformance {
+  id               String       @id @default(dbgenerated("(gen_random_uuid())::text"))
+  draftId          String       @unique @map("draft_id")
+  likes30m         Int?         @map("likes_30m")
+  retweets30m      Int?         @map("retweets_30m")
+  replies30m       Int?         @map("replies_30m")
+  impressions30m   Int?         @map("impressions_30m")
+  likes1h          Int?         @map("likes_1h")
+  retweets1h       Int?         @map("retweets_1h")
+  replies1h        Int?         @map("replies_1h")
+  impressions1h    Int?         @map("impressions_1h")
+  likes24h         Int?         @map("likes_24h")
+  retweets24h      Int?         @map("retweets_24h")
+  replies24h       Int?         @map("replies_24h")
+  impressions24h   Int?         @map("impressions_24h")
+  engagementRate   Float?       @map("engagement_rate")
+  viralCoefficient Float?       @map("viral_coefficient")
+  collectedAt      DateTime     @default(now()) @map("collected_at") @db.Timestamptz(6)
+  updatedAt        DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  draft            ViralDraftV2 @relation(fields: [draftId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_draft")
+
+  @@map("viral_draft_performance")
+}
+
+model CharacterProfile {
+  id                      String   @id @default(cuid())
+  name                    String   @unique
+  display_name            String
+  age                     Int
+  gender                  Gender
+  occupation              String
+  catchphrase             String
+  personality             String
+  speaking_style          String
+  expertise               String
+  backstory               String
+  philosophy              String?
+  tone                    String
+  voiceStyle              Json     @map("voice_style")
+  emoji_style             String
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @default(now()) @updatedAt @map("updated_at")
+  preferredNewsCategories String[] @default([]) @map("preferred_news_categories")
+  newsCommentStyle        Json?    @map("news_comment_style")
+  topicExpertise          Json?    @map("topic_expertise")
+
+  @@map("character_profiles")
+}
+
+model accounts {
+  id                  String  @id @default(dbgenerated("gen_random_uuid()"))
+  user_id             String
+  type                String
+  provider            String
+  provider_account_id String
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
+  users               User    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([provider, provider_account_id])
+  @@index([user_id])
+}
+
+model ai_patterns {
+  id              String   @id
+  name            String
+  description     String
+  prompt_template String
+  example_output  String
+  success_rate    Float    @default(0)
+  usage_count     Int      @default(0)
+  created_at      DateTime @default(now())
+}
+
+model content_drafts {
+  id                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  analysis_id          String       @db.Uuid
+  concept_type         String       @db.VarChar(255)
+  category             String       @db.VarChar(255)
+  title                String
+  content              String
+  edited_content       String?
+  explanation          String?
+  buzz_factors         Json?        @default("[]")
+  target_audience      String?
+  estimated_engagement Json?        @default("{}")
+  hashtags             Json?        @default("[]")
+  visual_guide         String?
+  platform             String?      @default("Twitter") @db.VarChar(50)
+  format               String?      @default("single") @db.VarChar(50)
+  status               String?      @default("draft") @db.VarChar(50)
+  editor_notes         String?
+  metadata             Json?
+  created_at           DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?    @default(now()) @db.Timestamptz(6)
+  gpt_analyses         gpt_analyses @relation(fields: [analysis_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([analysis_id, status])
+  @@index([concept_type, category])
+  @@index([analysis_id], map: "idx_content_drafts_analysis")
+  @@index([analysis_id, status], map: "idx_content_drafts_status")
+  @@index([concept_type, category], map: "idx_content_drafts_type")
+}
+
+model gpt_analyses {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  analysis_type  String           @db.VarChar(255)
+  prompt         String
+  response       Json             @default("{}")
+  tokens         Int?
+  duration       Int?
+  metadata       Json?
+  created_at     DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime?        @default(now()) @db.Timestamptz(6)
+  content_drafts content_drafts[]
+
+  @@index([analysis_type])
+  @@index([created_at], map: "idx_gpt_analyses_created")
+  @@index([analysis_type], map: "idx_gpt_analyses_type")
+}
+
+model news_analysis_jobs {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()"))
+  type                  String
+  status                String                  @default("pending")
+  started_at            DateTime?
+  completed_at          DateTime?
+  error                 String?
+  result                Json?
+  metadata              Json?
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @default(now())
+  news_analysis_results news_analysis_results[]
+
+  @@index([status])
+  @@index([type])
+}
+
+model news_analysis_results {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()"))
+  job_id             String
+  article_id         String
+  importance_score   Float
+  category           String
+  summary_ja         String
+  key_points         Json
+  impact_assessment  String
+  expert_perspective String?
+  metadata           Json?
+  created_at         DateTime           @default(now())
+  news_articles      NewsArticle        @relation(fields: [article_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  news_analysis_jobs news_analysis_jobs @relation(fields: [job_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([article_id])
+  @@index([importance_score(sort: Desc)])
+  @@index([job_id])
+}
+
+model prompt_templates {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @db.VarChar(255)
+  type       String    @db.VarChar(255)
+  template   String
+  variables  Json      @default("[]")
+  is_active  Boolean?  @default(true)
+  metadata   Json?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([type, is_active], map: "idx_prompt_templates_type")
+  @@index([type, is_active])
+}
+
+model viral_analysis_logs {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  model      String
+  phase      String
+  prompt     String
+  response   Json      @default("{}")
+  tokens     Int?
+  duration   Int?
+  success    Boolean
+  error      String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([model, phase], map: "idx_viral_analysis_logs_model_phase")
+}
+
+model viral_config {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String    @unique
+  value       Json      @default("{}")
+  description String?
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model viral_opportunities {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topic       String
+  platform    String
+  viral_score Float
+  time_window Int
+  angle       String
+  keywords    String[]      @default([])
+  source_data Json?         @default("{}")
+  status      String
+  analyzed_at DateTime      @db.Timestamptz(6)
+  created_at  DateTime?     @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?     @default(now()) @db.Timestamptz(6)
+  viral_posts viral_posts[]
+
+  @@index([platform, status], map: "idx_viral_opportunities_platform_status")
+  @@index([viral_score], map: "idx_viral_opportunities_viral_score")
+}
+
+model viral_post_performance {
+  id                String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  post_id           String      @unique @db.Uuid
+  impressions_30m   Int?
+  likes_30m         Int?
+  retweets_30m      Int?
+  comments_30m      Int?
+  impressions_1h    Int?
+  likes_1h          Int?
+  retweets_1h       Int?
+  comments_1h       Int?
+  impressions_24h   Int?
+  likes_24h         Int?
+  retweets_24h      Int?
+  comments_24h      Int?
+  followers_24h     Int?
+  engagement_rate   Float?
+  viral_coefficient Float?
+  created_at        DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?   @default(now()) @db.Timestamptz(6)
+  viral_posts       viral_posts @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model viral_posts {
+  id                     String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  opportunity_id         String                  @db.Uuid
+  concept_type           String
+  content                String
+  thread_content         Json?
+  visual_guide           String?
+  hashtags               String[]                @default([])
+  post_type              String
+  platform               String
+  scheduled_at           DateTime?               @db.Timestamptz(6)
+  posted_at              DateTime?               @db.Timestamptz(6)
+  post_url               String?
+  created_at             DateTime?               @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?               @default(now()) @db.Timestamptz(6)
+  viral_post_performance viral_post_performance?
+  viral_opportunities    viral_opportunities     @relation(fields: [opportunity_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([opportunity_id], map: "idx_viral_posts_opportunity_id")
+  @@index([scheduled_at], map: "idx_viral_posts_scheduled_at")
 }
 
 enum PostStatus {
@@ -471,7 +851,7 @@ enum CotSessionStatus {
   COMPLETED
   FAILED
   PAUSED
-  
+
   @@map("cot_session_status")
 }
 
@@ -479,7 +859,7 @@ enum CotPhaseStep {
   THINK
   EXECUTE
   INTEGRATE
-  
+
   @@map("cot_phase_step")
 }
 
@@ -490,7 +870,7 @@ enum CotPhaseStatus {
   INTEGRATING
   COMPLETED
   FAILED
-  
+
   @@map("cot_phase_status")
 }
 
@@ -500,207 +880,8 @@ enum CotDraftStatus {
   SCHEDULED
   POSTED
   ARCHIVED
-  
+
   @@map("cot_draft_status")
-}
-
-// ================================================================
-// Unified System Models - 統合システム
-// ================================================================
-
-// 統合コンテンツソース - ニュース、バズ投稿、トレンドを統合管理
-model UnifiedContentSource {
-  id              String   @id @default(cuid())
-  sourceType      String   @map("source_type") // 'news', 'buzz_post', 'trend'
-  sourceId        String   @map("source_id")   // 元データのID
-  contentSummary  String?  @map("content_summary") @db.Text
-  importanceScore Float?   @map("importance_score") // 0.0-1.0
-  viralPotential  Float?   @map("viral_potential")  // 0.0-1.0
-  keywords        String[] @default([])
-  metadata        Json?    @db.Json // 追加のメタデータ
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  
-  // リレーション
-  integratedSessions IntegratedSessionSource[]
-  
-  @@index([sourceType, importanceScore])
-  @@index([viralPotential])
-  @@index([createdAt])
-  @@map("unified_content_sources")
-}
-
-// 統合セッション - ニュース×バズ×AIの統合生成セッション
-model IntegratedSession {
-  id                String   @id @default(cuid())
-  sessionType       String   @map("session_type") // 'news_viral', 'buzz_viral', 'hybrid'
-  
-  // 関連データ
-  v2SessionId       String?  @map("v2_session_id")
-  newsArticleIds    String[] @default([]) @map("news_article_ids")
-  buzzPostIds       String[] @default([]) @map("buzz_post_ids")
-  
-  // 統合コンテキスト
-  generationContext Json?    @map("generation_context") @db.Json
-  performanceMetrics Json?   @map("performance_metrics") @db.Json
-  
-  // ステータス管理
-  status           String    @default("created") // created, analyzing, generating, completed, failed
-  currentStep      String?   @map("current_step")
-  
-  // メタデータ
-  theme            String?   // 統合テーマ
-  character        String?   // 使用キャラクター
-  platform         String?   // ターゲットプラットフォーム
-  strategy         String?   // 生成戦略
-  
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  completedAt      DateTime? @map("completed_at")
-  
-  // リレーション
-  v2Session        ViralSession? @relation(fields: [v2SessionId], references: [id])
-  sources          IntegratedSessionSource[]
-  drafts           IntegratedDraft[]
-  
-  @@index([sessionType, status])
-  @@index([createdAt])
-  @@map("integrated_sessions")
-}
-
-// 統合セッション-ソース関連（多対多）
-model IntegratedSessionSource {
-  id              String @id @default(cuid())
-  sessionId       String @map("session_id")
-  sourceId        String @map("source_id")
-  relevanceScore  Float? @map("relevance_score") // このセッションでの関連度
-  usageType       String @map("usage_type") // 'primary', 'reference', 'context'
-  
-  session         IntegratedSession      @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  source          UnifiedContentSource  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  
-  @@unique([sessionId, sourceId])
-  @@map("integrated_session_sources")
-}
-
-// 統合生成下書き
-model IntegratedDraft {
-  id              String    @id @default(cuid())
-  sessionId       String    @map("session_id")
-  
-  // コンテンツ情報
-  title           String
-  content         String    @db.Text
-  contentType     String    @map("content_type") // 'single', 'thread', 'carousel'
-  
-  // 統合情報
-  sourcesSummary  String?   @map("sources_summary") @db.Text
-  newsContext     String?   @map("news_context") @db.Text
-  buzzContext     String?   @map("buzz_context") @db.Text
-  
-  // トレーサビリティ情報
-  conceptId       String?   @map("concept_id") // V2システムのコンセプトID
-  hook            String?   @db.Text // 使用したフック
-  angle           String?   @db.Text // 使用したアングル
-  sourceNewsIds   String[]  @default([]) @map("source_news_ids") // 参照したニュース記事ID
-  sourceBuzzIds   String[]  @default([]) @map("source_buzz_ids") // 参照したバズ投稿ID
-  generationStrategy String? @map("generation_strategy") // 生成戦略
-  
-  // 生成メタデータ
-  generationData  Json?     @map("generation_data") @db.Json
-  hashtags        String[]  @default([])
-  visualGuide     String?   @map("visual_guide") @db.Text
-  
-  // 投稿管理
-  status          String    @default("draft") // draft, scheduled, posted, archived
-  scheduledAt     DateTime? @map("scheduled_at")
-  postedAt        DateTime? @map("posted_at")
-  postId          String?   @map("post_id")
-  
-  // パフォーマンス予測
-  viralScore      Float?    @map("viral_score")
-  
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  
-  // リレーション
-  session         IntegratedSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  performance     IntegratedDraftPerformance?
-  
-  @@index([sessionId])
-  @@index([status])
-  @@map("integrated_drafts")
-}
-
-// 統合下書きパフォーマンス
-model IntegratedDraftPerformance {
-  id              String    @id @default(cuid())
-  draftId         String    @unique @map("draft_id")
-  
-  // 30分後メトリクス
-  likes30m        Int?      @map("likes_30m")
-  retweets30m     Int?      @map("retweets_30m")
-  replies30m      Int?      @map("replies_30m")
-  impressions30m  Int?      @map("impressions_30m")
-  
-  // 1時間後メトリクス
-  likes1h         Int?      @map("likes_1h")
-  retweets1h      Int?      @map("retweets_1h")
-  replies1h       Int?      @map("replies_1h")
-  impressions1h   Int?      @map("impressions_1h")
-  
-  // 24時間後メトリクス
-  likes24h        Int?      @map("likes_24h")
-  retweets24h     Int?      @map("retweets_24h")
-  replies24h      Int?      @map("replies_24h")
-  impressions24h  Int?      @map("impressions_24h")
-  
-  // 計算フィールド
-  engagementRate    Float?  @map("engagement_rate")
-  viralCoefficient  Float?  @map("viral_coefficient")
-  predictionAccuracy Float? @map("prediction_accuracy") // 予測との差異
-  
-  collectedAt     DateTime  @default(now()) @map("collected_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  
-  // リレーション
-  draft           IntegratedDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
-  
-  @@map("integrated_draft_performance")
-}
-
-// ================================================================
-// Existing Unified System Models
-// ================================================================
-
-// Self-RT Management
-model ScheduledRetweet {
-  id              String   @id @default(cuid())
-  originalPostId  String   @map("original_post_id")
-  originalContent String   @map("original_content")
-  scheduledAt     DateTime @map("scheduled_at")
-  status          RTStatus @default(SCHEDULED)
-  rtStrategy      String   @map("rt_strategy") // "6h_spike", "next_day_reminder", etc.
-  addComment      Boolean  @default(false) @map("add_comment")
-  commentText     String?  @map("comment_text")
-  
-  // Relations
-  viralDraft      ViralDraftV2? @relation(fields: [viralDraftId], references: [id])
-  viralDraftId    String?       @map("viral_draft_id")
-  cotDraft        CotDraft?     @relation(fields: [cotDraftId], references: [id])
-  cotDraftId      String?       @map("cot_draft_id")
-  
-  // Execution details
-  executedAt      DateTime? @map("executed_at")
-  rtPostId        String?   @map("rt_post_id")
-  error           String?
-  
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  
-  @@index([status, scheduledAt])
-  @@index([originalPostId])
-  @@map("scheduled_retweets")
 }
 
 enum RTStatus {
@@ -708,250 +889,20 @@ enum RTStatus {
   EXECUTED
   FAILED
   CANCELLED
-  
+
   @@map("rt_status")
 }
 
-// Unified Performance Tracking
-model UnifiedPerformance {
-  id            String   @id @default(cuid())
-  contentId     String   @unique @map("content_id")
-  contentType   String   @map("content_type") // VIRAL_DRAFT, COT_DRAFT, NEWS_THREAD
-  
-  // Standard metrics (30m, 1h, 24h)
-  metrics30m    Json?    @map("metrics_30m")
-  metrics1h     Json?    @map("metrics_1h")
-  metrics24h    Json?    @map("metrics_24h")
-  
-  // Calculated fields
-  engagementRate    Float? @map("engagement_rate")
-  viralCoefficient  Float? @map("viral_coefficient")
-  
-  collectedAt   DateTime @default(now()) @map("collected_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  
-  @@map("unified_performance")
+enum Gender {
+  male
+  female
+  other
 }
 
-// News to Viral Relations
-model NewsViralRelation {
-  id              String       @id @default(cuid())
-  newsId          String       @map("news_id")
-  sessionId       String       @map("session_id")
-  relevanceScore  Float?       @map("relevance_score")
-  usedInContent   Boolean      @default(false) @map("used_in_content")
-  
-  newsArticle     NewsArticle  @relation(fields: [newsId], references: [id], onDelete: Cascade)
-  session         ViralSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  
-  createdAt       DateTime     @default(now()) @map("created_at")
-  
-  @@unique([newsId, sessionId])
-  @@map("news_viral_relations")
-}
-
-// Session Activity Log
-model SessionActivityLog {
-  id           String   @id @default(cuid())
-  sessionId    String   @map("session_id")
-  sessionType  String   @map("session_type") // VIRAL, COT, NEWS
-  activityType String   @map("activity_type") // API_CALL, STATUS_CHANGE, ERROR
-  details      Json?
-  createdAt    DateTime @default(now()) @map("created_at")
-  
-  @@index([sessionId])
-  @@index([createdAt])
-  @@map("session_activity_logs")
-}
-
-// API Error Tracking
-model ApiErrorLog {
-  id            String   @id @default(cuid())
-  endpoint      String
-  method        String
-  statusCode    Int      @map("status_code")
-  errorMessage  String?  @map("error_message")
-  stackTrace    String?  @map("stack_trace")
-  requestBody   Json?    @map("request_body")
-  requestHeaders Json?   @map("request_headers")
-  userAgent     String?  @map("user_agent")
-  ipAddress     String?  @map("ip_address")
-  createdAt     DateTime @default(now()) @map("created_at")
-  
-  @@index([endpoint])
-  @@index([statusCode])
-  @@index([createdAt])
-  @@map("api_error_logs")
-}
-
-// 新しいシンプルなV2システム
-model ViralSession {
-  id            String   @id @default(cuid())
-  theme         String   // AIと働き方
-  platform      String   // Twitter
-  style         String   // エンターテイメント
-  status        String   @default("CREATED")
-  createdAt     DateTime @default(now()) @map("created_at")
-  
-  // キャラクター設定
-  characterProfileId  String?         @map("character_profile_id")
-  voiceStyleMode      String?         @map("voice_style_mode") // normal/emotional/humorous
-  
-  // Step 1の結果
-  topics        Json?    // Perplexityの生データを保存
-  
-  // Step 2の結果
-  concepts      Json?    // 9つのコンセプト
-  selectedIds   String[] @default([]) @map("selected_ids") // 選択されたコンセプトID
-  
-  // Step 3の結果
-  contents      Json?    // 生成されたコンテンツ
-  
-  // リレーション
-  drafts        ViralDraftV2[]
-  characterProfile    CharacterProfile? @relation(fields: [characterProfileId], references: [id])
-  newsRelations NewsViralRelation[]
-  integratedSessions IntegratedSession[]
-  
-  @@map("viral_sessions")
-}
-
-model ViralDraftV2 {
-  id              String   @id @default(cuid())
-  sessionId       String   @map("session_id")
-  session         ViralSession @relation(fields: [sessionId], references: [id])
-  
-  // コンテンツ情報
-  conceptId       String   @map("concept_id")
-  title           String
-  content         String   @db.Text
-  hashtags        String[]
-  visualNote      String?  @map("visual_note")
-  sourceUrl       String?  @map("source_url") // 引用元URL
-  
-  // キャラクター情報
-  characterId     String?  @map("character_id")
-  characterNote   String?  @map("character_note") // キャラクター表現の説明
-  
-  // 投稿情報
-  status          String   @default("DRAFT")
-  scheduledAt     DateTime? @map("scheduled_at")
-  postedAt        DateTime? @map("posted_at")
-  tweetId         String?   @map("tweet_id")
-  
-  // パフォーマンス
-  performance     ViralDraftPerformance?
-  scheduledRTs    ScheduledRetweet[]
-  
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  
-  @@map("viral_drafts_v2")
-}
-
-model ViralDraftPerformance {
-  id              String   @id @default(cuid())
-  draftId         String   @unique @map("draft_id")
-  draft           ViralDraftV2 @relation(fields: [draftId], references: [id])
-  
-  // 30分後
-  likes30m        Int?     @map("likes_30m")
-  retweets30m     Int?     @map("retweets_30m")
-  replies30m      Int?     @map("replies_30m")
-  impressions30m  Int?     @map("impressions_30m")
-  
-  // 1時間後
-  likes1h         Int?     @map("likes_1h")
-  retweets1h      Int?     @map("retweets_1h")
-  replies1h       Int?     @map("replies_1h")
-  impressions1h   Int?     @map("impressions_1h")
-  
-  // 24時間後
-  likes24h        Int?     @map("likes_24h")
-  retweets24h     Int?     @map("retweets_24h")
-  replies24h      Int?     @map("replies_24h")
-  impressions24h  Int?     @map("impressions_24h")
-  
-  // 計算フィールド
-  engagementRate  Float?   @map("engagement_rate")
-  viralCoefficient Float?  @map("viral_coefficient")
-  
-  collectedAt     DateTime @default(now()) @map("collected_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  
-  @@map("viral_draft_performance")
-}
-
-// キャラクタープロファイル
-model CharacterProfile {
-  id            String    @id @default(cuid())
-  name          String
-  age           Int
-  gender        String
-  tone          String    @db.Text
-  catchphrase   String
-  philosophy    String?   @db.Text
-  voiceStyle    Json      @map("voice_style") // normal, emotional, humorous の文体
-  topics        Json      // 得意なテーマの配列
-  visual        Json?     // ビジュアル設定（オプション）
-  isDefault     Boolean   @default(false) @map("is_default")
-  userId        String?   @map("user_id") // カスタムキャラクターの場合
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  
-  // News preferences (for unified system)
-  preferredNewsCategories String[] @default([]) @map("preferred_news_categories")
-  newsCommentStyle       Json?     @map("news_comment_style")
-  topicExpertise         Json?     @map("topic_expertise")
-  
-  // リレーション
-  user          User?     @relation(fields: [userId], references: [id])
-  sessions      ViralSession[]
-  
-  @@map("character_profiles")
-}
-
-// バズってる人（インフルエンサー）の集計データ
-model BuzzInfluencer {
-  id                String    @id @default(cuid())
-  username          String    @unique
-  userId            String    @map("user_id")
-  
-  // 基本情報
-  followers         Int       @default(0)
-  following         Int       @default(0)
-  verified          Boolean   @default(false)
-  profileImage      String?   @map("profile_image")
-  bio               String?   @db.Text
-  
-  // 集計期間別メトリクス
-  metrics7d         Json?     @map("metrics_7d")  // 7日間の集計
-  metrics30d        Json?     @map("metrics_30d") // 30日間の集計
-  metricsAllTime    Json?     @map("metrics_all_time") // 全期間の集計
-  
-  // カテゴリ別専門性スコア (0-100)
-  categoryScores    Json      @map("category_scores") // {ai: 85, work: 60, creative: 40, ...}
-  primaryCategory   String?   @map("primary_category") // 最も強いカテゴリ
-  
-  // パフォーマンス指標
-  engagementRate    Float     @default(0) @map("engagement_rate") // 平均エンゲージメント率
-  viralScore        Float     @default(0) @map("viral_score") // 総合的なバイラルスコア (0-100)
-  consistencyScore  Float     @default(0) @map("consistency_score") // 投稿の一貫性スコア (0-100)
-  
-  // 時系列分析
-  bestPostingHours  Json?     @map("best_posting_hours") // 最適な投稿時間帯
-  postingFrequency  Json?     @map("posting_frequency") // 曜日別投稿頻度
-  
-  // 最新活動
-  lastActiveAt      DateTime? @map("last_active_at")
-  lastAnalyzedAt    DateTime? @map("last_analyzed_at")
-  
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
-  
-  @@index([viralScore])
-  @@index([primaryCategory])
-  @@index([engagementRate])
-  @@index([followers])
-  @@map("buzz_influencers")
+enum draft_status {
+  DRAFT
+  EDITED
+  SCHEDULED
+  POSTED
+  CANCELLED
 }

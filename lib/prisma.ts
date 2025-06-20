@@ -6,6 +6,7 @@
  */
 
 import { PrismaClient } from './generated/prisma'
+export { PostType, PrismaClient } from './generated/prisma'
 
 // グローバル型宣言（開発時のホットリロード対策）
 declare global {
@@ -16,23 +17,17 @@ declare global {
 const isDevelopment = process.env.NODE_ENV === 'development'
 
 // ログレベル設定
-const logLevels = isDevelopment 
-  ? ['query', 'info', 'warn', 'error'] as const
-  : ['error'] as const
+const logLevels: any = isDevelopment 
+  ? ['query', 'info', 'warn', 'error']
+  : ['error']
 
 /**
  * Prismaクライアントの設定
  */
-const prismaConfig = {
+const prismaConfig: any = {
   log: logLevels,
-  // 接続プール設定
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
   // エラーフォーマット設定
-  errorFormat: (isDevelopment ? 'pretty' : 'minimal') as 'pretty' | 'minimal',
+  errorFormat: isDevelopment ? 'pretty' : 'minimal',
 }
 
 /**

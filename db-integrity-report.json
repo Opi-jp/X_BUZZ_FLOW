@@ -1,0 +1,1155 @@
+{
+  "timestamp": "2025-06-20T08:04:29.684Z",
+  "issues": [
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "accounts",
+      "message": "Table 'accounts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "ai_patterns",
+      "message": "Table 'ai_patterns' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "api_error_logs",
+      "message": "Table 'api_error_logs' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "api_tasks",
+      "message": "Table 'api_tasks' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "buzz_posts",
+      "message": "Table 'buzz_posts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "character_profiles",
+      "message": "Table 'character_profiles' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "collection_presets",
+      "message": "Table 'collection_presets' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "content_drafts",
+      "message": "Table 'content_drafts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "cot_drafts",
+      "message": "Table 'cot_drafts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "cot_phases",
+      "message": "Table 'cot_phases' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "cot_sessions",
+      "message": "Table 'cot_sessions' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "gpt_analyses",
+      "message": "Table 'gpt_analyses' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_analyses",
+      "message": "Table 'news_analyses' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_analysis_jobs",
+      "message": "Table 'news_analysis_jobs' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_analysis_results",
+      "message": "Table 'news_analysis_results' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_articles",
+      "message": "Table 'news_articles' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_sources",
+      "message": "Table 'news_sources' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_thread_items",
+      "message": "Table 'news_thread_items' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_threads",
+      "message": "Table 'news_threads' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "news_viral_relations",
+      "message": "Table 'news_viral_relations' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "perplexity_reports",
+      "message": "Table 'perplexity_reports' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "prompt_templates",
+      "message": "Table 'prompt_templates' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "scheduled_posts",
+      "message": "Table 'scheduled_posts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "scheduled_retweets",
+      "message": "Table 'scheduled_retweets' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "session_activity_logs",
+      "message": "Table 'session_activity_logs' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "sessions",
+      "message": "Table 'sessions' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "users",
+      "message": "Table 'users' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_analysis_logs",
+      "message": "Table 'viral_analysis_logs' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_config",
+      "message": "Table 'viral_config' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_drafts_v2",
+      "message": "Table 'viral_drafts_v2' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_opportunities",
+      "message": "Table 'viral_opportunities' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_post_performance",
+      "message": "Table 'viral_post_performance' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_posts",
+      "message": "Table 'viral_posts' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "viral_sessions",
+      "message": "Table 'viral_sessions' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "watchlist_tweets",
+      "message": "Table 'watchlist_tweets' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_TABLE",
+      "severity": "warning",
+      "table": "watchlist_users",
+      "message": "Table 'watchlist_users' exists in database but not in schema"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "BuzzPost",
+      "table": "buzz_post",
+      "message": "Table 'buzz_post' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "id",
+      "message": "Column 'id' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "keywords",
+      "message": "Column 'keywords' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "accounts",
+      "message": "Column 'accounts' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "min_engagement",
+      "message": "Column 'min_engagement' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "min_impressions",
+      "message": "Column 'min_impressions' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "collect_interval",
+      "message": "Column 'collect_interval' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "enabled",
+      "message": "Column 'enabled' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "created_at",
+      "message": "Column 'created_at' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "buzz_config",
+      "column": "updated_at",
+      "message": "Column 'updated_at' exists in table 'buzz_config' but not in model 'BuzzConfig'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ScheduledPost",
+      "table": "scheduled_post",
+      "message": "Table 'scheduled_post' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "id",
+      "message": "Column 'id' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "scheduled_post_id",
+      "message": "Column 'scheduled_post_id' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "impressions",
+      "message": "Column 'impressions' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "likes",
+      "message": "Column 'likes' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "retweets",
+      "message": "Column 'retweets' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "replies",
+      "message": "Column 'replies' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "profile_clicks",
+      "message": "Column 'profile_clicks' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "link_clicks",
+      "message": "Column 'link_clicks' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "measured_at",
+      "message": "Column 'measured_at' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "engagement_rate",
+      "message": "Column 'engagement_rate' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "post_analytics",
+      "column": "ai_analysis",
+      "message": "Column 'ai_analysis' exists in table 'post_analytics' but not in model 'PostAnalytics'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "User",
+      "table": "user",
+      "message": "Table 'user' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "Session",
+      "table": "session",
+      "message": "Table 'session' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsSource",
+      "table": "news_source",
+      "message": "Table 'news_source' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsArticle",
+      "table": "news_article",
+      "message": "Table 'news_article' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsThread",
+      "table": "news_thread",
+      "message": "Table 'news_thread' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsThreadItem",
+      "table": "news_thread_item",
+      "message": "Table 'news_thread_item' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsAnalysis",
+      "table": "news_analysis",
+      "message": "Table 'news_analysis' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "id",
+      "message": "Column 'id' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "type",
+      "message": "Column 'type' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "status",
+      "message": "Column 'status' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "payload",
+      "message": "Column 'payload' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "result",
+      "message": "Column 'result' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "error",
+      "message": "Column 'error' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "progress",
+      "message": "Column 'progress' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "total",
+      "message": "Column 'total' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "started_at",
+      "message": "Column 'started_at' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "ended_at",
+      "message": "Column 'ended_at' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "created_at",
+      "message": "Column 'created_at' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "job_queue",
+      "column": "updated_at",
+      "message": "Column 'updated_at' exists in table 'job_queue' but not in model 'JobQueue'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ApiTask",
+      "table": "api_task",
+      "message": "Table 'api_task' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "CollectionPreset",
+      "table": "collection_preset",
+      "message": "Table 'collection_preset' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "WatchlistUser",
+      "table": "watchlist_user",
+      "message": "Table 'watchlist_user' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "WatchlistTweet",
+      "table": "watchlist_tweet",
+      "message": "Table 'watchlist_tweet' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "id",
+      "message": "Column 'id' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "type",
+      "message": "Column 'type' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "source_tweet_id",
+      "message": "Column 'source_tweet_id' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "target_tweet_id",
+      "message": "Column 'target_tweet_id' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "content",
+      "message": "Column 'content' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "interaction_history",
+      "column": "created_at",
+      "message": "Column 'created_at' exists in table 'interaction_history' but not in model 'InteractionHistory'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "PerplexityReport",
+      "table": "perplexity_report",
+      "message": "Table 'perplexity_report' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "CotSession",
+      "table": "cot_session",
+      "message": "Table 'cot_session' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "CotPhase",
+      "table": "cot_phase",
+      "message": "Table 'cot_phase' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "CotDraft",
+      "table": "cot_draft",
+      "message": "Table 'cot_draft' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "id",
+      "message": "Column 'id' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "draft_id",
+      "message": "Column 'draft_id' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "likes_30m",
+      "message": "Column 'likes_30m' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "retweets_30m",
+      "message": "Column 'retweets_30m' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "replies_30m",
+      "message": "Column 'replies_30m' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "impressions_30m",
+      "message": "Column 'impressions_30m' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "likes_1h",
+      "message": "Column 'likes_1h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "retweets_1h",
+      "message": "Column 'retweets_1h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "replies_1h",
+      "message": "Column 'replies_1h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "impressions_1h",
+      "message": "Column 'impressions_1h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "likes_24h",
+      "message": "Column 'likes_24h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "retweets_24h",
+      "message": "Column 'retweets_24h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "replies_24h",
+      "message": "Column 'replies_24h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "impressions_24h",
+      "message": "Column 'impressions_24h' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "engagement_rate",
+      "message": "Column 'engagement_rate' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "viral_coefficient",
+      "message": "Column 'viral_coefficient' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "collected_at",
+      "message": "Column 'collected_at' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "cot_draft_performance",
+      "column": "last_update_at",
+      "message": "Column 'last_update_at' exists in table 'cot_draft_performance' but not in model 'CotDraftPerformance'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "UnifiedContentSource",
+      "table": "unified_content_source",
+      "message": "Table 'unified_content_source' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "IntegratedSession",
+      "table": "integrated_session",
+      "message": "Table 'integrated_session' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "IntegratedSessionSource",
+      "table": "integrated_session_source",
+      "message": "Table 'integrated_session_source' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "IntegratedDraft",
+      "table": "integrated_draft",
+      "message": "Table 'integrated_draft' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "IntegratedDraftPerformance",
+      "table": "integrated_draft_performance",
+      "message": "Table 'integrated_draft_performance' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ScheduledRetweet",
+      "table": "scheduled_retweet",
+      "message": "Table 'scheduled_retweet' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "id",
+      "message": "Column 'id' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "content_id",
+      "message": "Column 'content_id' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "content_type",
+      "message": "Column 'content_type' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "metrics_30m",
+      "message": "Column 'metrics_30m' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "metrics_1h",
+      "message": "Column 'metrics_1h' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "metrics_24h",
+      "message": "Column 'metrics_24h' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "engagement_rate",
+      "message": "Column 'engagement_rate' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "viral_coefficient",
+      "message": "Column 'viral_coefficient' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "collected_at",
+      "message": "Column 'collected_at' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "unified_performance",
+      "column": "updated_at",
+      "message": "Column 'updated_at' exists in table 'unified_performance' but not in model 'UnifiedPerformance'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "NewsViralRelation",
+      "table": "news_viral_relation",
+      "message": "Table 'news_viral_relation' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "SessionActivityLog",
+      "table": "session_activity_log",
+      "message": "Table 'session_activity_log' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ApiErrorLog",
+      "table": "api_error_log",
+      "message": "Table 'api_error_log' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ViralSession",
+      "table": "viral_session",
+      "message": "Table 'viral_session' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "ViralDraftV2",
+      "table": "viral_draft_v2",
+      "message": "Table 'viral_draft_v2' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "id",
+      "message": "Column 'id' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "draft_id",
+      "message": "Column 'draft_id' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "likes_30m",
+      "message": "Column 'likes_30m' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "retweets_30m",
+      "message": "Column 'retweets_30m' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "replies_30m",
+      "message": "Column 'replies_30m' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "impressions_30m",
+      "message": "Column 'impressions_30m' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "likes_1h",
+      "message": "Column 'likes_1h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "retweets_1h",
+      "message": "Column 'retweets_1h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "replies_1h",
+      "message": "Column 'replies_1h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "impressions_1h",
+      "message": "Column 'impressions_1h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "likes_24h",
+      "message": "Column 'likes_24h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "retweets_24h",
+      "message": "Column 'retweets_24h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "replies_24h",
+      "message": "Column 'replies_24h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "impressions_24h",
+      "message": "Column 'impressions_24h' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "engagement_rate",
+      "message": "Column 'engagement_rate' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "viral_coefficient",
+      "message": "Column 'viral_coefficient' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "collected_at",
+      "message": "Column 'collected_at' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "EXTRA_COLUMN",
+      "severity": "warning",
+      "table": "viral_draft_performance",
+      "column": "updated_at",
+      "message": "Column 'updated_at' exists in table 'viral_draft_performance' but not in model 'ViralDraftPerformance'"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "CharacterProfile",
+      "table": "character_profile",
+      "message": "Table 'character_profile' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "severity": "error",
+      "model": "BuzzInfluencer",
+      "table": "buzz_influencer",
+      "message": "Table 'buzz_influencer' is defined in schema but missing in database"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "Gender",
+      "values": [
+        "male",
+        "female",
+        "other"
+      ],
+      "message": "Enum 'Gender' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "cot_draft_status",
+      "values": [
+        "DRAFT",
+        "EDITED",
+        "SCHEDULED",
+        "POSTED",
+        "ARCHIVED"
+      ],
+      "message": "Enum 'cot_draft_status' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "cot_phase_status",
+      "values": [
+        "PENDING",
+        "THINKING",
+        "EXECUTING",
+        "INTEGRATING",
+        "COMPLETED",
+        "FAILED"
+      ],
+      "message": "Enum 'cot_phase_status' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "cot_phase_step",
+      "values": [
+        "THINK",
+        "EXECUTE",
+        "INTEGRATE"
+      ],
+      "message": "Enum 'cot_phase_step' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "cot_session_status",
+      "values": [
+        "PENDING",
+        "THINKING",
+        "EXECUTING",
+        "INTEGRATING",
+        "COMPLETED",
+        "FAILED",
+        "PAUSED"
+      ],
+      "message": "Enum 'cot_session_status' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "draft_status",
+      "values": [
+        "DRAFT",
+        "EDITED",
+        "SCHEDULED",
+        "POSTED",
+        "CANCELLED"
+      ],
+      "message": "Enum 'draft_status' exists in database but not in schema"
+    },
+    {
+      "type": "EXTRA_ENUM",
+      "severity": "warning",
+      "enum": "rt_status",
+      "values": [
+        "SCHEDULED",
+        "EXECUTED",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "message": "Enum 'rt_status' exists in database but not in schema"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "PostStatus",
+      "message": "Enum 'PostStatus' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "PostType",
+      "message": "Enum 'PostType' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "CotSessionStatus",
+      "message": "Enum 'CotSessionStatus' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "CotPhaseStep",
+      "message": "Enum 'CotPhaseStep' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "CotPhaseStatus",
+      "message": "Enum 'CotPhaseStatus' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "CotDraftStatus",
+      "message": "Enum 'CotDraftStatus' is defined in schema but missing in database"
+    },
+    {
+      "type": "MISSING_ENUM",
+      "severity": "error",
+      "enum": "RTStatus",
+      "message": "Enum 'RTStatus' is defined in schema but missing in database"
+    }
+  ],
+  "summary": {
+    "total": 164,
+    "errors": 37,
+    "warnings": 127
+  }
+}

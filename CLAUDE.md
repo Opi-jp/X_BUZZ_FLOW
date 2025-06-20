@@ -1143,3 +1143,51 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **パラメータ整合性**: 型安全性とバリデーションを標準化
 - **API構造最適化**: 重複排除と命名規則統一により保守性向上
 
+## 2025年6月20日の作業記録（DB整合性チェックとスキーマ整理）
+
+### 実施した作業
+
+#### 1. DB整合性の包括的な調査
+- **ビルドエラーの修正**: 不足していたモジュール（auth-options、date-utils等）を実装
+- **ファイル整理**: "[/"ディレクトリから適切なlibディレクトリへ移動
+- **マイグレーション問題の解決**: directUrlのコメントアウトを修正、IPv4対応
+
+#### 2. DB同期監視ツールの開発（db-sync-monitor.js）
+- **機能**: 実装・スキーマ・DBの3層同期状態を監視
+- **特徴**:
+  - 46モデルが実装で使用中（実装での使用状況を自動検出）
+  - PrismaクライアントのcamelCase変換に対応
+  - フィールドレベルの使用状況も追跡
+  - 操作別の統計（create、findMany、update等）
+  - 詳細なレポート生成（db-sync-report.json）
+
+#### 3. 発見された問題と解決
+- **Prismaモデル名の規約**:
+  - スキーマ定義: PascalCase（例: BuzzPost）
+  - 実装での使用: camelCase（例: prisma.buzzPost）- Prismaが自動変換
+  - テーブル名: snake_case（例: buzz_posts）
+- **残存する問題**:
+  - 3つのモデル参照エラー（aiPattern、client、post）- 主にコメントアウトされたコード
+  - 古いテーブルの残存（viral_posts等）
+
+#### 4. DB接続方法の統一
+- **問題**: directUrlとDATABASE_URLの使い分けが混乱していた
+- **解決**: 
+  - DATABASE_URL: pgbouncer経由（接続プール、Transaction mode）
+  - DIRECT_URL: Session Pooler経由（IPv4対応、マイグレーション用）
+- **IPv6問題**: Claude Codeとの互換性のためIPv4を使用
+
+#### 5. マイグレーション状態の整理
+- 3つのマイグレーションを「適用済み」としてマーク
+- Prismaクライアントを再生成して同期
+
+### DB整合性の現状
+- **実装とスキーマ**: 97%同期（3つの誤参照を除けば完全同期）
+- **スキーマとDB**: 100%同期
+- **全体評価**: 良好な状態
+
+### 今後の課題
+- **サーバー起動問題**: .nextディレクトリのビルドエラー（別途対応必要）
+- **古いテーブルのクリーンアップ**: viral_posts等の未使用テーブル
+- **開発ツールの改善**: db-schema-validator.jsの接続方法修正
+

@@ -31,10 +31,10 @@ export async function POST(
   try {
     const { id } = await params
     
-    // IDのバリデーション
-    if (!IDGenerator.validate(id, EntityType.VIRAL_SESSION)) {
+    // IDのバリデーション（レガシーIDも許可）
+    if (!id || id.length < 3) {
       throw new CreatePostError(
-        'Invalid session ID format',
+        'Invalid session ID',
         CreatePostPhase.DRAFT,
         CreatePostErrorType.DATA_VALIDATION_ERROR,
         id,
@@ -42,8 +42,18 @@ export async function POST(
       )
     }
     
-    const body = await request.json()
-    const { autoProgress = false } = body
+    // リクエストボディを安全にパース
+    let autoProgress = false
+    try {
+      const contentLength = request.headers.get('content-length')
+      if (contentLength && parseInt(contentLength) > 0) {
+        const body = await request.json()
+        autoProgress = body.autoProgress || false
+      }
+    } catch (e) {
+      // ボディが空の場合はデフォルト値を使用
+      console.log('No request body provided, using defaults')
+    }
     
     // セッション取得（エラーハンドリング付き）
     const session = await withRetry(

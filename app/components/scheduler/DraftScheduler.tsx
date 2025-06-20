@@ -253,7 +253,7 @@ export default function DraftScheduler({
                               {schedule.comment && (
                                 <div className="flex items-start space-x-2 mt-2">
                                   <MessageCircle className="w-3 h-3 text-gray-400 mt-0.5" />
-                                  <p className="text-xs text-gray-700 italic">"{schedule.comment}"</p>
+                                  <p className="text-xs text-gray-700 italic">&ldquo;{schedule.comment}&rdquo;</p>
                                 </div>
                               )}
                             </div>

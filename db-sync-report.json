@@ -1,0 +1,91 @@
+{
+  "timestamp": "2025-06-20T08:23:07.279Z",
+  "summary": {
+    "implementation": {
+      "usedModels": 46,
+      "usedOperations": 46,
+      "usedFields": 90
+    },
+    "schema": {
+      "models": 43,
+      "enums": 9,
+      "totalFields": 611
+    },
+    "database": {
+      "tables": 44,
+      "types": 9
+    },
+    "sync": {
+      "issues": 3,
+      "warnings": 1
+    }
+  },
+  "issues": [
+    {
+      "layer": "implementation-schema",
+      "type": "MISSING_IN_SCHEMA",
+      "model": "aiPattern",
+      "message": "実装で使用されているモデル 'aiPattern' がスキーマに存在しません"
+    },
+    {
+      "layer": "implementation-schema",
+      "type": "MISSING_IN_SCHEMA",
+      "model": "client",
+      "message": "実装で使用されているモデル 'client' がスキーマに存在しません"
+    },
+    {
+      "layer": "implementation-schema",
+      "type": "MISSING_IN_SCHEMA",
+      "model": "post",
+      "message": "実装で使用されているモデル 'post' がスキーマに存在しません"
+    }
+  ],
+  "warnings": [
+    {
+      "layer": "implementation-schema",
+      "type": "UNCLEAR_FIELDS",
+      "fields": [
+        "gte",
+        "generatedAt",
+        "dataSourcesUsed",
+        "perplexity",
+        "news",
+        "buzz",
+        "isDefault",
+        "visual",
+        "https",
+        "selectedConcepts",
+        "lt",
+        "in",
+        "select",
+        "usageCount",
+        "posts",
+        "orderBy",
+        "_count",
+        "planType",
+        "expectedEngagement",
+        "targetPost",
+        "newsArticle",
+        "characterCount",
+        "originalError",
+        "errorDetails",
+        "timestamp",
+        "not",
+        "OR",
+        "engagements30m",
+        "contains",
+        "lte"
+      ],
+      "message": "実装で使用されているフィールドの一部がスキーマで確認できません"
+    }
+  ],
+  "details": {
+    "missingModels": [
+      "aiPattern",
+      "client",
+      "post"
+    ],
+    "missingTables": [],
+    "unusedModels": []
+  }
+}

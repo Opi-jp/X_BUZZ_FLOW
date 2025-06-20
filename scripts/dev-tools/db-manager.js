@@ -130,6 +130,9 @@ class DatabaseManager {
       news_articles: {
         category: 'TEXT',
         importance: 'DOUBLE PRECISION'
+      },
+      api_tasks: {
+        task_type: 'TEXT NOT NULL DEFAULT \'unknown\''
       }
     }
   }
