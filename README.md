@@ -2,11 +2,11 @@
 
 ## ✅ Create→Draft→Post フロー実装完了！
 
-### 🎉 2025年6月19日達成
+### 🎉 2025年6月20日達成
 - **完全フロー動作**: テーマ入力→トピック収集→コンセプト生成→キャラクター選択→下書き作成→Twitter投稿
-- **DB問題解決**: Prisma v6.10.1で根本解決
-- **ViralDraftV2移行**: 新スキーマ完全対応
-- **プロンプト管理**: バージョン管理対応
+- **実際のTwitter投稿成功**: Create→Draft→Postフローで実際の投稿を確認
+- **autoProgress機能**: E2Eテスト用の自動進行モード実装
+- **LLM応答時間対応**: 各フェーズに適切な待機時間を設定
 
 ## 🚨 重要：最初にこれを読め！
 
@@ -30,6 +30,30 @@ cat ERRORS.md      # エラー解決集
 ```
 
 **軽量版で十分。詳細は必要になってから。**
+
+## 🆕 統一システム管理（2025年6月20日追加）
+
+開発の一貫性を保つための中央管理システムを導入しました。
+
+### 使い方
+```typescript
+import { IDGenerator, EntityType, ErrorManager } from '@/lib/core/unified-system-manager'
+
+// ID生成（プレフィックス付き）
+const sessionId = IDGenerator.generate(EntityType.VIRAL_SESSION)  // sess_xxxxxxxxxxxx
+
+// エラーハンドリング
+try {
+  // 処理
+} catch (error) {
+  const errorId = await ErrorManager.logError(error, {
+    module: 'create',
+    operation: 'generate-concepts'
+  })
+}
+```
+
+詳細: `/lib/core/unified-system-usage-guide.md`
 
 ## 🎯 クイックリファレンス
 

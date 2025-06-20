@@ -134,6 +134,61 @@ node scripts/dev-tools/prompt-editor.js stats
 - compatでDB互換性をチェック
 - 問題があればマイグレーションを生成して実行
 
+## 🆕 統一システム管理（Unified System Manager）
+
+### 概要
+開発の一貫性を保つための中央管理システムを導入しました。ID生成、型定義、エラーハンドリング、プロンプト管理、DB連携などを統一的に管理します。
+
+### 基本的な使い方
+```typescript
+import { IDGenerator, EntityType, ErrorManager, PromptManager, DataTransformer, DBManager } from '@/lib/core/unified-system-manager'
+
+// 1. ID生成（エンティティタイプ別のプレフィックス付き）
+const sessionId = IDGenerator.generate(EntityType.VIRAL_SESSION)  // sess_xxxxxxxxxxxx
+const draftId = IDGenerator.generate(EntityType.DRAFT)           // draft_xxxxxxxxxxxx
+
+// 2. エラーハンドリング（自動ログ記録）
+try {
+  // 処理実行
+} catch (error) {
+  const errorId = await ErrorManager.logError(error, {
+    module: 'create',
+    operation: 'generate-concepts',
+    sessionId
+  })
+  const userMessage = ErrorManager.getUserMessage(error, 'ja')
+}
+
+// 3. プロンプト管理（変数展開・キャッシュ対応）
+const prompt = await PromptManager.load(
+  'gpt/generate-concepts.txt',
+  { theme, platform, style },
+  { validate: true, cache: true }
+)
+
+// 4. データ変換（3層アーキテクチャ）
+const processData = DataTransformer.toProcessData(rawData, EntityType.VIRAL_SESSION)
+const displayData = DataTransformer.toDisplayData(processData, 'summary')
+
+// 5. DB操作（トランザクション・リトライ対応）
+const result = await DBManager.transaction(async (tx) => {
+  const session = await tx.viralSession.create({ data })
+  await tx.sessionActivityLog.create({ data: logData })
+  return session
+})
+```
+
+### 詳細ドキュメント
+- 使用ガイド: `/lib/core/unified-system-usage-guide.md`
+- クイックリファレンス: `/lib/core/unified-system-quick-reference.ts`
+
+### 導入のメリット
+1. **一貫性**: ID形式、エラー処理、データ構造が統一される
+2. **型安全性**: Zodスキーマによる実行時の型チェック
+3. **開発効率**: よく使うパターンがすぐに使える
+4. **保守性**: 中央管理により変更が容易
+5. **エラー削減**: パラメータの不一致によるエラーを防ぐ
+
 ## 📝 テストスクリプトの管理ルール
 
 ### テストスクリプトの命名規則と配置
@@ -949,5 +1004,37 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **問題を先送りしない** - 認証エラーやDB接続エラーは根本解決
 - **テスト用エンドポイントは必ず削除** - 蓄積させない
 
+## 2025年6月20日の作業記録（統一システム管理の実装）
+
+### 実施した作業
+
+#### 統一システム管理（Unified System Manager）の設計・実装
+- **背景**: Create部分の開発で「渡している関数やパラメータが期待しているものと違う」エラーが多発
+- **解決策**: 統一的な管理システムを中央に配置し、一貫性を確保
+
+#### 実装した機能
+1. **ID生成管理**: エンティティタイプ別のプレフィックス付きID（sess_xxx, draft_xxx等）
+2. **型定義とバリデーション**: Zodスキーマによる共通・モジュール別の型定義
+3. **プロンプト管理**: 変数展開、キャッシュ、バリデーション機能
+4. **データ変換管理**: 3層アーキテクチャ（Raw → Process → Display）
+5. **エラーハンドリング**: 自動ログ記録、ユーザーメッセージ生成、リトライ判定
+6. **DB連携管理**: トランザクション、バッチ処理、自動リトライ
+
+#### ファイル構成
+- `/lib/core/unified-system-manager.ts` - メイン実装
+- `/lib/core/unified-system-usage-guide.md` - 詳細な使用ガイド
+- `/lib/core/unified-system-quick-reference.ts` - クイックリファレンス
+
+### 重要な設計思想
+- **プレフィックス付きID**: どのエンティティのIDか一目でわかる
+- **3層データ変換**: 必要なデータだけを適切なレベルで表示
+- **統一エラー処理**: すべてのエラーを記録し、適切なメッセージを返す
+- **型安全性**: 実行時エラーを防ぐための徹底的な型チェック
+
+### 今後の活用
+- 新規API開発時は必ずこのシステムを使用
+- 既存コードも段階的に移行
+- エラーが減り、開発効率が向上することを期待
+
 ---
-*最終更新: 2025/01/19 20:30*
+*最終更新: 2025/06/20 16:00*
