@@ -45,6 +45,15 @@ cat ERRORS.md          # エラー解決集
 
 ## 🛠 開発ツール
 
+### Context7 MCP連携（2025年6月21日追加）
+Context7は、AIアシスタントと外部ツール・データソースを接続するMCP（Model Context Protocol）です。
+- **ライブラリ検索**: React/Next.js関連ライブラリの検索とコードスニペット取得
+- **プロジェクトコンテキスト管理**: セッション間での情報共有
+- **X_BUZZ_FLOWでの活用例**:
+  - React Tweet (/vercel/react-tweet) - ツイート埋め込み
+  - React Spring (/pmndrs/react-spring) - アニメーション
+  - React Window (/bvaughn/react-window) - 大量リスト最適化
+
 ### エラー記録システム
 ```bash
 # スマートエラー記録（対話的）

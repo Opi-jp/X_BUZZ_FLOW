@@ -1391,6 +1391,58 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **レガシー命名の排除**: viral_drafts_v2 → viral_draftsでコードベースがクリーンに
 - **DB整合性の維持**: db-managerツールによる安全な変更
 
+### Context7 MCP連携の設定（2025年6月21日追加）
+
+#### 1. Context7とは
+Context7は、Claude DesktopでMCP（Model Context Protocol）を通じて外部ツールと連携するためのサービスです。
+- Upstashが提供するコンテキスト管理サービス
+- プロジェクト固有の情報を永続化
+- ライブラリ検索とコードスニペット取得
+
+#### 2. 設定方法
+Claude Desktopの設定ファイル（`claude_desktop_config.json`）に以下を追加：
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
+```
+
+#### 3. X_BUZZ_FLOWプロジェクトでの活用
+
+**推奨ライブラリ**:
+- **React Tweet** (`/vercel/react-tweet`): ツイート埋め込み表示
+  - Trust Score: 10
+  - Code Snippets: 46
+  - Twitter投稿のプレビュー表示に最適
+
+- **React Spring** (`/pmndrs/react-spring`): アニメーションライブラリ
+  - Trust Score: 9.6
+  - Code Snippets: 167
+  - フロー遷移のアニメーション実装
+
+- **React Window** (`/bvaughn/react-window`): 仮想スクロール
+  - Trust Score: 10
+  - Code Snippets: 6
+  - 大量の投稿リスト表示の最適化
+
+**使用例**:
+```bash
+# ライブラリのコードスニペット取得
+"React Tweetのコード例を表示してください"
+
+# プロジェクト情報の保存
+"X_BUZZ_FLOWのフロントエンド実装状況を記憶してください"
+
+# 保存した情報の取得
+"X_BUZZ_FLOWプロジェクトの現在の状況を教えてください"
+```
+
 ---
-*最終更新: 2025/06/21 18:30*
+*最終更新: 2025/06/21 19:00*
 
