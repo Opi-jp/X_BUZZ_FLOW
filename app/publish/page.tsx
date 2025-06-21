@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   Send, 
@@ -40,7 +40,7 @@ interface PublishResult {
   error?: string
 }
 
-export default function UnifiedPublishPage() {
+function PublishPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   
@@ -128,7 +128,7 @@ export default function UnifiedPublishPage() {
         ? `${scheduledDate}T${scheduledTime}:00.000Z`
         : undefined
 
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -501,5 +501,17 @@ export default function UnifiedPublishPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function UnifiedPublishPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+      </div>
+    }>
+      <PublishPageContent />
+    </Suspense>
   )
 }

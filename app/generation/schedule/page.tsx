@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Calendar, Clock, AlertCircle, ChevronLeft, ChevronRight, Send } from 'lucide-react'
+import { Calendar, Clock, AlertCircle, ChevronLeft, ChevronRight, Send, Loader2 } from 'lucide-react'
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, setHours, setMinutes } from 'date-fns'
 import { ja } from 'date-fns/locale'
 
@@ -32,7 +32,7 @@ interface Draft {
   content: string
 }
 
-export default function SchedulePage() {
+function SchedulePageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const draftIds = searchParams.get('draftIds')?.split(',') || []
@@ -331,5 +331,17 @@ export default function SchedulePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SchedulePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+      </div>
+    }>
+      <SchedulePageContent />
+    </Suspense>
   )
 }

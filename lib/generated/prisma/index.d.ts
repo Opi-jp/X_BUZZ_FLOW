@@ -46682,9 +46682,6 @@ export namespace Prisma {
     concept_id: string | null
     title: string | null
     content: string | null
-    edited_content: string | null
-    is_edited: boolean | null
-    edited_at: Date | null
     visual_note: string | null
     status: string | null
     scheduled_at: Date | null
@@ -46696,6 +46693,9 @@ export namespace Prisma {
     character_note: string | null
     source_url: string | null
     news_article_id: string | null
+    edited_at: Date | null
+    edited_content: string | null
+    is_edited: boolean | null
   }
 
   export type Viral_draftsMaxAggregateOutputType = {
@@ -46704,9 +46704,6 @@ export namespace Prisma {
     concept_id: string | null
     title: string | null
     content: string | null
-    edited_content: string | null
-    is_edited: boolean | null
-    edited_at: Date | null
     visual_note: string | null
     status: string | null
     scheduled_at: Date | null
@@ -46718,6 +46715,9 @@ export namespace Prisma {
     character_note: string | null
     source_url: string | null
     news_article_id: string | null
+    edited_at: Date | null
+    edited_content: string | null
+    is_edited: boolean | null
   }
 
   export type Viral_draftsCountAggregateOutputType = {
@@ -46726,24 +46726,24 @@ export namespace Prisma {
     concept_id: number
     title: number
     content: number
-    edited_content: number
-    is_edited: number
-    edited_at: number
     hashtags: number
     visual_note: number
     status: number
     scheduled_at: number
     posted_at: number
     tweet_id: number
-    source_tweets: number
-    thread_structure: number
-    post_history: number
     created_at: number
     updated_at: number
     character_id: number
     character_note: number
     source_url: number
     news_article_id: number
+    edited_at: number
+    edited_content: number
+    is_edited: number
+    post_history: number
+    source_tweets: number
+    thread_structure: number
     _all: number
   }
 
@@ -46754,9 +46754,6 @@ export namespace Prisma {
     concept_id?: true
     title?: true
     content?: true
-    edited_content?: true
-    is_edited?: true
-    edited_at?: true
     visual_note?: true
     status?: true
     scheduled_at?: true
@@ -46768,6 +46765,9 @@ export namespace Prisma {
     character_note?: true
     source_url?: true
     news_article_id?: true
+    edited_at?: true
+    edited_content?: true
+    is_edited?: true
   }
 
   export type Viral_draftsMaxAggregateInputType = {
@@ -46776,9 +46776,6 @@ export namespace Prisma {
     concept_id?: true
     title?: true
     content?: true
-    edited_content?: true
-    is_edited?: true
-    edited_at?: true
     visual_note?: true
     status?: true
     scheduled_at?: true
@@ -46790,6 +46787,9 @@ export namespace Prisma {
     character_note?: true
     source_url?: true
     news_article_id?: true
+    edited_at?: true
+    edited_content?: true
+    is_edited?: true
   }
 
   export type Viral_draftsCountAggregateInputType = {
@@ -46798,24 +46798,24 @@ export namespace Prisma {
     concept_id?: true
     title?: true
     content?: true
-    edited_content?: true
-    is_edited?: true
-    edited_at?: true
     hashtags?: true
     visual_note?: true
     status?: true
     scheduled_at?: true
     posted_at?: true
     tweet_id?: true
-    source_tweets?: true
-    thread_structure?: true
-    post_history?: true
     created_at?: true
     updated_at?: true
     character_id?: true
     character_note?: true
     source_url?: true
     news_article_id?: true
+    edited_at?: true
+    edited_content?: true
+    is_edited?: true
+    post_history?: true
+    source_tweets?: true
+    thread_structure?: true
     _all?: true
   }
 
@@ -46897,24 +46897,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content: string | null
-    is_edited: boolean
-    edited_at: Date | null
     hashtags: string[]
     visual_note: string | null
     status: string
     scheduled_at: Date | null
     posted_at: Date | null
     tweet_id: string | null
-    source_tweets: JsonValue | null
-    thread_structure: JsonValue | null
-    post_history: JsonValue | null
     created_at: Date
     updated_at: Date
     character_id: string | null
     character_note: string | null
     source_url: string | null
     news_article_id: string | null
+    edited_at: Date | null
+    edited_content: string | null
+    is_edited: boolean
+    post_history: JsonValue | null
+    source_tweets: JsonValue | null
+    thread_structure: JsonValue | null
     _count: Viral_draftsCountAggregateOutputType | null
     _min: Viral_draftsMinAggregateOutputType | null
     _max: Viral_draftsMaxAggregateOutputType | null
@@ -46940,24 +46940,24 @@ export namespace Prisma {
     concept_id?: boolean
     title?: boolean
     content?: boolean
-    edited_content?: boolean
-    is_edited?: boolean
-    edited_at?: boolean
     hashtags?: boolean
     visual_note?: boolean
     status?: boolean
     scheduled_at?: boolean
     posted_at?: boolean
     tweet_id?: boolean
-    source_tweets?: boolean
-    thread_structure?: boolean
-    post_history?: boolean
     created_at?: boolean
     updated_at?: boolean
     character_id?: boolean
     character_note?: boolean
     source_url?: boolean
     news_article_id?: boolean
+    edited_at?: boolean
+    edited_content?: boolean
+    is_edited?: boolean
+    post_history?: boolean
+    source_tweets?: boolean
+    thread_structure?: boolean
     viral_draft_performance?: boolean | viral_drafts$viral_draft_performanceArgs<ExtArgs>
     viral_sessions?: boolean | viral_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viral_drafts"]>
@@ -46968,24 +46968,24 @@ export namespace Prisma {
     concept_id?: boolean
     title?: boolean
     content?: boolean
-    edited_content?: boolean
-    is_edited?: boolean
-    edited_at?: boolean
     hashtags?: boolean
     visual_note?: boolean
     status?: boolean
     scheduled_at?: boolean
     posted_at?: boolean
     tweet_id?: boolean
-    source_tweets?: boolean
-    thread_structure?: boolean
-    post_history?: boolean
     created_at?: boolean
     updated_at?: boolean
     character_id?: boolean
     character_note?: boolean
     source_url?: boolean
     news_article_id?: boolean
+    edited_at?: boolean
+    edited_content?: boolean
+    is_edited?: boolean
+    post_history?: boolean
+    source_tweets?: boolean
+    thread_structure?: boolean
     viral_sessions?: boolean | viral_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viral_drafts"]>
 
@@ -46995,24 +46995,24 @@ export namespace Prisma {
     concept_id?: boolean
     title?: boolean
     content?: boolean
-    edited_content?: boolean
-    is_edited?: boolean
-    edited_at?: boolean
     hashtags?: boolean
     visual_note?: boolean
     status?: boolean
     scheduled_at?: boolean
     posted_at?: boolean
     tweet_id?: boolean
-    source_tweets?: boolean
-    thread_structure?: boolean
-    post_history?: boolean
     created_at?: boolean
     updated_at?: boolean
     character_id?: boolean
     character_note?: boolean
     source_url?: boolean
     news_article_id?: boolean
+    edited_at?: boolean
+    edited_content?: boolean
+    is_edited?: boolean
+    post_history?: boolean
+    source_tweets?: boolean
+    thread_structure?: boolean
     viral_sessions?: boolean | viral_sessionsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viral_drafts"]>
 
@@ -47022,27 +47022,27 @@ export namespace Prisma {
     concept_id?: boolean
     title?: boolean
     content?: boolean
-    edited_content?: boolean
-    is_edited?: boolean
-    edited_at?: boolean
     hashtags?: boolean
     visual_note?: boolean
     status?: boolean
     scheduled_at?: boolean
     posted_at?: boolean
     tweet_id?: boolean
-    source_tweets?: boolean
-    thread_structure?: boolean
-    post_history?: boolean
     created_at?: boolean
     updated_at?: boolean
     character_id?: boolean
     character_note?: boolean
     source_url?: boolean
     news_article_id?: boolean
+    edited_at?: boolean
+    edited_content?: boolean
+    is_edited?: boolean
+    post_history?: boolean
+    source_tweets?: boolean
+    thread_structure?: boolean
   }
 
-  export type viral_draftsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "session_id" | "concept_id" | "title" | "content" | "edited_content" | "is_edited" | "edited_at" | "hashtags" | "visual_note" | "status" | "scheduled_at" | "posted_at" | "tweet_id" | "source_tweets" | "thread_structure" | "post_history" | "created_at" | "updated_at" | "character_id" | "character_note" | "source_url" | "news_article_id", ExtArgs["result"]["viral_drafts"]>
+  export type viral_draftsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "session_id" | "concept_id" | "title" | "content" | "hashtags" | "visual_note" | "status" | "scheduled_at" | "posted_at" | "tweet_id" | "created_at" | "updated_at" | "character_id" | "character_note" | "source_url" | "news_article_id" | "edited_at" | "edited_content" | "is_edited" | "post_history" | "source_tweets" | "thread_structure", ExtArgs["result"]["viral_drafts"]>
   export type viral_draftsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     viral_draft_performance?: boolean | viral_drafts$viral_draft_performanceArgs<ExtArgs>
     viral_sessions?: boolean | viral_sessionsDefaultArgs<ExtArgs>
@@ -47066,24 +47066,24 @@ export namespace Prisma {
       concept_id: string
       title: string
       content: string
-      edited_content: string | null
-      is_edited: boolean
-      edited_at: Date | null
       hashtags: string[]
       visual_note: string | null
       status: string
       scheduled_at: Date | null
       posted_at: Date | null
       tweet_id: string | null
-      source_tweets: Prisma.JsonValue | null
-      thread_structure: Prisma.JsonValue | null
-      post_history: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
       character_id: string | null
       character_note: string | null
       source_url: string | null
       news_article_id: string | null
+      edited_at: Date | null
+      edited_content: string | null
+      is_edited: boolean
+      post_history: Prisma.JsonValue | null
+      source_tweets: Prisma.JsonValue | null
+      thread_structure: Prisma.JsonValue | null
     }, ExtArgs["result"]["viral_drafts"]>
     composites: {}
   }
@@ -47514,24 +47514,24 @@ export namespace Prisma {
     readonly concept_id: FieldRef<"viral_drafts", 'String'>
     readonly title: FieldRef<"viral_drafts", 'String'>
     readonly content: FieldRef<"viral_drafts", 'String'>
-    readonly edited_content: FieldRef<"viral_drafts", 'String'>
-    readonly is_edited: FieldRef<"viral_drafts", 'Boolean'>
-    readonly edited_at: FieldRef<"viral_drafts", 'DateTime'>
     readonly hashtags: FieldRef<"viral_drafts", 'String[]'>
     readonly visual_note: FieldRef<"viral_drafts", 'String'>
     readonly status: FieldRef<"viral_drafts", 'String'>
     readonly scheduled_at: FieldRef<"viral_drafts", 'DateTime'>
     readonly posted_at: FieldRef<"viral_drafts", 'DateTime'>
     readonly tweet_id: FieldRef<"viral_drafts", 'String'>
-    readonly source_tweets: FieldRef<"viral_drafts", 'Json'>
-    readonly thread_structure: FieldRef<"viral_drafts", 'Json'>
-    readonly post_history: FieldRef<"viral_drafts", 'Json'>
     readonly created_at: FieldRef<"viral_drafts", 'DateTime'>
     readonly updated_at: FieldRef<"viral_drafts", 'DateTime'>
     readonly character_id: FieldRef<"viral_drafts", 'String'>
     readonly character_note: FieldRef<"viral_drafts", 'String'>
     readonly source_url: FieldRef<"viral_drafts", 'String'>
     readonly news_article_id: FieldRef<"viral_drafts", 'String'>
+    readonly edited_at: FieldRef<"viral_drafts", 'DateTime'>
+    readonly edited_content: FieldRef<"viral_drafts", 'String'>
+    readonly is_edited: FieldRef<"viral_drafts", 'Boolean'>
+    readonly post_history: FieldRef<"viral_drafts", 'Json'>
+    readonly source_tweets: FieldRef<"viral_drafts", 'Json'>
+    readonly thread_structure: FieldRef<"viral_drafts", 'Json'>
   }
     
 
@@ -55940,24 +55940,24 @@ export namespace Prisma {
     concept_id: 'concept_id',
     title: 'title',
     content: 'content',
-    edited_content: 'edited_content',
-    is_edited: 'is_edited',
-    edited_at: 'edited_at',
     hashtags: 'hashtags',
     visual_note: 'visual_note',
     status: 'status',
     scheduled_at: 'scheduled_at',
     posted_at: 'posted_at',
     tweet_id: 'tweet_id',
-    source_tweets: 'source_tweets',
-    thread_structure: 'thread_structure',
-    post_history: 'post_history',
     created_at: 'created_at',
     updated_at: 'updated_at',
     character_id: 'character_id',
     character_note: 'character_note',
     source_url: 'source_url',
-    news_article_id: 'news_article_id'
+    news_article_id: 'news_article_id',
+    edited_at: 'edited_at',
+    edited_content: 'edited_content',
+    is_edited: 'is_edited',
+    post_history: 'post_history',
+    source_tweets: 'source_tweets',
+    thread_structure: 'thread_structure'
   };
 
   export type Viral_draftsScalarFieldEnum = (typeof Viral_draftsScalarFieldEnum)[keyof typeof Viral_draftsScalarFieldEnum]
@@ -59585,24 +59585,24 @@ export namespace Prisma {
     concept_id?: StringFilter<"viral_drafts"> | string
     title?: StringFilter<"viral_drafts"> | string
     content?: StringFilter<"viral_drafts"> | string
-    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
-    is_edited?: BoolFilter<"viral_drafts"> | boolean
-    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     hashtags?: StringNullableListFilter<"viral_drafts">
     visual_note?: StringNullableFilter<"viral_drafts"> | string | null
     status?: StringFilter<"viral_drafts"> | string
     scheduled_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     posted_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     tweet_id?: StringNullableFilter<"viral_drafts"> | string | null
-    source_tweets?: JsonNullableFilter<"viral_drafts">
-    thread_structure?: JsonNullableFilter<"viral_drafts">
-    post_history?: JsonNullableFilter<"viral_drafts">
     created_at?: DateTimeFilter<"viral_drafts"> | Date | string
     updated_at?: DateTimeFilter<"viral_drafts"> | Date | string
     character_id?: StringNullableFilter<"viral_drafts"> | string | null
     character_note?: StringNullableFilter<"viral_drafts"> | string | null
     source_url?: StringNullableFilter<"viral_drafts"> | string | null
     news_article_id?: StringNullableFilter<"viral_drafts"> | string | null
+    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
+    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
+    is_edited?: BoolFilter<"viral_drafts"> | boolean
+    post_history?: JsonNullableFilter<"viral_drafts">
+    source_tweets?: JsonNullableFilter<"viral_drafts">
+    thread_structure?: JsonNullableFilter<"viral_drafts">
     viral_draft_performance?: XOR<Viral_draft_performanceNullableScalarRelationFilter, viral_draft_performanceWhereInput> | null
     viral_sessions?: XOR<Viral_sessionsScalarRelationFilter, viral_sessionsWhereInput>
   }
@@ -59613,24 +59613,24 @@ export namespace Prisma {
     concept_id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    edited_content?: SortOrderInput | SortOrder
-    is_edited?: SortOrder
-    edited_at?: SortOrderInput | SortOrder
     hashtags?: SortOrder
     visual_note?: SortOrderInput | SortOrder
     status?: SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     posted_at?: SortOrderInput | SortOrder
     tweet_id?: SortOrderInput | SortOrder
-    source_tweets?: SortOrderInput | SortOrder
-    thread_structure?: SortOrderInput | SortOrder
-    post_history?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     character_id?: SortOrderInput | SortOrder
     character_note?: SortOrderInput | SortOrder
     source_url?: SortOrderInput | SortOrder
     news_article_id?: SortOrderInput | SortOrder
+    edited_at?: SortOrderInput | SortOrder
+    edited_content?: SortOrderInput | SortOrder
+    is_edited?: SortOrder
+    post_history?: SortOrderInput | SortOrder
+    source_tweets?: SortOrderInput | SortOrder
+    thread_structure?: SortOrderInput | SortOrder
     viral_draft_performance?: viral_draft_performanceOrderByWithRelationInput
     viral_sessions?: viral_sessionsOrderByWithRelationInput
   }
@@ -59644,24 +59644,24 @@ export namespace Prisma {
     concept_id?: StringFilter<"viral_drafts"> | string
     title?: StringFilter<"viral_drafts"> | string
     content?: StringFilter<"viral_drafts"> | string
-    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
-    is_edited?: BoolFilter<"viral_drafts"> | boolean
-    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     hashtags?: StringNullableListFilter<"viral_drafts">
     visual_note?: StringNullableFilter<"viral_drafts"> | string | null
     status?: StringFilter<"viral_drafts"> | string
     scheduled_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     posted_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     tweet_id?: StringNullableFilter<"viral_drafts"> | string | null
-    source_tweets?: JsonNullableFilter<"viral_drafts">
-    thread_structure?: JsonNullableFilter<"viral_drafts">
-    post_history?: JsonNullableFilter<"viral_drafts">
     created_at?: DateTimeFilter<"viral_drafts"> | Date | string
     updated_at?: DateTimeFilter<"viral_drafts"> | Date | string
     character_id?: StringNullableFilter<"viral_drafts"> | string | null
     character_note?: StringNullableFilter<"viral_drafts"> | string | null
     source_url?: StringNullableFilter<"viral_drafts"> | string | null
     news_article_id?: StringNullableFilter<"viral_drafts"> | string | null
+    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
+    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
+    is_edited?: BoolFilter<"viral_drafts"> | boolean
+    post_history?: JsonNullableFilter<"viral_drafts">
+    source_tweets?: JsonNullableFilter<"viral_drafts">
+    thread_structure?: JsonNullableFilter<"viral_drafts">
     viral_draft_performance?: XOR<Viral_draft_performanceNullableScalarRelationFilter, viral_draft_performanceWhereInput> | null
     viral_sessions?: XOR<Viral_sessionsScalarRelationFilter, viral_sessionsWhereInput>
   }, "id">
@@ -59672,24 +59672,24 @@ export namespace Prisma {
     concept_id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    edited_content?: SortOrderInput | SortOrder
-    is_edited?: SortOrder
-    edited_at?: SortOrderInput | SortOrder
     hashtags?: SortOrder
     visual_note?: SortOrderInput | SortOrder
     status?: SortOrder
     scheduled_at?: SortOrderInput | SortOrder
     posted_at?: SortOrderInput | SortOrder
     tweet_id?: SortOrderInput | SortOrder
-    source_tweets?: SortOrderInput | SortOrder
-    thread_structure?: SortOrderInput | SortOrder
-    post_history?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     character_id?: SortOrderInput | SortOrder
     character_note?: SortOrderInput | SortOrder
     source_url?: SortOrderInput | SortOrder
     news_article_id?: SortOrderInput | SortOrder
+    edited_at?: SortOrderInput | SortOrder
+    edited_content?: SortOrderInput | SortOrder
+    is_edited?: SortOrder
+    post_history?: SortOrderInput | SortOrder
+    source_tweets?: SortOrderInput | SortOrder
+    thread_structure?: SortOrderInput | SortOrder
     _count?: viral_draftsCountOrderByAggregateInput
     _max?: viral_draftsMaxOrderByAggregateInput
     _min?: viral_draftsMinOrderByAggregateInput
@@ -59704,24 +59704,24 @@ export namespace Prisma {
     concept_id?: StringWithAggregatesFilter<"viral_drafts"> | string
     title?: StringWithAggregatesFilter<"viral_drafts"> | string
     content?: StringWithAggregatesFilter<"viral_drafts"> | string
-    edited_content?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
-    is_edited?: BoolWithAggregatesFilter<"viral_drafts"> | boolean
-    edited_at?: DateTimeNullableWithAggregatesFilter<"viral_drafts"> | Date | string | null
     hashtags?: StringNullableListFilter<"viral_drafts">
     visual_note?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
     status?: StringWithAggregatesFilter<"viral_drafts"> | string
     scheduled_at?: DateTimeNullableWithAggregatesFilter<"viral_drafts"> | Date | string | null
     posted_at?: DateTimeNullableWithAggregatesFilter<"viral_drafts"> | Date | string | null
     tweet_id?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
-    source_tweets?: JsonNullableWithAggregatesFilter<"viral_drafts">
-    thread_structure?: JsonNullableWithAggregatesFilter<"viral_drafts">
-    post_history?: JsonNullableWithAggregatesFilter<"viral_drafts">
     created_at?: DateTimeWithAggregatesFilter<"viral_drafts"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"viral_drafts"> | Date | string
     character_id?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
     character_note?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
     source_url?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
     news_article_id?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
+    edited_at?: DateTimeNullableWithAggregatesFilter<"viral_drafts"> | Date | string | null
+    edited_content?: StringNullableWithAggregatesFilter<"viral_drafts"> | string | null
+    is_edited?: BoolWithAggregatesFilter<"viral_drafts"> | boolean
+    post_history?: JsonNullableWithAggregatesFilter<"viral_drafts">
+    source_tweets?: JsonNullableWithAggregatesFilter<"viral_drafts">
+    thread_structure?: JsonNullableWithAggregatesFilter<"viral_drafts">
   }
 
   export type viral_opportunitiesWhereInput = {
@@ -64139,24 +64139,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceCreateNestedOneWithoutViral_draftsInput
     viral_sessions: viral_sessionsCreateNestedOneWithoutViral_draftsInput
   }
@@ -64167,24 +64167,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUncheckedCreateNestedOneWithoutViral_draftsInput
   }
 
@@ -64193,24 +64193,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUpdateOneWithoutViral_draftsNestedInput
     viral_sessions?: viral_sessionsUpdateOneRequiredWithoutViral_draftsNestedInput
   }
@@ -64221,24 +64221,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUncheckedUpdateOneWithoutViral_draftsNestedInput
   }
 
@@ -64248,24 +64248,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_draftsUpdateManyMutationInput = {
@@ -64273,24 +64273,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_draftsUncheckedUpdateManyInput = {
@@ -64299,24 +64299,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_opportunitiesCreateInput = {
@@ -67583,24 +67583,24 @@ export namespace Prisma {
     concept_id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    edited_content?: SortOrder
-    is_edited?: SortOrder
-    edited_at?: SortOrder
     hashtags?: SortOrder
     visual_note?: SortOrder
     status?: SortOrder
     scheduled_at?: SortOrder
     posted_at?: SortOrder
     tweet_id?: SortOrder
-    source_tweets?: SortOrder
-    thread_structure?: SortOrder
-    post_history?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
     character_id?: SortOrder
     character_note?: SortOrder
     source_url?: SortOrder
     news_article_id?: SortOrder
+    edited_at?: SortOrder
+    edited_content?: SortOrder
+    is_edited?: SortOrder
+    post_history?: SortOrder
+    source_tweets?: SortOrder
+    thread_structure?: SortOrder
   }
 
   export type viral_draftsMaxOrderByAggregateInput = {
@@ -67609,9 +67609,6 @@ export namespace Prisma {
     concept_id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    edited_content?: SortOrder
-    is_edited?: SortOrder
-    edited_at?: SortOrder
     visual_note?: SortOrder
     status?: SortOrder
     scheduled_at?: SortOrder
@@ -67623,6 +67620,9 @@ export namespace Prisma {
     character_note?: SortOrder
     source_url?: SortOrder
     news_article_id?: SortOrder
+    edited_at?: SortOrder
+    edited_content?: SortOrder
+    is_edited?: SortOrder
   }
 
   export type viral_draftsMinOrderByAggregateInput = {
@@ -67631,9 +67631,6 @@ export namespace Prisma {
     concept_id?: SortOrder
     title?: SortOrder
     content?: SortOrder
-    edited_content?: SortOrder
-    is_edited?: SortOrder
-    edited_at?: SortOrder
     visual_note?: SortOrder
     status?: SortOrder
     scheduled_at?: SortOrder
@@ -67645,6 +67642,9 @@ export namespace Prisma {
     character_note?: SortOrder
     source_url?: SortOrder
     news_article_id?: SortOrder
+    edited_at?: SortOrder
+    edited_content?: SortOrder
+    is_edited?: SortOrder
   }
 
   export type Viral_postsListRelationFilter = {
@@ -72076,24 +72076,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_sessions: viral_sessionsCreateNestedOneWithoutViral_draftsInput
   }
 
@@ -72103,24 +72103,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_draftsCreateOrConnectWithoutViral_draft_performanceInput = {
@@ -72144,24 +72144,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_sessions?: viral_sessionsUpdateOneRequiredWithoutViral_draftsNestedInput
   }
 
@@ -72171,24 +72171,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_draft_performanceCreateWithoutViral_draftsInput = {
@@ -72708,24 +72708,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceCreateNestedOneWithoutViral_draftsInput
   }
 
@@ -72734,24 +72734,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUncheckedCreateNestedOneWithoutViral_draftsInput
   }
 
@@ -72790,24 +72790,24 @@ export namespace Prisma {
     concept_id?: StringFilter<"viral_drafts"> | string
     title?: StringFilter<"viral_drafts"> | string
     content?: StringFilter<"viral_drafts"> | string
-    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
-    is_edited?: BoolFilter<"viral_drafts"> | boolean
-    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     hashtags?: StringNullableListFilter<"viral_drafts">
     visual_note?: StringNullableFilter<"viral_drafts"> | string | null
     status?: StringFilter<"viral_drafts"> | string
     scheduled_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     posted_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
     tweet_id?: StringNullableFilter<"viral_drafts"> | string | null
-    source_tweets?: JsonNullableFilter<"viral_drafts">
-    thread_structure?: JsonNullableFilter<"viral_drafts">
-    post_history?: JsonNullableFilter<"viral_drafts">
     created_at?: DateTimeFilter<"viral_drafts"> | Date | string
     updated_at?: DateTimeFilter<"viral_drafts"> | Date | string
     character_id?: StringNullableFilter<"viral_drafts"> | string | null
     character_note?: StringNullableFilter<"viral_drafts"> | string | null
     source_url?: StringNullableFilter<"viral_drafts"> | string | null
     news_article_id?: StringNullableFilter<"viral_drafts"> | string | null
+    edited_at?: DateTimeNullableFilter<"viral_drafts"> | Date | string | null
+    edited_content?: StringNullableFilter<"viral_drafts"> | string | null
+    is_edited?: BoolFilter<"viral_drafts"> | boolean
+    post_history?: JsonNullableFilter<"viral_drafts">
+    source_tweets?: JsonNullableFilter<"viral_drafts">
+    thread_structure?: JsonNullableFilter<"viral_drafts">
   }
 
   export type watchlist_usersCreateWithoutWatchlist_tweetsInput = {
@@ -73919,24 +73919,24 @@ export namespace Prisma {
     concept_id: string
     title: string
     content: string
-    edited_content?: string | null
-    is_edited?: boolean
-    edited_at?: Date | string | null
     hashtags?: viral_draftsCreatehashtagsInput | string[]
     visual_note?: string | null
     status?: string
     scheduled_at?: Date | string | null
     posted_at?: Date | string | null
     tweet_id?: string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
     character_id?: string | null
     character_note?: string | null
     source_url?: string | null
     news_article_id?: string | null
+    edited_at?: Date | string | null
+    edited_content?: string | null
+    is_edited?: boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type viral_draftsUpdateWithoutViral_sessionsInput = {
@@ -73944,24 +73944,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUpdateOneWithoutViral_draftsNestedInput
   }
 
@@ -73970,24 +73970,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
     viral_draft_performance?: viral_draft_performanceUncheckedUpdateOneWithoutViral_draftsNestedInput
   }
 
@@ -73996,24 +73996,24 @@ export namespace Prisma {
     concept_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
-    is_edited?: BoolFieldUpdateOperationsInput | boolean
-    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     hashtags?: viral_draftsUpdatehashtagsInput | string[]
     visual_note?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     posted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tweet_id?: NullableStringFieldUpdateOperationsInput | string | null
-    source_tweets?: NullableJsonNullValueInput | InputJsonValue
-    thread_structure?: NullableJsonNullValueInput | InputJsonValue
-    post_history?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     character_id?: NullableStringFieldUpdateOperationsInput | string | null
     character_note?: NullableStringFieldUpdateOperationsInput | string | null
     source_url?: NullableStringFieldUpdateOperationsInput | string | null
     news_article_id?: NullableStringFieldUpdateOperationsInput | string | null
+    edited_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    edited_content?: NullableStringFieldUpdateOperationsInput | string | null
+    is_edited?: BoolFieldUpdateOperationsInput | boolean
+    post_history?: NullableJsonNullValueInput | InputJsonValue
+    source_tweets?: NullableJsonNullValueInput | InputJsonValue
+    thread_structure?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type watchlist_tweetsCreateManyWatchlist_usersInput = {
