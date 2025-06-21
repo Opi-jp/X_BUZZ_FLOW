@@ -124,7 +124,7 @@ export function formatSourceTweet(
   isThread: boolean = false
 ): string {
   if (sources.length === 0) {
-    return "💡 最新情報はPerplexity AIで収集・分析しています\n\n#AI分析 #最新ニュース"
+    return "📚 参考情報\n\n最新の情報源から収集・分析しています\n\n#AI分析 #最新ニュース"
   }
   
   // スレッドの2番目の投稿であることを明示
