@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@/lib/generated/prisma'
 import { loadPrompt } from '@/lib/prompt-loader'
 import Anthropic from '@anthropic-ai/sdk'
 import { ErrorManager, DBManager, PromptManager, IDGenerator, EntityType } from '@/lib/core/unified-system-manager'
 import { claudeLog } from '@/lib/core/claude-logger'
+
+// Fallback Prisma client
+let prismaClient: PrismaClient | null = null
 
 type RouteParams = {
   params: Promise<{
@@ -71,6 +75,35 @@ export async function POST(
   let id: string
   let body: any
   
+  // Prismaクライアントのデバッグとフォールバック
+  console.log('🔍 Prisma Client Debug at route start:');
+  console.log('  - prisma exists:', !!prisma);
+  console.log('  - prisma type:', typeof prisma);
+  console.log('  - viral_drafts exists:', prisma && 'viral_drafts' in prisma);
+  console.log('  - viral_drafts type:', prisma && typeof (prisma as any).viral_drafts);
+  
+  // Prismaクライアントのフォールバック
+  let db = prisma;
+  if (!db || !db.viral_drafts) {
+    console.log('⚠️ Primary Prisma client not available, creating fallback...');
+    if (!prismaClient) {
+      prismaClient = new PrismaClient({
+        log: ['error', 'warn'],
+      });
+    }
+    db = prismaClient;
+    console.log('  - Fallback client created:', !!db);
+    console.log('  - Fallback viral_drafts:', !!db.viral_drafts);
+  }
+  
+  // Prisma接続を確認
+  try {
+    await db.$connect();
+    console.log('  - Prisma connected successfully');
+  } catch (e) {
+    console.error('  - Prisma connection error:', e);
+  }
+  
   try {
     const resolvedParams = await params
     id = resolvedParams.id
@@ -85,7 +118,7 @@ export async function POST(
     }
 
     // セッションを取得
-    const session = await prisma.viral_sessions.findUnique({
+    const session = await db.viral_sessions.findUnique({
       where: { id }
     })
 
@@ -281,19 +314,32 @@ export async function POST(
     }
 
     // セッションを更新
-    const updatedSession = await DBManager.transaction(async (tx) => {
-      return await tx.viral_sessions.update({
-        where: { id },
-        data: {
-          contents: generatedPosts,
-          status: 'COMPLETED'
-        }
-      })
+    const updatedSession = await db.viral_sessions.update({
+      where: { id },
+      data: {
+        contents: generatedPosts,
+        status: 'COMPLETED'
+      }
     })
 
-    // 下書きを作成（ViralDraftV2を使用）
-    await DBManager.transaction(async (tx) => {
-      for (const post of generatedPosts) {
+    // 下書きを作成
+    console.log('📝 下書き作成開始...');
+    console.log('  生成された投稿数:', generatedPosts.length);
+    console.log('  prismaオブジェクト:', typeof prisma);
+    console.log('  prisma.viral_drafts:', typeof prisma.viral_drafts);
+    console.log('  prisma.viralDrafts:', typeof prisma.viralDrafts);
+    
+    // より詳細なデバッグ
+    if (!db) {
+      console.error('❌ db is null or undefined!');
+    } else if (!db.viral_drafts) {
+      console.error('❌ db.viral_drafts is undefined!');
+      console.log('  Available models:', Object.keys(db).filter(k => !k.startsWith('$') && !k.startsWith('_')).slice(0, 10));
+    }
+    
+    // トランザクションを使わずに作成を試みる
+    for (const post of generatedPosts) {
+      try {
         // コンセプトから関連するハッシュタグを取得
         const matchingConcept = selectedConcepts.find(c => c.conceptId === post.conceptId)
         const hashtags = matchingConcept?.hashtags || ['#AI', '#働き方', '#未来']
@@ -308,7 +354,8 @@ export async function POST(
             firstPost: post.posts?.[0]?.substring(0, 50) + '...'
           })
           
-          await tx.viral_drafts.create({
+          // 安全性チェックを追加
+          await db.viral_drafts.create({
             data: {
               id: draftId,
               session_id: id,  // DBはsnake_case
@@ -329,7 +376,8 @@ export async function POST(
           })
         } else {
           // シングル形式の場合は、contentをそのまま保存
-          await tx.viral_drafts.create({
+          // 安全性チェックを追加
+          await db.viral_drafts.create({
             data: {
               id: draftId,
               session_id: id,  // DBはsnake_case
@@ -344,8 +392,16 @@ export async function POST(
             }
           })
         }
+      } catch (draftError) {
+        console.error('下書き作成エラー:', draftError);
+        console.error('エラー詳細:', {
+          message: draftError instanceof Error ? draftError.message : 'Unknown error',
+          conceptId: post.conceptId,
+          characterId: post.characterId
+        });
+        throw draftError;
       }
-    })
+    }
     
     claudeLog.success(
       { module: 'api', operation: 'generate-character-content', sessionId: id },

@@ -86,8 +86,21 @@ async function testCompleteFlow() {
     
     // 6. Twitter投稿
     console.log('\n📤 Step 6: Twitter投稿');
-    const content = JSON.parse(draft.content);
-    const tweetText = content.posts[0] + '\n\n' + draft.hashtags.join(' ');
+    let tweetText;
+    
+    // contentがJSONかどうかチェック
+    try {
+      const content = JSON.parse(draft.content);
+      tweetText = content.posts ? content.posts[0] : content.text;
+    } catch (e) {
+      // JSONでない場合は直接使用
+      tweetText = draft.content;
+    }
+    
+    // ハッシュタグを追加
+    if (draft.hashtags && draft.hashtags.length > 0) {
+      tweetText = tweetText + '\n\n' + draft.hashtags.join(' ');
+    }
     
     console.log('投稿内容:');
     console.log('---');
