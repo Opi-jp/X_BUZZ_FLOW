@@ -106,14 +106,19 @@ function extractSourcesFromTopics(topicsText: string): SourceInfo[] {
  */
 export async function formatSourceTweetFromSession(
   sessionId: string
-): Promise<string> {
+): Promise<string | string[]> {
   const sources = await getSourcesFromSession(sessionId)
   
   if (sources.length === 0) {
     throw new Error('出典情報が見つかりません。投稿を中止します。')
   }
   
-  return formatSourceTweet(sources)
+  // 出典が1つの場合は単一のツイート、複数の場合は複数のツイート
+  if (sources.length === 1) {
+    return formatSingleSourceTweet(sources[0])
+  } else {
+    return formatMultipleSourceTweets(sources)
+  }
 }
 
 /**
@@ -178,6 +183,56 @@ function formatShortSourceTweet(sources: SourceInfo[]): string {
   // tweet += "\n💡 Perplexity AI分析"
   
   return tweet
+}
+
+/**
+ * 単一の出典情報をツイート用にフォーマット
+ */
+function formatSingleSourceTweet(source: SourceInfo): string {
+  const metadata = source.date 
+    ? `${source.source} (${source.date})` 
+    : source.source
+    
+  return `📚 出典情報
+
+${source.title}
+${metadata}
+
+🔗 ${source.url}
+
+#信頼性 #ソース`
+}
+
+/**
+ * 複数の出典情報を複数のツイートにフォーマット
+ */
+function formatMultipleSourceTweets(sources: SourceInfo[]): string[] {
+  const tweets: string[] = []
+  
+  // 最初のツイートは導入
+  tweets.push(`📚 出典情報（${sources.length}件）
+
+以下、今回の分析で参照した情報源です。
+
+#信頼性 #ソース`)
+  
+  // 各出典を個別のツイートに
+  sources.forEach((source, index) => {
+    const metadata = source.date 
+      ? `${source.source} (${source.date})` 
+      : source.source
+      
+    const tweet = `【出典 ${index + 1}/${sources.length}】
+
+${source.title}
+${metadata}
+
+🔗 ${source.url}`
+    
+    tweets.push(tweet)
+  })
+  
+  return tweets
 }
 
 /**

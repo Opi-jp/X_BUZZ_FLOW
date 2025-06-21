@@ -124,8 +124,17 @@ export async function postDraftWithEnhancement(
           console.log('Source情報:', sourceInfo ? '生成成功' : '生成失敗')
           
           if (sourceInfo) {
-            tweets.push(sourceInfo)
-            sourcePosition = tweets.length - 1
+            // sourceInfoが文字列の場合は単一の出典、配列の場合は複数の出典
+            if (typeof sourceInfo === 'string') {
+              tweets.push(sourceInfo)
+              sourcePosition = tweets.length - 1
+            } else if (Array.isArray(sourceInfo)) {
+              // 複数の出典ツイートを追加
+              const startPosition = tweets.length
+              tweets.push(...sourceInfo)
+              sourcePosition = startPosition // 最初の出典ツイートの位置を記録
+              console.log(`📚 複数の出典情報: ${sourceInfo.length}件のツイートを追加`)
+            }
           }
         } catch (sourceError) {
           // 出典情報がない場合はエラーをスロー
