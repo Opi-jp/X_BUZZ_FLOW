@@ -1,0 +1,13 @@
+{
+  "lastBuildTime": "2025-06-21T13:54:13.712Z",
+  "lastBuildSuccess": false,
+  "lastBuildDuration": 13248,
+  "errors": [
+    {
+      "message": "Failed to compile",
+      "type": "build"
+    }
+  ],
+  "warnings": [],
+  "consecutiveFailures": 1
+}

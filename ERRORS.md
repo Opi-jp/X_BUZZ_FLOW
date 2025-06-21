@@ -12966,6 +12966,38 @@ Next.js 15のSSR/CSR bailout仕様変更
 
 ---
 
+
+## 🔴 updated_at does not exist
+
+**カテゴリ**: Other | **タグ**: uncategorized
+**記録日時**: 2025/6/21 22:52:58
+
+
+### 症状
+```
+viral_sessionsテーブルにupdated_atフィールドが存在しない
+```
+
+### 再現手順
+
+
+### 試した解決策
+
+
+### 実際の解決策
+
+updated_atを削除するか、Prismaスキーマに追加
+
+### 根本原因
+
+DB設計時にupdated_atフィールドを含めていなかった
+
+### 再発防止策
+
+
+
+---
+
 ## 📝 エラー記録方法
 
 新しいエラーが発生したら：
