@@ -23,6 +23,7 @@ import { FlowSession } from '@/lib/flow/types'
 import { transformSessionForFrontend, ViralSessionDB } from '@/lib/flow/db-types'
 import { JSTClock } from '@/components/flow/JSTClock'
 import { useFlowProgress } from '@/lib/hooks/useFlowProgress'
+import { useDBFlowSession } from '@/lib/hooks/use-db-flow-session'
 
 // Phase別のローディング表示
 const PHASE_LOADING_MESSAGES: Record<number, { message: string; submessage: string }> = {
@@ -41,6 +42,14 @@ export default function NewFlowPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [apiLoading, setApiLoading] = useState(false)
+  
+  // DB主導フック（段階的移行のため追加）
+  const { 
+    session: dbSessionData, 
+    loading: dbLoading, 
+    error: dbError,
+    refresh: refreshDBSession 
+  } = useDBFlowSession(flowId)
   
   // DBからのデータ
   const [dbData, setDbData] = useState<any>(null)
@@ -78,39 +87,50 @@ export default function NewFlowPage() {
 
   const initializeSession = async () => {
     try {
-      const response = await fetch(`/api/create/flow/${flowId}/status`)
-      if (!response.ok) throw new Error('セッション取得失敗')
-      
-      const dbSession: ViralSessionDB = await response.json()
-      setDbData(dbSession)
-      
-      // DBセッションをフロントエンド形式に変換
-      const frontendData = transformSessionForFrontend(dbSession)
-      
-      // FlowSession形式に変換
-      let session = loadSessionFromStorage(flowId)
-      if (!session) {
-        session = createFlowSession(
-          dbSession.theme,
-          dbSession.platform,
-          dbSession.style,
-          'single'
-        )
-        session.id = flowId
-        updateSessionStepsFromDB(session, dbSession)
+      // DB主導フックを使用（既にデータが取得されている場合）
+      if (dbSessionData) {
+        setDbData(dbSessionData)
+        
+        // DBセッションをフロントエンド形式に変換
+        const frontendData = transformSessionForFrontend(dbSessionData)
+        
+        // FlowSession形式に変換
+        let session = loadSessionFromStorage(flowId)
+        if (!session) {
+          session = createFlowSession(
+            dbSessionData.theme,
+            dbSessionData.platform,
+            dbSessionData.style,
+            'single'
+          )
+          session.id = flowId
+          updateSessionStepsFromDB(session, dbSessionData)
+        }
+        
+        const manager = new FlowManager(session)
+        setFlowManager(manager)
+        setFlowSession(session)
+        
+        if (dbSessionData.selected_ids?.length > 0) {
+          setSelectedConcepts(dbSessionData.selected_ids)
+        }
+        
+        setLoading(false)
+        checkAndExecuteAutoStep(manager)
+      } else {
+        // DBからデータが取得できない場合はLocalStorageから読み込み（後方互換性）
+        const storedSession = loadSessionFromStorage(flowId)
+        if (storedSession) {
+          const manager = new FlowManager(storedSession)
+          setFlowManager(manager)
+          setFlowSession(storedSession)
+          setLoading(false)
+          checkAndExecuteAutoStep(manager)
+        } else {
+          setError('セッションが見つかりません')
+          setLoading(false)
+        }
       }
-      
-      const manager = new FlowManager(session)
-      setFlowManager(manager)
-      setFlowSession(session)
-      
-      if (dbSession.selected_ids?.length > 0) {
-        setSelectedConcepts(dbSession.selected_ids)
-      }
-      
-      setLoading(false)
-      checkAndExecuteAutoStep(manager)
-      
     } catch (err) {
       setError('セッションの初期化に失敗しました')
       setLoading(false)
@@ -187,6 +207,28 @@ export default function NewFlowPage() {
   }
 
   // ステップ実行
+  // DBセッションの更新
+  const updateDBSession = async (updates: Partial<ViralSessionDB>) => {
+    if (!flowId || flowId === 'new') return
+    
+    try {
+      const response = await fetch(`/api/create/flow/${flowId}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      })
+      
+      if (!response.ok) {
+        console.error('Failed to update DB session')
+      } else {
+        // DB更新後にセッションを再取得
+        await refreshDBSession()
+      }
+    } catch (error) {
+      console.error('DB update error:', error)
+    }
+  }
+
   const executeStep = async (stepId: number) => {
     if (!flowManager) return
     
@@ -229,7 +271,22 @@ export default function NewFlowPage() {
           flowManager.proceedToNextStep()
           const updatedSession = flowManager.getSession()
           setFlowSession({...updatedSession})
-          saveSessionToStorage(updatedSession)
+          
+          // DB主導: LocalStorage保存からDB更新へ
+          if (dbSessionData) {
+            await updateDBSession({
+              current_step: updatedSession.currentStep,
+              step_status: JSON.stringify(updatedSession.steps.map(s => ({
+                id: s.id,
+                status: s.status,
+                data: s.data
+              })))
+            })
+          } else {
+            // 後方互換性のためLocalStorageも更新
+            saveSessionToStorage(updatedSession)
+          }
+          
           checkAndExecuteAutoStep(flowManager)
       }
     } catch (err) {
@@ -266,7 +323,7 @@ export default function NewFlowPage() {
   const handleThemeSubmit = async (data: { theme: string; style: string; platform: string }) => {
     if (flowId === 'new') {
       // 新規セッション作成
-      const response = await fetch('/api/create/flow', {
+      const response = await fetch('/api/create/flow/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -277,34 +334,61 @@ export default function NewFlowPage() {
         return
       }
       
-      const { sessionId } = await response.json()
-      router.push(`/create/flow/${sessionId}`)
+      const { id } = await response.json()
+      router.push(`/create/flow/${id}`)
     } else {
       // 既存セッションの更新
       flowManager?.proceedToNextStep(data)
       setFlowSession({...flowManager!.getSession()})
+      
+      // DBセッションを更新
+      await updateDBSession({
+        theme: data.theme,
+        style: data.style,
+        platform: data.platform
+      })
+      
       executeStep(2)
     }
   }
 
-  const handleConceptSelection = (selectedIds: string[]) => {
+  const handleConceptSelection = async (selectedIds: string[]) => {
     setSelectedConcepts(selectedIds)
     flowManager?.proceedToNextStep({ selectedIds })
     setFlowSession({...flowManager!.getSession()})
+    
+    // DBセッションを更新
+    await updateDBSession({
+      selected_ids: selectedIds
+    })
+    
     executeStep(11)
   }
 
-  const handleCharacterSelection = (characterId: string, format: 'single' | 'thread') => {
+  const handleCharacterSelection = async (characterId: string, format: 'single' | 'thread') => {
     setSelectedCharacter(characterId)
     setPostFormat(format)
     flowManager?.proceedToNextStep({ characterId, postFormat: format })
     setFlowSession({...flowManager!.getSession()})
+    
+    // DBセッションを更新
+    await updateDBSession({
+      character_profile_id: characterId,
+      post_format: format
+    })
+    
     executeStep(12)
   }
 
-  const handleContentConfirm = () => {
+  const handleContentConfirm = async () => {
     flowManager?.proceedToNextStep()
     setFlowSession({...flowManager!.getSession()})
+    
+    // DBセッションのステータスを更新
+    await updateDBSession({
+      status: 'DRAFTS_CREATED'
+    })
+    
     executeStep(15)
   }
 
@@ -317,12 +401,26 @@ export default function NewFlowPage() {
     executeStep(currentStep.id)
   }
 
-  const handleBack = () => {
+  const handleBack = async () => {
     if (!flowManager) return
     flowManager.goToPreviousStep()
     const updatedSession = flowManager.getSession()
     setFlowSession({...updatedSession})
-    saveSessionToStorage(updatedSession)
+    
+    // DB主導: LocalStorage保存からDB更新へ
+    if (dbSessionData) {
+      await updateDBSession({
+        current_step: updatedSession.currentStep,
+        step_status: JSON.stringify(updatedSession.steps.map(s => ({
+          id: s.id,
+          status: s.status,
+          data: s.data
+        })))
+      })
+    } else {
+      // 後方互換性のためLocalStorageも更新
+      saveSessionToStorage(updatedSession)
+    }
   }
 
   // レンダリング

@@ -1,22 +1,22 @@
 {
-  "timestamp": "2025-06-21T11:16:05.762Z",
+  "timestamp": "2025-06-21T14:37:51.123Z",
   "summary": {
     "implementation": {
-      "usedModels": 51,
-      "usedOperations": 51,
-      "usedFields": 76
+      "usedModels": 46,
+      "usedOperations": 46,
+      "usedFields": 75
     },
     "schema": {
       "models": 43,
       "enums": 9,
-      "totalFields": 617
+      "totalFields": 620
     },
     "database": {
       "tables": 44,
       "types": 9
     },
     "sync": {
-      "issues": 8,
+      "issues": 3,
       "warnings": 1
     }
   },
@@ -24,26 +24,8 @@
     {
       "layer": "implementation-schema",
       "type": "MISSING_IN_SCHEMA",
-      "model": "viral_drafts_v2",
-      "message": "実装で使用されているモデル 'viral_drafts_v2' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
       "model": "newsArticle",
       "message": "実装で使用されているモデル 'newsArticle' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "viralSession",
-      "message": "実装で使用されているモデル 'viralSession' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "viralDraftV2",
-      "message": "実装で使用されているモデル 'viralDraftV2' がスキーマに存在しません"
     },
     {
       "layer": "implementation-schema",
@@ -56,18 +38,6 @@
       "type": "MISSING_IN_SCHEMA",
       "model": "client",
       "message": "実装で使用されているモデル 'client' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "scheduledPost",
-      "message": "実装で使用されているモデル 'scheduledPost' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "scheduledRetweet",
-      "message": "実装で使用されているモデル 'scheduledRetweet' がスキーマに存在しません"
     }
   ],
   "warnings": [
@@ -98,39 +68,20 @@
         "newsArticle",
         "characterId",
         "characterCount",
-        "sessionType",
-        "activityType",
         "originalError",
-        "errorDetails",
-        "timestamp",
         "not",
-        "performance",
         "OR",
-        "engagements30m",
-        "session",
         "contains",
-        "postedAt",
-        "lte",
-        "scheduledAt",
-        "originalPostId",
-        "rtStrategy",
-        "addComment",
-        "commentText",
-        "viralDraftId"
+        "lte"
       ],
       "message": "実装で使用されているフィールドの一部がスキーマで確認できません"
     }
   ],
   "details": {
     "missingModels": [
-      "viral_drafts_v2",
       "newsArticle",
-      "viralSession",
-      "viralDraftV2",
       "user",
-      "client",
-      "scheduledPost",
-      "scheduledRetweet"
+      "client"
     ],
     "missingTables": [],
     "unusedModels": []

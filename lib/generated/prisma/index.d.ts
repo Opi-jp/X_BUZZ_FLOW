@@ -51682,8 +51682,18 @@ export namespace Prisma {
 
   export type AggregateViral_sessions = {
     _count: Viral_sessionsCountAggregateOutputType | null
+    _avg: Viral_sessionsAvgAggregateOutputType | null
+    _sum: Viral_sessionsSumAggregateOutputType | null
     _min: Viral_sessionsMinAggregateOutputType | null
     _max: Viral_sessionsMaxAggregateOutputType | null
+  }
+
+  export type Viral_sessionsAvgAggregateOutputType = {
+    current_step: number | null
+  }
+
+  export type Viral_sessionsSumAggregateOutputType = {
+    current_step: number | null
   }
 
   export type Viral_sessionsMinAggregateOutputType = {
@@ -51695,6 +51705,8 @@ export namespace Prisma {
     created_at: Date | null
     character_profile_id: string | null
     voice_style_mode: string | null
+    current_step: number | null
+    post_format: string | null
   }
 
   export type Viral_sessionsMaxAggregateOutputType = {
@@ -51706,6 +51718,8 @@ export namespace Prisma {
     created_at: Date | null
     character_profile_id: string | null
     voice_style_mode: string | null
+    current_step: number | null
+    post_format: string | null
   }
 
   export type Viral_sessionsCountAggregateOutputType = {
@@ -51721,9 +51735,20 @@ export namespace Prisma {
     contents: number
     character_profile_id: number
     voice_style_mode: number
+    current_step: number
+    step_status: number
+    post_format: number
     _all: number
   }
 
+
+  export type Viral_sessionsAvgAggregateInputType = {
+    current_step?: true
+  }
+
+  export type Viral_sessionsSumAggregateInputType = {
+    current_step?: true
+  }
 
   export type Viral_sessionsMinAggregateInputType = {
     id?: true
@@ -51734,6 +51759,8 @@ export namespace Prisma {
     created_at?: true
     character_profile_id?: true
     voice_style_mode?: true
+    current_step?: true
+    post_format?: true
   }
 
   export type Viral_sessionsMaxAggregateInputType = {
@@ -51745,6 +51772,8 @@ export namespace Prisma {
     created_at?: true
     character_profile_id?: true
     voice_style_mode?: true
+    current_step?: true
+    post_format?: true
   }
 
   export type Viral_sessionsCountAggregateInputType = {
@@ -51760,6 +51789,9 @@ export namespace Prisma {
     contents?: true
     character_profile_id?: true
     voice_style_mode?: true
+    current_step?: true
+    step_status?: true
+    post_format?: true
     _all?: true
   }
 
@@ -51801,6 +51833,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: Viral_sessionsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Viral_sessionsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: Viral_sessionsMinAggregateInputType
@@ -51831,6 +51875,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Viral_sessionsCountAggregateInputType | true
+    _avg?: Viral_sessionsAvgAggregateInputType
+    _sum?: Viral_sessionsSumAggregateInputType
     _min?: Viral_sessionsMinAggregateInputType
     _max?: Viral_sessionsMaxAggregateInputType
   }
@@ -51848,7 +51894,12 @@ export namespace Prisma {
     contents: JsonValue | null
     character_profile_id: string | null
     voice_style_mode: string | null
+    current_step: number | null
+    step_status: JsonValue | null
+    post_format: string | null
     _count: Viral_sessionsCountAggregateOutputType | null
+    _avg: Viral_sessionsAvgAggregateOutputType | null
+    _sum: Viral_sessionsSumAggregateOutputType | null
     _min: Viral_sessionsMinAggregateOutputType | null
     _max: Viral_sessionsMaxAggregateOutputType | null
   }
@@ -51880,6 +51931,9 @@ export namespace Prisma {
     contents?: boolean
     character_profile_id?: boolean
     voice_style_mode?: boolean
+    current_step?: boolean
+    step_status?: boolean
+    post_format?: boolean
     viral_drafts?: boolean | viral_sessions$viral_draftsArgs<ExtArgs>
     _count?: boolean | Viral_sessionsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["viral_sessions"]>
@@ -51897,6 +51951,9 @@ export namespace Prisma {
     contents?: boolean
     character_profile_id?: boolean
     voice_style_mode?: boolean
+    current_step?: boolean
+    step_status?: boolean
+    post_format?: boolean
   }, ExtArgs["result"]["viral_sessions"]>
 
   export type viral_sessionsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -51912,6 +51969,9 @@ export namespace Prisma {
     contents?: boolean
     character_profile_id?: boolean
     voice_style_mode?: boolean
+    current_step?: boolean
+    step_status?: boolean
+    post_format?: boolean
   }, ExtArgs["result"]["viral_sessions"]>
 
   export type viral_sessionsSelectScalar = {
@@ -51927,9 +51987,12 @@ export namespace Prisma {
     contents?: boolean
     character_profile_id?: boolean
     voice_style_mode?: boolean
+    current_step?: boolean
+    step_status?: boolean
+    post_format?: boolean
   }
 
-  export type viral_sessionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "theme" | "platform" | "style" | "status" | "created_at" | "topics" | "concepts" | "selected_ids" | "contents" | "character_profile_id" | "voice_style_mode", ExtArgs["result"]["viral_sessions"]>
+  export type viral_sessionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "theme" | "platform" | "style" | "status" | "created_at" | "topics" | "concepts" | "selected_ids" | "contents" | "character_profile_id" | "voice_style_mode" | "current_step" | "step_status" | "post_format", ExtArgs["result"]["viral_sessions"]>
   export type viral_sessionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     viral_drafts?: boolean | viral_sessions$viral_draftsArgs<ExtArgs>
     _count?: boolean | Viral_sessionsCountOutputTypeDefaultArgs<ExtArgs>
@@ -51955,6 +52018,9 @@ export namespace Prisma {
       contents: Prisma.JsonValue | null
       character_profile_id: string | null
       voice_style_mode: string | null
+      current_step: number | null
+      step_status: Prisma.JsonValue | null
+      post_format: string | null
     }, ExtArgs["result"]["viral_sessions"]>
     composites: {}
   }
@@ -52391,6 +52457,9 @@ export namespace Prisma {
     readonly contents: FieldRef<"viral_sessions", 'Json'>
     readonly character_profile_id: FieldRef<"viral_sessions", 'String'>
     readonly voice_style_mode: FieldRef<"viral_sessions", 'String'>
+    readonly current_step: FieldRef<"viral_sessions", 'Int'>
+    readonly step_status: FieldRef<"viral_sessions", 'Json'>
+    readonly post_format: FieldRef<"viral_sessions", 'String'>
   }
     
 
@@ -56038,7 +56107,10 @@ export namespace Prisma {
     selected_ids: 'selected_ids',
     contents: 'contents',
     character_profile_id: 'character_profile_id',
-    voice_style_mode: 'voice_style_mode'
+    voice_style_mode: 'voice_style_mode',
+    current_step: 'current_step',
+    step_status: 'step_status',
+    post_format: 'post_format'
   };
 
   export type Viral_sessionsScalarFieldEnum = (typeof Viral_sessionsScalarFieldEnum)[keyof typeof Viral_sessionsScalarFieldEnum]
@@ -60062,6 +60134,9 @@ export namespace Prisma {
     contents?: JsonNullableFilter<"viral_sessions">
     character_profile_id?: StringNullableFilter<"viral_sessions"> | string | null
     voice_style_mode?: StringNullableFilter<"viral_sessions"> | string | null
+    current_step?: IntNullableFilter<"viral_sessions"> | number | null
+    step_status?: JsonNullableFilter<"viral_sessions">
+    post_format?: StringNullableFilter<"viral_sessions"> | string | null
     viral_drafts?: Viral_draftsListRelationFilter
   }
 
@@ -60078,6 +60153,9 @@ export namespace Prisma {
     contents?: SortOrderInput | SortOrder
     character_profile_id?: SortOrderInput | SortOrder
     voice_style_mode?: SortOrderInput | SortOrder
+    current_step?: SortOrderInput | SortOrder
+    step_status?: SortOrderInput | SortOrder
+    post_format?: SortOrderInput | SortOrder
     viral_drafts?: viral_draftsOrderByRelationAggregateInput
   }
 
@@ -60097,6 +60175,9 @@ export namespace Prisma {
     contents?: JsonNullableFilter<"viral_sessions">
     character_profile_id?: StringNullableFilter<"viral_sessions"> | string | null
     voice_style_mode?: StringNullableFilter<"viral_sessions"> | string | null
+    current_step?: IntNullableFilter<"viral_sessions"> | number | null
+    step_status?: JsonNullableFilter<"viral_sessions">
+    post_format?: StringNullableFilter<"viral_sessions"> | string | null
     viral_drafts?: Viral_draftsListRelationFilter
   }, "id">
 
@@ -60113,9 +60194,14 @@ export namespace Prisma {
     contents?: SortOrderInput | SortOrder
     character_profile_id?: SortOrderInput | SortOrder
     voice_style_mode?: SortOrderInput | SortOrder
+    current_step?: SortOrderInput | SortOrder
+    step_status?: SortOrderInput | SortOrder
+    post_format?: SortOrderInput | SortOrder
     _count?: viral_sessionsCountOrderByAggregateInput
+    _avg?: viral_sessionsAvgOrderByAggregateInput
     _max?: viral_sessionsMaxOrderByAggregateInput
     _min?: viral_sessionsMinOrderByAggregateInput
+    _sum?: viral_sessionsSumOrderByAggregateInput
   }
 
   export type viral_sessionsScalarWhereWithAggregatesInput = {
@@ -60134,6 +60220,9 @@ export namespace Prisma {
     contents?: JsonNullableWithAggregatesFilter<"viral_sessions">
     character_profile_id?: StringNullableWithAggregatesFilter<"viral_sessions"> | string | null
     voice_style_mode?: StringNullableWithAggregatesFilter<"viral_sessions"> | string | null
+    current_step?: IntNullableWithAggregatesFilter<"viral_sessions"> | number | null
+    step_status?: JsonNullableWithAggregatesFilter<"viral_sessions">
+    post_format?: StringNullableWithAggregatesFilter<"viral_sessions"> | string | null
   }
 
   export type watchlist_tweetsWhereInput = {
@@ -64716,6 +64805,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: string | null
     voice_style_mode?: string | null
+    current_step?: number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: string | null
     viral_drafts?: viral_draftsCreateNestedManyWithoutViral_sessionsInput
   }
 
@@ -64732,6 +64824,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: string | null
     voice_style_mode?: string | null
+    current_step?: number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: string | null
     viral_drafts?: viral_draftsUncheckedCreateNestedManyWithoutViral_sessionsInput
   }
 
@@ -64748,6 +64843,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
     viral_drafts?: viral_draftsUpdateManyWithoutViral_sessionsNestedInput
   }
 
@@ -64764,6 +64862,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
     viral_drafts?: viral_draftsUncheckedUpdateManyWithoutViral_sessionsNestedInput
   }
 
@@ -64780,6 +64881,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: string | null
     voice_style_mode?: string | null
+    current_step?: number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: string | null
   }
 
   export type viral_sessionsUpdateManyMutationInput = {
@@ -64795,6 +64899,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type viral_sessionsUncheckedUpdateManyInput = {
@@ -64810,6 +64917,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type watchlist_tweetsCreateInput = {
@@ -67895,6 +68005,13 @@ export namespace Prisma {
     contents?: SortOrder
     character_profile_id?: SortOrder
     voice_style_mode?: SortOrder
+    current_step?: SortOrder
+    step_status?: SortOrder
+    post_format?: SortOrder
+  }
+
+  export type viral_sessionsAvgOrderByAggregateInput = {
+    current_step?: SortOrder
   }
 
   export type viral_sessionsMaxOrderByAggregateInput = {
@@ -67906,6 +68023,8 @@ export namespace Prisma {
     created_at?: SortOrder
     character_profile_id?: SortOrder
     voice_style_mode?: SortOrder
+    current_step?: SortOrder
+    post_format?: SortOrder
   }
 
   export type viral_sessionsMinOrderByAggregateInput = {
@@ -67917,6 +68036,12 @@ export namespace Prisma {
     created_at?: SortOrder
     character_profile_id?: SortOrder
     voice_style_mode?: SortOrder
+    current_step?: SortOrder
+    post_format?: SortOrder
+  }
+
+  export type viral_sessionsSumOrderByAggregateInput = {
+    current_step?: SortOrder
   }
 
   export type Watchlist_usersScalarRelationFilter = {
@@ -72249,6 +72374,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: string | null
     voice_style_mode?: string | null
+    current_step?: number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: string | null
   }
 
   export type viral_sessionsUncheckedCreateWithoutViral_draftsInput = {
@@ -72264,6 +72392,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: string | null
     voice_style_mode?: string | null
+    current_step?: number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: string | null
   }
 
   export type viral_sessionsCreateOrConnectWithoutViral_draftsInput = {
@@ -72346,6 +72477,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type viral_sessionsUncheckedUpdateWithoutViral_draftsInput = {
@@ -72361,6 +72495,9 @@ export namespace Prisma {
     contents?: NullableJsonNullValueInput | InputJsonValue
     character_profile_id?: NullableStringFieldUpdateOperationsInput | string | null
     voice_style_mode?: NullableStringFieldUpdateOperationsInput | string | null
+    current_step?: NullableIntFieldUpdateOperationsInput | number | null
+    step_status?: NullableJsonNullValueInput | InputJsonValue
+    post_format?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type viral_postsCreateWithoutViral_opportunitiesInput = {

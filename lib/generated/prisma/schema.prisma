@@ -744,6 +744,9 @@ model viral_sessions {
   contents             Json?
   character_profile_id String?
   voice_style_mode     String?
+  current_step         Int?           @default(1)
+  step_status          Json?
+  post_format          String?        @default("single")
   viral_drafts         viral_drafts[]
 
   @@index([status], map: "idx_viral_sessions_status")

@@ -74,17 +74,15 @@ export async function POST(request: Request) {
       { sessionId }
     )
 
-    // DBManagerを使用してトランザクション内でセッション作成
-    const session = await DBManager.transaction(async (tx) => {
-      return await tx.viral_sessions.create({
-        data: {
-          id: sessionId,
-          theme,
-          platform,
-          style,
-          status: 'CREATED'
-        }
-      })
+    // DBManagerを使用してセッション作成（トランザクションなしでシンプルに）
+    const session = await prisma.viral_sessions.create({
+      data: {
+        id: sessionId,
+        theme,
+        platform,
+        style,
+        status: 'CREATED'
+      }
     })
 
     claudeLog.logCreateFlow(session.id, 'CREATED', 'SUCCESS', {

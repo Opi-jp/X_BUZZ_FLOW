@@ -37,6 +37,12 @@ export async function POST(
       { updates }
     )
 
+    // 存在するフィールドのみを抽出
+    const allowedFields = ['status', 'topics', 'concepts', 'selected_ids', 'contents', 'character_profile_id', 'voice_style_mode']
+    const filteredUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([key]) => allowedFields.includes(key))
+    )
+
     // DBからセッションを更新
     const updatedSession = await DBManager.transaction(async (tx) => {
       // 現在のセッションを取得
@@ -51,7 +57,7 @@ export async function POST(
       // セッションを更新
       const updated = await tx.viral_sessions.update({
         where: { id: sessionId },
-        data: updates
+        data: filteredUpdates
       })
 
       // アクティビティログを記録
