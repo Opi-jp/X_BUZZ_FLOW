@@ -234,7 +234,7 @@ export default function DetailedCreatePage() {
       const hashtags = draft.hashtags.map((tag: string) => `#${tag.replace(/^#/, '')}`).join(' ')
       const tweetText = `${content}\n\n${hashtags}`
       
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

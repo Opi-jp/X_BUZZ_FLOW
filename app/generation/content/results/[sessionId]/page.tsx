@@ -77,7 +77,7 @@ export default function ResultPage() {
       const hashtags = ['AI時代', 'カーディダーレ']
       const tweetText = `${content}\n\n${hashtags.map(tag => `#${tag}`).join(' ')}`
       
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

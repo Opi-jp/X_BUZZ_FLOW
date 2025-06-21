@@ -53,7 +53,7 @@ export default function DraftsPage() {
       const hashtags = draft.hashtags || ['AI時代', 'X_BUZZ_FLOW']
       const text = `${content}\n\n${hashtags.map((tag: string) => `#${tag.replace(/^#/, '')}`).join(' ')}`
       
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, draftId: draft.id })

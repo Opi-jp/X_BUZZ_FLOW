@@ -58,7 +58,7 @@ export default function PostPage() {
         throw new Error(`文字数が280文字を超えています（${tweetText.length}文字）`)
       }
       
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -80,7 +80,7 @@ export function AutomationPanel() {
   const fetchAutomationData = async () => {
     try {
       // スケジュール済み投稿を取得
-      const scheduledRes = await fetch('/api/viral/v2/scheduled-posts')
+      const scheduledRes = await fetch('/api/publish/schedule/list')
       const scheduledData = await scheduledRes.json()
       setScheduledPosts(scheduledData.posts || [])
 

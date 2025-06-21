@@ -108,7 +108,7 @@ export default function DraftsPage() {
     if (!confirm('今すぐ投稿しますか？')) return
 
     try {
-      const response = await fetch('/api/publish/post/now/post/now/post/now', {
+      const response = await fetch('/api/publish/post/now', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ draftId })
