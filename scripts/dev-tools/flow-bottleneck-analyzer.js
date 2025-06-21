@@ -142,7 +142,7 @@ async function analyzeFlowBottlenecks() {
     }
 
     // Check draft posting rate
-    const drafts = await prisma.viralDraftV2.findMany({
+    const drafts = await prisma.viralDraft.findMany({
       where: { createdAt: { gte: oneDayAgo } },
       orderBy: { createdAt: 'desc' }
     });

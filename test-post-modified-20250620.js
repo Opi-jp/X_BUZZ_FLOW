@@ -7,7 +7,7 @@ async function testModifiedPost() {
     console.log('🔍 下書き投稿テスト（修正版）');
     
     // 最新の下書きを取得
-    const draft = await prisma.viral_drafts_v2.findFirst({
+    const draft = await prisma.viral_drafts.findFirst({
       where: { status: 'DRAFT' },
       orderBy: { created_at: 'desc' }
     });

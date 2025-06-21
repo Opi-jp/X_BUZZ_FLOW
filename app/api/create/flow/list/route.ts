@@ -78,9 +78,9 @@ export async function GET(request: Request) {
       take: limit,
       include: {
         _count: {
-          select: { viral_drafts_v2: true }
+          select: { viral_drafts: true }
         },
-        viral_drafts_v2: {
+        viral_drafts: {
           select: {
             id: true,
             content: true,

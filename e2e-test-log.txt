@@ -1,0 +1,44 @@
+🚀 Create→Post E2Eテスト開始
+
+📝 Step 1: セッション作成
+✅ セッション作成完了: sess_Vsp42bq1N-MO
+   テーマ: プログラミング教育の革新
+   プラットフォーム: Twitter
+   スタイル: エンターテイメント
+
+🔄 Step 2: 自動進行開始（autoProgress=true）
+
+⏳ 進行 1: 現在のステータス = CREATED
+   アクション: collecting
+   メッセージ: トピック収集を開始しました
+   ✅ トピック収集完了（4756文字）
+
+⏳ 進行 2: 現在のステータス = generating_concepts
+   アクション: generating_concepts
+   メッセージ: コンセプト生成を開始しました
+   ✅ コンセプト生成完了（1個）
+   ✅ コンセプト選択完了（0個選択）
+
+⏳ 進行 3: 現在のステータス = GENERATING_CONCEPTS
+   アクション: generating_content
+   メッセージ: 投稿を自動生成中です
+   ✅ コンテンツ生成完了
+
+⏳ 進行 4: 現在のステータス = completed
+   アクション: completed
+   メッセージ: すべての処理が完了しました
+   ✅ コンテンツ生成完了
+
+🎉 全フェーズ完了！
+
+📋 作成された下書き: 1件
+
+下書き 1:
+  タイトル: undefined
+
+❌ E2Eテスト失敗: Cannot read properties of undefined (reading 'substring')
+
+📈 テスト結果: {
+  "success": false,
+  "error": "Cannot read properties of undefined (reading 'substring')"
+}

@@ -1,16 +1,43 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
 import { TwitterApi } from 'twitter-api-v2'
+import { DBManager, ErrorManager } from '@/lib/core/unified-system-manager'
+import { prisma } from '@/lib/prisma'
+import { postDraftWithEnhancement } from '@/lib/twitter/enhanced-post-manager'
+import { postSingleTweet } from '@/lib/twitter/thread-poster'
 
 // 既存の/api/twitter/postの機能をシンプルに統合
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { text, draftId } = body
+    const { text, draftId, includeSource = true, useEditedContent } = body
 
+    // ドラフトIDがある場合は拡張投稿機能を使用
+    if (draftId) {
+      const result = await postDraftWithEnhancement(draftId, {
+        includeSource,
+        useEditedContent
+      })
+
+      if (result.success && result.threadResult) {
+        return NextResponse.json({
+          success: true,
+          id: result.threadResult.threadId,
+          url: result.threadResult.url,
+          threadIds: result.threadResult.tweetIds,
+          includesSource: result.threadResult.tweetIds.length > 1
+        })
+      } else {
+        return NextResponse.json(
+          { error: result.error || 'Failed to post draft' },
+          { status: 500 }
+        )
+      }
+    }
+
+    // テキストのみの場合は従来の処理
     if (!text) {
       return NextResponse.json(
-        { error: 'Text is required' },
+        { error: 'Text or draftId is required' },
         { status: 400 }
       )
     }
@@ -47,7 +74,7 @@ export async function POST(request: Request) {
       
       // 下書きステータス更新
       if (draftId) {
-        await prisma.viral_drafts_v2.update({
+        await prisma.viral_drafts.update({
           where: { id: draftId },
           data: {
             status: 'POSTED',
@@ -65,41 +92,15 @@ export async function POST(request: Request) {
       })
     }
 
-    // 実際の投稿
-    // 読み書き可能なクライアントを取得
-    console.log('readWriteクライアント取得...')
-    const rwClient = client.readWrite
-    console.log('readWriteクライアント取得完了:', !!rwClient)
-    console.log('v2.tweet実行中...')
-    const tweet = await rwClient.v2.tweet(text)
-    console.log('v2.tweet実行完了:', tweet.data.id)
-    
-    // Twitter APIv2では author_id が返されないため、シンプルなURL形式を使用
-    const tweetUrl = `https://twitter.com/user/status/${tweet.data.id}`
-    
-    // 下書きステータス更新
-    if (draftId) {
-      console.log('下書きステータス更新開始:', draftId)
-      try {
-        const updateResult = await prisma.viral_drafts_v2.update({
-          where: { id: draftId },
-          data: {
-            status: 'POSTED',
-            tweet_id: tweet.data.id,
-            posted_at: new Date()
-          }
-        })
-        console.log('下書きステータス更新完了:', updateResult.id)
-      } catch (dbError) {
-        console.error('DB更新エラー:', dbError)
-        // DB更新エラーでも投稿は成功しているので、成功レスポンスを返す
-      }
-    }
+    // テキストのみの投稿（Source Tree無し）
+    const result = await postSingleTweet(text, {
+      mockMode: process.env.USE_MOCK_POSTING === 'true'
+    })
     
     return NextResponse.json({
       success: true,
-      id: tweet.data.id,
-      url: tweetUrl
+      id: result.id,
+      url: result.url
     })
     
   } catch (error: any) {

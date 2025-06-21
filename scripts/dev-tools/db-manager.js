@@ -123,7 +123,7 @@ class DatabaseManager {
         news_comment_style: 'JSONB',
         topic_expertise: 'JSONB'
       },
-      viral_drafts_v2: {
+      viral_drafts: {
         source_url: 'TEXT',
         news_article_id: 'TEXT'
       },

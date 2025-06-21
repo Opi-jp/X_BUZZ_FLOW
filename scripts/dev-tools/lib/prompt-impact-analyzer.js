@@ -284,13 +284,13 @@ class PromptImpactAnalyzer {
     
     // GPT（generate-concepts）の場合
     else if (filename.includes('generate-concepts')) {
-      impact.tables.push('ViralSession', 'ViralDraftV2')
+      impact.tables.push('ViralSession', 'ViralDraft')
       impact.fields.push(
         'ViralSession.concepts',  // JSON型でコンセプト情報を格納
-        'ViralDraftV2.conceptId',
-        'ViralDraftV2.title',
-        'ViralDraftV2.hashtags',
-        'ViralDraftV2.visualNote'
+        'ViralDraft.conceptId',
+        'ViralDraft.title',
+        'ViralDraft.hashtags',
+        'ViralDraft.visualNote'
       )
       impact.warnings.push('conceptsはJSON型 - コンセプト配列（conceptId, conceptTitle, format, hookType, angle, structure等）を含む')
       impact.warnings.push('hookCombination、angleCombinationは配列型')
@@ -308,13 +308,13 @@ class PromptImpactAnalyzer {
     
     // Claude（generate-contents）の場合
     else if (filename.includes('cardi-dare') || filename.includes('character')) {
-      impact.tables.push('ViralSession', 'ViralDraftV2')
+      impact.tables.push('ViralSession', 'ViralDraft')
       impact.fields.push(
         'ViralSession.contents',  // JSON型で生成コンテンツを格納
         'ViralSession.characterProfileId',
         'ViralSession.voiceStyleMode',
-        'ViralDraftV2.content',
-        'ViralDraftV2.format'
+        'ViralDraft.content',
+        'ViralDraft.format'
       )
       impact.warnings.push('contentsはJSON型 - 生成されたコンテンツ（単独投稿またはthread形式）を格納')
       impact.warnings.push('スレッド形式の場合、post1-post5のJSON構造')
@@ -330,7 +330,7 @@ class PromptImpactAnalyzer {
       })
       impact.codeUsage.push({
         location: '/api/generation/content/drafts/route.ts',
-        usage: 'ViralDraftV2テーブルに下書きとして保存'
+        usage: 'ViralDraftテーブルに下書きとして保存'
       })
     }
     
@@ -528,8 +528,8 @@ class PromptImpactAnalyzer {
           }
         }
 
-        // ViralDraftV2テーブルもチェック
-        const drafts = await this.prisma.viralDraftV2.findMany({
+        // ViralDraftテーブルもチェック
+        const drafts = await this.prisma.viralDraft.findMany({
           take: 5,
           orderBy: { createdAt: 'desc' }
         })

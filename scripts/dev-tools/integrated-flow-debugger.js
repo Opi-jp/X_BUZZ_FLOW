@@ -104,8 +104,8 @@ class IntegratedFlowDebugger {
   async getDraftStatistics() {
     try {
       const [total, posted] = await Promise.all([
-        prisma.viralDraftV2.count(),
-        prisma.viralDraftV2.count({
+        prisma.viralDraft.count(),
+        prisma.viralDraft.count({
           where: { status: 'POSTED' }
         })
       ])

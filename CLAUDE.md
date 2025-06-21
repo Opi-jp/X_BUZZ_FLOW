@@ -1312,3 +1312,47 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
 - **selectedIds vs selected_ids**: 一部のAPIでフィールド名の不一致
 - **Twitter投稿の重複チェック**: 同一コンテンツの再投稿防止機能
 
+## 2025年6月21日の作業記録（スレッド投稿機能とviral_drafts名前変更）
+
+### 実施した作業
+
+#### 1. スレッド投稿機能の完全実装
+- **問題**: 5つの投稿が1つの投稿として扱われていた
+- **原因**: `thread_structure`フィールドが未実装
+- **解決**: 
+  - `generate/route.ts`: thread形式の場合、postsを配列として`thread_structure`に保存
+  - `enhanced-post-manager.ts`: `thread_structure`から投稿を抽出して個別にツイート
+  - 結果: 5投稿+Source Tree = 計6ツイートのスレッドが正常に投稿される
+
+#### 2. Source Tree（出典情報）の自動生成
+- **実装内容**:
+  - すべての投稿形式（single/thread）でSource Treeを追加
+  - Perplexityのtopicsデータから出典情報を生成
+  - フッターテキスト「💡 Perplexity AIで最新情報を分析」を削除
+- **データフロー**: `viral_sessions.topics` → `formatSourceTweetFromSession()` → 最後のツイート
+
+#### 3. viral_drafts_v2 → viral_draftsへの名前変更
+- **背景**: ユーザーから「V2は旧時代の名残なので削除してください」との要望
+- **実施内容**:
+  - Prismaスキーマ更新: モデル名とインデックス名を変更
+  - マイグレーション実行: `20250621_rename_viral_drafts`
+  - 全コード参照更新: 16個のファイルで`viral_drafts_v2`を`viral_drafts`に変更
+  - Prismaクライアント再生成: `prisma.viral_drafts`（snake_case）を使用
+- **使用ツール**: db-managerによるスキーマ検証、自動更新スクリプトによる一括変更
+
+#### 4. DB主導アーキテクチャの確認と徹底
+- **原則**: Frontend ↔ DB ↔ API ↔ LLMのデータフロー
+- **理由**: 
+  - LLMタイムアウトなどの外部要因への耐性
+  - セッション状態の永続化による復旧可能性
+- **確認結果**: ほとんどのAPIがDB主導パターンに従っていることを確認
+
+### 技術的な成果
+- **スレッド投稿の完全動作**: 各投稿が個別のツイートIDを持つ
+- **出典情報の自動付与**: 信頼性とトレーサビリティの向上
+- **レガシー命名の排除**: viral_drafts_v2 → viral_draftsでコードベースがクリーンに
+- **DB整合性の維持**: db-managerツールによる安全な変更
+
+---
+*最終更新: 2025/06/21 13:00*
+

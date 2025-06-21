@@ -500,7 +500,7 @@ export async function POST(
           }
           
           // draftsが存在する場合も完了とみなす
-          const drafts = await prisma.viral_drafts_v2.findMany({
+          const drafts = await prisma.viral_drafts.findMany({
             where: { session_id: id }
           })
           
@@ -531,7 +531,7 @@ export async function POST(
       case 'CONTENTS_GENERATED':
       case 'COMPLETED':
         // すべて完了
-        const drafts = await prisma.viral_drafts_v2.findMany({
+        const drafts = await prisma.viral_drafts.findMany({
           where: { session_id: id },
           select: {
             id: true,

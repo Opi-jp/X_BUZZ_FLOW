@@ -469,11 +469,11 @@ export class ErrorManager {
           id: errorLog.id,
           endpoint: `${context.module}/${context.operation}`,
           method: 'ERROR',
-          statusCode: 500,
-          errorMessage: errorLog.message,
-          stackTrace: errorLog.stack,
-          requestBody: errorLog.metadata,
-          userId: errorLog.userId
+          status_code: 500,  // snake_case に修正
+          error_message: errorLog.message,  // snake_case に修正
+          stack_trace: errorLog.stack,  // snake_case に修正
+          request_body: errorLog.metadata,  // snake_case に修正
+          user_id: errorLog.userId  // snake_case に修正
         }
       })
     } catch (dbError) {
@@ -577,6 +577,94 @@ const ERROR_MESSAGES = {
 
 export class DBManager {
   /**
+   * モデル名のマッピング（スキーマ不整合を防ぐ）
+   * DBテーブル名 → Prismaモデル名
+   */
+  private static modelMapping: Record<string, keyof typeof prisma> = {
+    'viral_sessions': 'viral_sessions',
+    'viral_drafts': 'viral_drafts',
+    'scheduled_posts': 'scheduled_posts',
+    'session_activity_logs': 'session_activity_logs',
+    'buzz_posts': 'buzz_posts',
+    'news_articles': 'news_articles',
+    'character_profiles': 'character_profiles',
+  }
+
+  /**
+   * モデル名を正規化（エイリアスサポート）
+   */
+  private static normalizeModelName(modelName: string): keyof typeof prisma {
+    // camelCaseからsnake_caseへの変換
+    const snakeCase = modelName.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '')
+    
+    // マッピングから探す
+    if (this.modelMapping[modelName]) {
+      return this.modelMapping[modelName]
+    }
+    if (this.modelMapping[snakeCase]) {
+      return this.modelMapping[snakeCase]
+    }
+    
+    // そのまま返す
+    return modelName as keyof typeof prisma
+  }
+
+  /**
+   * 単一レコードを取得
+   */
+  static async findUnique<T extends keyof typeof prisma>(
+    model: T | string,
+    args: Parameters<typeof prisma[T]['findUnique']>[0]
+  ): Promise<ReturnType<typeof prisma[T]['findUnique']>> {
+    const normalizedModel = this.normalizeModelName(model as string)
+    return await (prisma[normalizedModel] as any).findUnique(args)
+  }
+
+  /**
+   * 複数レコードを取得
+   */
+  static async findMany<T extends keyof typeof prisma>(
+    model: T | string,
+    args?: Parameters<typeof prisma[T]['findMany']>[0]
+  ): Promise<ReturnType<typeof prisma[T]['findMany']>> {
+    const normalizedModel = this.normalizeModelName(model as string)
+    return await (prisma[normalizedModel] as any).findMany(args)
+  }
+
+  /**
+   * レコードを作成
+   */
+  static async create<T extends keyof typeof prisma>(
+    model: T | string,
+    args: Parameters<typeof prisma[T]['create']>[0]
+  ): Promise<ReturnType<typeof prisma[T]['create']>> {
+    const normalizedModel = this.normalizeModelName(model as string)
+    return await (prisma[normalizedModel] as any).create(args)
+  }
+
+  /**
+   * レコードを更新
+   */
+  static async update<T extends keyof typeof prisma>(
+    model: T | string,
+    args: Parameters<typeof prisma[T]['update']>[0]
+  ): Promise<ReturnType<typeof prisma[T]['update']>> {
+    const normalizedModel = this.normalizeModelName(model as string)
+    return await (prisma[normalizedModel] as any).update(args)
+  }
+
+  /**
+   * レコードを削除
+   */
+  static async delete<T extends keyof typeof prisma>(
+    model: T | string,
+    args: Parameters<typeof prisma[T]['delete']>[0]
+  ): Promise<ReturnType<typeof prisma[T]['delete']>> {
+    const normalizedModel = this.normalizeModelName(model as string)
+    return await (prisma[normalizedModel] as any).delete(args)
+  }
+
+  /**
    * トランザクション実行ラッパー
    */
   static async transaction<T>(
@@ -593,7 +681,10 @@ export class DBManager {
     
     for (let i = 0; i < maxRetries; i++) {
       try {
-        return await prisma.$transaction(callback, {
+        return await prisma.$transaction(async (tx) => {
+          // トランザクションクライアントを正しく渡す
+          return await callback(tx as typeof prisma)
+        }, {
           timeout,
           isolationLevel: 'Serializable'
         })

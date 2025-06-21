@@ -122,7 +122,7 @@ async function testClaudeWithDBManager() {
     const draftColumns = await prisma.$queryRaw`
       SELECT column_name, data_type, is_nullable
       FROM information_schema.columns 
-      WHERE table_name = 'viral_drafts_v2'
+      WHERE table_name = 'viral_drafts'
       AND column_name IN ('id', 'session_id', 'concept_id', 'character_id', 'content', 'hashtags')
       ORDER BY ordinal_position;
     `;
@@ -158,7 +158,7 @@ async function testClaudeWithDBManager() {
       console.log('    - contents存在:', !!updatedSession.contents);
       
       // 下書きの確認
-      const drafts = await prisma.viral_drafts_v2.findMany({
+      const drafts = await prisma.viral_drafts.findMany({
         where: { sessionId: session.id },
         orderBy: { created_at: 'desc' },
         take: 1

@@ -126,9 +126,9 @@ async function runE2ETest() {
           console.log(`\n📋 作成された下書き: ${nextResponse.drafts.length}件`)
           nextResponse.drafts.forEach((draft, index) => {
             console.log(`\n下書き ${index + 1}:`)
-            console.log(`  タイトル: ${draft.title}`)
-            console.log(`  内容: ${draft.content.substring(0, 100)}...`)
-            console.log(`  ハッシュタグ: ${draft.hashtags.join(', ')}`)
+            console.log(`  タイトル: ${draft.title || 'タイトルなし'}`)
+            console.log(`  内容: ${draft.content ? (typeof draft.content === 'string' ? draft.content.substring(0, 100) : JSON.stringify(draft.content).substring(0, 100)) + '...' : '内容なし'}`)
+            console.log(`  ハッシュタグ: ${draft.hashtags ? draft.hashtags.join(', ') : 'なし'}`)
           })
         }
       }

@@ -111,7 +111,7 @@ async function postToTwitter(content, hashtags) {
 }
 
 async function saveDraft(content, sessionId, conceptId) {
-  const draft = await prisma.viralDraftV2.create({
+  const draft = await prisma.viralDraft.create({
     data: {
       sessionId: sessionId || 'mock-session',
       conceptId: conceptId || 'mock-concept-1',
@@ -161,7 +161,7 @@ async function main() {
         console.log(chalk.blue(`URL: ${postResult.url}`))
         
         // 下書きのステータスを更新
-        await prisma.viralDraftV2.update({
+        await prisma.viralDraft.update({
           where: { id: draft.id },
           data: { 
             status: 'posted',

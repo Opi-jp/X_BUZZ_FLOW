@@ -110,7 +110,7 @@ async function testClaudeFlow() {
           
           // 7. 下書きが作成されたか確認
           console.log('\n7️⃣ 作成された下書きを確認...');
-          const drafts = await prisma.viral_drafts_v2.findMany({
+          const drafts = await prisma.viral_drafts.findMany({
             where: { sessionId: session.id },
             orderBy: { created_at: 'desc' },
             take: 3

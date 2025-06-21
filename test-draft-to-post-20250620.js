@@ -8,7 +8,7 @@ async function testDraftToPost() {
     
     // 1. 最新の下書きを確認
     console.log('\n1️⃣ 最新の下書きを検索...');
-    const drafts = await prisma.viral_drafts_v2.findMany({
+    const drafts = await prisma.viral_drafts.findMany({
       where: {
         status: 'DRAFT',
         session_id: 'sess_j2aTllyraxSi'  // 先ほど成功したセッション
@@ -84,7 +84,7 @@ async function testDraftToPost() {
       
       // 6. 下書きのステータス確認
       console.log('\n6️⃣ 下書きステータスの更新確認...');
-      const updatedDraft = await prisma.viral_drafts_v2.findUnique({
+      const updatedDraft = await prisma.viral_drafts.findUnique({
         where: { id: draft.id }
       });
       
@@ -100,12 +100,12 @@ async function testDraftToPost() {
     
     // 7. DBManagerによる整合性チェック
     console.log('\n7️⃣ DB整合性チェック...');
-    const sessionPosts = await prisma.viral_drafts_v2.count({
+    const sessionPosts = await prisma.viral_drafts.count({
       where: { session_id: 'sess_j2aTllyraxSi' }
     });
     console.log('  このセッションの総下書き数:', sessionPosts);
     
-    const postedCount = await prisma.viral_drafts_v2.count({
+    const postedCount = await prisma.viral_drafts.count({
       where: { 
         session_id: 'sess_j2aTllyraxSi',
         status: 'POSTED'

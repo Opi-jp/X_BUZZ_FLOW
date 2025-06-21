@@ -417,9 +417,9 @@ graph LR
 
   async getDraftStats(todayStart, weekStart) {
     const [today, week, total] = await Promise.all([
-      prisma.viralDraftV2.count({ where: { createdAt: { gte: todayStart } } }),
-      prisma.viralDraftV2.count({ where: { createdAt: { gte: weekStart } } }),
-      prisma.viralDraftV2.count()
+      prisma.viralDraft.count({ where: { createdAt: { gte: todayStart } } }),
+      prisma.viralDraft.count({ where: { createdAt: { gte: weekStart } } }),
+      prisma.viralDraft.count()
     ]);
     return { today, week, total };
   }

@@ -139,6 +139,13 @@ export async function POST(
         const formatSuffix = concept.format === 'thread' ? 'thread' : 'simple'
         const promptPath = `claude/character-profiles/${characterId}-${formatSuffix}.txt`
         
+        console.log('🔍 プロンプトパス:', promptPath)
+        console.log('📊 コンセプト情報:', {
+          conceptId: concept.conceptId,
+          format: concept.format,
+          title: concept.conceptTitle
+        })
+        
         const characterProfile = await wrapCharacterProfile(characterId)
         const conceptData = wrapConceptData(concept)
         
@@ -261,7 +268,13 @@ export async function POST(
           error: 'Failed to generate any posts',
           details: 'Check server logs for detailed error information',
           selectedConcepts: selectedConcepts.length,
-          characterId
+          selectedConceptDetails: selectedConcepts.map(c => ({
+            conceptId: c.conceptId,
+            format: c.format,
+            title: c.conceptTitle
+          })),
+          characterId,
+          sessionStatus: session.status
         },
         { status: 500 }
       )
@@ -288,27 +301,35 @@ export async function POST(
         const draftId = IDGenerator.generate(EntityType.DRAFT)
         
         if (post.format === 'thread') {
-          // スレッド形式の場合は、posts配列をJSONとして保存
-          await tx.viral_drafts_v2.create({
+          // スレッド形式の場合
+          console.log('🧵 スレッド形式のドラフトを作成:', {
+            conceptId: post.conceptId,
+            postCount: post.posts?.length || 0,
+            firstPost: post.posts?.[0]?.substring(0, 50) + '...'
+          })
+          
+          await tx.viral_drafts.create({
             data: {
               id: draftId,
               session_id: id,  // DBはsnake_case
               concept_id: post.conceptId,  // DBはsnake_case
               title: post.conceptTitle || 'Generated Thread',
-              content: JSON.stringify({
-                format: 'thread',
-                posts: post.posts
-              }),
+              content: post.posts[0],  // 最初の投稿をcontentに保存
               hashtags: hashtags,
               visual_note: matchingConcept?.visual,
               character_id: post.characterId,  // DBはsnake_case
               character_note: `Generated as ${post.characterId} (thread)`,
-              status: 'DRAFT'
+              status: 'DRAFT',
+              thread_structure: {
+                type: 'thread',
+                count: post.posts.length,
+                posts: post.posts  // 全ての投稿を配列として保存
+              }
             }
           })
         } else {
           // シングル形式の場合は、contentをそのまま保存
-          await tx.viral_drafts_v2.create({
+          await tx.viral_drafts.create({
             data: {
               id: draftId,
               session_id: id,  // DBはsnake_case

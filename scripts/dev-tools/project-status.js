@@ -229,7 +229,7 @@ class ProjectStatus {
       status.recentSessions = recentSessions;
 
       // 下書き数
-      const drafts = await prisma.viralDraftV2.count({
+      const drafts = await prisma.viralDraft.count({
         where: { status: 'DRAFT' }
       });
       status.drafts = drafts;
