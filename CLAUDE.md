@@ -1365,6 +1365,32 @@ node scripts/dev-tools/prompt-editor.js compat gpt/generate-concepts.txt --non-i
   - 投稿スタイル: 皮肉を交えながら本質的な洞察を提供
 - **テスト結果**: 3つのテーマでテストし、すべて皮肉と建設的視点のバランスが取れた投稿を生成
 
+#### 6. Source Tree機能の改善
+- **Perplexity表記の削除**:
+  - 「最新情報はPerplexity AIで収集・分析」→「最新の情報源から収集・分析」に変更
+  - ツール名を出さない一般的な表現に統一
+- **出典情報必須化**:
+  - 出典情報がない場合はエラーをスローして投稿を中止
+  - `formatSourceTweet`と`formatSourceTweetFromSession`でエラーハンドリング実装
+  - 信頼性確保のため、情報源なしでの投稿を防止
+- **複数出典のURL切断問題解決**:
+  - 問題: 複数出典を1ツイートに詰め込むとURLが改行で切断される
+  - 解決策: 出典数に応じて処理を分岐
+    - 1件: 単一のSource Treeツイート
+    - 複数: 導入ツイート + 各出典の個別ツイート
+  - 実装: `formatSingleSourceTweet`と`formatMultipleSourceTweets`関数を追加
+- **技術的改善**:
+  - `formatSourceTweetFromSession`の戻り値を`string | string[]`に変更
+  - `enhanced-post-manager.ts`で配列対応を実装
+  - 各出典が独立したツイートになることで280文字制限も回避
+
+### 技術的な成果
+- **スレッド投稿の完全動作**: 5投稿+Source Tree=計6ツイートが正常投稿
+- **出典情報の信頼性向上**: 必須化とURL完全表示により情報源の透明性確保
+- **キャラクターの洗練**: より建設的で洞察力のある投稿スタイルへ
+- **レガシー命名の排除**: viral_drafts_v2 → viral_draftsでコードベースがクリーンに
+- **DB整合性の維持**: db-managerツールによる安全な変更
+
 ---
-*最終更新: 2025/06/21 15:30*
+*最終更新: 2025/06/21 18:30*
 
