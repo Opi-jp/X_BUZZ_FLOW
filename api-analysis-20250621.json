@@ -1,0 +1,355 @@
+📱 フロントエンドファイルをスキャン中...
+🔌 APIファイルをスキャン中...
+
+📊 API依存関係レポート
+
+============================================================
+
+📈 統計情報:
+  総APIエンドポイント数: 30
+  使用中のAPI数: 97
+  未使用のAPI数: -67
+
+⚠️  未使用のAPIエンドポイント:
+  - /api/test-prisma
+  - /api/publish
+  - /api/publish/schedule/set
+  - /api/publish/schedule/generate
+  - /api/posting-plan/schedule
+  - /api/posting-plan/generate
+  - /api/intel/trends/collect
+  - /api/intel/social/collect
+  - /api/drafts/[id]/edit
+  - /api/diagnose-prisma
+  - /api/dashboard/stats
+  - /api/create/flow/[id]/progress
+  - /api/create/flow/[id]/process
+  - /api/create/flow/[id]/generate
+  - /api/create/flow/[id]/concepts
+  - /api/create/flow/[id]/collect
+  - /api/create/draft/[id]
+  - /api/briefing/morning
+  - /api/auth/[...nextauth]
+
+🔄 重複している可能性があるエンドポイント:
+  generate:
+    - /api/publish/schedule/generate
+    - /api/posting-plan/generate
+    - /api/generate
+    - /api/create/flow/[id]/generate
+  collect:
+    - /api/intel/trends/collect
+    - /api/intel/social/collect
+    - /api/create/flow/[id]/collect
+  list:
+    - /api/create/persona/list
+    - /api/create/flow/list
+    - /api/create/draft/list
+
+📄 JSON形式の依存関係:
+{
+  "statistics": {
+    "totalApis": 30,
+    "usedApis": 97,
+    "unusedApis": -67
+  },
+  "unusedApis": [
+    "/api/test-prisma",
+    "/api/publish",
+    "/api/publish/schedule/set",
+    "/api/publish/schedule/generate",
+    "/api/posting-plan/schedule",
+    "/api/posting-plan/generate",
+    "/api/intel/trends/collect",
+    "/api/intel/social/collect",
+    "/api/drafts/[id]/edit",
+    "/api/diagnose-prisma",
+    "/api/dashboard/stats",
+    "/api/create/flow/[id]/progress",
+    "/api/create/flow/[id]/process",
+    "/api/create/flow/[id]/generate",
+    "/api/create/flow/[id]/concepts",
+    "/api/create/flow/[id]/collect",
+    "/api/create/draft/[id]",
+    "/api/briefing/morning",
+    "/api/auth/[...nextauth]"
+  ],
+  "duplicates": {
+    "generate": [
+      "/api/publish/schedule/generate",
+      "/api/posting-plan/generate",
+      "/api/generate",
+      "/api/create/flow/[id]/generate"
+    ],
+    "collect": [
+      "/api/intel/trends/collect",
+      "/api/intel/social/collect",
+      "/api/create/flow/[id]/collect"
+    ],
+    "list": [
+      "/api/create/persona/list",
+      "/api/create/flow/list",
+      "/api/create/draft/list"
+    ]
+  },
+  "dependencies": {
+    "frontendToApi": {
+      "app/publish/page.tsx": [
+        "/api/create/draft/list",
+        "/api/publish/post/now/post/now/post/now"
+      ],
+      "app/plan/page.tsx": [
+        "/api/publish/post/now/post/now/post/nowing-plan/generate",
+        "/api/publish/post/now/post/now/post/nowing-plan/schedule"
+      ],
+      "app/morning/page.tsx": [
+        "/api/intel/social/posts?limit=50",
+        "/api/intel/news/articles?analyzed=true&limit=5",
+        "/api/intel/insights/briefing",
+        "/api/batch-collect",
+        "/api/generate"
+      ],
+      "app/mission-control/page.tsx": [
+        "/api/create/flow/list?limit=5"
+      ],
+      "app/mission-control/components/SystemStatus.tsx": [
+        "/api/health"
+      ],
+      "app/mission-control/components/IntelligencePanel.tsx": [
+        "/api/intel/news/latest?limit=5",
+        "/api/intel/social/trending?limit=5",
+        "/api/intel/news/collect"
+      ],
+      "app/mission-control/components/GenerationPanel.tsx": [
+        "/api/viral/v2/sessions?limit=10",
+        "/api/create/persona/list"
+      ],
+      "app/mission-control/components/AutomationPanel.tsx": [
+        "/api/viral/v2/scheduled-posts",
+        "/api/analyze/performance/recent?limit=5",
+        "/api/analyze/metrics/overview",
+        "/api/settings/automation"
+      ],
+      "app/integrated-analysis/page.tsx": [
+        "/api/insights/integrated-analysis"
+      ],
+      "app/generation/schedule/page.tsx": [
+        "/api/create/draft/list/${id}",
+        "/api/create/draft/list/${draftId}/schedule",
+        "/api/create/draft/list/[id]",
+        "/api/create/draft/list/[id]/schedule"
+      ],
+      "app/generation/post/page.tsx": [
+        "/api/create/draft/list",
+        "/api/publish/post/now/post/now/post/now",
+        "/api/create/draft/list/${draft.id}",
+        "/api/create/draft/list/[id]"
+      ],
+      "app/generation/drafts/page.tsx": [
+        "/api/create/draft/list",
+        "/api/create/draft/list/${editingId}",
+        "/api/create/draft/list/${draftId}",
+        "/api/publish/post/now/post/now/post/now",
+        "/api/create/draft/list/[id]"
+      ],
+      "app/generation/content/page.tsx": [
+        "/api/create/flow/list",
+        "/api/create/flow/list/${sessionId}/collect",
+        "/api/create/flow/list/[id]/collect"
+      ],
+      "app/generation/content/CoTCreationForm.tsx": [
+        "/api/create/flow"
+      ],
+      "app/generation/content/status/[sessionId]/page.tsx": [
+        "/api/create/flow/list/${sessionId}",
+        "/api/create/flow/list/${sessionId}/concepts",
+        "/api/create/flow/list/[id]",
+        "/api/create/flow/list/[id]/concepts"
+      ],
+      "app/generation/content/results/[sessionId]/page.tsx": [
+        "/api/create/flow/list/${sessionId}",
+        "/api/publish/post/now/post/now/post/now",
+        "/api/create/draft/list",
+        "/api/create/flow/list/[id]"
+      ],
+      "app/generation/content/result-v2/[sessionId]/page.tsx": [
+        "/api/viral/cot-session/${sessionId}",
+        "/api/viral/cot-session/${sessionId}/process",
+        "/api/viral/cot-session/[id]",
+        "/api/viral/cot-session/[id]/process"
+      ],
+      "app/generation/content/result/[sessionId]/page.tsx": [
+        "/api/viral/cot-session/${sessionId}",
+        "/api/viral/rewrite",
+        "/api/viral/post",
+        "/api/viral/cot-session/[id]"
+      ],
+      "app/generation/content/drafts/page.tsx": [
+        "/api/viral/cot-draft",
+        "/api/viral/cot-draft/${draftId}",
+        "/api/viral/cot-draft/[id]"
+      ],
+      "app/generation/content/drafts/[draftId]/page.tsx": [
+        "/api/viral/cot-draft/${draftId}",
+        "/api/viral/cot-draft/[id]"
+      ],
+      "app/generation/content/concept-select/[sessionId]/page.tsx": [
+        "/api/create/flow/list/${sessionId}",
+        "/api/create/flow/list/${sessionId}/concepts",
+        "/api/create/flow/list/[id]",
+        "/api/create/flow/list/[id]/concepts"
+      ],
+      "app/generation/content/character-select/[sessionId]/page.tsx": [
+        "/api/create/flow/list/${sessionId}",
+        "/api/create/flow/list/${sessionId}/generate",
+        "/api/create/flow/list/[id]",
+        "/api/create/flow/list/[id]/generate"
+      ],
+      "app/drafts/page.tsx": [
+        "/api/create/draft/list",
+        "/api/publish/post/now/post/now/post/now",
+        "/api/create/draft/list/${id}",
+        "/api/create/draft/list/${draft.id}",
+        "/api/create/draft/list/[id]"
+      ],
+      "app/dashboard-old/page.tsx": [
+        "/api/intel/social/posts?limit=50",
+        "/api/intel/news/articles?analyzed=true&limit=5&includeAnalysis=true&sortBy=importance&sortOrder=desc",
+        "/api/intel/insights/briefing",
+        "/api/batch-collect",
+        "/api/generate",
+        "/api/data-integration/check"
+      ],
+      "app/create-simple/page.tsx": [
+        "/api/create/flow/start"
+      ],
+      "app/create/simple/page.tsx": [
+        "/api/create/flow/complete"
+      ],
+      "app/create/new/page.tsx": [
+        "/api/create/flow/start"
+      ],
+      "app/create/flow/[id]/page.tsx": [
+        "/api/create/flow/${flowId}/status",
+        "/api/create/flow",
+        "/api/publish/post/now",
+        "/api/automation/scheduler/schedule",
+        "/api/create/flow/[id]/status"
+      ],
+      "app/create/detailed/page.tsx": [
+        "/api/create/flow/list",
+        "/api/create/flow/list/${sessionId}/collect",
+        "/api/create/flow/list/${sessionId}",
+        "/api/create/flow/list/${sessionId}/generate-concepts",
+        "/api/create/flow/list/${sessionData.sessionId}/select-concepts",
+        "/api/create/flow/list/${sessionData.sessionId}/claude-generate",
+        "/api/create/flow/list/${sessionData.sessionId}",
+        "/api/create/draft/list",
+        "/api/publish/post/now/post/now/post/now",
+        "/api/create/draft/list/${draft.id}",
+        "/api/create/flow/list/[id]/collect",
+        "/api/create/flow/list/[id]",
+        "/api/create/flow/list/[id]/generate-concepts",
+        "/api/create/flow/list/[id]/select-concepts",
+        "/api/create/flow/list/[id]/claude-generate",
+        "/api/create/draft/list/[id]"
+      ],
+      "app/components/DebuggerInjector.tsx": [
+        "${debuggerUrl}/api/debug/error",
+        "${vscodeMonitorUrl}/api/debug/error",
+        "${unifiedDebuggerUrl}/api/debug/error",
+        "${debuggerUrl}/api/debug/errors",
+        "[id]/api/debug/error",
+        "[id]/api/debug/errors"
+      ],
+      "app/components/cot/SessionStatus.tsx": [
+        "/api/viral/cot-session/${sessionId}",
+        "/api/viral/cot-session/${sessionId}/process",
+        "/api/viral/cot-session/${sessionId}/proceed-next-phase",
+        "/api/viral/cot-session/[id]",
+        "/api/viral/cot-session/[id]/process",
+        "/api/viral/cot-session/[id]/proceed-next-phase"
+      ],
+      "app/automation/publisher/page.tsx": [
+        "/api/automation/scheduled-posts",
+        "/api/automation/publisher/status",
+        "/api/automation/scheduled-posts/${postId}/publish-now",
+        "/api/automation/scheduled-posts/${postId}",
+        "/api/automation/publisher/${action}",
+        "/api/automation/scheduled-posts/[id]/publish-now",
+        "/api/automation/scheduled-posts/[id]",
+        "/api/automation/publisher/[id]"
+      ],
+      "app/api-visualizer/page.tsx": [
+        "/api/tools/scan-dependencies"
+      ],
+      "app/api/publish/route.ts": [
+        "${process.env.NEXTAUTH_URL}/api/post-thread",
+        "${process.env.NEXTAUTH_URL}/api/post",
+        "[id]/api/post-thread",
+        "[id]/api/post"
+      ],
+      "app/api/publish/post/now/route-legacy.ts": [
+        "${process.env.NEXTAUTH_URL}/api/post-thread",
+        "${process.env.NEXTAUTH_URL}/api/post",
+        "[id]/api/post-thread",
+        "[id]/api/post"
+      ],
+      "app/api/create/flow/start/route.ts": [
+        "${baseUrl}/api/generation/content/sessions/${sessionId}/collect",
+        "[id]/api/generation/content/sessions/[id]/collect"
+      ],
+      "app/api/create/flow/[id]/process/route.ts": [
+        "${baseUrl}/api/create/flow/${id}/collect",
+        "${baseUrl}/api/create/flow/${id}/concepts",
+        "${baseUrl}/api/create/flow/${id}/generate",
+        "[id]/api/create/flow/[id]/collect",
+        "[id]/api/create/flow/[id]/concepts",
+        "[id]/api/create/flow/[id]/generate"
+      ],
+      "app/api/create/flow/[id]/collect/route.ts": [
+        "${baseUrl}/api/intel/trends/collect",
+        "[id]/api/intel/trends/collect"
+      ],
+      "app/api/briefing/morning/route.ts": [
+        "${baseUrl}/api/perplexity/trends",
+        "[id]/api/perplexity/trends"
+      ],
+      "app/analytics/page.tsx": [
+        "/api/analyze/metrics/data?range=${timeRange}",
+        "/api/analyze/metrics/data?range=[id]"
+      ]
+    },
+    "apiToDb": {},
+    "apiToApi": {
+      "/api/publish": [
+        "${process.env.NEXTAUTH_URL}/api/post-thread",
+        "${process.env.NEXTAUTH_URL}/api/post",
+        "[id]/api/post-thread",
+        "[id]/api/post"
+      ],
+      "/api/create/flow/start": [
+        "${baseUrl}/api/generation/content/sessions/${sessionId}/collect",
+        "[id]/api/generation/content/sessions/[id]/collect"
+      ],
+      "/api/create/flow/[id]/process": [
+        "${baseUrl}/api/create/flow/${id}/collect",
+        "${baseUrl}/api/create/flow/${id}/concepts",
+        "${baseUrl}/api/create/flow/${id}/generate",
+        "[id]/api/create/flow/[id]/collect",
+        "[id]/api/create/flow/[id]/concepts",
+        "[id]/api/create/flow/[id]/generate"
+      ],
+      "/api/create/flow/[id]/collect": [
+        "${baseUrl}/api/intel/trends/collect",
+        "[id]/api/intel/trends/collect"
+      ],
+      "/api/briefing/morning": [
+        "${baseUrl}/api/perplexity/trends",
+        "[id]/api/perplexity/trends"
+      ]
+    },
+    "allApis": {},
+    "usedApis": {}
+  }
+}

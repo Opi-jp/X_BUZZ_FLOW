@@ -1,0 +1,83 @@
+[36m=== DB Schema Validator ===[0m
+
+[34mChecking users table...[0m
+[34mChecking cot_sessions table...[0m
+[34mChecking api_tasks table...[0m
+[34mChecking all tables...[0m
+[34mChecking indexes...[0m
+
+[36m=== Validation Results ===[0m
+
+[32m✅ Passed (16):[0m
+   [32m✓[0m users.id exists
+   [32m✓[0m users.email exists
+   [32m✓[0m users.name exists
+   [32m✓[0m users.createdAt exists
+   [32m✓[0m users.updatedAt exists
+   [32m✓[0m cot_sessions.theme exists (migration successful)
+   [32m✓[0m cot_sessions.id exists
+   [32m✓[0m cot_sessions.status exists
+   [32m✓[0m cot_sessions.current_phase exists
+   [32m✓[0m cot_sessions.current_step exists
+   [32m✓[0m api_tasks.id exists
+   [32m✓[0m api_tasks.session_id exists
+   [32m✓[0m api_tasks.task_type exists
+   [32m✓[0m api_tasks.status exists
+   [32m✓[0m api_tasks.request exists
+   [32m✓[0m api_tasks.response exists
+
+[33m⚠️  Warnings (48):[0m
+   [33m![0m users.twitterId is missing - Twitter auth may have issues
+   [33m![0m users.twitterUsername is missing - Twitter auth may have issues
+   [33m![0m Model accounts may not have corresponding table
+   [33m![0m Model ai_patterns may not have corresponding table
+   [33m![0m Model api_error_logs may not have corresponding table
+   [33m![0m Model api_tasks may not have corresponding table
+   [33m![0m Model buzz_config may not have corresponding table
+   [33m![0m Model buzz_posts may not have corresponding table
+   [33m![0m Model character_profiles may not have corresponding table
+   [33m![0m Model collection_presets may not have corresponding table
+   [33m![0m Model content_drafts may not have corresponding table
+   [33m![0m Model cot_draft_performance may not have corresponding table
+   [33m![0m Model cot_drafts may not have corresponding table
+   [33m![0m Model cot_phases may not have corresponding table
+   [33m![0m Model cot_sessions may not have corresponding table
+   [33m![0m Model gpt_analyses may not have corresponding table
+   [33m![0m Model interaction_history may not have corresponding table
+   [33m![0m Model job_queue may not have corresponding table
+   [33m![0m Model news_analyses may not have corresponding table
+   [33m![0m Model news_analysis_jobs may not have corresponding table
+   [33m![0m Model news_analysis_results may not have corresponding table
+   [33m![0m Model news_articles may not have corresponding table
+   [33m![0m Model news_sources may not have corresponding table
+   [33m![0m Model news_thread_items may not have corresponding table
+   [33m![0m Model news_threads may not have corresponding table
+   [33m![0m Model news_viral_relations may not have corresponding table
+   [33m![0m Model perplexity_reports may not have corresponding table
+   [33m![0m Model post_analytics may not have corresponding table
+   [33m![0m Model prompt_templates may not have corresponding table
+   [33m![0m Model scheduled_posts may not have corresponding table
+   [33m![0m Model scheduled_retweets may not have corresponding table
+   [33m![0m Model session_activity_logs may not have corresponding table
+   [33m![0m Model sessions may not have corresponding table
+   [33m![0m Model unified_performance may not have corresponding table
+   [33m![0m Model users may not have corresponding table
+   [33m![0m Model viral_analysis_logs may not have corresponding table
+   [33m![0m Model viral_config may not have corresponding table
+   [33m![0m Model viral_draft_performance may not have corresponding table
+   [33m![0m Model viral_drafts may not have corresponding table
+   [33m![0m Model viral_opportunities may not have corresponding table
+   [33m![0m Model viral_post_performance may not have corresponding table
+   [33m![0m Model viral_posts may not have corresponding table
+   [33m![0m Model viral_sessions may not have corresponding table
+   [33m![0m Model watchlist_tweets may not have corresponding table
+   [33m![0m Model watchlist_users may not have corresponding table
+   [33m![0m Index cot_sessions_status_idx is missing - may impact performance
+   [33m![0m Index api_tasks_status_idx is missing - may impact performance
+   [33m![0m Index api_tasks_session_id_idx is missing - may impact performance
+
+[36mSummary:[0m
+Total checks: 64
+Passed: [32m16[0m
+Failed: [31m0[0m
+Warnings: [33m48[0m

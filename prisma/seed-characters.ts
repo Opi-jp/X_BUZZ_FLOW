@@ -1,5 +1,6 @@
 import { PrismaClient } from '../lib/generated/prisma'
 import { DEFAULT_CHARACTERS } from '../types/character'
+import { IDGenerator, EntityType } from '../lib/core/unified-system-manager'
 
 const prisma = new PrismaClient()
 
@@ -7,21 +8,40 @@ async function seedCharacters() {
   console.log('🎭 キャラクタープロファイルのシードデータを作成中...')
   
   try {
-    // 既存のデフォルトキャラクターを削除
+    // 既存のキャラクターを削除（名前ベースで重複チェック）
+    const existingNames = DEFAULT_CHARACTERS.map(c => c.name)
     await prisma.character_profiles.deleteMany({
-      where: { isDefault: true }
+      where: { 
+        name: {
+          in: existingNames
+        }
+      }
     })
     
     // デフォルトキャラクターを作成
     for (const character of DEFAULT_CHARACTERS) {
-      const { id, createdAt, updatedAt, userId, ...characterData } = character
+      const { id, createdAt, updatedAt, userId, isDefault, visual, features, background, ...characterData } = character
       
       const created = await prisma.character_profiles.create({
         data: {
-          ...characterData,
-          voiceStyle: character.voice_style,
-          visual: character.visual || {},
-          isDefault: true
+          id: character.id || `char_${Date.now()}`,
+          name: character.name,
+          display_name: character.name,
+          age: character.age,
+          gender: character.gender,
+          occupation: character.background || 'フリーランス',
+          catchphrase: character.catchphrase,
+          personality: character.features?.join(', ') || 'ユニークな個性',
+          speaking_style: character.voice_style?.normal || '独特の語り口',
+          expertise: 'AI・機械学習',
+          backstory: character.background || '元詐欺師、元王様',
+          philosophy: character.philosophy,
+          tone: character.tone,
+          voice_style: character.voice_style || {},
+          emoji_style: '😏🍺🚬',
+          preferred_news_categories: ['テクノロジー', 'AI'],
+          news_comment_style: character.voice_style || {},
+          topic_expertise: { fields: ['AI', '機械学習', '人生哲学'] }
         }
       })
       
@@ -32,7 +52,11 @@ async function seedCharacters() {
     
     // 作成されたキャラクターを確認
     const characters = await prisma.character_profiles.findMany({
-      where: { isDefault: true }
+      where: { 
+        name: {
+          in: existingNames
+        }
+      }
     })
     
     console.log('\n📋 作成されたキャラクター一覧:')
