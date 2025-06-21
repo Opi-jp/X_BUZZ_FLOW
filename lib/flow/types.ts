@@ -9,6 +9,8 @@ export interface FlowStep {
   completedAt?: Date
   error?: string
   data?: any
+  autoExecute?: boolean
+  stepNumber?: number
 }
 
 export interface FlowSession {
@@ -22,6 +24,13 @@ export interface FlowSession {
   status: 'active' | 'completed' | 'failed' | 'cancelled'
   createdAt: Date
   updatedAt: Date
+  // DBセッションからのデータを格納
+  data?: {
+    topics?: any
+    concepts?: any
+    generatedContent?: any
+    selectedIds?: string[]
+  }
 }
 
 // APIフェーズとステップのマッピング
