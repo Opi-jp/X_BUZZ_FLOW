@@ -106,11 +106,11 @@ function extractSourcesFromTopics(topicsText: string): SourceInfo[] {
  */
 export async function formatSourceTweetFromSession(
   sessionId: string
-): Promise<string | null> {
+): Promise<string> {
   const sources = await getSourcesFromSession(sessionId)
   
   if (sources.length === 0) {
-    return null
+    throw new Error('出典情報が見つかりません。投稿を中止します。')
   }
   
   return formatSourceTweet(sources)
@@ -124,7 +124,7 @@ export function formatSourceTweet(
   isThread: boolean = false
 ): string {
   if (sources.length === 0) {
-    return "📚 参考情報\n\n最新の情報源から収集・分析しています\n\n#AI分析 #最新ニュース"
+    throw new Error('出典情報が見つかりません。投稿を中止します。')
   }
   
   // スレッドの2番目の投稿であることを明示

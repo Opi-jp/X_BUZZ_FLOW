@@ -119,13 +119,22 @@ export async function postDraftWithEnhancement(
       })
       
       if (draft.viral_sessions?.topics) {
-        const sourceInfo = await formatSourceTweetFromSession(draft.session_id)
-        console.log('Source情報:', sourceInfo ? '生成成功' : '生成失敗')
-        
-        if (sourceInfo) {
-          tweets.push(sourceInfo)
-          sourcePosition = tweets.length - 1
+        try {
+          const sourceInfo = await formatSourceTweetFromSession(draft.session_id)
+          console.log('Source情報:', sourceInfo ? '生成成功' : '生成失敗')
+          
+          if (sourceInfo) {
+            tweets.push(sourceInfo)
+            sourcePosition = tweets.length - 1
+          }
+        } catch (sourceError) {
+          // 出典情報がない場合はエラーをスロー
+          console.error('❌ 出典情報エラー:', sourceError)
+          throw new Error('出典情報が見つかりません。投稿を中止します。')
         }
+      } else {
+        // topicsデータ自体がない場合もエラー
+        throw new Error('セッションにトピックデータがありません。投稿を中止します。')
       }
     }
 
