@@ -5,6 +5,8 @@ import { ErrorManager, DBManager, PromptManager } from '@/lib/core/unified-syste
 import { ClaudeLogger } from '@/lib/core/claude-logger'
 
 export async function POST(request: Request) {
+  let sessionId: string | undefined
+  
   try {
     // API キーのチェック
     if (!process.env.PERPLEXITY_API_KEY) {
@@ -19,7 +21,8 @@ export async function POST(request: Request) {
     }
     
     const body = await request.json()
-    const { sessionId, theme, platform = 'Twitter', style = 'エンターテイメント' } = body
+    sessionId = body.sessionId
+    const { theme, platform = 'Twitter', style = 'エンターテイメント' } = body
     
     if (!sessionId || !theme) {
       return NextResponse.json(
@@ -53,7 +56,7 @@ export async function POST(request: Request) {
     }
 
     ClaudeLogger.info(
-      { module: 'intel', operation: 'perplexity-start' },
+      { module: 'backend', operation: 'perplexity-start' },
       '🔍 Starting Perplexity collection',
       { sessionId, theme }
     )
@@ -100,14 +103,14 @@ export async function POST(request: Request) {
       return await tx.viral_sessions.update({
         where: { id: sessionId },
         data: {
-          topics: parsedData,
+          topics: parsedData as any,
           status: 'TOPICS_COLLECTED'
         }
       })
     })
 
     ClaudeLogger.success(
-      { module: 'intel', operation: 'perplexity-complete', sessionId },
+      { module: 'backend', operation: 'perplexity-complete', sessionId },
       '✅ Perplexity collection completed',
       0,
       { topicCount: parsedData.topics?.length || 0 }
@@ -121,15 +124,15 @@ export async function POST(request: Request) {
     })
   } catch (error: any) {
     ClaudeLogger.error(
-      { module: 'intel', operation: 'perplexity-error' },
+      { module: 'backend', operation: 'perplexity-error' },
       '💥 Perplexity collection failed',
       error
     )
     
     await ErrorManager.logError(error, {
-      module: 'intel',
+      module: 'backend',
       operation: 'trends-collect',
-      metadata: { sessionId: request.body?.sessionId }
+      metadata: { sessionId }
     })
     
     return NextResponse.json(

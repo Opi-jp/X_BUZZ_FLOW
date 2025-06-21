@@ -21,11 +21,11 @@ export async function GET() {
       type: typeof prisma,
       isNull: prisma === null,
       isUndefined: prisma === undefined,
-      hasViralSession: !!prisma?.viralSession
+      hasViralSession: !!prisma?.viral_sessions
     }
     
     if (prisma) {
-      const count = await prisma.viralSession.count()
+      const count = await prisma.viral_sessions.count()
       results.step1_static_import.sessionCount = count
     }
   } catch (error) {
@@ -57,11 +57,11 @@ export async function GET() {
     results.step3_db_import = {
       success: true,
       type: typeof dbPrisma,
-      hasViralSession: !!dbPrisma?.viralSession
+      hasViralSession: !!dbPrisma?.viral_sessions
     }
     
     if (dbPrisma) {
-      const count = await dbPrisma.viralSession.count()
+      const count = await dbPrisma.viral_sessions.count()
       results.step3_db_import.sessionCount = count
     }
   } catch (error) {
@@ -77,10 +77,10 @@ export async function GET() {
     const directClient = new PrismaClient()
     results.step4_direct_client = {
       success: true,
-      hasViralSession: !!directClient.viralSession
+      hasViralSession: !!directClient.viral_sessions
     }
     
-    const count = await directClient.viralSession.count()
+    const count = await directClient.viral_sessions.count()
     results.step4_direct_client.sessionCount = count
     
     await directClient.$disconnect()

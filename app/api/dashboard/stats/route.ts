@@ -24,9 +24,9 @@ export async function GET() {
       weeklyStats
     ] = await Promise.all([
       // 今日の投稿数（一時的にCotDraftを使用）
-      prisma.cotDraft.count({
+      prisma.cot_drafts.count({
         where: {
-          createdAt: {
+          created_at: {
             gte: today,
             lt: tomorrow
           }
@@ -34,10 +34,10 @@ export async function GET() {
       }),
 
       // 総投稿数
-      prisma.cotDraft.count(),
+      prisma.cot_drafts.count(),
 
       // アクティブセッション数（処理中）
-      prisma.cotSession.count({
+      prisma.cot_sessions.count({
         where: {
           status: {
             in: ['PENDING', 'THINKING', 'EXECUTING', 'INTEGRATING']
@@ -46,27 +46,20 @@ export async function GET() {
       }),
 
       // 総セッション数
-      prisma.cotSession.count(),
+      prisma.cot_sessions.count(),
 
       // 最近の投稿（パフォーマンスデータ付き）
-      prisma.cotDraft.findMany({
+      prisma.cot_drafts.findMany({
         take: 5,
-        orderBy: { createdAt: 'desc' },
-        include: {
-          performance: true,
-          session: true
-        }
+        orderBy: { created_at: 'desc' }
       }),
 
       // パフォーマンスデータ（過去7日間）
-      prisma.cotDraftPerformance.findMany({
+      prisma.cot_draft_performance.findMany({
         where: {
-          collectedAt: {
+          collected_at: {
             gte: sevenDaysAgo
           }
-        },
-        include: {
-          draft: true
         }
       }),
 
@@ -87,13 +80,13 @@ export async function GET() {
     // エンゲージメント率の計算
     const totalEngagements = performanceData.reduce((sum, perf) => {
       // Use the most recent data available (24h > 1h > 30m)
-      const likes = perf.likes24h || perf.likes1h || perf.likes30m || 0
-      const retweets = perf.retweets24h || perf.retweets1h || perf.retweets30m || 0
-      const comments = perf.replies24h || perf.replies1h || perf.replies30m || 0
+      const likes = perf.likes_24h || perf.likes_1h || perf.likes_30m || 0
+      const retweets = perf.retweets_24h || perf.retweets_1h || perf.retweets_30m || 0
+      const comments = perf.replies_24h || perf.replies_1h || perf.replies_30m || 0
       return sum + likes + retweets + comments
     }, 0)
     const totalImpressions = performanceData.reduce((sum, perf) => {
-      const impressions = perf.impressions24h || perf.impressions1h || perf.impressions30m || 0
+      const impressions = perf.impressions_24h || perf.impressions_1h || perf.impressions_30m || 0
       return sum + impressions
     }, 0)
     const avgEngagementRate = totalImpressions > 0 ? (totalEngagements / totalImpressions) * 100 : 0
@@ -102,18 +95,18 @@ export async function GET() {
     const lastWeekStart = new Date(sevenDaysAgo)
     lastWeekStart.setDate(lastWeekStart.getDate() - 7)
     
-    const lastWeekPostsCount = await prisma.cotDraft.count({
+    const lastWeekPostsCount = await prisma.cot_drafts.count({
       where: {
-        createdAt: {
+        created_at: {
           gte: lastWeekStart,
           lt: sevenDaysAgo
         }
       }
     })
 
-    const thisWeekPostsCount = await prisma.cotDraft.count({
+    const thisWeekPostsCount = await prisma.cot_drafts.count({
       where: {
-        createdAt: {
+        created_at: {
           gte: sevenDaysAgo
         }
       }
@@ -135,16 +128,10 @@ export async function GET() {
       recentActivity: recentPosts.map(post => ({
         id: post.id,
         content: post.content?.substring(0, 100) + '...',
-        createdAt: post.createdAt,
-        platform: post.session?.platform || 'Twitter',
-        status: post.postedAt ? 'posted' : (post.scheduledAt ? 'scheduled' : 'draft'),
-        performance: post.performance ? {
-          likes: post.performance.likes24h || post.performance.likes1h || post.performance.likes30m || 0,
-          retweets: post.performance.retweets24h || post.performance.retweets1h || post.performance.retweets30m || 0,
-          comments: post.performance.replies24h || post.performance.replies1h || post.performance.replies30m || 0,
-          impressions: post.performance.impressions24h || post.performance.impressions1h || post.performance.impressions30m || 0,
-          engagementRate: post.performance.engagementRate || 0
-        } : null
+        created_at: post.created_at,
+        platform: 'Twitter',
+        status: post.posted_at ? 'posted' : (post.scheduled_at ? 'scheduled' : 'draft'),
+        performance: null
       })),
       weeklyTrend: weeklyStats,
       lastUpdated: new Date().toISOString()

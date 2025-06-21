@@ -8,7 +8,7 @@ async function seedCharacters() {
   
   try {
     // 既存のデフォルトキャラクターを削除
-    await prisma.characterProfile.deleteMany({
+    await prisma.character_profiles.deleteMany({
       where: { isDefault: true }
     })
     
@@ -16,7 +16,7 @@ async function seedCharacters() {
     for (const character of DEFAULT_CHARACTERS) {
       const { id, createdAt, updatedAt, userId, ...characterData } = character
       
-      const created = await prisma.characterProfile.create({
+      const created = await prisma.character_profiles.create({
         data: {
           ...characterData,
           voiceStyle: character.voice_style,
@@ -31,7 +31,7 @@ async function seedCharacters() {
     console.log('\n🎉 キャラクタープロファイルのシードデータ作成完了！')
     
     // 作成されたキャラクターを確認
-    const characters = await prisma.characterProfile.findMany({
+    const characters = await prisma.character_profiles.findMany({
       where: { isDefault: true }
     })
     

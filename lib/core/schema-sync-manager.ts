@@ -42,7 +42,7 @@ export const ModelNameMapping = {
  * Prismaは自動的にcamelCaseに変換する
  */
 export const PrismaModelNames = {
-  viral_sessions: 'viralSessions',
+  viral_sessions: 'viral_sessionss',
   viral_drafts: 'viralDrafts',
   scheduled_posts: 'scheduledPosts',
   session_activity_logs: 'sessionActivityLogs',
@@ -119,14 +119,14 @@ export const ViralDraftV2Schema = z.object({
   hashtags: z.array(z.string()),
   visualNote: z.string().optional().nullable(),
   status: z.string().default('DRAFT'),
-  scheduledAt: z.date().optional().nullable(),
-  postedAt: z.date().optional().nullable(),
+  scheduled_at: z.date().optional().nullable(),
+  posted_at: z.date().optional().nullable(),
   tweetId: z.string().optional().nullable(),
   sourceTweets: z.any().optional().nullable(), // JSON
   threadStructure: z.any().optional().nullable(), // JSON
   postHistory: z.array(z.any()).default([]), // JSON array
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  created_at: z.date(),
+  updated_at: z.date(),
   characterId: z.string().optional().nullable(),
   characterNote: z.string().optional().nullable(),
   sourceUrl: z.string().optional().nullable(),
@@ -139,7 +139,7 @@ export type ViralDraftV2 = z.infer<typeof ViralDraftV2Schema>
  * PostHistoryEntryの統一スキーマ
  */
 export const PostHistoryEntrySchema = z.object({
-  postedAt: z.date(),
+  posted_at: z.date(),
   tweetId: z.string(),
   contentUsed: z.enum(['original', 'edited']),
   includesSource: z.boolean(),
@@ -248,7 +248,7 @@ export function validatePostHistoryEntry(data: unknown): PostHistoryEntry {
  * 型安全なドラフト取得
  */
 export async function getDraft(id: string): Promise<ViralDraftV2 | null> {
-  const dbRecord = await prisma.viral_drafts_v2.findUnique({
+  const dbRecord = await prisma.viral_drafts.findUnique({
     where: { id }
   })
   
@@ -267,7 +267,7 @@ export async function updateDraft(
 ): Promise<ViralDraftV2> {
   const dbData = jsToDb(data)
   
-  const updated = await prisma.viral_drafts_v2.update({
+  const updated = await prisma.viral_drafts.update({
     where: { id },
     data: dbData
   })
@@ -291,7 +291,7 @@ export async function checkSchemaSync(): Promise<{
   
   try {
     // 1. サンプルデータでテスト
-    const sampleDraft = await prisma.viral_drafts_v2.findFirst()
+    const sampleDraft = await prisma.viral_drafts.findFirst()
     if (sampleDraft) {
       const jsRecord = dbToJs(sampleDraft)
       try {

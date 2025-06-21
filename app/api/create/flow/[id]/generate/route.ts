@@ -327,7 +327,6 @@ export async function POST(
     console.log('  生成された投稿数:', generatedPosts.length);
     console.log('  prismaオブジェクト:', typeof prisma);
     console.log('  prisma.viral_drafts:', typeof prisma.viral_drafts);
-    console.log('  prisma.viralDrafts:', typeof prisma.viralDrafts);
     
     // より詳細なデバッグ
     if (!db) {
@@ -420,7 +419,7 @@ export async function POST(
       module: 'create-flow-generate',
       operation: 'generate-content',
       sessionId: id,
-      characterId: body?.characterId
+      metadata: { characterId: body?.characterId }
     })
     
     const userMessage = ErrorManager.getUserMessage(error, 'ja')

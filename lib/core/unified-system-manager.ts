@@ -161,7 +161,7 @@ export const ModuleSchemas = {
   }),
   
   // Create Module
-  viralSession: z.object({
+  viral_sessions: z.object({
     id: CommonSchemas.sessionId,
     theme: z.string().min(1).max(100),
     platform: CommonSchemas.platform,
@@ -177,7 +177,7 @@ export const ModuleSchemas = {
       'COMPLETED',
       'ERROR'
     ]),
-    createdAt: CommonSchemas.timestamp
+    created_at: CommonSchemas.timestamp
   }),
   
   // API Request/Response
@@ -305,8 +305,8 @@ export class DataTransformer {
     const baseData = {
       id: rawData.id,
       entityType,
-      createdAt: rawData.createdAt || rawData.created_at,
-      updatedAt: rawData.updatedAt || rawData.updated_at
+      created_at: rawData.createdAt || rawData.created_at,
+      updated_at: rawData.updatedAt || rawData.updated_at
     }
     
     // エンティティタイプ別の変換ロジック
@@ -355,7 +355,7 @@ export class DataTransformer {
     const displayData: DisplayData = {
       id: processData.id,
       entityType: processData.entityType,
-      createdAt: processData.createdAt
+      created_at: processData.created_at
     }
     
     // レベル別の情報量調整
@@ -469,11 +469,11 @@ export class ErrorManager {
           id: errorLog.id,
           endpoint: `${context.module}/${context.operation}`,
           method: 'ERROR',
-          status_code: 500,  // snake_case に修正
-          error_message: errorLog.message,  // snake_case に修正
-          stack_trace: errorLog.stack,  // snake_case に修正
-          request_body: errorLog.metadata,  // snake_case に修正
-          user_id: errorLog.userId  // snake_case に修正
+          status_code: 500,
+          error_message: errorLog.message,
+          stack_trace: errorLog.stack,
+          request_body: errorLog.metadata
+          // user_id フィールドは存在しないため削除
         }
       })
     } catch (dbError) {
@@ -612,10 +612,10 @@ export class DBManager {
   /**
    * 単一レコードを取得
    */
-  static async findUnique<T extends keyof typeof prisma>(
-    model: T | string,
-    args: Parameters<typeof prisma[T]['findUnique']>[0]
-  ): Promise<ReturnType<typeof prisma[T]['findUnique']>> {
+  static async findUnique(
+    model: string,
+    args: any
+  ): Promise<any> {
     const normalizedModel = this.normalizeModelName(model as string)
     return await (prisma[normalizedModel] as any).findUnique(args)
   }
@@ -623,10 +623,10 @@ export class DBManager {
   /**
    * 複数レコードを取得
    */
-  static async findMany<T extends keyof typeof prisma>(
-    model: T | string,
-    args?: Parameters<typeof prisma[T]['findMany']>[0]
-  ): Promise<ReturnType<typeof prisma[T]['findMany']>> {
+  static async findMany(
+    model: string,
+    args?: any
+  ): Promise<any> {
     const normalizedModel = this.normalizeModelName(model as string)
     return await (prisma[normalizedModel] as any).findMany(args)
   }
@@ -634,10 +634,10 @@ export class DBManager {
   /**
    * レコードを作成
    */
-  static async create<T extends keyof typeof prisma>(
-    model: T | string,
-    args: Parameters<typeof prisma[T]['create']>[0]
-  ): Promise<ReturnType<typeof prisma[T]['create']>> {
+  static async create(
+    model: string,
+    args: any
+  ): Promise<any> {
     const normalizedModel = this.normalizeModelName(model as string)
     return await (prisma[normalizedModel] as any).create(args)
   }
@@ -645,10 +645,10 @@ export class DBManager {
   /**
    * レコードを更新
    */
-  static async update<T extends keyof typeof prisma>(
-    model: T | string,
-    args: Parameters<typeof prisma[T]['update']>[0]
-  ): Promise<ReturnType<typeof prisma[T]['update']>> {
+  static async update(
+    model: string,
+    args: any
+  ): Promise<any> {
     const normalizedModel = this.normalizeModelName(model as string)
     return await (prisma[normalizedModel] as any).update(args)
   }
@@ -656,10 +656,10 @@ export class DBManager {
   /**
    * レコードを削除
    */
-  static async delete<T extends keyof typeof prisma>(
-    model: T | string,
-    args: Parameters<typeof prisma[T]['delete']>[0]
-  ): Promise<ReturnType<typeof prisma[T]['delete']>> {
+  static async delete(
+    model: string,
+    args: any
+  ): Promise<any> {
     const normalizedModel = this.normalizeModelName(model as string)
     return await (prisma[normalizedModel] as any).delete(args)
   }
@@ -752,11 +752,12 @@ export interface ProcessData {
   entityType: EntityType
   title?: string
   content?: string
+  theme?: string
   status?: string
   score?: number
   progress?: number
-  createdAt?: string
-  updatedAt?: string
+  created_at?: string
+  updated_at?: string
   metadata?: Record<string, any>
 }
 
@@ -767,7 +768,7 @@ export interface DisplayData {
   summary?: string
   status?: string
   score?: number
-  createdAt?: string
+  created_at?: string
   [key: string]: any
 }
 

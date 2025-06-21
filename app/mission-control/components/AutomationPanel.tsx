@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Switch } from '@/components/ui/switch'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+// Alert削除: Card系コンポーネントを使用
 import { 
   Calendar,
   Clock,
@@ -161,15 +161,19 @@ export function AutomationPanel() {
 
       {/* Next Post Alert */}
       {nextPostInfo && (
-        <Alert className="bg-green-50 border-green-200">
-          <Timer className="w-4 h-4 text-green-600" />
-          <AlertDescription className="text-green-800">
-            次の投稿まで <strong>{nextPostInfo.hours}時間{nextPostInfo.minutes}分</strong>
-            <span className="ml-2 text-sm">
-              ({new Date(nextPostInfo.post.scheduledAt).toLocaleString('ja-JP')})
-            </span>
-          </AlertDescription>
-        </Alert>
+        <Card className="bg-green-50 border-green-200">
+          <CardContent className="p-3">
+            <div className="flex items-center space-x-2">
+              <Timer className="w-4 h-4 text-green-600" />
+              <span className="text-green-800">
+                次の投稿まで <strong>{nextPostInfo.hours}時間{nextPostInfo.minutes}分</strong>
+                <span className="ml-2 text-sm">
+                  ({new Date(nextPostInfo.post.scheduledAt).toLocaleString('ja-JP')})
+                </span>
+              </span>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Automation Settings */}
@@ -359,19 +363,23 @@ export function AutomationPanel() {
       </Card>
 
       {/* Automation Status */}
-      <Alert className="bg-blue-50 border-blue-200">
-        <Zap className="w-4 h-4 text-blue-600" />
-        <AlertDescription className="text-blue-800">
-          <strong>自動化ステータス:</strong> {settings.autoPost ? 'アクティブ' : '停止中'}
-          {settings.autoPost && (
-            <span className="ml-2">
-              • 次回投稿: {nextPostInfo ? 
-                `${nextPostInfo.hours}時間${nextPostInfo.minutes}分後` : 
-                '予約なし'}
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="p-3">
+          <div className="flex items-center space-x-2">
+            <Zap className="w-4 h-4 text-blue-600" />
+            <span className="text-blue-800">
+              <strong>自動化ステータス:</strong> {settings.autoPost ? 'アクティブ' : '停止中'}
+              {settings.autoPost && (
+                <span className="ml-2">
+                  • 次回投稿: {nextPostInfo ? 
+                    `${nextPostInfo.hours}時間${nextPostInfo.minutes}分後` : 
+                    '予約なし'}
+                </span>
+              )}
             </span>
-          )}
-        </AlertDescription>
-      </Alert>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

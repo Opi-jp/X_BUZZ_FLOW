@@ -46,8 +46,8 @@ export default function MediaUploader({
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const allowedMimeTypes = acceptedTypes.flatMap(type => MEDIA_CONFIGS[type].allowedTypes)
-  const maxFileSize = Math.max(...acceptedTypes.map(type => MEDIA_CONFIGS[type].maxFileSize))
+  const allowedMimeTypes = acceptedTypes.flatMap(type => MEDIA_CONFIGS[type].allowedFormats)
+  const maxFileSize = Math.max(...acceptedTypes.map(type => MEDIA_CONFIGS[type].maxSize))
 
   const handleFileSelect = useCallback(async (selectedFiles: FileList) => {
     if (files.length >= maxFiles) {
@@ -75,11 +75,10 @@ export default function MediaUploader({
         continue
       }
 
-      const config = MEDIA_CONFIGS[mediaType]
-      const validation = validateMediaFile(file, config)
+      const validation = validateMediaFile(file, mediaType)
 
-      if (!validation.isValid) {
-        alert(`${file.name}: ${validation.errors.join(', ')}`)
+      if (!validation.valid) {
+        alert(`${file.name}: ${validation.error}`)
         continue
       }
 
@@ -101,6 +100,7 @@ export default function MediaUploader({
         // ファイル情報作成
         const mediaFile: MediaFile = {
           id: `${Date.now()}_${i}`,
+          file: optimized.file,
           type: mediaType as 'image' | 'video' | 'gif',
           url: URL.createObjectURL(optimized.file),
           filename: file.name,
@@ -284,11 +284,14 @@ export default function MediaUploader({
                     {/* プレビュー画像 */}
                     <div className="flex-shrink-0">
                       {file.type === 'image' || file.type === 'gif' ? (
-                        <img
-                          src={file.url}
-                          alt={file.filename}
-                          className="w-16 h-16 object-cover rounded border"
-                        />
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={file.url}
+                            alt={file.filename}
+                            className="w-16 h-16 object-cover rounded border"
+                          />
+                        </>
                       ) : (
                         <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center">
                           {getFileIcon(file.type)}
@@ -318,13 +321,7 @@ export default function MediaUploader({
                       {file.type === 'image' && file.width && file.height && (
                         <div className="mb-3">
                           {(() => {
-                            const sizeCheck = checkOptimalImageSize({
-                              width: file.width,
-                              height: file.height,
-                              aspectRatio: file.width / file.height,
-                              size: file.size,
-                              type: 'image/jpeg'
-                            })
+                            const sizeCheck = checkOptimalImageSize(file.width!, file.height!)
                             
                             return sizeCheck.isOptimal ? (
                               <div className="flex items-center space-x-1">
@@ -335,7 +332,7 @@ export default function MediaUploader({
                               <div className="flex items-center space-x-1">
                                 <AlertCircle className="w-3 h-3 text-yellow-500" />
                                 <span className="text-xs text-yellow-600">
-                                  {sizeCheck.recommendations[0]}
+                                  {sizeCheck.recommendation}
                                 </span>
                               </div>
                             )

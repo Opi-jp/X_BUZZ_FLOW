@@ -28,4 +28,3 @@ export const prisma = db
 
 // 型のエクスポート
 export { PrismaClient } from '@prisma/client'
-export type { PostType } from '@prisma/client'

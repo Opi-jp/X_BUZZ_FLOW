@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Brain, Zap } from 'lucide-react'
-import { api } from '@/lib/api-client'
+// api-client削除: 直接fetch呼び出しに変更
 
 export default function CoTCreationForm() {
   const router = useRouter()
@@ -25,12 +25,18 @@ export default function CoTCreationForm() {
     setLoading(true)
     
     try {
-      // 統一APIクライアントを使用（自動的に新しいエンドポイントに変換）
-      const result = await api.generation.content.session.create(config)
+      // 直接APIエンドポイントを呼び出し
+      const response = await fetch('/api/create/flow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      })
+      
+      const result = await response.json()
       
       if (result.success && result.sessionId) {
-        // セッション詳細ページにリダイレクト
-        router.push(`/generation/content/session/${result.sessionId}`)
+        // セッション詳細ページにリダイレクト 
+        router.push(`/create/flow/${result.sessionId}`)
       } else {
         throw new Error(result.error || 'セッション作成に失敗しました')
       }

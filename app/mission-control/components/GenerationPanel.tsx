@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+// Alert削除: Card系コンポーネントを使用
 import { 
   Brain, 
   Sparkles, 
@@ -318,14 +318,18 @@ export function GenerationPanel() {
       )}
 
       {/* Quick Tips */}
-      <Alert className="bg-purple-50 border-purple-200">
-        <Sparkles className="w-4 h-4 text-purple-600" />
-        <AlertDescription className="text-purple-800">
-          <strong>ヒント:</strong> 3ステップ生成システム（Perplexity→GPT→Claude）により、
-          最新トレンドを反映した高品質なコンテンツを生成できます。
-          各キャラクターの個性を活かして、バリエーション豊かな投稿を作成しましょう。
-        </AlertDescription>
-      </Alert>
+      <Card className="bg-purple-50 border-purple-200">
+        <CardContent className="p-3">
+          <div className="flex items-center space-x-2">
+            <Sparkles className="w-4 h-4 text-purple-600" />
+            <span className="text-purple-800">
+              <strong>ヒント:</strong> 3ステップ生成システム（Perplexity→GPT→Claude）により、
+              最新トレンドを反映した高品質なコンテンツを生成できます。
+              各キャラクターの個性を活かして、バリエーション豊かな投稿を作成しましょう。
+            </span>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

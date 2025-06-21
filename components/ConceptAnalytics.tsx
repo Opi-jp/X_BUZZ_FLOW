@@ -90,8 +90,8 @@ export function ConceptAnalytics({ sessionId }: ConceptAnalyticsProps) {
                   .sort((a, b) => (b[1] as number) - (a[1] as number))
                   .slice(0, 5)
                   .map(([angle, count]) => (
-                    <Badge key={angle} variant="secondary">
-                      {angle} ({count})
+                    <Badge key={angle as string} variant="secondary">
+                      {angle as string} ({count as number})
                     </Badge>
                   ))}
               </div>
@@ -136,7 +136,7 @@ export function ConceptAnalytics({ sessionId }: ConceptAnalyticsProps) {
                         />
                       </div>
                       <span className="text-sm text-muted-foreground w-8 text-right">
-                        {count}
+                        {count as number}
                       </span>
                     </div>
                   </div>

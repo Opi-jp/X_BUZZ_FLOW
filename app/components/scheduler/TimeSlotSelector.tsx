@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { 
-  TIME_SLOT_PRESETS, 
+  TIME_SLOT_PRESETS_UI, 
   TimeSlotPreset, 
   ContentType, 
-  getRecommendedTimeSlots,
   getJSTDate,
   getNextOptimalTime
 } from '@/lib/time-slot-presets'
@@ -26,7 +25,7 @@ interface TimeSlotSelectorProps {
 }
 
 export default function TimeSlotSelector({
-  contentType = 'general',
+  contentType = 'business',
   selectedTimeSlot,
   onTimeSlotSelect,
   defaultDate = new Date(),
@@ -39,13 +38,19 @@ export default function TimeSlotSelector({
   const [useCustomTime, setUseCustomTime] = useState(false)
   
   const jstNow = getJSTDate()
-  const recommendedSlots = getRecommendedTimeSlots(contentType)
+  const recommendedSlots = TIME_SLOT_PRESETS_UI // 推奨スロットとして全てのプリセットを使用
   
   // 選択が変更された時の処理
   useEffect(() => {
     if (selectedSlot && !useCustomTime) {
-      const scheduledTime = getNextOptimalTime(selectedSlot, customDate)
-      onTimeSlotSelect?.(selectedSlot, scheduledTime)
+      // 選択されたスロットから時間を取得
+      const slot = recommendedSlots.find(s => s.id === selectedSlot)
+      if (slot) {
+        const [hours, minutes] = slot.weekdayTime.split('-')[0].split(':').map(Number)
+        const scheduledTime = new Date(customDate)
+        scheduledTime.setHours(hours, minutes, 0, 0)
+        onTimeSlotSelect?.(selectedSlot, scheduledTime)
+      }
     } else if (useCustomTime && customTime) {
       const [hours, minutes] = customTime.split(':').map(Number)
       const scheduledTime = new Date(customDate)
@@ -87,15 +92,11 @@ export default function TimeSlotSelector({
         minute: '2-digit'
       }) + ' JST'
     } else if (selectedSlot) {
-      const scheduled = getNextOptimalTime(selectedSlot, customDate)
-      return scheduled.toLocaleString('ja-JP', { 
-        timeZone: 'Asia/Tokyo',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }) + ' JST'
+      const slot = recommendedSlots.find(s => s.id === selectedSlot)
+      if (slot) {
+        const timeRange = slot.weekdayTime
+        return `${customDate.toLocaleDateString('ja-JP')} ${timeRange} JST`
+      }
     }
     return null
   }
@@ -209,7 +210,7 @@ export default function TimeSlotSelector({
             時間帯プリセット
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {TIME_SLOT_PRESETS.map(preset => (
+            {recommendedSlots.map(preset => (
               <TimeSlotCard
                 key={preset.id}
                 preset={preset}

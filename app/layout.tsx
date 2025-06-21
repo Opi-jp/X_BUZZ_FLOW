@@ -1,23 +1,25 @@
 import type { Metadata } from 'next'
-import { Noto_Sans_JP } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import DebuggerInjector from './components/DebuggerInjector'
 
-const notoSansJP = Noto_Sans_JP({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-noto-sans-jp',
-})
+// Google Fontsのメタデータ
+const googleFontsLink = [
+  { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+  { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+  {
+    rel: 'stylesheet',
+    href: 'https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@300;400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&family=M+PLUS+1+Code:wght@400;500;700&display=swap',
+  },
+]
 
 export const metadata: Metadata = {
-  title: 'BuzzFlow - AI活用型SNS運用支援システム',
-  description: 'AIを活用したX(Twitter)バズ投稿管理・分析・自動化システム',
-  keywords: 'AI, Twitter, X, バズ, 投稿管理, SNS運用, 自動化',
-  authors: [{ name: 'BuzzFlow Team' }],
-  creator: 'BuzzFlow',
-  publisher: 'BuzzFlow',
+  title: 'Cardi-SYSTEM - AI駆動型バイラルコンテンツ生成プラットフォーム',
+  description: '元詐欺師Cardi Dareの哲学とAIを融合した、人間味あるバイラルコンテンツ生成システム',
+  keywords: 'AI, Twitter, X, バイラル, Cardi Dare, コンテンツ生成, 自動化',
+  authors: [{ name: 'Cardi-SYSTEM Team' }],
+  creator: 'Cardi-SYSTEM',
+  publisher: 'Cardi-SYSTEM',
   icons: {
     icon: '/icon.svg',
     shortcut: '/favicon.ico',
@@ -32,19 +34,27 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
     nocache: true,
+    noarchive: true,
+    nosnippet: true,
+    noimageindex: true,
     googleBot: {
       index: false,
       follow: false,
       noimageindex: true,
+      noarchive: true,
+      nosnippet: true,
       'max-image-preview': 'none',
+      'max-snippet': -1,
+      'max-video-preview': -1,
     },
   },
   openGraph: {
-    title: 'BuzzFlow - AI活用型SNS運用支援システム',
-    description: 'AIを活用したX(Twitter)バズ投稿管理・分析・自動化システム',
+    title: 'Cardi-SYSTEM - AI駆動型バイラルコンテンツ生成プラットフォーム',
+    description: '元詐欺師Cardi Dareの哲学とAIを融合した、人間味あるバイラルコンテンツ生成システム',
     locale: 'ja_JP',
     type: 'website',
   },
+  // links プロパティは存在しないため削除（Google FontsはHTML headで読み込み）
 }
 
 export default function RootLayout({
@@ -54,7 +64,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={`${notoSansJP.variable} font-sans antialiased`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link 
+          rel="stylesheet" 
+          href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@300;400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700;900&family=M+PLUS+1+Code:wght@400;500;700&display=swap"
+        />
+      </head>
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <DebuggerInjector />
           <div className="min-h-screen bg-gray-100">

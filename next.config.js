@@ -2,6 +2,10 @@
 const nextConfig = {
   serverExternalPackages: ['@prisma/client', 'prisma'],
   transpilePackages: [],
+  
+  // Production最適化
+  productionBrowserSourceMaps: false,
+  
   typescript: {
     // Vercel デプロイ時の TypeScript エラーをバイパス
     ignoreBuildErrors: process.env.VERCEL_ENV === 'production',
@@ -10,12 +14,23 @@ const nextConfig = {
     // Vercel デプロイ時の ESLint エラーをバイパス
     ignoreDuringBuilds: process.env.VERCEL_ENV === 'production',
   },
+  
+  // 画像最適化
   images: {
     domains: [
       'pbs.twimg.com',
       'abs.twimg.com',
       'video.twimg.com',
     ],
+    minimumCacheTTL: 60,
+  },
+  
+  // Experimental最適化
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
   async headers() {
     return [

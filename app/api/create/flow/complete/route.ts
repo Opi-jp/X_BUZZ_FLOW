@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const { theme, platform, style, characterId, autoSelectConcepts } = CompleteFlowSchema.parse(body)
     
     // 新しいセッションを作成
-    const session = await prisma.viralSession.create({
+    const session = await prisma.viral_sessions.create({
       data: {
         theme,
         platform,
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const drafts = await createDrafts(session, contents, characterId)
     
     // セッションステータスを完了に更新
-    await prisma.viralSession.update({
+    await prisma.viral_sessions.update({
       where: { id: session.id },
       data: { status: 'COMPLETED' }
     })
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
         publishNow: `/publish/post/now`,
         schedule: `/publish/schedule/set`
       }
-    }, 'Content generation flow completed successfully')
+    })
     
   } catch (error) {
     console.error('[Create/Flow/Complete] Error:', error)
@@ -117,15 +117,15 @@ async function collectTopics(session: any, theme: string, platform: string, styl
     .replace(/\${platform}/g, platform)
     .replace(/\${style}/g, style)
   
-  const response = await perplexity.chat({
-    model: 'sonar-pro',
-    messages: [{ role: 'user', content: promptTemplate }]
-  })
+  const response = await perplexity.createCompletion(
+    [{ role: 'user', content: promptTemplate }],
+    { model: 'sonar-pro' }
+  )
   
   const topicsText = response.choices[0].message.content
   
   // セッションを更新
-  await prisma.viralSession.update({
+  await prisma.viral_sessions.update({
     where: { id: session.id },
     data: {
       status: 'TOPICS_COLLECTED',
@@ -173,7 +173,7 @@ async function generateConcepts(session: any, topics: any[], platform: string, s
   }
   
   // セッションを更新
-  await prisma.viralSession.update({
+  await prisma.viral_sessions.update({
     where: { id: session.id },
     data: {
       status: 'CONCEPTS_GENERATED',
@@ -240,12 +240,12 @@ ${conceptData}
   }
   
   // セッションを更新
-  await prisma.viralSession.update({
+  await prisma.viral_sessions.update({
     where: { id: session.id },
     data: {
       status: 'CONTENTS_GENERATED',
       contents: JSON.stringify(contents),
-      selectedConcepts: concepts
+      selected_ids: concepts
     }
   })
   
@@ -257,16 +257,15 @@ async function createDrafts(session: any, contents: any[], characterId: string) 
   const drafts = []
   
   for (const content of contents) {
-    const draft = await prisma.viralDraftV2.create({
+    const draft = await prisma.viral_drafts.create({
       data: {
-        sessionId: session.id,
-        conceptId: content.conceptId,
+        session_id: session.id,
+        concept_id: content.conceptId,
         title: content.conceptTitle,
         content: content.content,
         hashtags: ['AI時代', characterId === 'cardi-dare' ? 'カーディダーレ' : 'AI活用'],
         status: 'DRAFT',
-        characterId: content.characterId,
-        characterNote: `Generated with ${characterId} character`
+        character_id: content.characterId
       }
     })
     

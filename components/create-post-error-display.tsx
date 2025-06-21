@@ -2,7 +2,8 @@
 
 import { AlertCircle, RefreshCw, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+// Alert削除: Card系コンポーネントを使用
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CreatePostErrorResponse, CreatePostPhase } from '@/lib/create-post-error-handler'
 
 interface CreatePostErrorDisplayProps {
@@ -27,23 +28,27 @@ export function CreatePostErrorDisplay({
   const phaseDisplay = phaseDisplayNames[error.phase] || error.phase
 
   return (
-    <Alert variant="destructive" className="mb-4">
-      <AlertCircle className="h-4 w-4" />
-      <AlertTitle className="flex items-center justify-between">
-        <span>{phaseDisplay}でエラーが発生しました</span>
-        {onDismiss && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDismiss}
-            className="h-6 w-6 p-0"
-          >
-            <XCircle className="h-4 w-4" />
-          </Button>
-        )}
-      </AlertTitle>
-      <AlertDescription className="mt-2 space-y-2">
-        <p>{error.userMessage}</p>
+    <Card className="mb-4 border-red-200 bg-red-50">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center justify-between text-red-800">
+          <div className="flex items-center space-x-2">
+            <AlertCircle className="h-4 w-4" />
+            <span>{phaseDisplay}でエラーが発生しました</span>
+          </div>
+          {onDismiss && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDismiss}
+              className="h-6 w-6 p-0"
+            >
+              <XCircle className="h-4 w-4" />
+            </Button>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        <p className="text-red-700">{error.userMessage}</p>
         
         {process.env.NODE_ENV === 'development' && (
           <details className="text-xs text-gray-500">
@@ -71,8 +76,8 @@ export function CreatePostErrorDisplay({
             再試行
           </Button>
         )}
-      </AlertDescription>
-    </Alert>
+      </CardContent>
+    </Card>
   )
 }
 

@@ -268,8 +268,8 @@ export async function POST(request: NextRequest) {
         
         const postId = String(tweet.id) // 念のため文字列に変換
         
-        const existingPost = await prisma.buzzPost.findUnique({
-          where: { postId: postId },
+        const existingPost = await prisma.buzz_posts.findUnique({
+          where: { post_id: postId },
         })
 
         if (existingPost) {
@@ -300,24 +300,25 @@ export async function POST(request: NextRequest) {
               buzzTags.push('trend_word')
             }
             
-            const post = await prisma.buzzPost.create({
+            const post = await prisma.buzz_posts.create({
               data: {
-                postId: postId,
+                id: `buzz_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                post_id: postId,
                 content: tweet.text || '',
-                authorUsername: tweet.author?.userName || tweet.author?.username || '',
-                authorId: tweet.author?.id || '',
-                authorFollowers: tweet.author?.followersCount || 0,
-                authorFollowing: tweet.author?.followingCount || 0,
-                authorVerified: tweet.author?.verified || null,
-                likesCount: likes,
-                retweetsCount: retweets,
-                repliesCount: replies,
-                impressionsCount: impressions,
-                postedAt: new Date(tweet.createdAt || tweet.created_at),
+                author_username: tweet.author?.userName || tweet.author?.username || '',
+                author_id: tweet.author?.id || '',
+                author_followers: tweet.author?.followersCount || 0,
+                author_following: tweet.author?.followingCount || 0,
+                author_verified: tweet.author?.verified || null,
+                likes_count: likes,
+                retweets_count: retweets,
+                replies_count: replies,
+                impressions_count: impressions,
+                posted_at: new Date(tweet.createdAt || tweet.created_at),
                 url: tweet.url || tweet.twitterUrl || `https://twitter.com/${tweet.author?.userName}/status/${tweet.id}`,
                 theme: query,
                 language: tweet.lang || 'ja',
-                mediaUrls: tweet.extendedEntities?.media?.map((m: any) => m.media_url_https) || [],
+                media_urls: tweet.extendedEntities?.media?.map((m: any) => m.media_url_https) || [],
                 hashtags: [...(tweet.entities?.hashtags?.map((h: any) => h.text) || []), ...buzzTags],
               },
             })
@@ -325,7 +326,7 @@ export async function POST(request: NextRequest) {
             console.log(`Successfully saved tweet ${postId}`)
           } catch (error) {
             console.error('Error saving tweet:', {
-              postId: postId,
+              post_id: postId,
               error: error instanceof Error ? error.message : error,
               stack: error instanceof Error ? error.stack : undefined
             })
@@ -345,13 +346,13 @@ export async function POST(request: NextRequest) {
       
       // エンゲージメント分析
       avgLikes: savedPosts.length > 0 
-        ? Math.round(savedPosts.reduce((sum, p) => sum + p.likesCount, 0) / savedPosts.length)
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.likes_count, 0) / savedPosts.length)
         : 0,
       avgRetweets: savedPosts.length > 0
-        ? Math.round(savedPosts.reduce((sum, p) => sum + p.retweetsCount, 0) / savedPosts.length)
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.retweets_count, 0) / savedPosts.length)
         : 0,
       avgImpressions: savedPosts.length > 0
-        ? Math.round(savedPosts.reduce((sum, p) => sum + p.impressionsCount, 0) / savedPosts.length)
+        ? Math.round(savedPosts.reduce((sum, p) => sum + p.impressions_count, 0) / savedPosts.length)
         : 0,
       
       // バズレベル分析

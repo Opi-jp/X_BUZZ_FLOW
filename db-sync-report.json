@@ -1,22 +1,22 @@
 {
-  "timestamp": "2025-06-20T20:05:10.778Z",
+  "timestamp": "2025-06-21T11:16:05.762Z",
   "summary": {
     "implementation": {
-      "usedModels": 56,
-      "usedOperations": 56,
-      "usedFields": 92
+      "usedModels": 51,
+      "usedOperations": 51,
+      "usedFields": 76
     },
     "schema": {
       "models": 43,
       "enums": 9,
-      "totalFields": 611
+      "totalFields": 617
     },
     "database": {
       "tables": 44,
       "types": 9
     },
     "sync": {
-      "issues": 13,
+      "issues": 8,
       "warnings": 1
     }
   },
@@ -24,50 +24,8 @@
     {
       "layer": "implementation-schema",
       "type": "MISSING_IN_SCHEMA",
-      "model": "perplexityReport",
-      "message": "実装で使用されているモデル 'perplexityReport' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "buzzPost",
-      "message": "実装で使用されているモデル 'buzzPost' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "viralDraftV2",
-      "message": "実装で使用されているモデル 'viralDraftV2' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "viralSession",
-      "message": "実装で使用されているモデル 'viralSession' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "characterProfile",
-      "message": "実装で使用されているモデル 'characterProfile' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "cotDraft",
-      "message": "実装で使用されているモデル 'cotDraft' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "cotSession",
-      "message": "実装で使用されているモデル 'cotSession' がスキーマに存在しません"
-    },
-    {
-      "layer": "implementation-schema",
-      "type": "MISSING_IN_SCHEMA",
-      "model": "cotDraftPerformance",
-      "message": "実装で使用されているモデル 'cotDraftPerformance' がスキーマに存在しません"
+      "model": "viral_drafts_v2",
+      "message": "実装で使用されているモデル 'viral_drafts_v2' がスキーマに存在しません"
     },
     {
       "layer": "implementation-schema",
@@ -78,8 +36,14 @@
     {
       "layer": "implementation-schema",
       "type": "MISSING_IN_SCHEMA",
-      "model": "scheduledPost",
-      "message": "実装で使用されているモデル 'scheduledPost' がスキーマに存在しません"
+      "model": "viralSession",
+      "message": "実装で使用されているモデル 'viralSession' がスキーマに存在しません"
+    },
+    {
+      "layer": "implementation-schema",
+      "type": "MISSING_IN_SCHEMA",
+      "model": "viralDraftV2",
+      "message": "実装で使用されているモデル 'viralDraftV2' がスキーマに存在しません"
     },
     {
       "layer": "implementation-schema",
@@ -96,6 +60,12 @@
     {
       "layer": "implementation-schema",
       "type": "MISSING_IN_SCHEMA",
+      "model": "scheduledPost",
+      "message": "実装で使用されているモデル 'scheduledPost' がスキーマに存在しません"
+    },
+    {
+      "layer": "implementation-schema",
+      "type": "MISSING_IN_SCHEMA",
       "model": "scheduledRetweet",
       "message": "実装で使用されているモデル 'scheduledRetweet' がスキーマに存在しません"
     }
@@ -106,52 +76,27 @@
       "type": "UNCLEAR_FIELDS",
       "fields": [
         "gte",
-        "postedAt",
         "generatedAt",
         "dataSourcesUsed",
         "perplexity",
         "news",
         "buzz",
-        "likesCount",
-        "session",
-        "select",
         "sessionId",
-        "characterId",
-        "tweetId",
-        "conceptId",
-        "posts",
-        "visualNote",
-        "characterNote",
-        "drafts",
-        "orderBy",
+        "hasTopics",
+        "hasConcepts",
+        "selectedIds",
+        "hasContents",
         "selectedConcepts",
         "_count",
+        "select",
         "errorMessage",
-        "isDefault",
-        "visual",
         "lt",
         "in",
-        "collectedAt",
-        "performance",
-        "draft",
-        "publishedAt",
-        "source",
-        "postId",
-        "authorUsername",
-        "authorId",
-        "authorFollowers",
-        "authorFollowing",
-        "authorVerified",
-        "retweetsCount",
-        "repliesCount",
-        "impressionsCount",
-        "https",
         "planType",
         "expectedEngagement",
         "targetPost",
         "newsArticle",
-        "scheduledTime",
-        "draftId",
+        "characterId",
         "characterCount",
         "sessionType",
         "activityType",
@@ -159,9 +104,12 @@
         "errorDetails",
         "timestamp",
         "not",
+        "performance",
         "OR",
         "engagements30m",
+        "session",
         "contains",
+        "postedAt",
         "lte",
         "scheduledAt",
         "originalPostId",
@@ -175,18 +123,13 @@
   ],
   "details": {
     "missingModels": [
-      "perplexityReport",
-      "buzzPost",
-      "viralDraftV2",
-      "viralSession",
-      "characterProfile",
-      "cotDraft",
-      "cotSession",
-      "cotDraftPerformance",
+      "viral_drafts_v2",
       "newsArticle",
-      "scheduledPost",
+      "viralSession",
+      "viralDraftV2",
       "user",
       "client",
+      "scheduledPost",
       "scheduledRetweet"
     ],
     "missingTables": [],

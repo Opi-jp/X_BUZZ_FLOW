@@ -8,19 +8,18 @@
 // 1. 基本的なインポート
 // ============================================
 
-// 最小限のインポート
-import { IDGenerator, EntityType, ErrorManager } from '@/lib/core/unified-system-manager'
-
 // 標準的なインポート
 import { 
   IDGenerator, 
   EntityType,
+  ErrorManager,
+  PromptManager,
   CommonSchemas,
   ModuleSchemas,
   DataTransformer,
-  ErrorManager,
   DBManager
 } from '@/lib/core/unified-system-manager'
+import { NextResponse } from 'next/server'
 
 // フルインポート（全機能使用時）
 import USM from '@/lib/core/unified-system-manager'
@@ -138,12 +137,12 @@ export async function createWithLog<T>(
   return DBManager.transaction(async (tx) => {
     const entity = await createFn(id)
     
-    await tx.sessionActivityLog.create({
+    await tx.session_activity_logs.create({
       data: {
         id: IDGenerator.generate(EntityType.ACTIVITY_LOG),
-        sessionId: id,
-        sessionType: entityType,
-        activityType: 'CREATED',
+        session_id: id,
+        session_type: entityType,
+        activity_type: 'CREATED',
         details: logDetails
       }
     })
@@ -162,12 +161,12 @@ export async function updateWithLog<T>(
   return DBManager.transaction(async (tx) => {
     const entity = await updateFn()
     
-    await tx.sessionActivityLog.create({
+    await tx.session_activity_logs.create({
       data: {
         id: IDGenerator.generate(EntityType.ACTIVITY_LOG),
-        sessionId: id,
-        sessionType: entityType,
-        activityType: 'UPDATED',
+        session_id: id,
+        session_type: entityType,
+        activity_type: 'UPDATED',
         details: logDetails
       }
     })

@@ -92,11 +92,11 @@ export async function POST(request: NextRequest) {
     if (includePerplexity) {
       try {
         // まず既存のレポートをDBから取得（1時間以内のもの）
-        const recentReport = await prisma.perplexityReport.findFirst({
+        const recentReport = await prisma.perplexity_reports.findFirst({
           where: {
-            createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) }
+            created_at: { gte: new Date(Date.now() - 60 * 60 * 1000) }
           },
-          orderBy: { createdAt: 'desc' }
+          orderBy: { created_at: 'desc' }
         })
 
         if (recentReport) {
@@ -108,10 +108,10 @@ export async function POST(request: NextRequest) {
               trends: recentReport.trends as string[],
               insights: recentReport.insights as string[]
             },
-            contentAngles: recentReport.contentAngles,
-            marketContext: recentReport.marketContext,
-            competitorActivity: recentReport.competitorActivity,
-            riskFactors: recentReport.riskFactors,
+            contentAngles: recentReport.personal_angles,
+            marketContext: recentReport.metadata,
+            competitorActivity: recentReport.metadata,
+            riskFactors: recentReport.metadata,
             newsIntegrated: true,
             newsUsedCount: Math.min(briefing.newsHighlights.length, 5),
             fromCache: true
@@ -155,12 +155,12 @@ export async function POST(request: NextRequest) {
 
     // 3. バズツイートのトレンド分析
     if (includeBuzz) {
-      const buzzPosts = await prisma.buzzPost.findMany({
+      const buzzPosts = await prisma.buzz_posts.findMany({
         where: {
-          postedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-          likesCount: { gte: 1000 }
+          posted_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+          likes_count: { gte: 1000 }
         },
-        orderBy: { likesCount: 'desc' },
+        orderBy: { likes_count: 'desc' },
         take: 20
       })
 
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest) {
             count: themePosts.length,
             topPost: themePosts[0],
             totalEngagement: themePosts.reduce((sum, post) => 
-              sum + post.likesCount + post.retweetsCount, 0
+              sum + post.likes_count + post.retweets_count, 0
             )
           }
         }
@@ -292,7 +292,7 @@ async function generateActionableItems(briefingData: any) {
       type: 'urgent_rp',
       priority: 'high',
       action: `「${topTrend.theme}」のバズツイートにRP`,
-      details: `@${topTrend.topPost?.authorUsername}の投稿（${topTrend.topPost?.likesCount.toLocaleString()}いいね）に独自視点でRP`,
+      details: `@${topTrend.topPost?.author_username}の投稿（${topTrend.topPost?.likes_count.toLocaleString()}いいね）に独自視点でRP`,
       timeframe: '30分以内',
       url: topTrend.topPost?.url
     })

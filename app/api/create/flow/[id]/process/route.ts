@@ -515,7 +515,10 @@ export async function POST(
             return NextResponse.json({
               action: 'completed',
               message: 'すべての処理が完了しました',
-              drafts: drafts.map(draft => DataTransformer.toDisplayData(draft, EntityType.DRAFT)),
+              drafts: drafts.map(draft => {
+                const processData = DataTransformer.toProcessData(draft, EntityType.DRAFT)
+                return DataTransformer.toDisplayData(processData, 'summary')
+              }),
               autoProgress: true
             })
           }
@@ -547,7 +550,10 @@ export async function POST(
         return NextResponse.json({
           action: 'completed',
           message: 'すべての処理が完了しました',
-          drafts: drafts.map(draft => DataTransformer.toDisplayData(draft, EntityType.DRAFT)),
+          drafts: drafts.map(draft => {
+            const processData = DataTransformer.toProcessData(draft, EntityType.DRAFT)
+            return DataTransformer.toDisplayData(processData, 'summary')
+          }),
           requestId
         })
         

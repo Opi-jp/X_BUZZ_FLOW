@@ -233,15 +233,11 @@ export class CreatePostErrorHandler {
     errorType: CreatePostErrorType
   ): Promise<void> {
     try {
-      await prisma.viralSession.update({
+      await prisma.viral_sessions.update({
         where: { id: sessionId },
         data: {
-          status: 'ERROR',
-          errorDetails: {
-            phase,
-            errorType,
-            timestamp: new Date().toISOString()
-          }
+          status: 'ERROR'
+          // errorDetailsフィールドは存在しないため削除
         }
       })
     } catch (error) {

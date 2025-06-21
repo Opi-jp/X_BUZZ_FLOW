@@ -11,7 +11,7 @@ import TimeSlotSelector from './TimeSlotSelector'
 import { 
   ContentType, 
   getJSTDate,
-  detectContentType,
+  detectContentType as detectContentTypeFromPresets,
   getNextOptimalTime
 } from '@/lib/time-slot-presets'
 import { 
@@ -49,26 +49,26 @@ interface ScheduleData {
 }
 
 // コンテンツタイプ検出関数（簡易版）
-function detectContentType(content: string, format?: string): ContentType {
+function detectLocalContentType(content: string, format?: string): ContentType {
   const text = content.toLowerCase()
   
   if (text.includes('ニュース') || text.includes('速報') || text.includes('発表')) {
     return 'news'
   }
   if (text.includes('tips') || text.includes('コツ') || text.includes('方法') || text.includes('やり方')) {
-    return 'tips'
+    return 'lifestyle'
   }
   if (format === 'thread' || text.includes('スレッド') || text.includes('1/')) {
-    return 'thread'
+    return 'news'
   }
   if (text.includes('どう思') || text.includes('議論') || text.includes('意見')) {
-    return 'discussion'
+    return 'business'
   }
   if (text.includes('面白') || text.includes('楽し') || text.includes('😄') || text.includes('🎉')) {
     return 'entertainment'
   }
   
-  return 'general'
+  return 'business'
 }
 
 export default function DraftScheduler({
@@ -86,7 +86,7 @@ export default function DraftScheduler({
   const [selfRTSchedules, setSelfRTSchedules] = useState<SelfRTSchedule[]>([])
   const [rtSuggestions, setRtSuggestions] = useState<SelfRTSuggestion[]>([])
   
-  const contentType = detectContentType(content, format)
+  const contentType = detectLocalContentType(content, format)
   const strategy = SELF_RT_STRATEGIES[contentType]
   const jstNow = getJSTDate()
 
@@ -96,7 +96,7 @@ export default function DraftScheduler({
       const plans = generateSelfRTPlan(scheduledTime, contentType)
       setSelfRTSchedules(plans)
       
-      const suggestions = suggestOptimalSelfRTTiming(scheduledTime, contentType)
+      const suggestions = suggestOptimalSelfRTTiming(content, scheduledTime, contentType)
       setRtSuggestions(suggestions)
     } else {
       setSelfRTSchedules([])
@@ -106,7 +106,7 @@ export default function DraftScheduler({
 
   // 初期セルフRT有効状態
   useEffect(() => {
-    setSelfRTEnabled(strategy.enabled && contentType !== 'general')
+    setSelfRTEnabled(true)
   }, [contentType])
 
   const handleTimeSlotSelect = (timeSlotId: string | null, scheduledAt: Date | null) => {
@@ -129,7 +129,7 @@ export default function DraftScheduler({
   }
 
   const getTotalReachIncrease = () => {
-    return rtSuggestions.reduce((total, suggestion) => total + suggestion.expectedReach, 0)
+    return rtSuggestions.reduce((total, suggestion) => total + suggestion.boostExpectation, 0)
   }
 
   return (
@@ -152,7 +152,7 @@ export default function DraftScheduler({
                   {contentType}
                 </Badge>
                 <span className="text-sm text-gray-500">
-                  ({strategy.enabled ? 'セルフRT推奨' : 'セルフRT非推奨'})
+                  (セルフRT推奨)
                 </span>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function DraftScheduler({
       />
 
       {/* セルフRT設定 */}
-      {strategy.enabled && (
+      {strategy && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -231,7 +231,7 @@ export default function DraftScheduler({
                                 <div className="flex items-center space-x-2">
                                   <Clock className="w-4 h-4 text-gray-500" />
                                   <span className="font-mono text-sm">
-                                    {schedule.scheduledAt.toLocaleString('ja-JP', {
+                                    {schedule.rtTime.toLocaleString('ja-JP', {
                                       timeZone: 'Asia/Tokyo',
                                       month: 'short',
                                       day: 'numeric',
@@ -240,22 +240,18 @@ export default function DraftScheduler({
                                     })} JST
                                   </span>
                                   <Badge variant="outline" className="text-xs">
-                                    +{schedule.intervalHours}時間後
+                                    {schedule.strategy}
                                   </Badge>
                                 </div>
-                                {schedule.targetTimeSlot && (
-                                  <Badge className="bg-purple-100 text-purple-800 text-xs">
-                                    {schedule.targetTimeSlot}
-                                  </Badge>
-                                )}
+                                <Badge className="bg-purple-100 text-purple-800 text-xs">
+                                  {schedule.targetAudience}
+                                </Badge>
                               </div>
-                              <p className="text-xs text-gray-600 mb-1">{schedule.rationale}</p>
-                              {schedule.comment && (
-                                <div className="flex items-start space-x-2 mt-2">
-                                  <MessageCircle className="w-3 h-3 text-gray-400 mt-0.5" />
-                                  <p className="text-xs text-gray-700 italic">&ldquo;{schedule.comment}&rdquo;</p>
-                                </div>
-                              )}
+                              <p className="text-xs text-gray-600 mb-1">{schedule.description}</p>
+                              <div className="flex items-start space-x-2 mt-2">
+                                <MessageCircle className="w-3 h-3 text-gray-400 mt-0.5" />
+                                <p className="text-xs text-gray-700 italic">期待上昇率: {schedule.expectedBoost}%</p>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -272,10 +268,10 @@ export default function DraftScheduler({
                             {rtSuggestions.map((suggestion, index) => (
                               <div key={index} className="bg-white border border-blue-200 rounded p-2">
                                 <div className="text-xs text-blue-800 font-medium">
-                                  {suggestion.timeSlot.name}
+                                  {suggestion.timing} ({suggestion.delay}分後)
                                 </div>
                                 <div className="text-lg font-bold text-blue-600">
-                                  +{suggestion.expectedReach}%
+                                  +{suggestion.boostExpectation}%
                                 </div>
                                 <div className="text-xs text-gray-600">
                                   {suggestion.reason}

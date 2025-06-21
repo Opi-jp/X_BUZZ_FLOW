@@ -20,15 +20,15 @@ export function getTwitterClient(accessToken: string) {
 
 export async function postTweet(userId: string, content: string) {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: userId },
     })
 
-    if (!user || !user.accessToken) {
+    if (!user || !user.access_token) {
       throw new Error('User not found or not authenticated')
     }
 
-    const client = getTwitterClient(user.accessToken)
+    const client = getTwitterClient(user.access_token)
     const tweet = await client.v2.tweet(content)
     return tweet
   } catch (error) {
@@ -46,15 +46,15 @@ export async function postToTwitter(params: {
   try {
     if (!params.accessToken) {
       // ユーザー情報から取得
-      const user = await prisma.user.findUnique({
+      const user = await prisma.users.findUnique({
         where: { id: params.userId },
       })
       
-      if (!user || !user.accessToken) {
+      if (!user || !user.access_token) {
         throw new Error('User not found or not authenticated')
       }
       
-      params.accessToken = user.accessToken
+      params.accessToken = user.access_token
     }
 
     const client = getTwitterClient(params.accessToken)

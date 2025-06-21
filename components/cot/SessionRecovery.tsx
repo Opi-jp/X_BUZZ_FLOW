@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+// Alert削除: Card系コンポーネントを使用
 import { AlertCircle, RefreshCw, SkipForward, RotateCcw } from 'lucide-react'
 
 interface SessionRecoveryProps {
@@ -165,9 +165,11 @@ export function SessionRecovery({ sessionId, onRecoveryComplete }: SessionRecove
 
         {/* リカバリーメッセージ */}
         {recoveryMessage && (
-          <Alert className="mt-4">
-            <AlertDescription>{recoveryMessage}</AlertDescription>
-          </Alert>
+          <Card className="mt-4 bg-blue-50 border-blue-200">
+            <CardContent className="p-3">
+              <span className="text-blue-800">{recoveryMessage}</span>
+            </CardContent>
+          </Card>
         )}
       </CardContent>
     </Card>

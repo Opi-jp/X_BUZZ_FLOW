@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     claudeLog.info(
-      { module: 'api', operation: 'publish-validation', requestId },
+      { module: 'api', operation: 'publish-validation' },
       `✅ Publish validation passed`,
       { 
         targetCount: targetDraftIds.length, 
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
         try {
           // 下書きデータを取得
           const { prisma } = await import('@/lib/prisma')
-          const draft = await prisma.viralDraftV2.findUnique({
+          const draft = await prisma.viral_drafts.findUnique({
             where: { id }
           })
           
           if (!draft) {
             publishResults.push({
-              draftId: id,
+              draft_id: id,
               status: 'failed',
               error: '下書きが見つかりません'
             })
@@ -89,14 +89,14 @@ export async function POST(request: NextRequest) {
           
           if (isThread) {
             // スレッド投稿
-            const sourceUrl = draft.sourceUrl || parsedContent?.sourceUrl
+            const source_url = draft.source_url || parsedContent?.source_url
             postResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/post-thread`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 posts,
-                draftId: id,
-                sourceUrl
+                draft_id: id,
+                source_url
               })
             })
           } else {
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ 
                 text: tweetText,
-                draftId: id 
+                draft_id: id 
               })
             })
           }
@@ -118,21 +118,21 @@ export async function POST(request: NextRequest) {
           
           if (postResponse.ok && postResult.success) {
             publishResults.push({
-              draftId: id,
+              draft_id: id,
               status: 'published',
               tweetUrl: postResult.url,
               publishedAt: new Date().toISOString()
             })
           } else {
             publishResults.push({
-              draftId: id,
+              draft_id: id,
               status: 'failed',
               error: postResult.error || '投稿に失敗しました'
             })
           }
         } catch (error) {
           publishResults.push({
-            draftId: id,
+            draft_id: id,
             status: 'failed',
             error: error instanceof Error ? error.message : 'Unknown error'
           })
@@ -140,8 +140,9 @@ export async function POST(request: NextRequest) {
       }
 
       claudeLog.success(
-        { module: 'api', operation: 'immediate-publish', requestId },
+        { module: 'api', operation: 'immediate-publish' },
         '🚀 Immediate publish completed',
+        0,
         { successCount: publishResults.filter(r => r.status === 'published').length }
       )
 
@@ -168,13 +169,13 @@ export async function POST(request: NextRequest) {
         try {
           // 下書きデータを取得
           const { prisma } = await import('@/lib/prisma')
-          const draft = await prisma.viralDraftV2.findUnique({
+          const draft = await prisma.viral_drafts.findUnique({
             where: { id }
           })
           
           if (!draft) {
             scheduleResults.push({
-              draftId: id,
+              draft_id: id,
               status: 'failed',
               error: '下書きが見つかりません'
             })
@@ -182,25 +183,28 @@ export async function POST(request: NextRequest) {
           }
 
           // スケジュールレコードを直接作成（Prismaスキーマに合わせて調整）
-          const scheduledPost = await prisma.scheduledPost.create({
+          const scheduledPost = await prisma.scheduled_posts.create({
             data: {
+              id: `sched_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               content: draft.content,
-              hashtags: draft.hashtags,
-              scheduledTime: new Date(scheduledAt), // scheduledAt → scheduledTime
+              scheduled_time: new Date(scheduledAt),
               status: 'SCHEDULED',
-              draftId: id
+              post_type: 'NEW',
+              ai_generated: true,
+              created_at: new Date(),
+              updated_at: new Date()
             }
           })
           
           scheduleResults.push({
-            draftId: id,
+            draft_id: id,
             status: 'scheduled',
             scheduledAt,
             scheduleId: scheduledPost.id
           })
         } catch (error) {
           scheduleResults.push({
-            draftId: id,
+            draft_id: id,
             status: 'failed',
             error: error instanceof Error ? error.message : 'Unknown error'
           })
@@ -208,8 +212,9 @@ export async function POST(request: NextRequest) {
       }
 
       claudeLog.success(
-        { module: 'api', operation: 'scheduled-publish', requestId },
+        { module: 'api', operation: 'scheduled-publish' },
         '⏰ Schedule publish completed',
+        0,
         { scheduledCount: scheduleResults.filter(r => r.status === 'scheduled').length }
       )
 

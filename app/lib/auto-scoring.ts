@@ -1,4 +1,4 @@
-import { BuzzPost } from '@/lib/generated/prisma'
+import { buzz_posts } from '@/lib/generated/prisma'
 
 export interface ScoringResult {
   postId: string
@@ -19,7 +19,7 @@ const RELEVANCE_KEYWORDS = {
   low: ['デジタル', 'ツール', 'アプリ', 'サービス', 'IT']
 }
 
-export function calculateAutoScore(post: BuzzPost): ScoringResult {
+export function calculateAutoScore(post: buzz_posts): ScoringResult {
   // 1. テーマ関連度スコア
   const content = post.content.toLowerCase()
   let relevanceScore = 0
@@ -37,8 +37,8 @@ export function calculateAutoScore(post: BuzzPost): ScoringResult {
   relevanceScore = Math.min(relevanceScore, 1)
 
   // 2. バズ可能性スコア
-  const engagementRate = post.impressionsCount > 0 
-    ? (post.likesCount + post.retweetsCount) / post.impressionsCount 
+  const engagementRate = post.impressions_count > 0 
+    ? (post.likes_count + post.retweets_count) / post.impressions_count 
     : 0
   
   let buzzPotential = 0
@@ -49,12 +49,12 @@ export function calculateAutoScore(post: BuzzPost): ScoringResult {
   else buzzPotential = 0.2
 
   // いいね数による補正
-  if (post.likesCount > 10000) buzzPotential = Math.min(buzzPotential + 0.2, 1)
-  else if (post.likesCount > 5000) buzzPotential = Math.min(buzzPotential + 0.1, 1)
+  if (post.likes_count > 10000) buzzPotential = Math.min(buzzPotential + 0.2, 1)
+  else if (post.likes_count > 5000) buzzPotential = Math.min(buzzPotential + 0.1, 1)
 
   // 3. RP価値スコア
-  const followers = post.authorFollowers || 0
-  const isVerified = post.authorVerified || false
+  const followers = post.author_followers || 0
+  const isVerified = post.author_verified || false
   
   let rpValue = 0
   if (followers > 1000000) rpValue = 1           // 100万フォロワー以上
@@ -73,8 +73,8 @@ export function calculateAutoScore(post: BuzzPost): ScoringResult {
   }
 
   // 4. 著者影響力スコア
-  const ffRatio = (followers && post.authorFollowing && post.authorFollowing > 0) 
-    ? followers / post.authorFollowing 
+  const ffRatio = (followers && post.author_following && post.author_following > 0) 
+    ? followers / post.author_following 
     : 1
   
   let authorInfluence = 0
@@ -88,7 +88,7 @@ export function calculateAutoScore(post: BuzzPost): ScoringResult {
   if (followers > 100000) authorInfluence = Math.max(authorInfluence, 0.8)
 
   // 5. 時事性スコア
-  const hoursSincePost = (Date.now() - new Date(post.postedAt).getTime()) / (1000 * 60 * 60)
+  const hoursSincePost = (Date.now() - new Date(post.posted_at).getTime()) / (1000 * 60 * 60)
   let timeliness = 0
   if (hoursSincePost < 1) timeliness = 1         // 1時間以内
   else if (hoursSincePost < 3) timeliness = 0.8  // 3時間以内
@@ -137,7 +137,7 @@ export function calculateAutoScore(post: BuzzPost): ScoringResult {
 }
 
 // バッチスコアリング
-export function batchScore(posts: BuzzPost[]): ScoringResult[] {
+export function batchScore(posts: buzz_posts[]): ScoringResult[] {
   return posts
     .map(post => calculateAutoScore(post))
     .sort((a, b) => b.totalScore - a.totalScore)

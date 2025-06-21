@@ -11,17 +11,17 @@ export async function POST(request: NextRequest) {
     } = body
     
     // 1. 最新のPerplexityレポートを取得
-    const perplexityReport = await prisma.perplexityReport.findFirst({
-      orderBy: { createdAt: 'desc' },
+    const perplexityReport = await prisma.perplexity_reports.findFirst({
+      orderBy: { created_at: 'desc' },
       where: {
-        createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+        created_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
       }
     })
     
     // 2. 重要ニュースを取得
-    const newsArticles = await prisma.newsArticle.findMany({
+    const newsArticles = await prisma.news_articles.findMany({
       where: {
-        publishedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        published_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
         importance: { gte: 0.7 }
       },
       orderBy: { importance: 'desc' },
@@ -29,12 +29,12 @@ export async function POST(request: NextRequest) {
     })
     
     // 3. 高エンゲージメントのバズ投稿を取得
-    const buzzPosts = await prisma.buzzPost.findMany({
+    const buzzPosts = await prisma.buzz_posts.findMany({
       where: {
-        collectedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-        likesCount: { gte: 1000 }
+        collected_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        likes_count: { gte: 1000 }
       },
-      orderBy: { likesCount: 'desc' },
+      orderBy: { likes_count: 'desc' },
       take: 20
     })
     

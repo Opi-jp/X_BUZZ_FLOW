@@ -19,27 +19,30 @@ export async function POST(request: NextRequest) {
     const scheduledPosts = await Promise.all(
       plans.map(async (plan: any) => {
         const postData = {
+          id: `sched_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           content: plan.suggestedContent,
-          scheduledTime: new Date(plan.scheduledTime),
-          postType: convertPlanTypeToPostType(plan.type),
-          aiGenerated: true,
-          aiPrompt: `Type: ${plan.type}, Theme: ${plan.theme || 'N/A'}, Reasoning: ${plan.reasoning}`,
+          scheduled_time: new Date(plan.scheduledTime),
+          post_type: convertPlanTypeToPostType(plan.type),
+          ai_generated: true,
+          ai_prompt: `Type: ${plan.type}, Theme: ${plan.theme || 'N/A'}, Reasoning: ${plan.reasoning}`,
           metadata: {
             planType: plan.type,
             priority: plan.priority,
             expectedEngagement: plan.expectedEngagement,
             targetPost: plan.targetPost,
             newsArticle: plan.newsArticle
-          }
+          },
+          created_at: new Date(),
+          updated_at: new Date()
         }
         
-        // refPostIdが必要な場合（quote_rt, comment_rt）
+        // ref_post_idが必要な場合（quote_rt, comment_rt）
         if (plan.targetPost?.id) {
           // バズ投稿IDから参照を設定
-          Object.assign(postData, { refPostId: plan.targetPost.id })
+          Object.assign(postData, { ref_post_id: plan.targetPost.id })
         }
         
-        return await prisma.scheduledPost.create({
+        return await prisma.scheduled_posts.create({
           data: postData
         })
       })
@@ -50,8 +53,8 @@ export async function POST(request: NextRequest) {
       created: scheduledPosts.length,
       scheduledPosts: scheduledPosts.map(post => ({
         id: post.id,
-        scheduledTime: post.scheduledTime,
-        postType: post.postType,
+        scheduledTime: post.scheduled_time,
+        postType: post.post_type,
         content: post.content.substring(0, 50) + '...'
       }))
     })

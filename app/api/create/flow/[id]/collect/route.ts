@@ -51,7 +51,7 @@ export async function POST(
     })
     
     ClaudeLogger.flow(
-      { module: 'create', operation: 'collect-topics', sessionId: id },
+      { module: 'flow', operation: 'collect-topics', sessionId: id },
       'Delegating to Intel module for topic collection',
       { theme: session.theme }
     )
@@ -85,7 +85,7 @@ export async function POST(
     const intelData = await intelResponse.json()
     
     ClaudeLogger.success(
-      { module: 'create', operation: 'collect-topics', sessionId: id },
+      { module: 'flow', operation: 'collect-topics', sessionId: id },
       'Topic collection completed via Intel module',
       0,
       { topicCount: intelData.topics?.topics?.length || 0 }
@@ -99,13 +99,13 @@ export async function POST(
     })
   } catch (error: any) {
     ClaudeLogger.error(
-      { module: 'create', operation: 'collect-topics' },
+      { module: 'flow', operation: 'collect-topics' },
       'Topic collection failed',
       error
     )
     
     await ErrorManager.logError(error, {
-      module: 'create',
+      module: 'flow',
       operation: 'flow-collect',
       metadata: { sessionId: (await params).id }
     })

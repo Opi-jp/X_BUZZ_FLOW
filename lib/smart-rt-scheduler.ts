@@ -7,17 +7,17 @@ export interface RTCandidate {
   originalPostId: string
   originalAuthor: string
   score: number
-  scheduledAt?: Date
+  scheduled_at?: Date
 }
 
-export interface TimeSlot {
+export interface RTTimeSlot {
   hour: number
   weight: number
   maxPosts: number
 }
 
 // 最適な投稿時間帯（日本時間）
-const OPTIMAL_TIME_SLOTS: TimeSlot[] = [
+const OPTIMAL_TIME_SLOTS: RTTimeSlot[] = [
   { hour: 7, weight: 0.8, maxPosts: 2 },   // 通勤時間帯
   { hour: 8, weight: 0.9, maxPosts: 3 },   
   { hour: 12, weight: 1.0, maxPosts: 3 },  // 昼休み
@@ -56,7 +56,7 @@ export class SmartRTScheduler {
       
       scheduled.push({
         ...candidate,
-        scheduledAt,
+        scheduled_at: scheduledAt,
       })
       
       // スロットの残り枠を減らす
@@ -76,9 +76,9 @@ export class SmartRTScheduler {
     const start = startOfDay(new Date())
     const end = endOfDay(new Date())
     
-    return await prisma.scheduledPost.count({
+    return await prisma.scheduled_posts.count({
       where: {
-        postedAt: {
+        posted_at: {
           gte: start,
           lte: end,
         },
@@ -89,8 +89,8 @@ export class SmartRTScheduler {
   /**
    * 利用可能なスロットを計算
    */
-  private async calculateAvailableSlots(date: Date): Promise<Array<TimeSlot & { remaining: number }>> {
-    const slots: Array<TimeSlot & { remaining: number }> = []
+  private async calculateAvailableSlots(date: Date): Promise<Array<RTTimeSlot & { remaining: number }>> {
+    const slots: Array<RTTimeSlot & { remaining: number }> = []
     const now = new Date()
     
     for (const slot of OPTIMAL_TIME_SLOTS) {
@@ -122,9 +122,9 @@ export class SmartRTScheduler {
     const start = new Date(slotTime)
     const end = addMinutes(start, 59)
     
-    return await prisma.scheduledPost.count({
+    return await prisma.scheduled_posts.count({
       where: {
-        scheduledAt: {
+        scheduled_time: {
           gte: start,
           lte: end,
         },
@@ -135,7 +135,7 @@ export class SmartRTScheduler {
   /**
    * スケジュール時刻を計算
    */
-  private getScheduledTime(date: Date, slot: TimeSlot): Date {
+  private getScheduledTime(date: Date, slot: RTTimeSlot): Date {
     const scheduledAt = new Date(date)
     scheduledAt.setHours(slot.hour)
     
@@ -189,21 +189,20 @@ export class SmartRTScheduler {
     
     for (const strategy of strategies) {
       const scheduledAt = new Date(strategy.scheduledAt)
-      const scheduledRT = await prisma.scheduledRetweet.create({
+      const scheduledRT = await prisma.scheduled_retweets.create({
         data: {
-          originalPostId: postId,
-          originalContent,
-          scheduledAt,
-          rtStrategy: strategy.type,
-          addComment: strategy.comment !== undefined,
-          commentText: strategy.comment,
-          characterId: character?.id,
+          original_post_id: postId,
+          original_content: originalContent,
+          scheduled_at: scheduledAt,
+          rt_strategy: strategy.type,
+          add_comment: strategy.comment !== undefined,
+          comment_text: strategy.comment,
           status: 'SCHEDULED',
           ...(draftId && draftType === 'viral' && {
-            viralDraftId: draftId
+            viral_draft_id: draftId
           }),
           ...(draftId && draftType === 'cot' && {
-            cotDraftId: draftId
+            cot_draft_id: draftId
           })
         }
       })

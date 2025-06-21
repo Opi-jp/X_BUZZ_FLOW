@@ -73,12 +73,12 @@ export function markThreadBoundaries(tweets: string[]): string[] {
 export function ensureTweetLength(tweet: string, maxLength: number = 280): string {
   // URLの数を数える
   const urlPattern = /https?:\/\/[^\s]+/g
-  const urls = tweet.match(urlPattern) || []
+  const urls: string[] = tweet.match(urlPattern) || []
   const urlCount = urls.length
   
   // URLを考慮した実際の長さを計算（各URLは23文字として計算）
   let effectiveLength = tweet.length
-  urls.forEach(url => {
+  urls.forEach((url: string) => {
     effectiveLength = effectiveLength - url.length + 23
   })
   

@@ -14,25 +14,25 @@ export async function GET(request: Request) {
     }
 
     const [drafts, total] = await Promise.all([
-      prisma.viralDraftV2.findMany({
+      prisma.viral_drafts.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: 'desc' },
         take: limit,
         skip: offset,
         select: {
           id: true,
-          sessionId: true,
+          session_id: true,
           title: true,
           content: true,
           hashtags: true,
           status: true,
-          characterId: true,
-          tweetId: true,
-          createdAt: true,
-          updatedAt: true
+          character_id: true,
+          tweet_id: true,
+          created_at: true,
+          updated_at: true
         }
       }),
-      prisma.viralDraftV2.count({ where })
+      prisma.viral_drafts.count({ where })
     ])
 
     return NextResponse.json({

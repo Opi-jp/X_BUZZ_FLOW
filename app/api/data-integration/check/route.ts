@@ -8,30 +8,29 @@ export async function GET() {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
     
     // 1. バズ投稿データ
-    const buzzPosts = await prisma.buzzPost.findMany({
+    const buzzPosts = await prisma.buzz_posts.findMany({
       where: {
-        collectedAt: { gte: since }
+        collected_at: { gte: since }
       },
-      orderBy: { likesCount: 'desc' },
+      orderBy: { likes_count: 'desc' },
       take: 10
     })
     
     // 2. ニュース記事
-    const newsArticles = await prisma.newsArticle.findMany({
+    const newsArticles = await prisma.news_articles.findMany({
       where: {
-        publishedAt: { gte: since }
+        published_at: { gte: since }
       },
       orderBy: { importance: 'desc' },
-      take: 10,
-      include: { source: true }
+      take: 10
     })
     
     // 3. Perplexityレポート
-    const perplexityReports = await prisma.perplexityReport.findMany({
+    const perplexityReports = await prisma.perplexity_reports.findMany({
       where: {
-        createdAt: { gte: since }
+        created_at: { gte: since }
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
       take: 5
     })
     
@@ -66,15 +65,15 @@ export async function GET() {
           count: buzzPosts.length,
           topEngagement: buzzPosts[0] ? {
             content: buzzPosts[0].content.substring(0, 100) + '...',
-            likes: buzzPosts[0].likesCount,
-            author: buzzPosts[0].authorUsername
+            likes: buzzPosts[0].likes_count,
+            author: buzzPosts[0].author_username
           } : null
         },
         news: {
           count: newsArticles.length,
           topStory: newsArticles[0] ? {
             title: newsArticles[0].title,
-            source: newsArticles[0].source.name,
+            source: 'News',
             importance: newsArticles[0].importance
           } : null
         },
@@ -105,7 +104,7 @@ function extractTrendKeywords(buzzPosts: any[], newsArticles: any[], perplexityR
   buzzPosts.forEach(post => {
     const keywords = extractKeywordsFromText(post.content)
     keywords.forEach(kw => {
-      keywordCounts[kw] = (keywordCounts[kw] || 0) + post.likesCount
+      keywordCounts[kw] = (keywordCounts[kw] || 0) + post.likes_count
     })
   })
   
@@ -159,7 +158,7 @@ function findCorrelations(buzzPosts: any[], newsArticles: any[], perplexityRepor
         type: 'news_buzz',
         news: article.title,
         buzzCount: relatedBuzz.length,
-        totalEngagement: relatedBuzz.reduce((sum, p) => sum + p.likesCount, 0)
+        totalEngagement: relatedBuzz.reduce((sum, p) => sum + p.likes_count, 0)
       })
     }
   })
@@ -174,7 +173,7 @@ function calculatePredictionAccuracy(reports: any[], actualBuzz: any[]) {
   // 新スキーマではbuzzPredictionフィールドがないため、簡易的な計算
   const hasReports = reports.length > 0
   const avgActualEngagement = actualBuzz.length > 0
-    ? actualBuzz.reduce((sum, p) => sum + p.likesCount, 0) / actualBuzz.length
+    ? actualBuzz.reduce((sum, p) => sum + p.likes_count, 0) / actualBuzz.length
     : 0
   
   // 代替的な精度計算（レポート数と実際のエンゲージメントベース）

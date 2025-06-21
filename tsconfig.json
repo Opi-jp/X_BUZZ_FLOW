@@ -34,8 +34,9 @@
   ],
   "exclude": [
     "node_modules",
-    "old-api-backup",
+    "old-api-backup", 
     "old-archive-backup",
-    "scripts"
+    "scripts",
+    "archive"
   ]
 }

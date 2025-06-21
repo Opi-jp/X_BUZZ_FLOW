@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const { refPostId, patternId, customPrompt } = body
 
     // 参照投稿取得
-    const refPost = refPostId ? await prisma.buzzPost.findUnique({
+    const refPost = refPostId ? await prisma.buzz_posts.findUnique({
       where: { id: refPostId },
     }) : null
 
@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
     if (refPost) {
       const basePrompt = `参照投稿の分析：
 - 内容: ${refPost.content}
-- エンゲージメント: いいね${refPost.likesCount} RT${refPost.retweetsCount} 返信${refPost.repliesCount}
-- インプレッション: ${refPost.impressionsCount}
+- エンゲージメント: いいね${refPost.likes_count} RT${refPost.retweets_count} 返信${refPost.replies_count}
+- インプレッション: ${refPost.impressions_count}
 
 この投稿の要素を参考に、以下の点を意識して新しい投稿を作成してください：
 1. なぜこの投稿がバズったのかを分析
@@ -74,8 +74,8 @@ export async function POST(request: NextRequest) {
       
       userPrompt = userPrompt || basePrompt
       userPrompt = userPrompt.replace('{{content}}', refPost.content)
-      userPrompt = userPrompt.replace('{{likes}}', refPost.likesCount.toString())
-      userPrompt = userPrompt.replace('{{retweets}}', refPost.retweetsCount.toString())
+      userPrompt = userPrompt.replace('{{likes}}', refPost.likes_count.toString())
+      userPrompt = userPrompt.replace('{{retweets}}', refPost.retweets_count.toString())
     }
 
     // Claude API呼び出し
@@ -117,11 +117,11 @@ export async function POST(request: NextRequest) {
       refPost: refPost ? {
         content: refPost.content,
         metrics: {
-          likes: refPost.likesCount,
-          retweets: refPost.retweetsCount,
-          impressions: refPost.impressionsCount,
-          engagementRate: refPost.impressionsCount > 0 
-            ? ((refPost.likesCount + refPost.retweetsCount + refPost.repliesCount) / refPost.impressionsCount * 100).toFixed(2)
+          likes: refPost.likes_count,
+          retweets: refPost.retweets_count,
+          impressions: refPost.impressions_count,
+          engagementRate: refPost.impressions_count > 0 
+            ? ((refPost.likes_count + refPost.retweets_count + refPost.replies_count) / refPost.impressions_count * 100).toFixed(2)
             : 0
         }
       } : null

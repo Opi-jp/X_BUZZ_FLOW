@@ -5,12 +5,12 @@ import { prisma } from '@/lib/prisma'
 export class DataStore {
   // 最新のトピックを取得（テーマ指定可能）
   static async getLatestTopics(theme?: string, limit: number = 3) {
-    const session = await prisma.viralSession.findFirst({
+    const session = await prisma.viral_sessions.findFirst({
       where: {
         topics: { not: null },
         ...(theme ? { theme } : {})
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { created_at: 'desc' }
     })
     
     if (!session || !session.topics) return null
@@ -19,14 +19,14 @@ export class DataStore {
     return {
       sessionId: session.id,
       theme: session.theme,
-      createdAt: session.createdAt,
+      created_at: session.created_at,
       topics: topics.slice(0, limit)
     }
   }
 
   // 特定のセッションのトピックを取得
   static async getSessionTopics(sessionId: string) {
-    const session = await prisma.viralSession.findUnique({
+    const session = await prisma.viral_sessions.findUnique({
       where: { id: sessionId },
       select: { topics: true, theme: true }
     })
@@ -42,11 +42,11 @@ export class DataStore {
     endDate?: Date
     keyword?: string
   }) {
-    const sessions = await prisma.viralSession.findMany({
+    const sessions = await prisma.viral_sessions.findMany({
       where: {
         topics: { not: null },
         ...(params.theme ? { theme: params.theme } : {}),
-        createdAt: {
+        created_at: {
           gte: params.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
           lte: params.endDate || new Date()
         }
@@ -54,7 +54,7 @@ export class DataStore {
       select: {
         id: true,
         theme: true,
-        createdAt: true,
+        created_at: true,
         topics: true
       }
     })
@@ -81,12 +81,12 @@ export class DataStore {
 
   // 最新のコンセプトを取得
   static async getLatestConcepts(theme?: string, limit: number = 10) {
-    const session = await prisma.viralSession.findFirst({
+    const session = await prisma.viral_sessions.findFirst({
       where: {
         concepts: { not: null },
         ...(theme ? { theme } : {})
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { created_at: 'desc' }
     })
     
     if (!session || !session.concepts) return null
@@ -95,14 +95,14 @@ export class DataStore {
     return {
       sessionId: session.id,
       theme: session.theme,
-      createdAt: session.createdAt,
+      created_at: session.created_at,
       concepts: concepts.slice(0, limit)
     }
   }
 
   // 特定の角度のコンセプトを検索
   static async getConceptsByAngle(angle: string) {
-    const sessions = await prisma.viralSession.findMany({
+    const sessions = await prisma.viral_sessions.findMany({
       where: { concepts: { not: null } },
       select: {
         id: true,
@@ -129,41 +129,41 @@ export class DataStore {
   }
 
   // キャラクター別の下書きを取得
-  static async getDraftsByCharacter(characterId: string, limit: number = 10) {
-    return await prisma.viralDraftV2.findMany({
-      where: { characterId },
+  static async getDraftsByCharacter(character_id: string, limit: number = 10) {
+    return await prisma.viral_drafts.findMany({
+      where: { character_id },
       include: {
-        session: {
+        viral_sessions: {
           select: {
             theme: true,
             platform: true
           }
         }
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
       take: limit
     })
   }
 
   // パフォーマンスの良い下書きを取得（将来の実装用）
   static async getHighPerformanceDrafts(minEngagement: number = 100) {
-    return await prisma.viralDraftV2.findMany({
+    return await prisma.viral_drafts.findMany({
       where: {
-        performance: {
+        viral_draft_performance: {
           OR: [
-            { engagements30m: { gte: minEngagement } },
-            { engagements1h: { gte: minEngagement } },
-            { engagements24h: { gte: minEngagement } }
+            { likes_30m: { gte: minEngagement } },
+            { likes_1h: { gte: minEngagement } },
+            { likes_24h: { gte: minEngagement } }
           ]
         }
       },
       include: {
-        performance: true,
-        session: {
+        viral_draft_performance: true,
+        viral_sessions: {
           select: { theme: true }
         }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { created_at: 'desc' }
     })
   }
 
@@ -172,46 +172,46 @@ export class DataStore {
     const cutoffDate = new Date(Date.now() - 24 * 60 * 60 * 1000) // 24時間以内
     
     if (type === 'topics') {
-      const sessions = await prisma.viralSession.findMany({
+      const sessions = await prisma.viral_sessions.findMany({
         where: {
           theme,
           topics: { not: null },
-          createdAt: { gte: cutoffDate }
+          created_at: { gte: cutoffDate }
         },
         select: {
           id: true,
-          createdAt: true,
+          created_at: true,
           topics: true
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: 'desc' },
         take: 5
       })
       
       return sessions.map(s => ({
         sessionId: s.id,
-        createdAt: s.createdAt,
+        created_at: s.created_at,
         data: s.topics
       }))
     } else {
-      const sessions = await prisma.viralSession.findMany({
+      const sessions = await prisma.viral_sessions.findMany({
         where: {
           theme,
           concepts: { not: null },
-          createdAt: { gte: cutoffDate }
+          created_at: { gte: cutoffDate }
         },
         select: {
           id: true,
-          createdAt: true,
+          created_at: true,
           concepts: true,
           topics: true
         },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: 'desc' },
         take: 5
       })
       
       return sessions.map(s => ({
         sessionId: s.id,
-        createdAt: s.createdAt,
+        created_at: s.created_at,
         data: s.concepts,
         relatedTopics: s.topics
       }))

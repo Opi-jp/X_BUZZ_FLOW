@@ -4,7 +4,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import { DBManager, ErrorManager } from '@/lib/core/unified-system-manager'
+import { DBManager, ErrorManager, IDGenerator, EntityType } from '@/lib/core/unified-system-manager'
 import { formatSourceTweetFromSession } from './source-formatter'
 
 export interface ScheduledPostWithSource {
@@ -56,7 +56,7 @@ export async function createScheduledPostWithSource(
     if (options?.includeSource !== false && draft.viral_sessions?.topics) {
       const formattedSource = await formatSourceTweetFromSession(draft.session_id)
       if (formattedSource) {
-        sourceContent = formattedSource
+        sourceContent = Array.isArray(formattedSource) ? formattedSource.join('\n') : formattedSource
       }
     }
 
@@ -65,6 +65,7 @@ export async function createScheduledPostWithSource(
       // スケジュール投稿を作成
       const scheduledPost = await tx.scheduled_posts.create({
         data: {
+          id: IDGenerator.generate(EntityType.SCHEDULED_POST),
           content: contentToPost,
           scheduled_time: scheduledAt,
           status: 'SCHEDULED',
@@ -76,7 +77,8 @@ export async function createScheduledPostWithSource(
             includeSource: !!sourceContent,
             contentUsed: shouldUseEdited ? 'edited' : 'original',
             sourceContent
-          })
+          }),
+          updated_at: new Date()
         }
       })
 

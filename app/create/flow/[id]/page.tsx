@@ -2,157 +2,341 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Brain, Loader2, Check, AlertCircle, ChevronRight, Send } from 'lucide-react'
+import { Brain, Loader2, Check, AlertCircle, Wifi, WifiOff } from 'lucide-react'
+import {
+  StepIndicator,
+  LoadingOverlay,
+  ErrorBoundary,
+  StepNavigation,
+  FLOW_STEPS
+} from '@/components/flow'
+import {
+  ThemeInputStep,
+  TopicsDisplayStep,
+  ConceptSelectionStep,
+  CharacterSelectionStep,
+  ContentDisplayStep,
+  DraftCompleteStep
+} from '@/components/flow/steps'
+import { FlowManager, createFlowSession, saveSessionToStorage, loadSessionFromStorage } from '@/lib/flow/manager'
+import { FlowSession } from '@/lib/flow/types'
+import { transformSessionForFrontend, ViralSessionDB } from '@/lib/flow/db-types'
+import { JSTClock } from '@/components/flow/JSTClock'
+import { useFlowProgress } from '@/lib/hooks/useFlowProgress'
 
-interface FlowStatus {
-  id: string
-  theme: string
-  currentStep: string
-  nextAction: string | null
-  progress: {
-    phase1_collecting: boolean
-    phase2_concepts: boolean
-    phase3_contents: boolean
-    completed: boolean
-  }
-  error?: string
-  data: {
-    topics: any
-    concepts: any[]
-    selectedConcepts: string[]
-    contents: any
-  }
+// Phase別のローディング表示
+const PHASE_LOADING_MESSAGES: Record<number, { message: string; submessage: string }> = {
+  4: { message: 'Perplexityで最新情報を収集中...', submessage: '予想時間: 30-60秒' },
+  8: { message: 'GPTでコンセプトを生成中...', submessage: '予想時間: 15-45秒' },
+  12: { message: 'Claudeで投稿文を作成中...', submessage: '予想時間: 10-30秒' }
 }
 
-export default function FlowDetailPage() {
+export default function NewFlowPage() {
   const params = useParams()
   const router = useRouter()
   const flowId = params.id as string
   
-  const [status, setStatus] = useState<FlowStatus | null>(null)
+  const [flowManager, setFlowManager] = useState<FlowManager | null>(null)
+  const [flowSession, setFlowSession] = useState<FlowSession | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [apiLoading, setApiLoading] = useState(false)
+  
+  // DBからのデータ
+  const [dbData, setDbData] = useState<any>(null)
+  
+  // 選択状態
   const [selectedConcepts, setSelectedConcepts] = useState<string[]>([])
-  const [processingAction, setProcessingAction] = useState(false)
+  const [selectedCharacter, setSelectedCharacter] = useState<string>('cardi-dare')
+  const [postFormat, setPostFormat] = useState<'single' | 'thread'>('single')
 
-  // ステータス監視
-  useEffect(() => {
-    if (!flowId) return
-
-    const checkStatus = async () => {
-      try {
-        const response = await fetch(`/api/create/flow/${flowId}/status`)
-        if (!response.ok) throw new Error('ステータス取得失敗')
-        
-        const data = await response.json()
-        setStatus(data)
-        
-        if (data.error) {
-          setError(data.error)
-          setLoading(false)
-        } else if (data.progress.completed) {
-          setLoading(false)
-        }
-      } catch (err) {
-        setError('ステータス確認エラー')
-        setLoading(false)
+  // リアルタイム進捗追跡
+  const { progress: realtimeProgress, isConnected, error: progressError } = useFlowProgress(
+    flowId === 'new' ? null : flowId,
+    (progress) => {
+      // リアルタイムの進捗更新を反映
+      if (progress.status !== dbData?.status) {
+        initializeSession()
       }
     }
+  )
 
-    // 初回チェック
-    checkStatus()
-    
-    // 完了するまでポーリング
-    const interval = setInterval(() => {
-      if (status?.progress.completed || error) {
-        clearInterval(interval)
-      } else {
-        checkStatus()
-      }
-    }, 3000)
+  // セッション初期化
+  useEffect(() => {
+    if (flowId === 'new') {
+      // 新規フロー作成
+      const session = createFlowSession('', 'Twitter', 'エンターテイメント', 'single')
+      const manager = new FlowManager(session)
+      setFlowManager(manager)
+      setFlowSession(session)
+      setLoading(false)
+    } else {
+      // 既存セッションの読み込み
+      initializeSession()
+    }
+  }, [flowId])
 
-    return () => clearInterval(interval)
-  }, [flowId, status?.progress.completed, error])
-
-  // 次のアクション実行
-  const executeNextAction = async (actionData?: any) => {
-    if (!status) return
-    
-    setProcessingAction(true)
-    
+  const initializeSession = async () => {
     try {
-      const response = await fetch(`/api/create/flow/${flowId}/process`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(actionData || {})
-      })
+      const response = await fetch(`/api/create/flow/${flowId}/status`)
+      if (!response.ok) throw new Error('セッション取得失敗')
       
-      const data = await response.json()
+      const dbSession: ViralSessionDB = await response.json()
+      setDbData(dbSession)
       
-      if (!response.ok) {
-        throw new Error(data.error || '処理に失敗しました')
+      // DBセッションをフロントエンド形式に変換
+      const frontendData = transformSessionForFrontend(dbSession)
+      
+      // FlowSession形式に変換
+      let session = loadSessionFromStorage(flowId)
+      if (!session) {
+        session = createFlowSession(
+          dbSession.theme,
+          dbSession.platform,
+          dbSession.style,
+          'single'
+        )
+        session.id = flowId
+        updateSessionStepsFromDB(session, dbSession)
       }
       
-      // ステータスを再取得
-      const statusResponse = await fetch(`/api/create/flow/${flowId}/status`)
-      const newStatus = await statusResponse.json()
-      setStatus(newStatus)
+      const manager = new FlowManager(session)
+      setFlowManager(manager)
+      setFlowSession(session)
+      
+      if (dbSession.selected_ids?.length > 0) {
+        setSelectedConcepts(dbSession.selected_ids)
+      }
+      
+      setLoading(false)
+      checkAndExecuteAutoStep(manager)
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'エラーが発生しました')
-    } finally {
-      setProcessingAction(false)
+      setError('セッションの初期化に失敗しました')
+      setLoading(false)
     }
   }
 
-  // コンセプト選択
-  const handleConceptSelection = () => {
-    if (selectedConcepts.length === 0) return
+  // DBの状態に基づいてステップを更新
+  const updateSessionStepsFromDB = (session: FlowSession, dbSession: ViralSessionDB) => {
+    const progress = {
+      phase1_collecting: dbSession.status !== 'CREATED' && dbSession.topics != null,
+      phase2_concepts: ['GENERATING_CONCEPTS', 'CONCEPTS_GENERATED', 'DRAFTS_CREATED'].includes(dbSession.status),
+      phase3_contents: dbSession.status === 'DRAFTS_CREATED'
+    }
     
-    const selected = status?.data.concepts.filter(c => 
-      selectedConcepts.includes(c.conceptId)
-    )
+    if (progress.phase1_collecting) {
+      markStepsCompleted(session, [1, 2, 3, 4, 5, 6])
+    }
+    if (progress.phase2_concepts) {
+      markStepsCompleted(session, [7, 8, 9])
+    }
+    if (dbSession.selected_ids?.length > 0) {
+      markStepsCompleted(session, [10])
+    }
+    if (progress.phase3_contents) {
+      markStepsCompleted(session, [11, 12, 13, 14, 15, 16])
+    }
     
-    executeNextAction({ selectedConcepts: selected })
-  }
-
-  // キャラクター選択
-  const handleCharacterSelection = (characterId: string) => {
-    executeNextAction({ 
-      selectedConcepts: status?.data.selectedConcepts,
-      characterId 
+    const currentStepId = determineCurrentStep(dbSession)
+    session.currentStep = currentStepId
+    session.steps.forEach(step => {
+      if (step.id === currentStepId) {
+        step.status = 'current'
+      }
     })
   }
 
-  // ステップの表示
-  const getStepInfo = (step: string) => {
-    const steps: Record<string, { label: string; icon: string }> = {
-      initializing: { label: '初期化中', icon: '🚀' },
-      collecting_topics: { label: 'トピック収集中', icon: '🔍' },
-      generating_concepts: { label: 'コンセプト生成中', icon: '💡' },
-      awaiting_concept_selection: { label: 'コンセプト選択待ち', icon: '🎯' },
-      awaiting_character_selection: { label: 'キャラクター選択待ち', icon: '🎭' },
-      generating_contents: { label: '投稿生成中', icon: '✍️' },
-      completed: { label: '完了', icon: '✅' },
-      error: { label: 'エラー', icon: '❌' }
-    }
-    return steps[step] || { label: step, icon: '⏳' }
+  const markStepsCompleted = (session: FlowSession, stepIds: number[]) => {
+    session.steps.forEach(step => {
+      if (stepIds.includes(step.id)) {
+        step.status = 'completed'
+      }
+    })
   }
 
-  if (!status && loading) {
+  const determineCurrentStep = (dbSession: ViralSessionDB): number => {
+    switch (dbSession.status) {
+      case 'CREATED':
+        return dbSession.theme ? 2 : 1
+      case 'COLLECTING':
+        return 4
+      case 'TOPICS_COLLECTED':
+        return dbSession.concepts ? 10 : 7
+      case 'GENERATING_CONCEPTS':
+        return 8
+      case 'CONCEPTS_GENERATED':
+        if (dbSession.selected_ids?.length === 0) return 10
+        if (!dbSession.contents) return 11
+        return 14
+      case 'DRAFTS_CREATED':
+        return 16
+      default:
+        return 1
+    }
+  }
+
+  // 自動実行ステップのチェック
+  const checkAndExecuteAutoStep = async (manager: FlowManager) => {
+    const currentStep = manager.getCurrentStep()
+    if (!currentStep || !manager.isAutoExecute(currentStep.id)) return
+    
+    setTimeout(() => {
+      executeStep(currentStep.id)
+    }, 2000)
+  }
+
+  // ステップ実行
+  const executeStep = async (stepId: number) => {
+    if (!flowManager) return
+    
+    setApiLoading(true)
+    
+    try {
+      switch (stepId) {
+        case 1: // テーマ入力は手動
+          break
+          
+        case 2: // DB保存
+        case 3: // プロンプト準備
+        case 4: // Perplexity実行
+        case 5: // トピック保存
+        case 7: // GPT準備
+        case 8: // コンセプト生成
+        case 9: // コンセプト保存
+          await executeAPIStep('process')
+          break
+          
+        case 10: // コンセプト選択は手動
+          break
+          
+        case 11: // キャラクター選択
+        case 12: // 投稿文生成
+        case 13: // 投稿文保存
+          await executeAPIStep('generate', { 
+            selectedConceptIds: selectedConcepts,
+            characterId: selectedCharacter,
+            postFormat 
+          })
+          break
+          
+        case 15: // 下書き作成
+          await executeAPIStep('create-draft')
+          break
+          
+        default:
+          // その他の自動ステップ
+          flowManager.proceedToNextStep()
+          const updatedSession = flowManager.getSession()
+          setFlowSession({...updatedSession})
+          saveSessionToStorage(updatedSession)
+          checkAndExecuteAutoStep(flowManager)
+      }
+    } catch (err) {
+      flowManager.setError(err instanceof Error ? err.message : 'エラーが発生しました')
+      setFlowSession({...flowManager.getSession()})
+    } finally {
+      setApiLoading(false)
+    }
+  }
+
+  // API呼び出し
+  const executeAPIStep = async (action: string, data?: any) => {
+    const endpoint = action === 'generate' 
+      ? `/api/create/flow/${flowId}/generate`
+      : action === 'create-draft'
+      ? `/api/create/flow/${flowId}/draft`
+      : `/api/create/flow/${flowId}/${action}`
+      
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data || {})
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'API呼び出しに失敗しました')
+    }
+    
+    await initializeSession()
+  }
+
+  // ステップハンドラー
+  const handleThemeSubmit = async (data: { theme: string; style: string; platform: string }) => {
+    if (flowId === 'new') {
+      // 新規セッション作成
+      const response = await fetch('/api/create/flow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      
+      if (!response.ok) {
+        setError('セッション作成に失敗しました')
+        return
+      }
+      
+      const { sessionId } = await response.json()
+      router.push(`/create/flow/${sessionId}`)
+    } else {
+      // 既存セッションの更新
+      flowManager?.proceedToNextStep(data)
+      setFlowSession({...flowManager!.getSession()})
+      executeStep(2)
+    }
+  }
+
+  const handleConceptSelection = (selectedIds: string[]) => {
+    setSelectedConcepts(selectedIds)
+    flowManager?.proceedToNextStep({ selectedIds })
+    setFlowSession({...flowManager!.getSession()})
+    executeStep(11)
+  }
+
+  const handleCharacterSelection = (characterId: string, format: 'single' | 'thread') => {
+    setSelectedCharacter(characterId)
+    setPostFormat(format)
+    flowManager?.proceedToNextStep({ characterId, postFormat: format })
+    setFlowSession({...flowManager!.getSession()})
+    executeStep(12)
+  }
+
+  const handleContentConfirm = () => {
+    flowManager?.proceedToNextStep()
+    setFlowSession({...flowManager!.getSession()})
+    executeStep(15)
+  }
+
+  // ナビゲーション
+  const handleNext = () => {
+    if (!flowManager) return
+    const currentStep = flowManager.getCurrentStep()
+    if (!currentStep) return
+    
+    executeStep(currentStep.id)
+  }
+
+  const handleBack = () => {
+    if (!flowManager) return
+    flowManager.goToPreviousStep()
+    const updatedSession = flowManager.getSession()
+    setFlowSession({...updatedSession})
+    saveSessionToStorage(updatedSession)
+  }
+
+  // レンダリング
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-purple-600" />
-          <p className="text-gray-600">読み込み中...</p>
-        </div>
+        <LoadingOverlay message="セッション読み込み中..." />
       </div>
     )
   }
 
-  if (error) {
+  if (error && !flowSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center p-4">
         <div className="bg-red-50 p-6 rounded-lg max-w-md">
           <AlertCircle className="w-6 h-6 text-red-600 mb-2" />
           <p className="text-red-700">{error}</p>
@@ -161,320 +345,218 @@ export default function FlowDetailPage() {
     )
   }
 
-  if (!status) return null
+  if (!flowSession || !flowManager) return null
 
-  const stepInfo = getStepInfo(status.currentStep)
+  const currentStep = flowManager.getCurrentStep()
+  const progress = flowManager.getProgress()
+
+  // ステップ別コンテンツのレンダリング
+  const renderStepContent = () => {
+    if (!currentStep) return null
+    
+    switch (currentStep.id) {
+      case 1:
+        return (
+          <ThemeInputStep
+            initialTheme={flowSession.theme}
+            onSubmit={handleThemeSubmit}
+            isLoading={apiLoading}
+          />
+        )
+        
+      case 6:
+        return (
+          <TopicsDisplayStep
+            topics={dbData?.topics || []}
+            rawData={dbData?.topics}
+            onConfirm={handleNext}
+            isLoading={apiLoading}
+          />
+        )
+        
+      case 10:
+        return (
+          <ConceptSelectionStep
+            concepts={dbData?.concepts || []}
+            onSelect={handleConceptSelection}
+            isLoading={apiLoading}
+          />
+        )
+        
+      case 11:
+        return (
+          <CharacterSelectionStep
+            postFormat={postFormat}
+            onSelect={handleCharacterSelection}
+            isLoading={apiLoading}
+          />
+        )
+        
+      case 14:
+        return (
+          <ContentDisplayStep
+            contents={dbData?.contents || []}
+            postFormat={postFormat}
+            characterName={selectedCharacter === 'cardi-dare' ? 'Cardi Dare' : 'ニュートラル'}
+            onConfirm={handleContentConfirm}
+            isLoading={apiLoading}
+          />
+        )
+        
+      case 16:
+        return (
+          <DraftCompleteStep
+            draft={{
+              id: dbData?.draft_id || flowId,
+              title: dbData?.theme || 'バイラルコンテンツ',
+              content: Array.isArray(dbData?.contents) 
+                ? dbData.contents.map((c: any) => c.content || c).join('\n\n')
+                : dbData?.contents || '',
+              hashtags: dbData?.hashtags || [],
+              characterId: selectedCharacter,
+              postFormat: postFormat,
+              createdAt: new Date(dbData?.created_at || Date.now()),
+              updatedAt: new Date(dbData?.updated_at || Date.now())
+            }}
+            onPublishNow={async () => {
+              // 今すぐ投稿
+              const response = await fetch('/api/publish/post/now', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ draftId: dbData?.draft_id || flowId })
+              })
+              if (response.ok) {
+                router.push('/drafts')
+              }
+            }}
+            onSchedule={async (scheduledAt) => {
+              // 予約投稿
+              const response = await fetch('/api/automation/scheduler/schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                  draftId: dbData?.draft_id || flowId,
+                  scheduledAt: scheduledAt.toISOString()
+                })
+              })
+              if (response.ok) {
+                router.push('/drafts')
+              }
+            }}
+            onEdit={() => router.push(`/drafts/${dbData?.draft_id || flowId}/edit`)}
+            isLoading={apiLoading}
+          />
+        )
+        
+      default:
+        return (
+          <div className="text-center py-8">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-purple-600" />
+            <p className="text-gray-600">{currentStep.description}</p>
+          </div>
+        )
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gray-50">
         {/* ヘッダー */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                {stepInfo.icon} {stepInfo.label}
-              </h1>
-              <p className="text-gray-600">テーマ: {status.theme}</p>
-            </div>
-            <div className="text-right text-sm text-gray-500">
-              <p>フローID</p>
-              <p className="font-mono text-xs">{flowId}</p>
-            </div>
-          </div>
-
-          {/* プログレスバー */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">進行状況</span>
-              <span className="text-sm font-medium text-gray-900">
-                {Object.values(status.progress).filter(Boolean).length} / 4 完了
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
-                className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-500 relative"
-                style={{ 
-                  width: `${(Object.values(status.progress).filter(Boolean).length / 4) * 100}%` 
-                }}
-              >
-                {Object.values(status.progress).filter(Boolean).length > 0 && (
-                  <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse" />
-                )}
-              </div>
-            </div>
-            
-            {/* ステップ表示 */}
-            <div className="mt-3 flex justify-between text-xs text-gray-500">
-              <span className={status.progress.phase1_collecting ? 'text-purple-600 font-medium' : ''}>
-                📡 収集
-              </span>
-              <span className={status.progress.phase2_concepts ? 'text-purple-600 font-medium' : ''}>
-                💡 生成
-              </span>
-              <span className={status.progress.phase3_contents ? 'text-purple-600 font-medium' : ''}>
-                ✍️ 執筆
-              </span>
-              <span className={status.progress.completed ? 'text-green-600 font-medium' : ''}>
-                ✅ 完了
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* ステップ詳細 */}
-        <div className="space-y-4">
-          {/* Phase 1: トピック収集 */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-3">
-              {status.progress.phase1_collecting ? (
-                <Check className="w-6 h-6 text-green-600" />
-              ) : status.currentStep === 'collecting_topics' ? (
-                <div className="relative">
-                  <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-500 rounded-full animate-pulse" />
-                </div>
-              ) : (
-                <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
-              )}
-              <div className="flex-1">
-                <h3 className="font-semibold">Phase 1: 情報収集（Perplexity）</h3>
-                {status.currentStep === 'collecting_topics' && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    ⏱️ 予想時間: 30-60秒（最新情報の検索・分析）
-                  </p>
-                )}
-              </div>
-            </div>
-            {status.data.topics && (
-              <div className="mt-4 ml-9">
-                <p className="text-sm text-gray-600 mb-2">
-                  トピックの収集が完了しました
+        <div className="bg-white border-b">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Cardi-SYSTEM フロー
+                </h1>
+                <p className="text-sm text-gray-600 mt-1">
+                  {flowSession.theme || 'テーマ未設定'}
                 </p>
-                {/* トピックデータの表示 */}
-                <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-                  <pre className="text-xs whitespace-pre-wrap">
-                    {typeof status.data.topics === 'string' 
-                      ? status.data.topics 
-                      : JSON.stringify(status.data.topics, null, 2)}
-                  </pre>
-                </div>
-                {/* 次へボタン */}
-                {status.currentStep === 'collecting_topics' && status.progress.phase1_collecting && !status.progress.phase2_concepts && (
-                  <button
-                    onClick={() => executeNextAction()}
-                    disabled={processingAction}
-                    className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400"
-                  >
-                    {processingAction ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        処理中...
-                      </span>
+              </div>
+              <div className="flex items-center gap-4">
+                {/* リアルタイム接続状態 */}
+                {flowId !== 'new' && (
+                  <div className="flex items-center gap-2">
+                    {isConnected ? (
+                      <Wifi className="w-4 h-4 text-green-600" />
                     ) : (
-                      'コンセプト生成へ進む'
+                      <WifiOff className="w-4 h-4 text-gray-400" />
                     )}
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Phase 2: コンセプト生成 */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-3">
-              {status.progress.phase2_concepts ? (
-                <Check className="w-6 h-6 text-green-600" />
-              ) : status.currentStep === 'generating_concepts' ? (
-                <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
-              ) : (
-                <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
-              )}
-              <div className="flex-1">
-                <h3 className="font-semibold">Phase 2: コンセプト生成（GPT）</h3>
-                {status.currentStep === 'generating_concepts' && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    ⏱️ 予想時間: 15-45秒（複数コンセプトの生成・評価）
-                  </p>
-                )}
-              </div>
-            </div>
-            
-            {/* コンセプト選択UI */}
-            {status.nextAction === 'select_concepts' && status.data.concepts && (
-              <div className="mt-4 ml-9 space-y-3">
-                <p className="text-sm text-gray-600 mb-3">
-                  生成されたコンセプトから最大3つ選択してください：
-                </p>
-                {status.data.concepts.map((concept: any) => (
-                  <label
-                    key={concept.conceptId}
-                    className={`block p-4 border-2 rounded-lg cursor-pointer transition-colors ${
-                      selectedConcepts.includes(concept.conceptId)
-                        ? 'border-purple-500 bg-purple-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedConcepts.includes(concept.conceptId)}
-                      onChange={(e) => {
-                        if (e.target.checked && selectedConcepts.length < 3) {
-                          setSelectedConcepts([...selectedConcepts, concept.conceptId])
-                        } else if (!e.target.checked) {
-                          setSelectedConcepts(selectedConcepts.filter(id => id !== concept.conceptId))
-                        }
-                      }}
-                      className="sr-only"
-                    />
-                    <div className="font-medium text-gray-900">{concept.conceptTitle}</div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      {concept.selectedHook} × {concept.selectedAngle}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-2">
-                      スコア: {concept.viralScore}
-                    </div>
-                  </label>
-                ))}
-                <button
-                  onClick={handleConceptSelection}
-                  disabled={selectedConcepts.length === 0 || processingAction}
-                  className="w-full mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-400"
-                >
-                  {processingAction ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      処理中...
+                    <span className="text-xs text-gray-500">
+                      {isConnected ? 'リアルタイム更新中' : 'オフライン'}
                     </span>
-                  ) : (
-                    `選択したコンセプトで続行（${selectedConcepts.length}個）`
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Phase 3: 投稿生成 */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <div className="flex items-center gap-3">
-              {status.progress.phase3_contents ? (
-                <Check className="w-6 h-6 text-green-600" />
-              ) : status.currentStep === 'generating_contents' ? (
-                <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
-              ) : (
-                <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
-              )}
-              <div className="flex-1">
-                <h3 className="font-semibold">Phase 3: 投稿生成（Claude）</h3>
-                {status.currentStep === 'generating_contents' && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    ⏱️ 予想時間: 10-30秒（キャラクター投稿文の作成）
-                  </p>
+                  </div>
                 )}
+                <JSTClock />
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">進捗</p>
+                  <p className="text-2xl font-bold text-purple-600">{progress}%</p>
+                </div>
               </div>
             </div>
-            
-            {/* キャラクター選択UI */}
-            {status.nextAction === 'select_character' && (
-              <div className="mt-4 ml-9">
-                <p className="text-sm text-gray-600 mb-3">
-                  投稿のトーンを選択してください：
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    onClick={() => handleCharacterSelection('cardi-dare')}
-                    disabled={processingAction}
-                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 text-left"
-                  >
-                    <div className="font-medium">カーディ・ダーレ</div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      シニカルだが愛のある毒舌キャラ
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => handleCharacterSelection('neutral')}
-                    disabled={processingAction}
-                    className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 text-left"
-                  >
-                    <div className="font-medium">ニュートラル</div>
-                    <div className="text-sm text-gray-600 mt-1">
-                      親しみやすく分かりやすいトーン
-                    </div>
-                  </button>
+          </div>
+        </div>
+
+        {/* ステップインジケーター */}
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <StepIndicator 
+            steps={flowSession.steps}
+            currentStep={flowSession.currentStep}
+            variant="horizontal"
+          />
+        </div>
+
+        {/* メインコンテンツ */}
+        <div className="max-w-4xl mx-auto px-4 pb-20">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            {currentStep && (
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                    {currentStep.id}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold">
+                      {currentStep.name}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {currentStep.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
-            
-            {/* 生成結果の表示 */}
-            {status.data.contents && (
-              <div className="mt-4 ml-9">
-                <p className="text-sm text-gray-600 mb-2">
-                  投稿が生成されました：
-                </p>
-                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                  {Array.isArray(status.data.contents) ? (
-                    status.data.contents.map((content: any, index: number) => (
-                      <div key={index} className="bg-white rounded p-3 border border-gray-200">
-                        <div className="text-sm font-medium text-gray-700 mb-1">
-                          投稿 {index + 1}
-                        </div>
-                        <div className="text-sm text-gray-900 whitespace-pre-wrap">
-                          {content.content || content}
-                        </div>
-                        {content.hashtags && (
-                          <div className="text-xs text-blue-600 mt-2">
-                            {content.hashtags.join(' ')}
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="text-sm text-gray-900 whitespace-pre-wrap">
-                      {typeof status.data.contents === 'string' 
-                        ? status.data.contents 
-                        : JSON.stringify(status.data.contents, null, 2)}
-                    </div>
-                  )}
-                </div>
+                
+                {/* ステップ別のコンテンツ表示 */}
+                {renderStepContent()}
               </div>
             )}
           </div>
-
-          {/* 完了時のアクション */}
-          {status.progress.completed && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Check className="w-6 h-6 text-green-600" />
-                <h3 className="font-semibold text-green-900">生成完了！</h3>
-              </div>
-              <p className="text-green-700 mb-4">
-                投稿の下書きが作成されました。編集して投稿しましょう。
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => router.push('/publish')}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  投稿・スケジュール
-                </button>
-                <button
-                  onClick={() => router.push('/drafts')}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                >
-                  下書きを確認
-                </button>
-                <button
-                  onClick={() => router.push('/create')}
-                  className="px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50"
-                >
-                  新規作成
-                </button>
-              </div>
-            </div>
-          )}
         </div>
+
+        {/* ナビゲーション */}
+        {!apiLoading && currentStep && ![1, 6, 10, 11, 14, 16].includes(currentStep.id) && (
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t">
+            <div className="max-w-7xl mx-auto">
+              <StepNavigation
+                currentStep={flowSession.currentStep}
+                totalSteps={16}
+                canGoBack={!apiLoading && flowSession.currentStep > 1}
+                canGoNext={!apiLoading}
+                onBack={handleBack}
+                onNext={handleNext}
+                isLoading={apiLoading}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* ローディングオーバーレイ */}
+        {apiLoading && currentStep && PHASE_LOADING_MESSAGES[currentStep.id] && (
+          <LoadingOverlay
+            {...PHASE_LOADING_MESSAGES[currentStep.id]}
+            fullScreen
+          />
+        )}
       </div>
-    </div>
+    </ErrorBoundary>
   )
 }

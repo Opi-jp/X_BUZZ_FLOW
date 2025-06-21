@@ -1,6 +1,12 @@
+# Cardi-SYSTEM - Private Closed System
+# このシステムは完全非公開です。クローリングは禁止されています。
+# This is a closed system. All crawling is strictly prohibited.
+
 User-agent: *
 Disallow: /
+Crawl-delay: 86400
 
+# Search engine bots
 User-agent: Googlebot
 Disallow: /
 
@@ -19,6 +25,7 @@ Disallow: /
 User-agent: YandexBot
 Disallow: /
 
+# Social media bots
 User-agent: facebookexternalhit
 Disallow: /
 
@@ -31,7 +38,34 @@ Disallow: /
 User-agent: WhatsApp
 Disallow: /
 
+# Other bots
 User-agent: applebot
 Disallow: /
 
-Sitemap: 
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# AI bots
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+# No sitemap for closed system
+Sitemap:

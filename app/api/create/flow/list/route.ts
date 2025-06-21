@@ -4,9 +4,15 @@ import { IDGenerator, EntityType, ErrorManager, DBManager } from '@/lib/core/uni
 import { claudeLog } from '@/lib/core/claude-logger'
 
 export async function POST(request: Request) {
+  let theme: string | undefined
+  let platform: string | undefined
+  let style: string | undefined
+  
   try {
     const body = await request.json()
-    const { theme, platform, style } = body
+    theme = body.theme
+    platform = body.platform
+    style = body.style
 
     if (!theme || !platform || !style) {
       return NextResponse.json(
@@ -50,7 +56,7 @@ export async function POST(request: Request) {
     const errorId = await ErrorManager.logError(error, {
       module: 'create-flow-list',
       operation: 'create-session',
-      context: { theme, platform, style }
+      metadata: { theme, platform, style }
     })
     
     const userMessage = ErrorManager.getUserMessage(error, 'ja')
@@ -74,7 +80,7 @@ export async function GET(request: Request) {
     )
 
     const sessions = await prisma.viral_sessions.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
       take: limit,
       include: {
         _count: {
@@ -84,7 +90,7 @@ export async function GET(request: Request) {
           select: {
             id: true,
             content: true,
-            createdAt: true
+            created_at: true
           }
         }
       }

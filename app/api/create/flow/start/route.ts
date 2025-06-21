@@ -28,6 +28,10 @@ export async function POST(request: Request) {
   const apiCall = claudeLog.logApiCall('POST', '/api/create/flow/start')
   const startTime = apiCall.start()
   
+  let theme: string | undefined
+  let platform: string = 'Twitter'
+  let style: string = 'エンターテイメント'
+  
   try {
     claudeLog.info(
       { module: 'api', operation: 'parse-body' },
@@ -35,7 +39,9 @@ export async function POST(request: Request) {
     )
     
     const body = await request.json()
-    const { theme, platform = 'Twitter', style = 'エンターテイメント' } = body
+    theme = body.theme
+    platform = body.platform || 'Twitter'
+    style = body.style || 'エンターテイメント'
 
     claudeLog.info(
       { module: 'api', operation: 'validate-input' },
@@ -132,7 +138,7 @@ export async function POST(request: Request) {
     
     // 統一システムのエラー管理にも記録
     await ErrorManager.logError(error, {
-      module: 'create',
+      module: 'flow',
       operation: 'flow-start',
       metadata: { theme, platform, style }
     })
@@ -160,7 +166,7 @@ async function startPerplexityCollection(sessionId: string) {
     }
   } catch (error) {
     // エラーをセッションに記録
-    await prisma.viralSession.update({
+    await prisma.viral_sessions.update({
       where: { id: sessionId },
       data: {
         status: 'ERROR',

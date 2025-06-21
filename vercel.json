@@ -29,6 +29,15 @@
     },
     "app/api/cron/collect-news/route.ts": {
       "maxDuration": 60
+    },
+    "app/api/create/flow/[id]/process/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/create/flow/[id]/generate/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/flow/[id]/next/route.ts": {
+      "maxDuration": 300
     }
   },
   "crons": [
@@ -51,6 +60,37 @@
     {
       "path": "/api/cron/collect-performance",
       "schedule": "*/30 * * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive, nosnippet, noimageindex, nocache"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(), microphone=(), camera=()"
+        }
+      ]
     }
   ]
 }

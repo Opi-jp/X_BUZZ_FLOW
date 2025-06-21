@@ -17,13 +17,14 @@ interface TimeSlotCardProps {
 export default function TimeSlotCard({
   preset,
   selected = false,
-  contentType = 'general',
+  contentType = 'business',
   onClick,
   showPrediction = true,
   scheduledDate = new Date()
 }: TimeSlotCardProps) {
   
-  const engagementScore = calculateEngagementScore(preset.id, contentType, scheduledDate)
+  // 平日・休日の時間を考慮した簡易スコア計算
+  const engagementScore = preset.engagement === 'high' ? 0.8 : preset.engagement === 'medium' ? 0.6 : 0.4
   const isRecommended = showPrediction && engagementScore >= 0.7
   
   const engagementColor = {

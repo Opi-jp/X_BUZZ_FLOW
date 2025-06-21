@@ -12,7 +12,7 @@ try {
   results.imports.prismaClient = {
     success: true,
     type: typeof prisma1,
-    hasViralSession: !!prisma1?.viralSession,
+    hasViralSession: !!prisma1?.viral_sessions,
     keys: prisma1 ? Object.keys(prisma1).slice(0, 5) : []
   }
   
@@ -30,11 +30,11 @@ try {
   results.imports.libPrisma = {
     success: true,
     type: typeof prisma2,
-    hasViralSession: !!prisma2?.viralSession
+    hasViralSession: !!prisma2?.viral_sessions
   }
   
-  if (prisma2?.viralSession) {
-    const count = await prisma2.viralSession.count()
+  if (prisma2?.viral_sessions) {
+    const count = await prisma2.viral_sessions.count()
     results.tests.libPrisma = { count }
   }
 } catch (e: any) {
@@ -47,10 +47,10 @@ try {
   const prisma3 = new PrismaClient()
   results.imports.directPrisma = {
     success: true,
-    hasViralSession: !!prisma3.viralSession
+    hasViralSession: !!prisma3.viral_sessions
   }
   
-  const count = await prisma3.viralSession.count()
+  const count = await prisma3.viral_sessions.count()
   results.tests.directPrisma = { count }
   await prisma3.$disconnect()
 } catch (e: any) {
@@ -63,10 +63,10 @@ try {
   const prisma4 = new PrismaClient()
   results.imports.generatedPrisma = {
     success: true,
-    hasViralSession: !!prisma4.viralSession
+    hasViralSession: !!prisma4.viral_sessions
   }
   
-  const count = await prisma4.viralSession.count()
+  const count = await prisma4.viral_sessions.count()
   results.tests.generatedPrisma = { count }
   await prisma4.$disconnect()
 } catch (e: any) {

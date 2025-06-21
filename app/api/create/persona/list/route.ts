@@ -3,8 +3,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const characters = await prisma.characterProfile.findMany({
-      where: { isDefault: true },
+    const characters = await prisma.character_profiles.findMany({
       orderBy: { name: 'asc' }
     })
 
@@ -12,8 +11,8 @@ export async function GET() {
     const formattedCharacters = characters.map(char => ({
       id: char.id,
       name: char.name,
-      voiceStyle: char.voiceStyle || char.tone,
-      isActive: char.isActive || false
+      voiceStyle: char.voice_style || char.tone,
+      isActive: true
     }))
 
     return NextResponse.json({
@@ -45,19 +44,23 @@ export async function POST(request: Request) {
       userId
     } = body
 
-    const character = await prisma.characterProfile.create({
+    const character = await prisma.character_profiles.create({
       data: {
+        id: `char_${Date.now()}`,
         name,
+        display_name: name,
         age,
         gender,
-        tone,
+        occupation: 'AI Character',
         catchphrase,
+        personality: philosophy || '',
+        speaking_style: tone,
+        expertise: topics || '',
+        backstory: 'AI generated character',
         philosophy,
-        voiceStyle,
-        topics,
-        visual: visual || {},
-        userId,
-        isDefault: false
+        tone,
+        voice_style: voiceStyle || {},
+        emoji_style: '😊'
       }
     })
 

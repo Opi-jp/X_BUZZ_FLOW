@@ -39,7 +39,7 @@ export async function postDraftWithEnhancement(
 }> {
   try {
     // 1. ドラフトを取得（セッション情報も含む）
-    const draftResult = await DBManager.findUnique('viral_drafts_v2', {
+    const draftResult = await DBManager.findUnique('viral_drafts', {
       where: { id: draftId },
       include: {
         viral_sessions: true
@@ -94,7 +94,7 @@ export async function postDraftWithEnhancement(
         console.log('Source情報:', sourceInfo ? '生成成功' : '生成失敗')
         
         if (sourceInfo) {
-          tweets.push(sourceInfo)
+          if (Array.isArray(sourceInfo)) { tweets.push(...sourceInfo) } else { tweets.push(sourceInfo) }
         }
       }
     }
@@ -120,7 +120,7 @@ export async function postDraftWithEnhancement(
       const currentHistory = (draft.post_history as unknown as PostHistoryEntry[]) || []
       
       // ドラフトを更新
-      await tx.viral_drafts_v2.update({
+      await tx.viral_drafts.update({
         where: { id: draftId },
         data: {
           status: 'POSTED',
@@ -194,7 +194,7 @@ export async function editDraft(
   error?: string
 }> {
   try {
-    await DBManager.update('viral_drafts_v2', {
+    await DBManager.update('viral_drafts', {
       where: { id: draftId },
       data: {
         edited_content: editedContent,
@@ -228,7 +228,7 @@ export async function editDraft(
 export async function getDraftPostHistory(
   draftId: string
 ): Promise<PostHistoryEntry[]> {
-  const draft = await DBManager.findUnique('viral_drafts_v2', {
+  const draft = await DBManager.findUnique('viral_drafts', {
     where: { id: draftId },
     select: { post_history: true }
   })
@@ -251,7 +251,7 @@ export async function getEditedDrafts(
     where.session_id = sessionId
   }
 
-  return await DBManager.findMany('viral_drafts_v2', {
+  return await DBManager.findMany('viral_drafts', {
     where,
     orderBy: { edited_at: 'desc' },
     include: {
